@@ -55,7 +55,6 @@ class ChargerType extends Resource
             Text::make('name')
                 ->sortable()
                 ->rules('required', 'max:255'),
-            HasMany::make('Chargers'),
         ];
     }
 

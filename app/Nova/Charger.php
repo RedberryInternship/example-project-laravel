@@ -89,8 +89,14 @@ class Charger extends Resource
                 ->onlyOnForms()
                 ->nullable(),
 
-            BelongsToMany::make('Charger Types','chargerChargerTypes', 'App\Nova\ChargerChargerType'),
+            BelongsToMany::make('Charger Types', 'charger_types', 'App\Nova\ChargerType'),
 
+            BelongsToMany::make('Charger Connectors', 'charger_connectors', 'App\Nova\ConnectorType')
+               ->fields(function () {
+                    return [
+                        Text::make('Type'),
+                    ];
+                }),
             // Text::make('Types') -> displayUsing(function ($types){
             //     $result = "";
             //     $i = 0;
@@ -109,9 +115,7 @@ class Charger extends Resource
             //     return $result;
             // })-> onlyOnIndex(),
 
-            // BelongsToMany::make('Charger Tags','Tags', 'App\Nova\Tag'),
-
-            // BelongsToMany::make('Connectors','ConnectorType', 'App\Nova\ConnectorType')
+            BelongsToMany::make('Charger Tags','Tags', 'App\Nova\Tag'),
 
         ];
     }

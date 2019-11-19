@@ -15,7 +15,7 @@ class ChargerConnectorTypePrice extends Resource
      *
      * @var string
      */
-    public static $model = 'App\ChargerChargerType';
+    public static $model = 'App\ChargerConnectorTypePrice';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -43,7 +43,7 @@ class ChargerConnectorTypePrice extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Coonector Type Id','charger_connector_type','App\Nova\ChargerConnectorType'),
+            //BelongsTo::make('Coonector Type Id','charger_connector_type','App\Nova\ChargerConnectorType'),
             Text::make('price'),
             Text::make('start_time'),
             Text::make('end_time')

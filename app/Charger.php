@@ -37,23 +37,19 @@ class Charger extends Model
    		return $this -> belongsTo('App\User');
    	}
 
-   	public function types()
-   	{
-   		return $this -> belongsToMany('App\ChargerType', 'charger_charger_types');
-   	}
-
     public function tags()
     {
       return $this -> belongsToMany('App\Tag', 'charger_tags');
     }
 
-    public function connector_types()
+    public function charger_connectors()
     {
-      return $this -> belongsToMany('App\ChargerChargerType', 'charger_types_connector_types');
+      return $this -> belongsToMany('App\ConnectorType', 'charger_connector_types')->withPivot('charger_type_id');
     }
 
-    public function chargerChargerTypes() {
-      return $this -> hasMany('App\ChargerChargerType');
+    public function charger_types()
+    {
+      return $this -> belongsToMany('App\ChargerType', 'charger_connector_types');
     }
 
 }

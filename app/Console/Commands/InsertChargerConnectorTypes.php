@@ -6,8 +6,6 @@ use Illuminate\Console\Command;
 use App\Charger;
 use App\ChargerConnectorType;
 use App\ConnectorType;
-use App\ChargerChargerType;
-use App\ChargerTypesConnectorType;
 
 class InsertChargerConnectorTypes extends Command
 {
@@ -69,15 +67,16 @@ class InsertChargerConnectorTypes extends Command
                     $connector_type_id   = $connector_type -> id;
                 }
 
-                $charger_charger_types = ChargerChargerType::where('charger_id', $charger_id)->get();
+                $charger_connector_types = ChargerConnectorType::where('charger_id', $charger_id) -> update([
+                    'connector_type_id'       => $connector_type_id
+                ]);
 
-                foreach($charger_charger_types as $charger_charger_type)
-                {
-                    $charger_types_connector_type = ChargerTypesConnectorType::create([
-                        'charger_charger_type_id' => $charger_charger_type -> id,
-                        'connector_type_id'       => $connector_type_id
-                    ]);
-                }
+                // foreach($charger_connector_types as $charger_connector_types)
+                // {
+                //     $charger_types_connector_type = ChargerConnectorType::update([
+                //         'connector_type_id'       => $connector_type_id
+                //     ]);
+                // }
             }   
         }
     }

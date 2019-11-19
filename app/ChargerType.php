@@ -10,8 +10,8 @@ class ChargerType extends Model
         'name'
     ];
 
-    public function chargers()
+    public function connector_types()
     {
-    	return $this -> hasMany('App/Charger','charger_charger_types');
+    	return $this -> belongsTo('App/ConnectorType','charger_connector_types');
     }
 }

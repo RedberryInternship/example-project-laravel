@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\ChargerConnectorType;
+//use App\ChargerConnectorType;
 
 class InsertChargerConnectorTypePrices extends Command
 {
@@ -38,23 +38,23 @@ class InsertChargerConnectorTypePrices extends Command
      */
     public function handle()
     {   
-        $path = public_path () . "/jsons/pricing_list.json";
-        $json = json_decode(file_get_contents($path), true);
+        // $path = public_path () . "/jsons/pricing_list.json";
+        // $json = json_decode(file_get_contents($path), true);
 
 
-        // foreach($json as $pricing_lists)
+        // // foreach($json as $pricing_lists)
+        // // {
+        // //     foreach($pricing_lists as $pricing_list)
+        // //     {
+        // //         $
+        // //     }
+        // // }
+
+        // $charger_connector_types = ChargerConnectorType::orderBy('id','asc')->get();
+
+        // foreach ($charger_connector_types as $charger_connector_type)
         // {
-        //     foreach($pricing_lists as $pricing_list)
-        //     {
-        //         $
-        //     }
+        //     $charger_connector_type_id = $charger_connector_type -> id; 
         // }
-
-        $charger_connector_types = ChargerConnectorType::orderBy('id','asc')->get();
-
-        foreach ($charger_connector_types as $charger_connector_type)
-        {
-            $charger_connector_type_id = $charger_connector_type -> id; 
-        }
     }   
 }

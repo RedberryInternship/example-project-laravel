@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateChargerTypesConnectorTypesTable extends Migration
+class CreateChargerConnectorTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateChargerTypesConnectorTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('charger_types_connector_types', function (Blueprint $table) {
+        Schema::create('charger_connector_types', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('charger_charger_type_id');
-            $table->integer('connector_type_id');
+            $table->integer('charger_id');
+            $table->integer('connector_type_id')->nullable();
+            $table->integer('charger_type_id')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateChargerTypesConnectorTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('charger_types_connector_types');
+        Schema::dropIfExists('charger_connector_types');
     }
 }

@@ -5,24 +5,26 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Text;
 
-class ChargerChargerType extends Resource
+class ChargerConnectorType extends Resource
 {
+
+    public static $displayInNavigation = false;
+
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\ChargerChargerType';
+    public static $model = 'App\ChargerConnectorType';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'title';
 
     /**
      * The columns that should be searched.
@@ -43,9 +45,8 @@ class ChargerChargerType extends Resource
     {
         return [
             ID::make()->sortable(),
-            // HasMany::make('Connector Types','connectorTypes', 'App\Nova\ConnectorType') -> displayUsing(function($item) {
-            //     return $item -> name;
-            // })
+            Text::make('connector_type_id'),
+            Text::make('charger_type_id')
         ];
     }
 

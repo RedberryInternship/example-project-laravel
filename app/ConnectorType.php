@@ -11,8 +11,8 @@ class ConnectorType extends Model
         'old_id'
     ];
 
-    public function chargers()
-    {
-    	return $this -> hasMany('App/Charger','charger_types_connector_types');
-    }
+    // public function chargers()
+    // {
+    // 	return $this -> hasMany('App/Charger','charger_types_connector_types');
+    // }
 }

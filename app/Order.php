@@ -17,23 +17,23 @@ class Order extends Model
         'charge_time'
     ];
 
-    public function user()
-    {
-    	return $this -> belongsTo('App\User');
-    }
+    // public function user()
+    // {
+    // 	return $this -> belongsTo('App\User');
+    // }
 
-    public function charger()
-    {
-    	return $this -> belongsTo('App\Charger');
-    }
+    // public function charger()
+    // {
+    // 	return $this -> belongsTo('App\Charger');
+    // }
 
-    public function connector_type()
-    {
-    	return $this -> belongsTo('App\ChargerConnectorType');
-    }
+    // public function connector_type()
+    // {
+    // 	return $this -> belongsTo('App\ChargerConnectorType');
+    // }
 
-    public function charging_type()
-    {
-    	return $this -> belongsTo('App\ChargingType');
-    }
+    // public function charging_type()
+    // {
+    // 	return $this -> belongsTo('App\ChargingType');
+    // }
 }

@@ -13,8 +13,8 @@ class ChargerConnectorTypePrice extends Model
         'end_time'
     ];
 
-    public function charger_connector_type()
-    {
-    	return $this -> belongsTo('App\ChargerConnectorType');
-    }
+    // public function charger_connector_type()
+    // {
+    // 	return $this -> belongsTo('App\ChargerConnectorType');
+    // }
 }

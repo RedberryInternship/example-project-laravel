@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use App\Charger;
 use App\Tag;
 use App\ChargerTag;
-use App\ChargerChargerType;
+use App\ChargerConnectorType;
 
 class InsertChargers extends Command
 {
@@ -121,9 +121,10 @@ class InsertChargers extends Command
 
                 if($type)
                 {
-                    $charger_type = ChargerChargerType::create([
-                        'charger_id'      => $charger -> id,
-                        'charger_type_id' => $type
+                    $charger_type = ChargerConnectorType::create([
+                        'charger_id'        => $charger -> id,
+                        'charger_type_id'   => $type,
+                        'connector_type_id' => 9
                     ]);
                 }
             }   
