@@ -11,8 +11,13 @@ class ConnectorType extends Model
         'old_id'
     ];
 
-    // public function chargers()
-    // {
-    // 	return $this -> hasMany('App/Charger','charger_types_connector_types');
-    // }
+    public function chargers()
+    {
+    	return $this -> belongsToMany('App\Charger', 'charger_connector_types') -> withPivot('charger_type_id');
+    }
+
+    public function charger_types()
+    {
+      return $this -> belongsToMany('App\ChargerType', 'charger_connector_types') -> withPivot('charger_type_id');
+    }
 }

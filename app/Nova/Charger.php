@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\ChargerType;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -12,6 +13,7 @@ use Spatie\Translatable\HasTranslations;
 use Spatie\NovaTranslatable\Translatable;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Select;
 
 
 class Charger extends Resource
@@ -48,7 +50,6 @@ class Charger extends Resource
     public function fields(Request $request)
     {
         return [
-
             ID::make()->sortable(),
 
             Translatable::make([
@@ -85,16 +86,15 @@ class Charger extends Resource
 
             Text::make('lng'),
 
-            BelongsTo::make('User','user', 'App\Nova\User')
-                ->onlyOnForms()
-                ->nullable(),
+            // BelongsTo::make('User','user', 'App\Nova\User')
+            //     ->onlyOnForms()
+            //     ->nullable(),
 
-            BelongsToMany::make('Charger Types', 'charger_types', 'App\Nova\ChargerType'),
-
-            BelongsToMany::make('Charger Connectors', 'charger_connectors', 'App\Nova\ConnectorType')
-               ->fields(function () {
+            BelongsToMany::make('Connector Types')
+                -> fields(function () {
                     return [
-                        Text::make('Type'),
+                        Text::make('charger_type_id') -> onlyOnIndex(),
+                        Select::make('charger_type_id') -> options(ChargerType::getChargerTypesKeyValueArray())
                     ];
                 }),
             // Text::make('Types') -> displayUsing(function ($types){
@@ -116,7 +116,6 @@ class Charger extends Resource
             // })-> onlyOnIndex(),
 
             BelongsToMany::make('Charger Tags','Tags', 'App\Nova\Tag'),
-
         ];
     }
 
