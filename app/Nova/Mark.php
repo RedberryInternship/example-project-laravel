@@ -7,14 +7,14 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Text;
 
-class Car extends Resource
+class Mark extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\Car';
+    public static $model = 'App\Mark';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -42,7 +42,7 @@ class Car extends Resource
     {
         return [
             ID::make()->sortable(),
-            Text::make('name')->sortable()
+            Text::make('name'),
         ];
     }
 

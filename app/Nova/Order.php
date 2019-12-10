@@ -8,6 +8,13 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\DateTime;
+use App\Nova\Filters\OrderFinished;
+use App\Nova\Filters\OrderConfirmed;
+use App\Nova\Filters\OrderRefunded;
+use App\Nova\Filters\OrderRequestedAlready;
+use App\Nova\Filters\OrderStatus;
 
 class Order extends Resource
 {
@@ -47,15 +54,32 @@ class Order extends Resource
             BelongsTo::make('User','user', 'App\Nova\User'),
             BelongsTo::make('Charger','charger', 'App\Nova\Charger'),
             BelongsTo::make('Connector Type','connector_type', 'App\Nova\ConnectorType'),
+            BelongsTo::make('Charger Type', 'charger_type', 'App\Nova\ChargerType'),
             BelongsTo::make('Charging Type','charging_type', 'App\Nova\ChargingType'),
             Boolean::make('finished')
                 ->trueValue(1)
                 ->falseValue(0),
-            Boolean::make('paid')
+            Text::make('charge_fee'),
+            Text::make('charge_time'),
+            Text::make('charger_transaction_id'),
+            Boolean::make('confirmed')
                 ->trueValue(1)
                 ->falseValue(0),
-            Text::make('charge_fee'),
-            Text::make('charge_time')
+            Text::make('confirm_date'),
+            Boolean::make('refunded')
+                ->trueValue(1)
+                ->falseValue(0),
+            Text::make('price'),
+            Text::make('target_price'),
+            Boolean::make('requested_already')
+                ->trueValue(1)
+                ->falseValue(0),
+            Boolean::make('status')
+                ->trueValue(1)
+                ->falseValue(0),
+            Text::make('comment'),
+            DateTime::make('created_at')
+                      
         ];
     }
 
@@ -78,7 +102,13 @@ class Order extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new OrderFinished,
+            new OrderConfirmed,
+            new OrderRefunded,
+            new OrderRequestedAlready,
+            new OrderStatus
+        ];
     }
 
     /**

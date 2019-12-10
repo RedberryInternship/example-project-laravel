@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->string('email');
             $table->boolean('active')->default(false);
             $table->boolean('verified')->default(false);
-            $table->integer('car_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

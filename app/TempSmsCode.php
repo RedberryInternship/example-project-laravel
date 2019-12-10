@@ -4,9 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Car extends Model
+class TempSmsCode extends Model
 {
     protected $fillable = [
-        'name'
+    	'phone_number',
+    	'code',
+    	'status'
     ];
 }

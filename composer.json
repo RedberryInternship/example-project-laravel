@@ -13,8 +13,12 @@
         "laravel/framework": "^6.2",
         "laravel/nova": "*",
         "laravel/tinker": "^1.0",
+        "rackspace/php-opencloud": "dev-master",
+        "spatie/laravel-schemaless-attributes": "^1.6",
         "spatie/laravel-translatable": "^4.2",
-        "spatie/nova-translatable": "^2.0"
+        "spatie/nova-translatable": "^2.0",
+        "tymon/jwt-auth": "dev-develop"
+
     },
     "require-dev": {
         "facade/ignition": "^1.4",

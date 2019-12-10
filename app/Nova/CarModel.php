@@ -7,25 +7,22 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Select;
 
-
-class Payment extends Resource
+class CarModel extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\Payment';
+    public static $model = 'App\CarModel';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -46,16 +43,8 @@ class Payment extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Order ID','order', 'App\Nova\Order'),
-            Text::make('price'),
-            Text::make('prrn'),
-            Text::make('trx_id'),
-            Boolean::make('status'),
-            Boolean::make('active'),
-            Boolean::make('confirmed'),
-            Text::make('confirm_date'),
-            Text::make('date'),
-            BelongsTo::make('User Card ID','user_card', 'App\Nova\UserCard'),
+            Text::make('name'),
+            BelongsTo::make('Mark Name','Mark', 'App\Nova\Mark'),
         ];
     }
 

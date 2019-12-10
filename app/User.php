@@ -5,8 +5,9 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
@@ -22,8 +23,8 @@ class User extends Authenticatable
         'email',
         'active',
         'verified',
-        'car_id',
         'password',
+        'temp_password',
         'old_id'
     ];
 
@@ -41,17 +42,37 @@ class User extends Authenticatable
      *
      * @var array
      */
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
-    public function car()
+    public function car_models()
     {
-        return $this -> belongsTo('App\Car');
+        return $this -> belongsToMany('App\CarModel', 'user_car_models','user_id','model_id');
     }
 
     public function user_card()
     {
         return $this -> hasMany('App\UserCard');
     }
+
+    public function orders()
+    {
+        return $this -> hasMany('App\Order');
+    }
+    public function user_cars()
+    {
+        return $this -> hasMany('App\UserCarModel');
+    }
+
 }

@@ -16,3 +16,24 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
+Route::group(['prefix' => 'app/V1'], function () {
+	Route::post('/login', 'Api\app\V1\UserController@authenticate');
+	Route::post('/send-sms-code/{phone_number}','Api\app\V1\UserController@postSendSmsCode');
+	Route::post('/verify-code/{phone_number}/{code}','Api\app\V1\UserController@postVerifyCode');
+	Route::post('/register/{phone_number}', 'Api\app\V1\UserController@register');
+	Route::post('/reset-password/{phone_number}/{password}', 'Api\app\V1\UserController@postResetPassword');
+	Route::post('/add-user-car/{car_model_id}', 'Api\app\V1\UserController@postAddUserCar');
+	Route::get('/get-delete-user-car/{car_model_id}', 'Api\app\V1\UserController@getDeleteUserCar');
+	Route::get('/get-user-cars' , 'Api\app\V1\UserController@getUserCars');
+
+	// Route::group(['middleware' => ['jwt.verify']], function() {
+	// 	Route::get('/me', 'Api\app\V1\UserController@getMe');
+	// });
+	
+	Route::get('/get-charger/{charger_id}', 'Api\app\V1\ChargerController@getSingleCharger');
+	Route::get('/get-chargers', 'Api\app\V1\ChargerController@getChargers');
+	Route::get('/get-models-and-marks', 'Api\app\V1\GetModelsAndMarksController@getModelsAndMarks');
+});	

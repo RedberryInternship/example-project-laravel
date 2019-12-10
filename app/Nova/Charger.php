@@ -14,7 +14,11 @@ use Spatie\NovaTranslatable\Translatable;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Select;
-
+use App\Nova\Filters\ChargerPublished;
+use App\Nova\Filters\ChargerActive;
+use App\Nova\Filters\ChargerTags;
+use App\Nova\Filters\ChargerTypes;
+use App\Nova\Filters\ChargerConnectorTypes;
 
 class Charger extends Resource
 {
@@ -38,7 +42,7 @@ class Charger extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'id', 'name'
     ];
 
     /**
@@ -49,7 +53,7 @@ class Charger extends Resource
      */
     public function fields(Request $request)
     {
-        return [
+        $fieldsArr = [
             ID::make()->sortable(),
 
             Translatable::make([
@@ -71,7 +75,7 @@ class Charger extends Resource
             Translatable::make([
                 Text::make('location')
                     ->sortable()
-                    ->rules('required', 'max:255')
+                    // ->rules('required', 'max:255')
             ])->locales(['en', 'ru', 'ka']),
 
             Boolean::make('public')
@@ -117,6 +121,31 @@ class Charger extends Resource
 
             BelongsToMany::make('Charger Tags','Tags', 'App\Nova\Tag'),
         ];
+
+        $charger_type_id = null;
+        if ($this -> charger_types)
+        {
+            foreach ($this -> charger_types as $charger_type) {
+                $charger_type_id = $charger_type -> id;
+                if($charger_type_id == 1)
+                {
+                    array_push($fieldsArr, HasMany::make('Charging Prices','charging_prices', 'App\Nova\ChargingPrice'));
+                }
+            }
+        }
+
+        if ($this -> charger_types)
+        {   
+            foreach ($this -> charger_types as $charger_type) {
+                $charger_type_id = $charger_type -> id;
+                if($charger_type_id == 2)
+                {
+                    array_push($fieldsArr, HasMany::make('Fast Charging Prices','fast_charging_prices', 'App\Nova\FastChargingPrice'));
+                }
+            }
+        }
+
+        return $fieldsArr;
     }
 
     /**
@@ -138,7 +167,13 @@ class Charger extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new ChargerPublished,
+            new ChargerActive,
+            new ChargerTags,
+            new ChargerTypes,
+            new ChargerConnectorTypes
+        ];
     }
 
     /**

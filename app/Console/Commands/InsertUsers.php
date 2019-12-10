@@ -37,7 +37,7 @@ class InsertUsers extends Command
      * @return mixed
      */
     public function handle()
-    {
+    {          
         $path = public_path () . "/jsons/users.json";
         $json = json_decode(file_get_contents($path), true); 
 
@@ -50,11 +50,18 @@ class InsertUsers extends Command
                 $first_name   = $user_array['first_name'];
                 $last_name    = $user_array['last_name'];
                 $phone_number = $user_array['phone_number'];
+                $phone_number = str_replace(" ","",$phone_number);
+                if(substr($phone_number, 0,4) == "+995")
+                {
+                    $phone_number = substr($phone_number,4);
+                }elseif(substr($phone_number, 0,3) == '995')
+                {
+                    $phone_number = substr($phone_number,3);
+                }
                 $password     = $user_array['password'];
                 $active       = 1;
                 $verified     = 0;
                 $role         = 1;
-
                 $user   = User::create([
                     'old_id'                => intval($old_id),
                     'first_name'            => $first_name,

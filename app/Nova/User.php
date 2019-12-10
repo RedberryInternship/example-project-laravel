@@ -11,6 +11,8 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\BelongsToMany;
+
 
 
 class User extends Resource
@@ -89,16 +91,15 @@ class User extends Resource
                 ->trueValue(1)
                 ->falseValue(0),
 
-            BelongsTo::make('Car','car', 'App\Nova\Car')
-                ->onlyOnForms()
-                ->nullable(),
-                
+            BelongsToMany::make('User Car Model','car_models', 'App\Nova\CarModel'),
+            
             Password::make('Password')
                 ->onlyOnForms()
                 ->creationRules('required', 'string', 'min:8')
                 ->updateRules('nullable', 'string', 'min:8'),
                 
-            HasMany::make('User Cards','user_card','App\Nova\UserCard')
+            HasMany::make('User Cards','user_card','App\Nova\UserCard'),
+            HasMany::make('Orders','orders','App\Nova\Order')
         ];
     }
 

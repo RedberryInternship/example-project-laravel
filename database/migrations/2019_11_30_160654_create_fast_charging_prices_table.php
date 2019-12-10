@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateChargerConnectorTypePricesTable extends Migration
+class CreateFastChargingPricesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateChargerConnectorTypePricesTable extends Migration
      */
     public function up()
     {
-        Schema::create('charger_connector_type_prices', function (Blueprint $table) {
+        Schema::create('fast_charging_prices', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('charger_connector_type_id');
-            $table->string('price');
-            $table->text('start_time');
-            $table->text('end_time');
+            $table->integer('charger_id');
+            $table->string('start_minutes')->nullable();
+            $table->string('end_minutes')->nullable();
+            $table->string('price')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateChargerConnectorTypePricesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('charger_connector_type_prices');
+        Schema::dropIfExists('fast_charging_prices');
     }
 }
