@@ -6,8 +6,10 @@
 /public/storage
 /storage/*.key
 /vendor
+/code/espace/database/database.sqlite
 .env
 .env.backup
+.env.testing
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
