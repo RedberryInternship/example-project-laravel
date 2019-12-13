@@ -63,6 +63,5 @@ class RegisterTest extends TestCase
     	$responseJson = $this -> post('/api/app/V1/verify-code', $request);
     	$this -> assertEquals('401', $responseJson -> original['status']);
     }
-
     
 }
