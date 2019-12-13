@@ -161,7 +161,7 @@ class UserController extends Controller
         ], $status);
     }
 
-    public function postAddUserCar(Request $request, $car_model_id)
+    public function postAddUserCar(Request $request)
     {
         $json_status = 'Not added!';
         $status      = 404;
@@ -169,11 +169,11 @@ class UserController extends Controller
         if($user)
         {
             $user_id = $user -> id;
-            $car_model = CarModel::where('id', $car_model_id) -> first();
+            $car_model = CarModel::where('id', $request -> get('car_model_id')) -> first();
             if($car_model){
                 $user_car_model = UserCarModel::create([
                     'user_id'  => $user_id,
-                    'model_id' => $car_model_id
+                    'model_id' => $request -> get('car_model_id')
                 ]);
                 $json_status = 'User Car Added';
                 $status      = 200;

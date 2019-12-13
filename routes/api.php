@@ -25,7 +25,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 	Route::post('/verify-code','Api\app\V1\UserController@postVerifyCode');
 	Route::post('/register', 'Api\app\V1\UserController@register');
 	Route::post('/reset-password', 'Api\app\V1\UserController@postResetPassword');
-	Route::post('/add-user-car/{car_model_id}', 'Api\app\V1\UserController@postAddUserCar');
+	Route::post('/add-user-car', 'Api\app\V1\UserController@postAddUserCar');
 	Route::get('/get-delete-user-car/{car_model_id}', 'Api\app\V1\UserController@getDeleteUserCar');
 	Route::get('/get-user-cars' , 'Api\app\V1\UserController@getUserCars');
 
