@@ -21,9 +21,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'app/V1'], function () {
 	Route::post('/login', 'Api\app\V1\UserController@authenticate');
-	Route::post('/send-sms-code/{phone_number}','Api\app\V1\UserController@postSendSmsCode');
-	Route::post('/verify-code/{phone_number}/{code}','Api\app\V1\UserController@postVerifyCode');
-	Route::post('/register/{phone_number}', 'Api\app\V1\UserController@register');
+	Route::post('/send-sms-code','Api\app\V1\UserController@postSendSmsCode');
+	Route::post('/verify-code','Api\app\V1\UserController@postVerifyCode');
+	Route::post('/register', 'Api\app\V1\UserController@register');
 	Route::post('/reset-password', 'Api\app\V1\UserController@postResetPassword');
 	Route::post('/add-user-car/{car_model_id}', 'Api\app\V1\UserController@postAddUserCar');
 	Route::get('/get-delete-user-car/{car_model_id}', 'Api\app\V1\UserController@getDeleteUserCar');

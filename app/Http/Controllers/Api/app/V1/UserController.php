@@ -50,19 +50,19 @@ class UserController extends Controller
         ]);
     }
 
-    public function postSendSmsCode($phone_number)
+    public function postSendSmsCode(Request $request)
     { 
         $rand        = rand(pow(10, 4-1), pow(10, 4)-1);
         $json_status = 'SMS Sent';
-        $temp = TempSmsCode::where('phone_number', $phone_number) -> first();
+        $temp = TempSmsCode::where('phone_number', $request -> get('phone_number')) -> first();
         if($temp)
         {
-            $temp -> phone_number = $phone_number;
+            $temp -> phone_number = $request -> get('phone_number');
             $temp -> code         = $rand;
             $temp -> save();
         }else{
             $temp = TempSmsCode::create([
-                'phone_number' => $phone_number,
+                'phone_number' => $request -> get('phone_number'),
                 'code'         => $rand
             ]);
         }
@@ -70,11 +70,14 @@ class UserController extends Controller
             'json_status' => $json_status
         ]);
     }
-    public function postVerifyCode($phone_number, $code)
+    public function postVerifyCode(Request $request)
     {
         $json_status  = 'Not found';
         $status       = 401;
-        $temp = TempSmsCode::where(['phone_number' => $phone_number , 'code' => $code]) -> first();
+        $temp = TempSmsCode::where([
+            'phone_number' => $request -> get('phone_number'), 
+            'code'         => $request -> get('code')
+        ]) -> first();
         if($temp)
         {   
             $totalDuration = Carbon::now()->diffInMinutes($temp -> created_at);
@@ -89,10 +92,14 @@ class UserController extends Controller
                 $status      = 440;
             }
         }
-        return response() -> json(['status' => $json_status, 'phone_number' => $phone_number], $status);
+        return response() -> json([
+            'json_status'  => $json_status,
+            'status'       => $status,
+            'phone_number' => $request -> get('phone_number')
+        ], $status);
     }
 
-    public function register(Request $request, $phone_number)
+    public function register(Request $request)
     {
         $json_status = 'Not Registered';
         $status      = 403;
@@ -100,7 +107,8 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name'        => 'required|string|max:255',
             'last_name'         => 'required|string|max:255',
-            'email'             => 'required|string|email|max:255|unique:users'
+            'email'             => 'required|string|email|max:255|unique:users',
+            'phone_number'      => 'required|string|unique:users'
         ]);
 
         if($validator->fails()){
@@ -111,17 +119,18 @@ class UserController extends Controller
             'role'              => 1,
             'first_name'        => $request ->get('first_name'),
             'last_name'         => $request ->get('last_name'),
-            'phone_number'      => $phone_number,
+            'phone_number'      => $request ->get('phone_number'),
             'email'             => $request ->get('email'),
             'verified'          => 1,
             'acitve'            => 0,
             'password'          => Hash::make($request ->get('password'))
         ]);
+
         if($user)
         {
             $json_status = 'Registered';
             $status      = 200;
-            $temp  = TempSmsCode::where('phone_number', $phone_number) -> delete();
+            $temp  = TempSmsCode::where('phone_number', $request ->get('phone_number')) -> delete();
         }
 
         $token = JWTAuth::fromUser($user);
