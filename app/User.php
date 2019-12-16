@@ -58,7 +58,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function car_models()
     {
-        return $this -> belongsToMany('App\CarModel', 'user_car_models','user_id','model_id');
+        return $this -> belongsToMany('App\CarModel', 'user_car_models','user_id','model_id') -> withPivot('user_id');
     }
 
     public function user_card()
