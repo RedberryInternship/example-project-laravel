@@ -225,14 +225,17 @@ class UserController extends Controller
         return response() -> json(['user_cars' => $user_cars, 'json_status' => $json_status], $status);
     }
 
-    public function getDeleteUserCar(Request $request, $user_car_id)
+    public function postDeleteUserCar(Request $request)
     {   
         $json_status = 'Not Deleted';
         $status      = 404;
         $user = auth('api') -> user();
         if($user)
         {
-            $user_car    = UserCarModel::where('id', $user_car_id) -> first();
+            $user_car    = UserCarModel::where([
+                'user_id', $user -> id,
+                'model_id', $request -> get('model_id')
+            ]) -> first();
             if($user_car)
             {
                 $user_car -> delete();
@@ -240,7 +243,6 @@ class UserController extends Controller
                 $status      = 200;
             } 
         }
-       
         return response() -> json(['json_status' => $json_status,], $status); 
     }
 
