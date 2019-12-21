@@ -6,12 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\CarModel;
 use App\Mark;
+use App\Http\Resources\CarCollection;
 
 class GetModelsAndMarksController extends Controller
 {
     public function getModelsAndMarks()
     {
-    	$marks 	= Mark::select('name','id') -> orderBy('name') -> withModelsOrNone() -> get();
-    	return response() -> json(['marks_and_models' => $marks], 200);
+    	return new CarCollection(Mark::select('name','id') -> orderBy('name') -> withModelsOrNone() -> get());
     }
+    	
 }
