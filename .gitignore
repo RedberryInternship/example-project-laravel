@@ -20,3 +20,4 @@ yarn-error.log
 .env.staging
 .DS_Store
 
+.env.development
