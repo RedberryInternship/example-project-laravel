@@ -10,6 +10,7 @@ use Laravel\Nova\Fields\BelongsTo;
 
 class FastChargingPrice extends Resource
 {
+    public static $displayInNavigation = false;
     /**
      * The model the resource corresponds to.
      *
