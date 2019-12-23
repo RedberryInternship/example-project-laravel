@@ -32,7 +32,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 		Route::post('/delete-user-car', 'Api\app\V1\UserController@postDeleteUserCar');
 	});
 	
-	Route::get('/get-charger/{charger_id}', 'Api\app\V1\ChargerController@getSingleCharger');
-	Route::get('/get-chargers', 'Api\app\V1\ChargerController@getChargers');
+	Route::get('/charger/{charger_id}', 'Api\app\V1\ChargerController@getSingleCharger');
+	Route::get('/chargers', 'Api\app\V1\ChargerController@getChargers');
 	Route::get('/get-models-and-marks', 'Api\app\V1\GetModelsAndMarksController@getModelsAndMarks');
 });	
