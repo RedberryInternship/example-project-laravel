@@ -18,11 +18,13 @@ class FavoriteController extends Controller
     	$charger    = Charger::where('id', $charger_id) -> first();
     	$status     = false;
     	$favorite   = Favorite::where([['user_id', $user_id],['charger_id', $charger_id]]) -> first();
+
     	if(is_null($favorite))
     	{
     		$user->favorites()->attach($charger_id);
     		$status = true;
     	}
+    	
     	return response() -> json(['status' => $status]);
     }
 
@@ -33,7 +35,7 @@ class FavoriteController extends Controller
     	$charger_id = $request -> charger_id;
     	$favorite   = Favorite::where([['user_id', $user_id],['charger_id', $charger_id]]) -> first();
     	$status		= false;
-    	
+
     	if($favorite)
     	{
     		$user->favorites()->detach($charger_id);
