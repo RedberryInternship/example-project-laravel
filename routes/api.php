@@ -16,22 +16,18 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-
-
 Route::group(['prefix' => 'app/V1'], function () {
 	Route::post('/login', 'Api\app\V1\UserController@authenticate');
 	Route::post('/send-sms-code','Api\app\V1\UserController@postSendSmsCode');
 	Route::post('/verify-code','Api\app\V1\UserController@postVerifyCode');
 	Route::post('/register', 'Api\app\V1\UserController@register');
 	Route::post('/reset-password', 'Api\app\V1\UserController@postResetPassword');
-	
 	Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::post('/add-user-car', 'Api\app\V1\UserController@postAddUserCar');
 		Route::get('/get-user-cars' , 'Api\app\V1\UserController@getUserCars');
 		Route::post('/delete-user-car', 'Api\app\V1\UserController@postDeleteUserCar');
+		Route::post('/add-favorite', 'Api\app\V1\FavoriteController@postAddFavorite');
 	});
-	
 	Route::get('/charger/{charger_id}', 'Api\app\V1\ChargerController@getSingleCharger');
 	Route::get('/chargers', 'Api\app\V1\ChargerController@getChargers');
 	Route::get('/get-models-and-marks', 'Api\app\V1\GetModelsAndMarksController@getModelsAndMarks');

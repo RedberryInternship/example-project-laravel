@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Favorite;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -73,6 +74,11 @@ class User extends Authenticatable implements JWTSubject
     public function user_cars()
     {
         return $this -> hasMany('App\UserCarModel');
+    }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Favorite::class, 'favorites', 'user_id', 'charger_id')->withTimeStamps();
     }
 
 }
