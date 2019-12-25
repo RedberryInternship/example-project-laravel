@@ -15,5 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test/{charger_id}', 'TestController@getTest');
-
+Route::group(['prefix' => 'business'], function(){
+    Route::get('/', 'BusinessController@getIndex');
+    Route::get('/login', 'BusinessController@getLogin');
+    Route::get('/register', 'BusinessController@getRegister');
+    Route::get('/dashboard', 'BusinessController@getDashboard');
+});
