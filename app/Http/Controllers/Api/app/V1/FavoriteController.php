@@ -24,7 +24,7 @@ class FavoriteController extends Controller
     		$user->favorites()->attach($charger_id);
     		$status = true;
     	}
-    	
+
     	return response() -> json(['status' => $status]);
     }
 
@@ -43,5 +43,11 @@ class FavoriteController extends Controller
     	}
 
     	return response() -> json(['status' => $status]);
+    }
+
+    public function getUserFavorites()
+    {
+    	$user  	  = auth('api') -> user();
+    	return response() -> json(['user_favorite_chargers' => $user -> favorites]);
     }
 }
