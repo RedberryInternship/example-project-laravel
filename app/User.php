@@ -81,4 +81,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Charger::class, 'favorites', 'user_id', 'charger_id')->withTimeStamps();
     }
 
+    public function role()
+    {
+        return $this -> hasMany('App\Role');
+    }
+
 }
