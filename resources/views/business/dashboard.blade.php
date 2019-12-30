@@ -1,4 +1,4 @@
 @extends('business.master')
-
-
-DASHBOARD PAGE
+@section('body')
+	dash
+@endsection
