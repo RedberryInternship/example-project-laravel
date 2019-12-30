@@ -20,4 +20,5 @@ Route::group(['prefix' => 'business'], function(){
     Route::get('/login', 'BusinessController@getLogin');
     Route::get('/register', 'BusinessController@getRegister');
     Route::get('/forgot-password', 'BusinessController@getForgotPassword');
+    Route::post('/register', 'UserController@postRegister');
 });
