@@ -1,6 +1,6 @@
 @extends('business.authenticate')
 @section('css')
-    <link rel="stylesheet" type="text/css" href="../../../app-assets/css-rtl/pages/register.css">
+    <link rel="stylesheet" type="text/css" href="../../../app-assets/css/pages/register.css">
 @endsection
 @section('body')
 	<div id="register-page" class="row">
@@ -57,8 +57,7 @@
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
-                        <input type="submit" name="submit">
-                        <!-- <a href="index.html" class="btn waves-effect waves-light border-round gradient-45deg-purple-deep-orange col s12">Register</a> -->
+                        <input type="submit" name="submit" class="btn waves-effect waves-light border-round gradient-45deg-purple-deep-orange col s12">
                     </div>
                 </div>
                 <div class="row">

@@ -1,4 +1,6 @@
 @extends('business.master')
 @section('body')
-	dash
+<div class="row"> 
+	{{ $user -> first_name }}
+</div>
 @endsection

@@ -1,6 +1,6 @@
 @extends('business.authenticate')
 @section('css')
-    <link rel="stylesheet" type="text/css" href="../../../app-assets/css-rtl/pages/forgot.css">
+    <link rel="stylesheet" type="text/css" href="../../../app-assets/css/pages/forgot.css">
 @endsection
 @section('body')
     <div id="forgot-password" class="row">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="loading" lang="en" data-textdirection="rtl">
+<html class="loading" lang="en" data-textdirection="ltr">
 <!-- BEGIN: Head-->
 
 <head>
@@ -16,14 +16,14 @@
     <!-- BEGIN: VENDOR CSS-->
     <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/vendors.min.css">
     <!-- END: VENDOR CSS-->
-    <link rel="stylesheet" type="text/css" href="../../../app-assets/css-rtl/style-rtl.css">
     <!-- BEGIN: Page Level CSS-->
-    <link rel="stylesheet" type="text/css" href="../../../app-assets/css-rtl/themes/horizontal-menu-template/materialize.css">
-    <link rel="stylesheet" type="text/css" href="../../../app-assets/css-rtl/themes/horizontal-menu-template/style.css">
-    <link rel="stylesheet" type="text/css" href="../../../app-assets/css-rtl/layouts/style-horizontal.css">
+    <link rel="stylesheet" type="text/css" href="../../../app-assets/css/themes/horizontal-menu-template/materialize.css">
+    <link rel="stylesheet" type="text/css" href="../../../app-assets/css/themes/horizontal-menu-template/style.css">
+    <link rel="stylesheet" type="text/css" href="../../../app-assets/css/layouts/style-horizontal.css">
+    <link rel="stylesheet" type="text/css" href="../../../app-assets/css/pages/login.css">
     <!-- END: Page Level CSS-->
     <!-- BEGIN: Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="../../../app-assets/css-rtl/custom/custom.css">
+    <link rel="stylesheet" type="text/css" href="../../../app-assets/css/custom/custom.css">
     <!-- END: Custom CSS-->
     @yield('css')
 </head>
