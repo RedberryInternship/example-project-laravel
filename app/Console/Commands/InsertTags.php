@@ -38,6 +38,7 @@ class InsertTags extends Command
      */
     public function handle()
     {
+        $this->info('Executing insert tags');
         $path = public_path () . "/jsons/categories.json";
         $json = json_decode(file_get_contents($path), true); 
 
@@ -59,5 +60,6 @@ class InsertTags extends Command
                 ]);
             }
         }
+        $this->info('Finished inserting tags');
     }
 }

@@ -40,6 +40,7 @@ class InsertPayments extends Command
      */
     public function handle()
     {
+        $this->info('Executing insert payments');
         $path = public_path () . "/jsons/payment.json";
         $json = json_decode(file_get_contents($path), true);
         foreach($json as $payments_arrays)
@@ -89,5 +90,6 @@ class InsertPayments extends Command
                 }
             }
         }
+        $this->info('Finished inserting payments');
     }
 }

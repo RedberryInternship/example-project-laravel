@@ -39,6 +39,16 @@ class CreateUsersTable extends Migration
                 'active'             =>  true,
                 'verified'           =>  true,
                 'password'           =>  bcrypt('admin2000'),
+            ],
+            [
+                'role'               => 4,
+                'first_name'         => 'Payment',
+                'last_name'          => 'Espace',
+                'phone_number'       => '222',
+                'email'              => 'payment@espace.ge',
+                'active'             =>  true,
+                'verified'           =>  true,
+                'password'           =>  bcrypt('payment2000'),
             ]
         ]);
     }

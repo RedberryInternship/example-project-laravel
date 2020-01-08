@@ -43,6 +43,7 @@ class InsertChargers extends Command
      */
     public function handle()
     {
+        $this->info('Executing insert chargers');
         $path = public_path () . "/jsons/chargers.json";
         $json = json_decode(file_get_contents($path), true);
 
@@ -186,5 +187,6 @@ class InsertChargers extends Command
                 }
             }   
         }
+        $this->info('Finished inserting chargers');
     }
 }

@@ -37,7 +37,8 @@ class InsertUsers extends Command
      * @return mixed
      */
     public function handle()
-    {          
+    {   
+        $this->info('Executing insert users');
         $path = public_path () . "/jsons/users.json";
         $json = json_decode(file_get_contents($path), true); 
 
@@ -75,5 +76,6 @@ class InsertUsers extends Command
                 ]);
             }
         }
+        $this->info('Finished inserting users');
     }
 }

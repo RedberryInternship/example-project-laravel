@@ -39,6 +39,7 @@ class InsertUserCards extends Command
      */
     public function handle()
     {
+        $this->info('Executing insert user cards');
         $path = public_path () . "/jsons/credit_cards.json";
         $json = json_decode(file_get_contents($path), true);
 
@@ -74,5 +75,6 @@ class InsertUserCards extends Command
                 ]);
             }
         }
+        $this->info('Finished inserting user cards');
     }
 }

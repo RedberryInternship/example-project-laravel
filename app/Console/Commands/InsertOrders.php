@@ -43,6 +43,7 @@ class InsertOrders extends Command
      */
     public function handle()
     {
+        $this->info('Executing insert orders');
         $path = public_path () . "/jsons/orders.json";
         $json = json_decode(file_get_contents($path), true);
         
@@ -124,5 +125,6 @@ class InsertOrders extends Command
                 }
             }
         }
+        $this->info('Finished inserting orders');
     }
 }

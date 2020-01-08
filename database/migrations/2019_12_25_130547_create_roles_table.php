@@ -28,6 +28,9 @@ class CreateRolesTable extends Migration
             ],
             [
                 'name' => 'Business'
+            ],
+            [
+                'name' => 'Payment'
             ]
         ]);
     }

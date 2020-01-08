@@ -40,6 +40,7 @@ class InsertChargerConnectorTypes extends Command
      */
     public function handle()
     {
+        $this->info('Executing insert charger connector types');
         $path = public_path () . "/jsons/charger_connectors.json";
         $json = json_decode(file_get_contents($path), true);
 
@@ -79,5 +80,6 @@ class InsertChargerConnectorTypes extends Command
                 // }
             }   
         }
+        $this->info('Finished inserting charger connector types');
     }
 }
