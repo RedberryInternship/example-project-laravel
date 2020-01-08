@@ -246,5 +246,31 @@ class UserController extends Controller
         return response() -> json(['json_status' => $json_status,], $status); 
     }
 
+    public function postUpdateUserInfo(Request $request)
+    {
+        $user       = auth('api') -> user();
+        $user_db    = User::where('id',$user -> id) -> first();
+        $checker    = false;        
+        $columns    = Schema::getColumnListing('users');
+        $keys       = [];
+
+        foreach($columns as $v){
+            array_push($keys, $v);
+        }
+
+        if($user){
+            foreach($request->all() as $key => $value){
+                if(in_array($key,$keys)){
+                    if($value != '' or $value != null){
+                        $user_db -> update([$key => $value]);
+                        $checker = true;                      
+                    }
+                }
+            }
+        }
+
+        return response() -> json(['updated' => $checker]);
+    }
+
 }
 

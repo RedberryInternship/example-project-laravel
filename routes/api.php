@@ -29,6 +29,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 		Route::post('/add-favorite', 'Api\app\V1\FavoriteController@postAddFavorite');
 		Route::post('/remove-favorite', 'Api\app\V1\FavoriteController@postRemoveFavotite');
 		Route::get('/user-favorites', 'Api\app\V1\FavoriteController@getUserFavorites');
+		Route::post('/update-user-info','Api\app\V1\UserController@postUpdateUserInfo');
 	});
 	Route::get('/charger/{charger_id}', 'Api\app\V1\ChargerController@getSingleCharger');
 	Route::get('/chargers', 'Api\app\V1\ChargerController@getChargers');
