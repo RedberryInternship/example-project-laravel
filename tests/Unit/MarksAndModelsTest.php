@@ -24,7 +24,7 @@ class MarksAndModelsTest extends TestCase
 
     	$responseJson = $this -> response = $this->json('GET', "/api/app/V1/get-models-and-marks");
 
-    	$this -> assertEquals(count($responseJson -> original['marks_and_models']),count($a));
+    	$this -> assertEquals(count($responseJson -> original),count($a));
        	
     }
 

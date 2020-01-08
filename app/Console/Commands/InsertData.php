@@ -45,6 +45,7 @@ class InsertData extends Command
         $this->call('command:insert_charger_connector_types');
         $this->call('command:insert_orders');
         $this->call('command:insert_payments');
+        $this->call('command:insert_phone_codes');
         $this->info('Finished inserting Data');
     }
 }
