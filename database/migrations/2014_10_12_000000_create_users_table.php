@@ -48,7 +48,7 @@ class CreateUsersTable extends Migration
                 'email'              => 'payment@espace.ge',
                 'active'             =>  true,
                 'verified'           =>  true,
-                'password'           =>  bcrypt('payment2000'),
+                'password'           =>  bcrypt('M9QwdZh1i4MHYV5v'),
             ]
         ]);
     }

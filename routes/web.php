@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/payment/{param}', 'PaymentController@getPayment');
+Route::get('/succeeded', 'PaymentController@getSucceeded');
+Route::get('/fail', 'PaymentController@getFail');
+
 Route::group(['prefix' => 'business'], function(){
     Route::get('/', 'BusinessController@getIndex');
     Route::get('/login', 'BusinessController@getLogin');
