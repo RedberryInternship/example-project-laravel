@@ -16,10 +16,11 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('old_id')->nullable();
-            $table->integer('role')->default(1);
+            $table->integer('role_id')->default(1);
             $table->string('phone_number');
             $table->string('first_name');
             $table->string('last_name');
+            $table->string('full_name');
             $table->string('email');
             $table->boolean('active')->default(false);
             $table->boolean('verified')->default(false);
@@ -31,9 +32,10 @@ class CreateUsersTable extends Migration
 
         DB::table('users')->insert([
             [   
-                'role'               => 2,
+                'role_id'            => 2,
                 'first_name'         => 'Admin',
                 'last_name'          => 'Espace',
+                'full_name'          => 'Admin Espace',
                 'phone_number'       => '111',
                 'email'              => 'admin@espace.ge',
                 'active'             =>  true,
@@ -41,9 +43,10 @@ class CreateUsersTable extends Migration
                 'password'           =>  bcrypt('admin2000'),
             ],
             [
-                'role'               => 4,
+                'role_id'            => 4,
                 'first_name'         => 'Payment',
                 'last_name'          => 'Espace',
+                'full_name'          => 'Payment Espace',
                 'phone_number'       => '222',
                 'email'              => 'payment@espace.ge',
                 'active'             =>  true,

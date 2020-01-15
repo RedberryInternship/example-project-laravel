@@ -30,7 +30,7 @@ class User extends Resource
      *
      * @var string
      */
-    public static $title = 'first_name';
+    public static $title = 'full_name';
 
 
     /**
@@ -39,7 +39,7 @@ class User extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'first_name', 'email',
+        'id', 'first_name','last_name', 'email',
     ];
 
     /**
@@ -53,8 +53,8 @@ class User extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('role', function() {
-                if($this -> role == 2){
+            Text::make('role_id', function() {
+                if($this -> role_id == 2){
                     return 'Admin';
                 }
                 else{
@@ -72,6 +72,10 @@ class User extends Resource
                 ->sortable()
                 ->rules('required', 'max:255'),
 
+            // Text::make('full_name')
+            //     ->sortable()
+            //     ->exceptOnForms(),
+                
             Text::make('phone_number')
                 ->rules('required','string', 'min:9')
                 ->creationRules('unique:users,phone_number')
@@ -99,7 +103,8 @@ class User extends Resource
                 ->updateRules('nullable', 'string', 'min:8'),
                 
             HasMany::make('User Cards','user_card','App\Nova\UserCard'),
-            HasMany::make('Orders','orders','App\Nova\Order')
+            HasMany::make('Orders','orders','App\Nova\Order'),
+            BelongsTo::make('Role', 'role', 'App\Nova\Role')
         ];
     }
 

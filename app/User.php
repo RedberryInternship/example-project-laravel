@@ -20,6 +20,7 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'first_name',
         'last_name',
+        'full_name',
         'phone_number',
         'email',
         'active',
@@ -27,7 +28,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'temp_password',
         'old_id',
-        'role'
+        'role_id'
     ];
 
     /**
@@ -84,7 +85,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function role()
     {
-        return $this -> hasMany('App\Role');
+        return $this -> belongsTo('App\Role');
     }
 
 }

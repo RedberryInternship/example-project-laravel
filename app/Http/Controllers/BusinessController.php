@@ -48,8 +48,8 @@ class BusinessController extends Controller
     public function getChargers()
     {
         $user     = Auth::user();
-        $chargers = Charger::OrderBy('id', 'desc') -> get();
-        //$chargers = Charger::where('user_id', $user -> id) -> get();
+        //$chargers = Charger::OrderBy('id', 'desc') -> get();
+        $chargers = Charger::where('user_id', $user -> id) -> get();
         return view('business.chargers') -> with([
             'tabTitle'            => 'დამტენები',
             'activeMenuItem'      => 'chargers',

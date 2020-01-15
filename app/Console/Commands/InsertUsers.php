@@ -67,12 +67,13 @@ class InsertUsers extends Command
                     'old_id'                => intval($old_id),
                     'first_name'            => $first_name,
                     'last_name'             => $last_name,
+                    'full_name'             => $first_name ." ". $last_name,
                     'email'                 => $email,
                     'password'              => $password,
                     'phone_number'          => $phone_number,
                     'active'                => $active,
                     'verified'              => $verified,
-                    'role'                  => $role
+                    'role_id'               => $role
                 ]);
             }
         }
