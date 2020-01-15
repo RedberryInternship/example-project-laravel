@@ -42,6 +42,13 @@ class Order extends Resource
     ];
 
     /**
+     * Eager Loading.
+     *
+     * @var string
+     */
+    public static $with = ['user.role', 'charger_type', 'charging_type', 'connector_type', 'charger'];
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -51,11 +58,11 @@ class Order extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('User','user', 'App\Nova\User'),
-            BelongsTo::make('Charger','charger', 'App\Nova\Charger'),
-            BelongsTo::make('Connector Type','connector_type', 'App\Nova\ConnectorType'),
-            BelongsTo::make('Charger Type', 'charger_type', 'App\Nova\ChargerType'),
-            BelongsTo::make('Charging Type','charging_type', 'App\Nova\ChargingType'),
+            BelongsTo::make('User'),
+            BelongsTo::make('Charger'),
+            BelongsTo::make('Connector Type'),
+            BelongsTo::make('Charger Type'),
+            BelongsTo::make('Charging Type'),
             Boolean::make('finished')
                 ->trueValue(1)
                 ->falseValue(0),
@@ -78,8 +85,7 @@ class Order extends Resource
                 ->trueValue(1)
                 ->falseValue(0),
             Text::make('comment'),
-            DateTime::make('created_at')
-                      
+            DateTime::make('created_at'),
         ];
     }
 

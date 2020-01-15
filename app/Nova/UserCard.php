@@ -36,6 +36,13 @@ class UserCard extends Resource
     ];
 
     /**
+     * Eager Loading.
+     *
+     * @var string
+     */
+    public static $with = ['user'];
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -45,7 +52,7 @@ class UserCard extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('User','user', 'App\Nova\User')
+            BelongsTo::make('User')
                 ->readonly(),
             Text::make('masked_pan')
                 ->readonly(),

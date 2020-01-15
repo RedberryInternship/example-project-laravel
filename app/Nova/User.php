@@ -14,7 +14,6 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\BelongsToMany;
 
 
-
 class User extends Resource
 {
     /**
@@ -39,8 +38,15 @@ class User extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'first_name','last_name', 'email',
+        'id', 'first_name', 'last_name', 'email',
     ];
+
+    /**
+     * Eager Loading.
+     *
+     * @var string
+     */
+    public static $with = ['role'];
 
     /**
      * Get the fields displayed by the resource.

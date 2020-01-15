@@ -46,6 +46,13 @@ class Charger extends Resource
     ];
 
     /**
+     * Eager Loading.
+     *
+     * @var string
+     */
+    public static $with = ['charger_types'];
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request

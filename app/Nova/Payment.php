@@ -37,6 +37,13 @@ class Payment extends Resource
     ];
 
     /**
+     * Eager Loading.
+     *
+     * @var string
+     */
+    public static $with = ['order', 'user_card'];
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request

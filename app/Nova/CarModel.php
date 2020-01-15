@@ -34,6 +34,13 @@ class CarModel extends Resource
     ];
 
     /**
+     * Eager Loading.
+     *
+     * @var string
+     */
+    public static $with = ['mark'];
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -44,7 +51,7 @@ class CarModel extends Resource
         return [
             ID::make()->sortable(),
             Text::make('name'),
-            BelongsTo::make('Mark Name','Mark', 'App\Nova\Mark'),
+            BelongsTo::make('Mark'),
         ];
     }
 
