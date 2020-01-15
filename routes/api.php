@@ -34,4 +34,5 @@ Route::group(['prefix' => 'app/V1'], function () {
 	Route::get('/charger/{charger_id}', 'Api\app\V1\ChargerController@getSingleCharger');
 	Route::get('/chargers', 'Api\app\V1\ChargerController@getChargers');
 	Route::get('/get-models-and-marks', 'Api\app\V1\GetModelsAndMarksController@getModelsAndMarks');
+	Route::get('/phone-codes' , 'Api\app\V1\PhoneCodesController@getPhoneCodes');
 });	
