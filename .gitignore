@@ -18,6 +18,6 @@ yarn-error.log
 .vapor/
 .env.production
 .env.staging
-.DS_Store
-
 .env.development
+.DS_Store
+storage/debugbar
