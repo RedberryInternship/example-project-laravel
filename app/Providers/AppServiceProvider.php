@@ -14,6 +14,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         \Spatie\NovaTranslatable\Translatable::defaultLocales(['en', 'ru','ka']);
+
         $this->app->make('Redberry\GeorgianCardGateway\PaymentController');
     }
 
