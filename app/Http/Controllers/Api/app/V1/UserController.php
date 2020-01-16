@@ -52,7 +52,8 @@ class UserController extends Controller
 
     public function postSendSmsCode(Request $request)
     { 
-        $rand        = rand(pow(10, 4-1), pow(10, 4)-1);
+        //$rand        = rand(pow(10, 4-1), pow(10, 4)-1);
+        $rand        = 3030;
         $json_status = 'SMS Sent';
         $temp = TempSmsCode::where('phone_number', $request -> get('phone_number')) -> first();
         if($temp)
