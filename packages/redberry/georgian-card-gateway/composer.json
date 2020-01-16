@@ -1,0 +1,16 @@
+{
+    "name": "vagrant/georgian-card-gateway",
+    "authors": [
+        {
+            "name": "gulverd",
+            "email": "vakhtang.pataraia@gmail.com"
+        },
+        {
+        	"name": "imedacf",
+        	"email": "imedacf@gmail.com"
+        }
+    ],
+    "require": {
+    	
+    }
+}

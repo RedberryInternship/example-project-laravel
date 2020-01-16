@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Redberry\GeorgianCardGateway;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {
@@ -16,12 +17,12 @@ class PaymentController extends Controller
     	}
     }
 
-    public function getFail()
+    public function getFailed()
    	{
-   		dd('fail');
+   		dd('failed');
    	}
-   	public function getSucceeded()
+   	public function getSucceed()
    	{
-   		dd('successed');
+   		dd('Succeed');
    	}
 }

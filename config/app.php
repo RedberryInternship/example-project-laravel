@@ -163,10 +163,12 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
+
         /*
          * Package Service Providers...
          */
         Barryvdh\Debugbar\ServiceProvider::class,
+        Redberry\GeorgianCardGateway\GeorgianCardGatewayServiceProvider::class,
 
         /*
          * Application Service Providers...
