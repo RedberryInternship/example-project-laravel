@@ -9,46 +9,26 @@ class PaymentController extends Controller
 {
     public function getPayment(Request $request, $param)
     {
-        $trx_id      =  $request['trx_id'];
-        $order_id    =  $request['o_order_id'];
-        $amount      =  $request['o_amount'] * 100;
-        $market_id   =  $request['o_market_id'];
-        $user_id     =  $request['o_user_id'];
-
-        if($param == 'avail-check'){
-            dd('avail-check');
-            $trx_id      =  $request['trx_id'];
-            $order_id    =  $request['o_order_id'];
-            $amount      =  $request['o_amount'] * 100;
-            $market_id   =  $request['o_market_id'];
-            $result_code = 1;
-            $result_desc = 'OK';
-            $short_desc  = 'Balance';
-            $long_desc   = 'Balance';
-            $account_id  = '801E6A9BF4FDF8E6CB9ABA5429D51A7C';
-            $currency    =  981;
-            $exponent    =  2;
-            $merch_id    = 'AA8D7EEDD2CCA270DB5116D59DE913BF';
-
+       if($param == 'avail-check'){
             if($result_code == 1){
                 $response  = 
                 '<payment-avail-response>
 
                     <result>
 
-                    <code>'.$result_code.'</code>
-                    <desc>'.$result_desc.'</desc>
+                    <code>1</code>
+                    <desc>some desc</desc>
                     </result>
-                    <merchant-trx>'.$trx_id.'</merchant-trx>
+                    <merchant-trx>'.$request -> get('trx_id').'</merchant-trx>
                     <purchase>
-                    <shortDesc>'.$short_desc.'</shortDesc>
-                    <longDesc>'.$long_desc.'</longDesc>
+                    <shortDesc>shord desc</shortDesc>
+                    <longDesc>long desc</longDesc>
                     <account-amount>
 
-                    <id>'.$account_id.'</id>
-                    <amount>'.$amount.'</amount>
-                    <currency>'.$currency.'</currency>
-                    <exponent>'.$exponent.'</exponent>
+                    <id>'.$request -> get('account_id').'</id>
+                    <amount>'.$request -> get('o_amount').'</amount>
+                    <currency>981</currency>
+                    <exponent>2</exponent>
 
                     </account-amount>
 
