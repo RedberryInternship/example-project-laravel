@@ -60,7 +60,7 @@ class UserController extends Controller
         {
             $temp -> phone_number = $request -> get('phone_number');
             $temp -> code         = $rand;
-            $temp -> updated_at   = Carbon::now();
+            $temp -> updated_at   = Carbon::now();g
             $temp -> save();
         }else{
             $temp = TempSmsCode::create([
@@ -82,7 +82,7 @@ class UserController extends Controller
         ]) -> first();
         if($temp)
         {   
-            $totalDuration = Carbon::now()->diffInMinutes($temp -> created_at);
+            $totalDuration = Carbon::now()->diffInMinutes($temp -> updated_at);
             if($totalDuration <= 3)
             {
                 $temp -> status = 1;
