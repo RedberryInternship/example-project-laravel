@@ -16,16 +16,12 @@ class PaymentController extends Controller
         $user_id     =  $request['o_user_id'];
 
         if($param == 'avail-check'){
-
+            dd('avail-check');
             $trx_id      =  $request['trx_id'];
             $order_id    =  $request['o_order_id'];
             $amount      =  $request['o_amount'] * 100;
             $market_id   =  $request['o_market_id'];
-
-            Log::info($request);
-
             $result_code = 1;
-
             $result_desc = 'OK';
             $short_desc  = 'Balance';
             $long_desc   = 'Balance';
@@ -34,9 +30,9 @@ class PaymentController extends Controller
             $exponent    =  2;
             $merch_id    = 'AA8D7EEDD2CCA270DB5116D59DE913BF';
 
-
             if($result_code == 1){
-                $response  = '<payment-avail-response>
+                $response  = 
+                '<payment-avail-response>
 
                     <result>
 
@@ -58,7 +54,7 @@ class PaymentController extends Controller
 
                     </purchase>
 
-                    </payment-avail-response>';
+                </payment-avail-response>';
             }elseif($result_code == 2){
                 $response   = '<payment-avail-response>
                     <result>
