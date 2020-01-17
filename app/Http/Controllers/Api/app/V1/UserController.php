@@ -60,6 +60,7 @@ class UserController extends Controller
         {
             $temp -> phone_number = $request -> get('phone_number');
             $temp -> code         = $rand;
+            $temp -> updated_at   = Carbon::now();
             $temp -> save();
         }else{
             $temp = TempSmsCode::create([
