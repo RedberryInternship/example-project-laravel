@@ -11,8 +11,9 @@
 		<input type="text" name="back_url_f" placeholder="back_url_f" value="{{ config('georgian-card-gateway.back_url_f') }}">
 		<input type="text" name="back_url_s" placeholder="back_url_s" value="{{ config('georgian-card-gateway.back_url_s') }}">
 		<input type="text" name="ccy" placeholder="ccy" value="{{ config('georgian-card-gateway.ccy') }}">
-		<input type="text" name="amount" placeholder="amount">
-		<input type="submit" name="submit">
+		<input type="text" name="o.amount" placeholder="amount">
+		<input type="text" name="o.order_id" placeholder="order_id" value="test123">
+		<input type="submit">
 	</form>
 </body>
 </html>
