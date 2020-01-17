@@ -131,11 +131,11 @@ class PaymentController extends Controller
 
     public function getFailed()
    	{
-   		dd('failed');
+   		
    	}
    	public function getSucceed()
    	{
-   		dd('Succeed');
+   		
    	}
 
     public function getTest()
