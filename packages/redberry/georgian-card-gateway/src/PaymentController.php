@@ -11,35 +11,27 @@ class PaymentController extends Controller
     public function getPayment(Request $request, $param)
     {
 	    Log::info($request -> all());
-        $result_code = 1;
+
         if($param == 'avail-check'){
-            if($result_code == 1){
-                $response  = 
-                '<payment-avail-response>
-                    <result>
-                    <code>'.$result_code.'</code>
-                    <desc>OK</desc>
-                    </result>
-                    <merchant-trx>'.$request['trx_id'].'</merchant-trx>
-                    <purchase>
-                    <shortDesc>TID:3825180</shortDesc>
-                    <longDesc>PIN:186611</longDesc>
-                    <account-amount>
-                    <id>'.$request['account_id'].'</id>
-                    <amount>'.$request['o_amount'].'</amount>
-                    <currency>981</currency>
-                    <exponent>2</exponent>
-                    </account-amount>
-                    </purchase>
-                </payment-avail-response>';
-            }elseif($result_code == 2){
-                $response   = '<payment-avail-response>
-                    <result>
-                    <code>2</code>
-                    <desc>Unable to accept this payment</desc>
-                    </result>
-                    </payment-avail-response>';
-            }
+            $response  = 
+            '<payment-avail-response>
+                <result>
+                <code>1</code>
+                <desc>Successful</desc>
+                </result>
+                <merchant-trx>'.$request['trx_id'].'</merchant-trx>
+                <purchase>
+                <shortDesc>TID:3825180</shortDesc>
+                <longDesc>PIN:186611</longDesc>
+                <account-amount>
+                <id>'.config('georgian-card-gateway.account_id').'</id>
+                <amount>'.$request['o_amount'].'</amount>
+                <currency>981</currency>
+                <exponent>2</exponent>
+                </account-amount>
+                </purchase>
+            </payment-avail-response>';
+
             return Response($response);
         }elseif($param == 'register'){
             $trx_id                     =  $request['trx_id'];
