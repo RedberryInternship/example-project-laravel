@@ -12,7 +12,6 @@ class PaymentController extends Controller
     {
         $result_code = 1;
         if($param == 'avail-check'){
-            Log::info($request -> all());
             if($result_code == 1){
                 $response  = 
                 '<payment-avail-response>
