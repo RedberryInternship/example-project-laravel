@@ -17,7 +17,7 @@ class PaymentController extends Controller
                 $response  = 
                 '<payment-avail-response>
                     <result>
-                    <code>'.$request.'</code>
+                    <code>'.$result_code'</code>
                     <desc>Successful</desc>
                     </result>
                     <merchant-trx>'.$request -> get('trx_id').'</merchant-trx>
@@ -40,9 +40,9 @@ class PaymentController extends Controller
                     </result>
                     </payment-avail-response>';
             }
-
-            return Response($response);
             LOG::info($response);
+            return Response($response);
+
         }elseif($param == 'register'){
             $trx_id                     =  $request['trx_id'];
             $order_id                   =  $request['o_order_id'];
