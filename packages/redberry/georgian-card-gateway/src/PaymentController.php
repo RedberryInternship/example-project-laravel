@@ -10,6 +10,7 @@ class PaymentController extends Controller
 {
     public function getPayment(Request $request, $param)
     {
+        $account_id = '6ED073BE2DCFDC1FF992115BAD7771EF';
         if($param == 'avail-check'){
             LOG::info($request -> all());
             $result_code = $request['result_code'];
@@ -25,7 +26,7 @@ class PaymentController extends Controller
                     <shortDesc>TID:3825180</shortDesc>
                     <longDesc>PIN:186611</longDesc>
                     <account-amount>
-                    <id>'.$request['account_id'].'</id>
+                    <id>'.$account_id.'</id>
                     <amount>'.$request['o_amount'].'</amount>
                     <currency>981</currency>
                     <exponent>2</exponent>
@@ -42,7 +43,6 @@ class PaymentController extends Controller
             }
             LOG::info($response);
             return Response($response);
-
         }elseif($param == 'register'){
             $trx_id                     =  $request['trx_id'];
             $order_id                   =  $request['o_order_id'];
