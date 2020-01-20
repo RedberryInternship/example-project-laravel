@@ -13,7 +13,7 @@ class PaymentController extends Controller
         $account_id  = '6ED073BE2DCFDC1FF992115BAD7771EF';
         $result_code = $request['result_code'];
         if($param == 'avail-check'){
-            LOG::info($result_code);
+            dd($result_code);
             if($result_code == 1){
                 $response  = 
                 '<payment-avail-response>
