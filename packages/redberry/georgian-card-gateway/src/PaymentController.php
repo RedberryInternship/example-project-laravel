@@ -10,6 +10,7 @@ class PaymentController extends Controller
 {
     public function getPayment(Request $request, $param)
     {
+        $account_id  = '6ED073BE2DCFDC1FF992115BAD7771EF';
         $result_code = $request['result_code'];
         if($param == 'avail-check'){
             LOG::info($result_code);
@@ -25,7 +26,7 @@ class PaymentController extends Controller
                     <shortDesc>TID:3825180</shortDesc>
                     <longDesc>PIN:186611</longDesc>
                     <account-amount>
-                    <id>'.$request['account_id'].'</id>
+                    <id>'.$account_id.'</id>
                     <amount>'.$request['o_amount'].'</amount>
                     <currency>981</currency>
                     <exponent>2</exponent>
