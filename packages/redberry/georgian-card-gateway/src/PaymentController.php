@@ -17,7 +17,7 @@ class PaymentController extends Controller
                 $response  = 
                 '<payment-avail-response>
                     <result>
-                    <code>'.$result_code'</code>
+                    <code>'.$result_code.'</code>
                     <desc>OK</desc>
                     </result>
                     <merchant-trx>'.$request['trx_id'].'</merchant-trx>
