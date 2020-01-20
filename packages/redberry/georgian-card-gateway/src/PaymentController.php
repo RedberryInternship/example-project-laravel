@@ -9,9 +9,10 @@ class PaymentController extends Controller
 {
     public function getPayment(Request $request, $param)
     {
+        dd($request -> all());
         $result_code = 1;
        if($param == 'avail-check'){
-        dd($request -> all());
+
             if($result_code == 1){
                 $response  = 
                 '<payment-avail-response>
