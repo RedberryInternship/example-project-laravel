@@ -42,6 +42,7 @@ class PaymentController extends Controller
             }
 
             return Response($response);
+            LOG::info($response);
         }elseif($param == 'register'){
             $trx_id                     =  $request['trx_id'];
             $order_id                   =  $request['o_order_id'];
