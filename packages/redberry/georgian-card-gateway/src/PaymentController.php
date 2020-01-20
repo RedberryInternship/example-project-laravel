@@ -4,20 +4,21 @@ namespace Redberry\GeorgianCardGateway;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Log;
 
 class PaymentController extends Controller
 {
     public function getPayment(Request $request, $param)
     {
         $result_code = 1;
-       if($param == 'avail-check'){
-
+        if($param == 'avail-check'){
+            Log::info($request -> all());
             if($result_code == 1){
                 $response  = 
                 '<payment-avail-response>
                     <result>
                     <code>1</code>
-                    <desc>some desc</desc>
+                    <desc>Successful</desc>
                     </result>
                     <merchant-trx>3825180</merchant-trx>
                     <purchase>
@@ -28,11 +29,8 @@ class PaymentController extends Controller
                     <amount>'.$request -> get('o_amount').'</amount>
                     <currency>981</currency>
                     <exponent>2</exponent>
-
                     </account-amount>
-
                     </purchase>
-
                 </payment-avail-response>';
             }elseif($result_code == 2){
                 $response   = '<payment-avail-response>
@@ -44,7 +42,6 @@ class PaymentController extends Controller
             }
 
             return Response($response);
-
         }elseif($param == 'register'){
             $trx_id                     =  $request['trx_id'];
             $order_id                   =  $request['o_order_id'];
@@ -65,12 +62,7 @@ class PaymentController extends Controller
                     </result>
                     </register-payment-response>';
 
-                    $user_balance = UserBalances::create([
-                        'market_id'         => $market_id,
-                        'user_id'           => $user_id,
-                        'amount'            => $amount,
-                        'status'            => $result_code
-                    ]);
+                    // CREATE DATABASE RECORD
 
             }elseif($result_code == 2){
                 $response = '<register-payment-response>
