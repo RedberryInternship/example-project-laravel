@@ -12,21 +12,21 @@ class PaymentController extends Controller
     {
         if($param == 'avail-check'){
             LOG::info($request -> all());
-            $result_code = $request -> get('result_code');
+            $result_code = $request['result_code'];
             if($result_code == 1){
                 $response  = 
                 '<payment-avail-response>
                     <result>
                     <code>'.$result_code'</code>
-                    <desc>Successful</desc>
+                    <desc>OK</desc>
                     </result>
-                    <merchant-trx>'.$request -> get('trx_id').'</merchant-trx>
+                    <merchant-trx>'.$request['trx_id'].'</merchant-trx>
                     <purchase>
                     <shortDesc>TID:3825180</shortDesc>
                     <longDesc>PIN:186611</longDesc>
                     <account-amount>
-                    <id>'.$request -> get('account_id').'</id>
-                    <amount>'.$request -> get('o_amount').'</amount>
+                    <id>'.$request['account_id'].'</id>
+                    <amount>'.$request['o_amount'].'</amount>
                     <currency>981</currency>
                     <exponent>2</exponent>
                     </account-amount>
