@@ -9,7 +9,6 @@ class PaymentController extends Controller
 {
     public function getPayment(Request $request, $param)
     {
-        dd($request -> all());
         $result_code = 1;
        if($param == 'avail-check'){
 
@@ -20,12 +19,11 @@ class PaymentController extends Controller
                     <code>1</code>
                     <desc>some desc</desc>
                     </result>
-                    <merchant-trx>'.$request -> get('trx_id').'</merchant-trx>
+                    <merchant-trx>3825180</merchant-trx>
                     <purchase>
-                    <shortDesc>shord desc</shortDesc>
-                    <longDesc>long desc</longDesc>
+                    <shortDesc>TID:3825180</shortDesc>
+                    <longDesc>PIN:186611</longDesc>
                     <account-amount>
-
                     <id>'.$request -> get('account_id').'</id>
                     <amount>'.$request -> get('o_amount').'</amount>
                     <currency>981</currency>
