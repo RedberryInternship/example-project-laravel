@@ -10,16 +10,16 @@ class PaymentController extends Controller
 {
     public function getPayment(Request $request, $param)
     {
-        $result_code = 1;
         if($param == 'avail-check'){
+            $result_code = $request -> get('result_code');
             if($result_code == 1){
                 $response  = 
                 '<payment-avail-response>
                     <result>
-                    <code>1</code>
+                    <code>'.$request.'</code>
                     <desc>Successful</desc>
                     </result>
-                    <merchant-trx>3825180</merchant-trx>
+                    <merchant-trx>'.$request -> get('trx_id').'</merchant-trx>
                     <purchase>
                     <shortDesc>TID:3825180</shortDesc>
                     <longDesc>PIN:186611</longDesc>
