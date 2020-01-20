@@ -10,9 +10,9 @@ class PaymentController extends Controller
 {
     public function getPayment(Request $request, $param)
     {
+        $result_code = $request['result_code'];
         if($param == 'avail-check'){
-            LOG::info($request -> all());
-            $result_code = $request['result_code'];
+            LOG::info($result_code);
             if($result_code == 1){
                 $response  = 
                 '<payment-avail-response>
@@ -45,13 +45,10 @@ class PaymentController extends Controller
             $trx_id                     =  $request['trx_id'];
             $order_id                   =  $request['o_order_id'];
             $amount                     =  $request['o_amount'] * 100;
-            $market_id                  =  $request['o_market_id'];
             $p_rrn                      =  $request['p_rrn'];
             $p_transmissionDateTime     =  $request['p_transmissionDateTime'];
             $signature                  =  $request['signature'];
             $p_authcode                 =  $request['p_authcode'];
-
-            $result_code = $request['result_code'];
 
             if($result_code == 1){
                 $response = '<register-payment-response>
