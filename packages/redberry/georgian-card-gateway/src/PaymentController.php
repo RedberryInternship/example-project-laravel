@@ -17,16 +17,16 @@ class PaymentController extends Controller
                 $response  = 
                 '<payment-avail-response>
                     <result>
-                    <code>1</code>
-                    <desc>Successful</desc>
+                    <code>'.$result_code.'</code>
+                    <desc>OK</desc>
                     </result>
-                    <merchant-trx>3825180</merchant-trx>
+                    <merchant-trx>'.$request['trx_id'].'</merchant-trx>
                     <purchase>
                     <shortDesc>TID:3825180</shortDesc>
                     <longDesc>PIN:186611</longDesc>
                     <account-amount>
-                    <id>'.$request -> get('account_id').'</id>
-                    <amount>'.$request -> get('o_amount').'</amount>
+                    <id>'.$request['account_id'].'</id>
+                    <amount>'.$request['o_amount'].'</amount>
                     <currency>981</currency>
                     <exponent>2</exponent>
                     </account-amount>
@@ -40,19 +40,15 @@ class PaymentController extends Controller
                     </result>
                     </payment-avail-response>';
             }
-
             return Response($response);
         }elseif($param == 'register'){
             $trx_id                     =  $request['trx_id'];
             $order_id                   =  $request['o_order_id'];
             $amount                     =  $request['o_amount'] * 100;
-            $market_id                  =  $request['o_market_id'];
             $p_rrn                      =  $request['p_rrn'];
             $p_transmissionDateTime     =  $request['p_transmissionDateTime'];
             $signature                  =  $request['signature'];
             $p_authcode                 =  $request['p_authcode'];
-
-            $result_code = $request['result_code'];
 
             if($result_code == 1){
                 $response = '<register-payment-response>
