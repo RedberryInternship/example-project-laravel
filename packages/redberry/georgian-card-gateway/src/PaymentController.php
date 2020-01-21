@@ -42,7 +42,7 @@ class PaymentController extends Controller
             $signature                  =  $request['signature'];
             $p_authcode                 =  $request['p_authcode'];
             $result_code                =  $request['result_code'];
-
+            LOG::info($result_code);
             if($result_code == 1){
                 $response = '<register-payment-response>
                     <result>
