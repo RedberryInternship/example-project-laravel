@@ -10,6 +10,7 @@ class PaymentController extends Controller
 {
     public function getPayment(Request $request, $param)
     {
+	    Log::info($request -> all());
         $result_code = 1;
         if($param == 'avail-check'){
             if($result_code == 1){
