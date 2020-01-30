@@ -73,7 +73,7 @@ class PaymentController extends Controller
    	}
    	public function getSucceed(Request $request)
    	{
-   		Log::info('success : '.$request -> all());
+   		Log::info($request -> all());
    	}
 
     public function getTest()
