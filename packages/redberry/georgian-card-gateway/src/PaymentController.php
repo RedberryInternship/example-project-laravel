@@ -71,9 +71,9 @@ class PaymentController extends Controller
    	{
    		
    	}
-   	public function getSucceed()
+   	public function getSucceed(Request $request)
    	{
-   		
+   		Log::info($request);
    	}
 
     public function getTest()
