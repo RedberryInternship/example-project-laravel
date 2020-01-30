@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->string('phone_number');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('full_name');
             $table->string('email');
             $table->boolean('active')->default(false);
             $table->boolean('verified')->default(false);
@@ -35,7 +34,6 @@ class CreateUsersTable extends Migration
                 'role_id'            => 2,
                 'first_name'         => 'Admin',
                 'last_name'          => 'Espace',
-                'full_name'          => 'Admin Espace',
                 'phone_number'       => '111',
                 'email'              => 'admin@espace.ge',
                 'active'             =>  true,
@@ -46,7 +44,6 @@ class CreateUsersTable extends Migration
                 'role_id'            => 4,
                 'first_name'         => 'Payment',
                 'last_name'          => 'Espace',
-                'full_name'          => 'Payment Espace',
                 'phone_number'       => '222',
                 'email'              => 'payment@espace.ge',
                 'active'             =>  true,

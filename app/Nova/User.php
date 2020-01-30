@@ -29,7 +29,7 @@ class User extends Resource
      *
      * @var string
      */
-    public static $title = 'full_name';
+    public static $title = 'first_name';
 
 
     /**
@@ -40,6 +40,10 @@ class User extends Resource
     public static $search = [
         'id', 'first_name', 'last_name', 'email',
     ];
+
+    public function title() {
+        return $this -> first_name . ' ' . $this -> last_name;
+    }
 
     /**
      * Eager Loading.
@@ -78,10 +82,6 @@ class User extends Resource
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            // Text::make('full_name')
-            //     ->sortable()
-            //     ->exceptOnForms(),
-                
             Text::make('phone_number')
                 ->rules('required','string', 'min:9')
                 ->creationRules('unique:users,phone_number')
@@ -102,6 +102,8 @@ class User extends Resource
                 ->falseValue(0),
 
             BelongsToMany::make('User Car Model','car_models', 'App\Nova\CarModel'),
+
+            HasMany::make('User Charger', 'user_chargers', 'App\Nova\ChargerUser'),
             
             Password::make('Password')
                 ->onlyOnForms()

@@ -24,7 +24,6 @@
 										<th>Public</th>
 										<th>Active</th>
 										<th>Edit</th>
-										<th>Delete</th>
 									</tr>
 									@foreach($chargers as $charger)
 										<tr>
@@ -35,7 +34,6 @@
 											<td>{{ $charger -> public }}</td>
 											<td>{{ $charger -> active }}</td>
 											<td><a href="/business/charger-edit/{{ $charger -> id }}" class="edit-link"><i class="material-icons">edit</i></a></td>
-											<td><a href="/business/charger-delete" class="delete-link"><i class="material-icons">delete_forever</i></a></td>
 										</tr>
 									@endforeach
 								</table>

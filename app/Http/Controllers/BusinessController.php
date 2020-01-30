@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Charger;
+use App\Http\Resources\Charger as ChargerResource;
 
 class BusinessController extends Controller
 {
@@ -27,15 +28,6 @@ class BusinessController extends Controller
             'backgroundClassName' => 'login'
         ]);
     }
-    
-    public function getRegister(){
-        return view('business.register') -> with([
-            'tabTitle'            => 'რეგისტრაცია',
-            'activeMenuItem'      => 'register',
-            'backgroundClassName' => 'register'
-        ]);
-    }
-
     public function getForgotPassword()
     {
          return view('business.forgot-password') -> with([
@@ -48,8 +40,8 @@ class BusinessController extends Controller
     public function getChargers()
     {
         $user     = Auth::user();
-        //$chargers = Charger::OrderBy('id', 'desc') -> get();
-        $chargers = Charger::where('user_id', $user -> id) -> get();
+        $chargers = Charger::OrderBy('id', 'desc') -> get();
+        //$chargers = Charger::where('user_id', $user -> id) -> get();
         return view('business.chargers') -> with([
             'tabTitle'            => 'დამტენები',
             'activeMenuItem'      => 'chargers',
@@ -61,7 +53,14 @@ class BusinessController extends Controller
     public function getChargerEdit($charger_id)
     {
         $user    = Auth::user();
-        $charger = Charger::where('id', $charger_id) -> first();
+        //$charger = Charger::where('id', $charger_id) -> first();
+        $charger = new ChargerResource(Charger::where('id',$charger_id)->with([
+            'tags' , 
+            'connector_types', 
+            'charger_types',
+            'charging_prices',
+            'fast_charging_prices'
+        ]) -> first());
         return view('business.charger-edit')->with([
             'tabTitle'       => 'რედაქტირება',
             'activeMenuItem' => 'charger',

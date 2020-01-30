@@ -9,7 +9,7 @@
     <meta name="description" content="Materialize is a Material Design Admin Template,It's modern, responsive and based on Material Design by Google.">
     <meta name="keywords" content="materialize, admin template, dashboard template, flat admin template, responsive admin template, eCommerce dashboard, analytic dashboard">
     <meta name="author" content="ThemeSelect">
-    <title>Dashboard eCommerce | Materialize - Material Design Admin Template</title>
+    <title>E-space {{ isset($tabTitle) ? ' | ' . $tabTitle : NULL }}</title>
     <link rel="apple-touch-icon" href="../../../app-assets/images/favicon/apple-touch-icon-152x152.png">
     <link rel="shortcut icon" type="image/x-icon" href="../../../app-assets/images/favicon/favicon-32x32.png">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -112,7 +112,7 @@
 
     <footer class="page-footer footer footer-static footer-light navbar-border navbar-shadow">
         <div class="footer-copyright">
-            <div class="container"><span>&copy; 2019 <a href="http://themeforest.net/user/pixinvent/portfolio?ref=pixinvent" target="_blank">PIXINVENT</a> All rights reserved.</span><span class="right hide-on-small-only">Design and Developed by <a href="https://pixinvent.com/">PIXINVENT</a></span></div>
+            <div class="container"><span>&copy; 2020 <a href="https://redberry.ge/" target="_blank">Redberry</a> All rights reserved.</span><span class="right hide-on-small-only">Design and Developed by <a href="https://redberry.ge/">Redberry</a></span></div>
         </div>
     </footer>
 

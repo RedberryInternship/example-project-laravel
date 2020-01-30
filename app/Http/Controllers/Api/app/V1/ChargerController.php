@@ -17,11 +17,7 @@ class ChargerController extends Controller
             'charger_types',
             'charging_prices',
             'fast_charging_prices'
-            ]) -> get());
-    	// $chargers = Charger::OrderBy('id', 'desc') -> get();
-     //    return response() -> json([
-     //        'charger' => $chargerLibrary -> getChargerArray($chargers)
-     //    ], 200);
+        ]) -> get());
     }
 
     public function getSingleCharger(ChargerLibrary $chargerLibrary, $charger_id)
@@ -32,10 +28,6 @@ class ChargerController extends Controller
             'charger_types',
             'charging_prices',
             'fast_charging_prices'
-            ]) -> first());
-    	// $chargers = Charger::where('id', $charger_id) -> get();
-     //    return response() -> json([
-     //        'charger' => $chargerLibrary -> getChargerArray($chargers)
-     //    ], 200);
+        ]) -> first());
     }
 }

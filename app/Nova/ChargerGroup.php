@@ -7,7 +7,8 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Text;
-
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\BelongsToMany;
 
 class ChargerGroup extends Resource
 {
@@ -47,6 +48,7 @@ class ChargerGroup extends Resource
             Text::make('name')
                 ->sortable(),
             BelongsTo::make('User','user', 'App\Nova\User'),
+            BelongsToMany::make('Chargers','charger', 'App\Nova\Charger')
         ];
     }
 

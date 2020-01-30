@@ -20,7 +20,6 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'first_name',
         'last_name',
-        'full_name',
         'phone_number',
         'email',
         'active',
@@ -86,6 +85,11 @@ class User extends Authenticatable implements JWTSubject
     public function role()
     {
         return $this -> belongsTo('App\Role');
+    }
+
+    public function user_chargers()
+    {
+        return $this -> hasMany('App\ChargerUser');
     }
 
 }
