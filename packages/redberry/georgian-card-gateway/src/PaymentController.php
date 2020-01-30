@@ -10,7 +10,7 @@ class PaymentController extends Controller
 {
     public function getPayment(Request $request, $param)
     {
-	    //Log::info($request -> all());
+	    Log::info($request -> all());
 
         if($param == 'avail-check'){
             $response  = 
@@ -42,7 +42,7 @@ class PaymentController extends Controller
             $signature                  =  $request['signature'];
             $p_authcode                 =  $request['p_authcode'];
             $result_code                =  $request['result_code'];
-            // LOG::info($result_code);
+            LOG::info('result_code = '.$result_code);
             if($result_code == 1){
                 $response = '<register-payment-response>
                     <result>
@@ -73,7 +73,7 @@ class PaymentController extends Controller
    	}
    	public function getSucceed(Request $request)
    	{
-   		Log::info($request -> all());
+   		Log::info('success : '.$request -> all());
    	}
 
     public function getTest()
