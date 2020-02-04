@@ -44,7 +44,7 @@ class UserController extends Controller
     {
         return response()->json([
             'access_token'  => $token,
-            'user'          => $this->guard()->user(),
+            'user'          => $this->guard()->user()->load('user_card','user_cars'),
             'token_type'    => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL()
         ]);

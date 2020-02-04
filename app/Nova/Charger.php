@@ -127,7 +127,8 @@ class Charger extends Resource
             // })-> onlyOnIndex(),
 
             BelongsToMany::make('Charger Tags','Tags', 'App\Nova\Tag'),
-            BelongsTo::make('user')
+            BelongsTo::make('user'),
+            BelongsTo::make('charger_group')
         ];
 
         $charger_type_id = null;

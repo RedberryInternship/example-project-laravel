@@ -48,7 +48,7 @@ class ChargerGroup extends Resource
             Text::make('name')
                 ->sortable(),
             BelongsTo::make('User','user', 'App\Nova\User'),
-            BelongsToMany::make('Chargers','charger', 'App\Nova\Charger')
+            HasMany::make('Chargers','chargers', 'App\Nova\Charger')
         ];
     }
 

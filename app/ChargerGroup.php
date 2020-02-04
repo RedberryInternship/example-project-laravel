@@ -16,8 +16,8 @@ class ChargerGroup extends Model
         return $this -> belongsTo('App\User');
     }
 
-    public function charger()
+    public function chargers()
     {
-    	return $this -> belongsToMany('App\Charger');
+    	return $this -> hasMany('App\Charger');
     }
 }

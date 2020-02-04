@@ -4,8 +4,50 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e24a1d91fc1cec7ef9bb40969485141a",
+    "content-hash": "7ce7000306037a303c888755e501622e",
     "packages": [
+        {
+            "name": "arku/nova-multiselect",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/arku31/NovaMultiSelect.git",
+                "reference": "1908fffb6138ae75b2ce631f0d459cad86f4a695"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/arku31/NovaMultiSelect/zipball/1908fffb6138ae75b2ce631f0d459cad86f4a695",
+                "reference": "1908fffb6138ae75b2ce631f0d459cad86f4a695",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Nova\\Multiselect\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nova\\Multiselect\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova Multiselect Implementation.",
+            "keywords": [
+                "laravel",
+                "multiselect",
+                "nova"
+            ],
+            "time": "2019-10-06T15:32:28+00:00"
+        },
         {
             "name": "aws/aws-sdk-php",
             "version": "3.133.6",
@@ -7407,6 +7449,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "arku/nova-multiselect": 20,
         "rackspace/php-opencloud": 20,
         "tymon/jwt-auth": 20
     },

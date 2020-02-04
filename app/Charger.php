@@ -60,8 +60,14 @@ class Charger extends Model
     {
         return $this -> hasMany('App\ChargingPrice');
     }
+
     public function fast_charging_prices()
     {
         return $this -> hasMany('App\FastChargingPrice');
+    }
+
+    public function charger_group()
+    {
+        return $this -> belongsTo('App\ChargerGroup');
     }
 }
