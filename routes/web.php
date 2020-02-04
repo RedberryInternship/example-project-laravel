@@ -14,6 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/geo-ip', function (){
+    return view('geo-ip');
+});
 
 Route::group(['prefix' => 'business'], function(){
     Route::get('/', 'BusinessController@getIndex');
