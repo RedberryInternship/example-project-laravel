@@ -70,4 +70,24 @@ class Charger extends Model
     {
         return $this -> belongsTo('App\ChargerGroup');
     }
+
+    public function scopeFilterBy($query, $param, $value)
+    {
+        if (isset($param) && $param && isset($value) && $value)
+        {
+            if (is_array($value))
+            {
+                if ($value[0])
+                {
+                    $query = $query -> whereIn($param, $value);
+                }
+            }
+            else
+            {
+                $query = $query -> where($param, $value);
+            }
+        }
+
+        return $query;
+    }
 }
