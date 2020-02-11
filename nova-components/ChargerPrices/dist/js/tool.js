@@ -169,7 +169,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n.charger-filters {\n  width: 100%;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  margin-bottom: 3rem;\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n}\n.charger-filters .charger-filter select,\n  .charger-filters .charger-filter button {\n    width: 100%;\n}\n.charger-filters .charger-filter.charger-filter-input {\n    min-width: 30%;\n}\n.chargers-header {\n  width: 100%;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n}\n.chargers-header .toggle-checkboxes-text {\n    top: 1px;\n    margin-left: .5rem;\n    position: relative;\n}\n.charger-items {\n  margin-bottom: 2rem;\n}\n.charger-items .charger-item {\n    background: white;\n    margin-bottom: 1rem;\n    padding: 1rem 1rem 0;\n}\n.charger-items .charger-item .connector-types {\n      width: 100%;\n      display: -webkit-box;\n      display: -ms-flexbox;\n      display: flex;\n      -ms-flex-wrap: wrap;\n          flex-wrap: wrap;\n      -webkit-box-orient: horizontal;\n      -webkit-box-direction: normal;\n          -ms-flex-direction: row;\n              flex-direction: row;\n}\n.charger-items .charger-item .connector-types .connector-type {\n        -webkit-box-flex: 45%;\n            -ms-flex: 45%;\n                flex: 45%;\n        margin-right: 10%;\n        padding: 1rem 1rem 1rem 0;\n}\n.charger-items .charger-item .connector-types .connector-type input {\n          margin-right: 1rem;\n}\n.charger-items .charger-item .connector-types .connector-type label {\n          cursor: pointer;\n}\n.charger-items .charger-item .connector-types .connector-type:nth-child(2n) {\n          margin-right: 0;\n}\n", ""]);
+exports.push([module.i, "", ""]);
 
 // exports
 
@@ -632,120 +632,108 @@ module.exports = function normalizeComponent (
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Filters__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Filters___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Filters__);
 //
 //
 //
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        Filters: __WEBPACK_IMPORTED_MODULE_0__Filters___default.a
+    },
     data: function data() {
-        return {
-            groups: {},
-            chargers: {},
-            activeGroup: 0
-        };
-    },
-    mounted: function mounted() {
-        this.getGroups();
-    },
-
-    methods: {
-        getGroups: function getGroups() {
-            var _this = this;
-
-            axios.get('/nova-vendor/charger-prices/charger-groups').then(function (response) {
-                _this.groups = response.data.groups;
-            });
-        },
-        filterChargers: function filterChargers() {
-            var _this2 = this;
-
-            axios({
-                method: 'get',
-                url: '/nova-vendor/charger-prices/chargers',
-                params: {
-                    group: this.activeGroup
-                }
-            }).then(function (response) {
-                _this2.changeConnectorTypesActiveStatus(response.data.chargers, false);
-
-                _this2.chargers = response.data.chargers;
-            });
-        },
-        toggleAllConnectorTypes: function toggleAllConnectorTypes() {
-            this.changeConnectorTypesActiveStatus(this.chargers);
-        },
-        changeConnectorTypesActiveStatus: function changeConnectorTypesActiveStatus(chargers) {
-            var val = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-
-            chargers.forEach(function (charger) {
-                charger.connector_types.forEach(function (connectorType) {
-                    connectorType.activeInput = val != undefined ? val : !connectorType.activeInput;
-                });
-            });
-        },
-        continueWithSelectedChargerTypes: function continueWithSelectedChargerTypes() {
-            console.log(this.chargers);
-        }
+        return {};
     }
 });
 
 /***/ }),
 /* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [_c("filters")], 1)
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-68ff5483", module.exports)
+  }
+}
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 12 */,
+/* 13 */,
+/* 14 */,
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(17)
+}
+var normalizeComponent = __webpack_require__(8)
+/* script */
+var __vue_script__ = __webpack_require__(19)
+/* template */
+var __vue_template__ = __webpack_require__(16)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/Filters.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-b9055040", Component.options)
+  } else {
+    hotAPI.reload("data-v-b9055040", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -967,15 +955,167 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-68ff5483", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-b9055040", module.exports)
   }
 }
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
 
-// removed by extract-text-webpack-plugin
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(18);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(6)("321fdaf1", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-b9055040\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/sass-loader/lib/loader.js!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Filters.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-b9055040\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/sass-loader/lib/loader.js!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Filters.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(5)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.charger-filters {\n  width: 100%;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  margin-bottom: 3rem;\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n}\n.charger-filters .charger-filter select,\n  .charger-filters .charger-filter button {\n    width: 100%;\n}\n.charger-filters .charger-filter.charger-filter-input {\n    min-width: 30%;\n}\n.chargers-header {\n  width: 100%;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  text-align: center;\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n}\n.chargers-header .toggle-checkboxes-text {\n    top: 1px;\n    margin-left: .5rem;\n    position: relative;\n}\n.charger-items {\n  margin-bottom: 2rem;\n}\n.charger-items .charger-item {\n    background: white;\n    margin-bottom: 1rem;\n    padding: 1rem 1rem 0;\n}\n.charger-items .charger-item .connector-types {\n      width: 100%;\n      display: -webkit-box;\n      display: -ms-flexbox;\n      display: flex;\n      -ms-flex-wrap: wrap;\n          flex-wrap: wrap;\n      -webkit-box-orient: horizontal;\n      -webkit-box-direction: normal;\n          -ms-flex-direction: row;\n              flex-direction: row;\n}\n.charger-items .charger-item .connector-types .connector-type {\n        -webkit-box-flex: 45%;\n            -ms-flex: 45%;\n                flex: 45%;\n        margin-right: 10%;\n        padding: 1rem 1rem 1rem 0;\n}\n.charger-items .charger-item .connector-types .connector-type input {\n          margin-right: 1rem;\n}\n.charger-items .charger-item .connector-types .connector-type label {\n          cursor: pointer;\n}\n.charger-items .charger-item .connector-types .connector-type:nth-child(2n) {\n          margin-right: 0;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            groups: {},
+            chargers: {},
+            activeGroup: 0
+        };
+    },
+    mounted: function mounted() {
+        this.getGroups();
+    },
+
+    methods: {
+        getGroups: function getGroups() {
+            var _this = this;
+
+            axios.get('/nova-vendor/charger-prices/charger-groups').then(function (response) {
+                _this.groups = response.data.groups;
+            });
+        },
+        filterChargers: function filterChargers() {
+            var _this2 = this;
+
+            axios({
+                method: 'get',
+                url: '/nova-vendor/charger-prices/chargers',
+                params: {
+                    group: this.activeGroup
+                }
+            }).then(function (response) {
+                _this2.changeConnectorTypesActiveStatus(response.data.chargers, false);
+
+                _this2.chargers = response.data.chargers;
+            });
+        },
+        toggleAllConnectorTypes: function toggleAllConnectorTypes() {
+            this.changeConnectorTypesActiveStatus(this.chargers);
+        },
+        changeConnectorTypesActiveStatus: function changeConnectorTypesActiveStatus(chargers) {
+            var val = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+
+            chargers.forEach(function (charger) {
+                charger.connector_types.forEach(function (connectorType) {
+                    connectorType.activeInput = val != undefined ? val : !connectorType.activeInput;
+                });
+            });
+        },
+        continueWithSelectedChargerTypes: function continueWithSelectedChargerTypes() {
+            console.log(this.chargers);
+        }
+    }
+});
 
 /***/ })
 /******/ ]);
