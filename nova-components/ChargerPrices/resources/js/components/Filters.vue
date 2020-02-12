@@ -100,7 +100,7 @@
 	            });
 	        },
 	        continueWithSelectedChargerTypes() {
-	            console.log(this.chargers);
+	            this.$emit('goToActionsPage', this.chargers);
 	        }
 	    }
 	}
@@ -173,4 +173,3 @@
         }
     }
 </style>
-
