@@ -149,41 +149,6 @@ class UserController extends Controller
     }
 
 
-    public function postVerifyCodeForEditPhone(Request $request)
-    {
-        $json_status  = 'Not found';
-        $status       = 401;
-        
-        
-        $temp = TempSmsCode::where([
-            'phone_number' => $request -> get('phone_number'), 
-            'code'         => $request -> get('code')
-        ]) -> first();
-
-        
-        if($temp)
-        {   
-            $totalDuration = Carbon::now()->diffInMinutes($temp -> updated_at);
-            if($totalDuration <= 3)
-            {
-                $temp -> status = 1;
-                $temp -> save();
-
-                $json_status = 'Verified';
-                $status      = 200;
-            }else{
-                $json_status = "SMS Code Expired";
-                $status      = 440;
-            }
-        }
-        
-
-        return response() -> json([
-            'json_status'  => $json_status,
-            'status'       => $status,
-            'phone_number' => $request -> get('phone_number')
-        ], $status);
-    }
 
     public function register(Request $request)
     {

@@ -21,7 +21,6 @@ Route::group(['prefix' => 'app/V1'], function () {
 	Route::post('/send-sms-code','Api\app\V1\UserController@postSendSmsCode');
 	Route::post('/verify-code','Api\app\V1\UserController@postVerifyCode');
 	Route::post('/verify-code-for-password-recovery','Api\app\V1\UserController@postVerifyCodeForPasswordRecovery');
-	Route::post('/verify-code-for-edit-phone','Api\app\V1\UserController@postVerifyCodeForEditPhone');
 	Route::post('/register', 'Api\app\V1\UserController@register');
 	Route::post('/reset-password', 'Api\app\V1\UserController@postResetPassword');
 	Route::group(['middleware' => ['jwt.verify']], function() {
