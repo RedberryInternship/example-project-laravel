@@ -228,6 +228,7 @@ class UserController extends Controller
 
         return response() -> json([
             'json_status' => $json_status,
+            'status_code' => $status
         ], $status);
     }
 
