@@ -216,7 +216,7 @@ class UserController extends Controller
         $json_status = "User Not Found";
         $status      = 401;
         $user        = User::where('phone_number', $request -> phone_number) 
-                                where('password',Hash::make('old_password')) 
+                                -> where('password',Hash::make('old_password')) 
                                 -> first();
         if($user)
         {
