@@ -14,6 +14,7 @@ use App\TempSmsCode;
 use Carbon\Carbon;
 use App\CarModel;
 use App\UserCarModel;
+use Illuminate\Support\Facades\Log;
 
 use Schema;
 
@@ -215,10 +216,10 @@ class UserController extends Controller
     {   
         $json_status = "User Not Found";
         $status      = 401;
-        $user        = User::where('phone_number', $request -> phone_number) 
-                                -> where('password',Hash::make($request -> old_password)) 
-                                -> first();
-        if($user)
+
+        $user        = User::where('phone_number', $request -> phone_number) -> first();
+        
+        if($user && Hash::check($request -> old_password, $user -> password))
         {
             $user -> password = Hash::make($request -> new_password);
             $user -> save();
