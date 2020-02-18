@@ -2,6 +2,8 @@
 
 use App\Charger;
 use App\ChargerGroup;
+use App\ChargerConnectorType;
+use Redberry\Library\ChargerPrices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,5 +35,39 @@ Route::get('/chargers', function (Request $request, Charger $charger) {
 
 	return [
 		'chargers' => $chargers
+	];
+});
+
+Route::post('/attach', function (Request $request, ChargerConnectorType $chargerConnectorType, ChargerPrices $chargerPrices) {
+	$price 	  = $request -> get('price');
+	$minPrice = $request -> get('minPrice');
+	$maxPrice = $request -> get('maxPrice');
+	$chargers = $request -> get('chargers');
+
+	$connectorTypes = $chargerPrices -> getChargersConnectorTypes();
+
+	if (isset($price) && $price != '')
+	{
+		// 
+	}
+
+	$chargerConnectorTypes = $chargerConnectorType -> whereIn('id', $connectorTypes);
+	
+	if (isset($minPrice) && $minPrice != '')
+	{
+		$chargerConnectorTypes -> update([
+			'min_price' => $minPrice
+		]);
+	}
+	
+	if (isset($maxPrice) && $maxPrice != '')
+	{
+		$chargerConnectorTypes -> update([
+			'max_price' => $maxPrice
+		]);
+	}
+
+	return [
+		
 	];
 });

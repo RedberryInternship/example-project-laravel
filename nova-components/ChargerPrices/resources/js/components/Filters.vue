@@ -100,8 +100,24 @@
 	            });
 	        },
 	        continueWithSelectedChargerTypes() {
-	            this.$emit('goToActionsPage', this.chargers);
-	        }
+                let chosenChargers = this.getChosenChargers();
+
+	            this.$emit('goToActionsPage', chosenChargers);
+            },
+            
+            getChosenChargers() {
+                return this.chargers.filter(charger => {
+                    let hasChosenConnector = false;
+
+                    charger.connector_types.forEach(connector => {
+                        if ( ! hasChosenConnector) {
+                            hasChosenConnector = connector.activeInput;
+                        }
+                    });
+
+                    return hasChosenConnector;
+                });
+            }
 	    }
 	}
 </script>

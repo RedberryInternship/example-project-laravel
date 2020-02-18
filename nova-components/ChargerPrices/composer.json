@@ -11,7 +11,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Redberry\\ChargerPrices\\": "src/"
+            "Redberry\\ChargerPrices\\": "src/",
+            "Redberry\\Library\\ChargerPrices\\": "src/Library/"
         }
     },
     "extra": {
