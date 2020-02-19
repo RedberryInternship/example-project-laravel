@@ -71,8 +71,13 @@ class Chargers
         echo '<pre>';
 
         echo $response -> getStatusCode(); // 200
+        echo '<br>';
+
         echo $response -> getHeaderLine('content-type'); // 'application/json; charset=utf8'
+        echo '<br>';
         
         print_r($response -> getBody());
+
+        print_r($response -> getBody() -> getContents());
     }
 }
