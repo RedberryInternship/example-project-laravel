@@ -28,5 +28,6 @@ Route::group(['prefix' => 'business'], function(){
 });
 
 Route::group(['prefix' => 'test-chargers'], function(){
-    Route::get('/get', 'TestChargers\AllChargersController@getIndex');
+    Route::get('/get/{chargerID?}', 'TestChargers\AllChargersController@getIndex');
+    Route::get('/activate/{chargerID}', 'TestChargers\ActivateChargerController@getIndex');
 });

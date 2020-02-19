@@ -6,13 +6,55 @@ use \GuzzleHttp\Client;
 
 class Chargers
 {
+    protected $protocol = 'http';
+    protected $ip       = '13.92.63.164';
+    protected $url      = '';
+
+    protected $guzzleClient;
+
+    public function __construct(Client $guzzleClient)
+    {
+        $this -> url = $this -> protocol . '://' . $this -> ip;
+
+        $this -> guzzleClient = $guzzleClient;
+    }
+
     /**
      * Get All Active Chargers from Misha's Service.
+     *
+     * @param $chargerID = null
      */
-    public function get()
+    public function get($chargerID = null)
     {
-        $client   = new Client();
-        $response = $client -> request('GET', 'http://13.92.63.164/es-services/mobile/ws/chargers');
+        $serviceUrl = $this -> url . '/es-services/mobile/ws/chargers';
+        if (isset($chargerID) && $chargerID)
+        {
+            $serviceUrl = $this -> url . '/es-services/mobile/ws/charger/info/' . $chargerID;
+        }
+
+        $this -> sendRequest($serviceUrl);
+    }
+
+    /**
+     * Activate Charger.
+     * 
+     * @param $chargerID
+     */
+    public function activate($chargerID)
+    {
+        $serviceUrl = $this -> url . ':12801/api/simulator/cp/add/'. $chargerID;
+
+        $this -> sendRequest($serviceUrl);
+    }
+
+    /**
+     * Send GuzzleHttp Request.
+     * 
+     * @param $serviceUrl
+     */
+    protected function sendRequest($serviceUrl)
+    {
+        $response = $this -> guzzleClient -> request('GET', $serviceUrl);
 
         echo '<pre>';
 
