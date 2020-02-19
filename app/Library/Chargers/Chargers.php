@@ -48,6 +48,18 @@ class Chargers
     }
 
     /**
+     * CP (I have no idea what it means yet) Charger.
+     * 
+     * @param $chargerID
+     */
+    public function cp($chargerID)
+    {
+        $serviceUrl = $this -> url . ':12801/api/simulator/cp/type/'. $chargerID . '/SIMULATOR_KEBA';
+
+        $this -> sendRequest($serviceUrl);
+    }
+
+    /**
      * Send GuzzleHttp Request.
      * 
      * @param $serviceUrl
