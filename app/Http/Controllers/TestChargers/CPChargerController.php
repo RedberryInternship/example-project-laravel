@@ -6,10 +6,10 @@ use App\Library\Chargers\Chargers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ActivateChargerController extends Controller
+class CPChargerController extends Controller
 {
     public function getIndex(Chargers $chargers, $chargerID)
     {
-        $chargers -> activate($chargerID);
+        $chargers -> cp($chargerID);
     }
 }
