@@ -11,7 +11,11 @@ class LocationController extends Controller
 	public function getLocation(Request $request)
 	{
 	   	$geoip = new GeoIP();
-    	$city = $geoip->getCity();	
-    	return response() -> json(['city' => $city]);
+    	$latitude  = $geoip->getLatitude();	
+    	$longitude = $geoip->getLongitude();	
+    	return response() -> json([
+    		'Latitude'  => $latitude,
+    		'Longitude' => $longitude
+    	]);
 	}
 }
