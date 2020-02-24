@@ -15,6 +15,11 @@ class PartnerController extends Controller
     {
         $partners = Partner::all();
 
+        foreach ($partners as &$partner)
+        {
+            $partner -> image = asset('/storage/' . $partner -> image);
+        }
+
         return response() -> json([
             'partners' => $partners
         ]);
