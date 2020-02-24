@@ -43,4 +43,5 @@ Route::group(['prefix' => 'app/V1'], function () {
 	Route::get('/get-models-and-marks', 'Api\app\V1\GetModelsAndMarksController@getModelsAndMarks');
 	Route::get('/phone-codes' , 'Api\app\V1\PhoneCodesController@getPhoneCodes');
 	Route::get('/geo-ip', 'Api\app\V1\LocationController@getLocation');
+	Route::get('/faq', 'Api\app\V1\FAQController');
 });	
