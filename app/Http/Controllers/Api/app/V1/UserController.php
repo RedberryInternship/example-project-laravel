@@ -344,7 +344,7 @@ class UserController extends Controller
         return response() -> json(['updated' => $checker]);
     }
 
-    public function postMe()
+    public function getMe()
     {
         $user = auth() -> user();
         $user -> load('car_models');
