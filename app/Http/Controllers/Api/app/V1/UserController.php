@@ -72,6 +72,7 @@ class UserController extends Controller
             'json_status' => $json_status
         ]);
     }
+
     public function postVerifyCode(Request $request)
     {
         $json_status  = 'Not found';
@@ -107,7 +108,6 @@ class UserController extends Controller
             'phone_number' => $request -> get('phone_number')
         ], $status);
     }
-
 
     public function postVerifyCodeForPasswordRecovery(Request $request)
     {
@@ -320,5 +320,9 @@ class UserController extends Controller
         return response() -> json(['updated' => $checker]);
     }
 
+    public function postMe()
+    {
+        return response() -> json(auth() -> user());
+    }
 }
 

@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::group(['prefix' => 'app/V1'], function () {
 	Route::post('/login', 'Api\app\V1\UserController@authenticate');
 	Route::post('/send-sms-code','Api\app\V1\UserController@postSendSmsCode');
@@ -23,6 +24,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 	Route::post('/verify-code-for-password-recovery','Api\app\V1\UserController@postVerifyCodeForPasswordRecovery');
 	Route::post('/register', 'Api\app\V1\UserController@register');
 	Route::post('/reset-password', 'Api\app\V1\UserController@postResetPassword');
+
 	Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::post('/add-user-car', 'Api\app\V1\UserController@postAddUserCar');
 		Route::get('/get-user-cars' , 'Api\app\V1\UserController@getUserCars');
@@ -31,7 +33,10 @@ Route::group(['prefix' => 'app/V1'], function () {
 		Route::post('/remove-favorite', 'Api\app\V1\FavoriteController@postRemoveFavotite');
 		Route::get('/user-favorites', 'Api\app\V1\FavoriteController@getUserFavorites');
 		Route::post('/update-user-info','Api\app\V1\UserController@postUpdateUserInfo');
+		Route::post('/update-user-info','Api\app\V1\UserController@postUpdateUserInfo');
+		Route::post('/me', 'Api\app\V1\UserController@postMe');
 	});
+
 	Route::get('/charger/{charger_id}', 'Api\app\V1\ChargerController@getSingleCharger');
 	Route::get('/chargers', 'Api\app\V1\ChargerController@getChargers');
 	Route::get('/get-models-and-marks', 'Api\app\V1\GetModelsAndMarksController@getModelsAndMarks');
