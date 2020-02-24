@@ -346,7 +346,10 @@ class UserController extends Controller
 
     public function postMe()
     {
-        return response() -> json(auth() -> user());
+        $user = auth() -> user();
+        $user -> load('car_models');
+
+        return response() -> json($user);
     }
 }
 
