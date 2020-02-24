@@ -13,7 +13,7 @@ class FAQController extends Controller
      */
     public function __invoke()
     {
-        $faq = FAQ::get();
+        $faq = FAQ::all();
 
         return response() -> json([
             'faq' => $faq
