@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\Api\app\V1;
 
-use App\FAQ;
+use App\Partner;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class FAQController extends Controller
+class PartnerController extends Controller
 {
     /**
-     * Get FAQ.
+     * Get Partners.
      */
     public function __invoke()
     {
-        $faq = FAQ::all();
+        $partners = Partner::all();
 
         return response() -> json([
-            'faq' => $faq
+            'partners' => $partners
         ]);
     }
 }
