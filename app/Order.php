@@ -67,4 +67,11 @@ class Order extends Model
             return $q -> confirmed();
         }]);
     }
+
+    public function scopeConfirmedPaymentsWithUserCards($query)
+    {
+        return $query -> with(['payments' => function($q) {
+            return $q -> confirmed() -> withUserCards();
+        }]);
+    }
 }

@@ -34,4 +34,9 @@ class Payment extends Model
     {
         return $query -> where('confirmed', 1);
     }
+
+    public function scopeWithUserCards($query)
+    {
+        return $query -> with('user_card');
+    }
 }

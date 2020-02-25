@@ -360,7 +360,7 @@ class UserController extends Controller
         $orders = $order -> where('user_id', $user -> id)
                          -> with('charger')
                          -> confirmed()
-                         -> confirmedPayments()
+                         -> confirmedPaymentsWithUserCards()
                          -> get();
 
         return response() -> json($orders);
