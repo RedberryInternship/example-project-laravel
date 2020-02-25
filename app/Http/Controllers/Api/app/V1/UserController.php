@@ -371,11 +371,14 @@ class UserController extends Controller
 
     public function getUserChargers($quantity = 3)
     {
-        $user   = auth('api') -> user();
+        $user     = auth('api') -> user();
 
         $chargers = Charger::whereHas('orders', function($query) use ($user) {
             return $query -> where('user_id', $user -> id);
-        }) -> take($quantity) -> get();
+        })
+        -> orderBy('id', 'DESC')
+        -> take($quantity)
+        -> get();
 
         return response() -> json([
             'chargers' => $chargers
