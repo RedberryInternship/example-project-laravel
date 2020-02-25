@@ -358,6 +358,7 @@ class UserController extends Controller
         $user   = auth('api') -> user();
 
         $orders = $order -> where('user_id', $user -> id)
+                         -> with('charger')
                          -> confirmed()
                          -> confirmedPayments()
                          -> get();
