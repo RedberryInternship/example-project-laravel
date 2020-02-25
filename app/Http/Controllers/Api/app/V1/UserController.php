@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\app\V1;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Order;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -346,10 +347,22 @@ class UserController extends Controller
 
     public function getMe()
     {
-        $user = auth() -> user();
+        $user = auth('api') -> user();
         $user -> load('car_models');
 
         return response() -> json($user);
+    }
+
+    public function getOrders(Order $order)
+    {
+        $user   = auth('api') -> user();
+
+        $orders = $order -> where('user_id', $user -> id)
+                         -> confirmed()
+                         -> confirmedPayments()
+                         -> get();
+
+        return response() -> json($orders);
     }
 }
 
