@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Spatie\Translatable\HasTranslations;
+use Spatie\NovaTranslatable\Translatable;
 
 class FAQ extends Resource
 {
@@ -46,13 +48,19 @@ class FAQ extends Resource
             ID::make()
                 -> sortable(),
 
-            Textarea::make('question')
-                -> alwaysShow()
-                -> showOnIndex(),
+            Translatable::make([
+                Textarea::make('question')
+                    -> alwaysShow()
+                    -> showOnIndex()
+                    -> rules('required')
+            ])->locales(['en', 'ru', 'ka']),
 
-            Textarea::make('answer')
-                -> alwaysShow()
-                -> showOnIndex(),
+            Translatable::make([
+                Textarea::make('answer')
+                    -> alwaysShow()
+                    -> showOnIndex()
+                    -> rules('required')
+            ])->locales(['en', 'ru', 'ka']),
         ];
     }
 
