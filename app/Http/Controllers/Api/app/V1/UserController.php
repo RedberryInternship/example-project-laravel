@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\app\V1;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Order;
+use App\Charger;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -363,7 +364,22 @@ class UserController extends Controller
                          -> confirmedPaymentsWithUserCards()
                          -> get();
 
-        return response() -> json($orders);
+        return response() -> json([
+            'orders' => $orders
+        ]);
+    }
+
+    public function getUserChargers($quantity = 3)
+    {
+        $user   = auth('api') -> user();
+
+        $chargers = Charger::whereHas('orders', function($query) use ($user) {
+            return $query -> where('user_id', $user -> id);
+        }) -> take($quantity) -> get();
+
+        return response() -> json([
+            'chargers' => $chargers
+        ]);
     }
 }
 

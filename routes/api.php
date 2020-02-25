@@ -34,6 +34,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 		Route::post('/remove-favorite', 'Api\app\V1\FavoriteController@postRemoveFavotite');
 		Route::get('/user-favorites', 'Api\app\V1\FavoriteController@getUserFavorites');
 		Route::get('/user-orders', 'Api\app\V1\UserController@getOrders');
+		Route::get('/user-chargers/{quantity?}', 'Api\app\V1\UserController@getUserChargers');
 		Route::post('/update-user-info','Api\app\V1\UserController@postUpdateUserInfo');
 		Route::post('/update-user-info','Api\app\V1\UserController@postUpdateUserInfo');
 		Route::get('/me', 'Api\app\V1\UserController@getMe');
