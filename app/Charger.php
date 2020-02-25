@@ -70,4 +70,9 @@ class Charger extends Model
     {
         return $this -> belongsTo('App\ChargerGroup');
     }
+
+    public function orders()
+    {
+        return $this -> hasMany('App\Order');
+    }
 }
