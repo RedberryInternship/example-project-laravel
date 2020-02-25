@@ -50,4 +50,21 @@ class Order extends Model
     {
     	return $this -> belongsTo('App\ChargingType');
     }
+
+    public function payments()
+    {
+        return $this -> hasMany('App\Payment');
+    }
+
+    public function scopeConfirmed($query)
+    {
+        return $query -> where('confirmed', 1);
+    }
+
+    public function scopeConfirmedPayments($query)
+    {
+        return $query -> with(['payments' => function($q) {
+            return $q -> confirmed();
+        }]);
+    }
 }

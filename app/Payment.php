@@ -29,4 +29,9 @@ class Payment extends Model
     {
     	return $this -> belongsTo('App\UserCard');
     }
+
+    public function scopeConfirmed($query)
+    {
+        return $query -> where('confirmed', 1);
+    }
 }
