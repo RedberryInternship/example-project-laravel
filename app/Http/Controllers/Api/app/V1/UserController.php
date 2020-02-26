@@ -47,7 +47,7 @@ class UserController extends Controller
     {
         return response()->json([
             'access_token'  => $token,
-            'user'          => $this->guard()->user()->load('user_card','user_cars'),
+            'user'          => $this->guard()->user()->load('user_card','user_cars','car_models'),
             'token_type'    => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL()
         ]);
@@ -349,7 +349,7 @@ class UserController extends Controller
     public function getMe()
     {
         $user = auth('api') -> user();
-        $user -> load('car_models');
+        $user -> load('user_card','user_cars','car_models');
 
         return response() -> json($user);
     }
