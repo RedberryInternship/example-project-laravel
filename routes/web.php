@@ -32,3 +32,5 @@ Route::group(['prefix' => 'test-chargers'], function(){
     Route::get('/activate/{chargerID}', 'TestChargers\ActivateChargerController@getIndex');
     Route::get('/cp/{chargerID}', 'TestChargers\CPChargerController@getIndex');
 });
+
+Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
