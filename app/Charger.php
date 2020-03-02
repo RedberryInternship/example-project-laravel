@@ -75,4 +75,41 @@ class Charger extends Model
     {
         return $this -> hasMany('App\Order');
     }
+
+    public function scopeActive($query)
+    {
+        return $query -> where('active', 1);
+    }
+
+    public function scopeFilterByFreeOrNot($query, $free)
+    {
+        return $query;
+    }
+
+    public function scopeFilterByType($query, $type)
+    {
+        $connectorTypeNames = [];
+        if ($type == 'level2')
+        {
+            $connectorTypeNames = ['Type 2', 'Combo 2'];
+        }
+        else if ($type == 'fast')
+        {
+            $connectorTypeNames = ['CHadeMO'];
+        }
+
+        if (empty($connectorTypeNames))
+        {
+            return $query;
+        }
+
+        return $query -> whereHas('connector_types', function($query) use($connectorTypeNames) {
+            return $query -> whereIn('connector_types.name', $connectorTypeNames);
+        });
+    }
+
+    public function scopeFilterByPublicOrNot($query, $public)
+    {
+        return $query -> where('public', $public);
+    }
 }
