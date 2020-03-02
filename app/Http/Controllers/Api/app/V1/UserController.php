@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\Api\app\V1;
 
-use App\Http\Controllers\Controller;
+use Twilio;
+use JWTAuth;
 use App\User;
 use App\Order;
 use App\Charger;
+use App\CarModel;
+use App\TempSmsCode;
+use App\UserCarModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\TempSmsCode;
-use Carbon\Carbon;
-use App\CarModel;
-use App\UserCarModel;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+
 
 use Schema;
 
@@ -65,12 +67,17 @@ class UserController extends Controller
             $temp -> code         = $rand;
             $temp -> updated_at   = Carbon::now();
             $temp -> save();
-        }else{
+        }
+        else
+        {
             $temp = TempSmsCode::create([
                 'phone_number' => $request -> get('phone_number'),
                 'code'         => $rand
             ]);
         }
+
+        Twilio::message('+995' . $request -> get('phone_number'), $rand);
+
         return response() -> json([
             'json_status' => $json_status
         ]);
@@ -300,7 +307,7 @@ class UserController extends Controller
     }
 
     public function postDeleteUserCar(Request $request)
-    {   
+    {
         $json_status = 'Not Deleted';
         $status      = 404;
         $user = auth('api') -> user();
@@ -384,5 +391,9 @@ class UserController extends Controller
             'chargers' => $chargers
         ]);
     }
-}
 
+    public function testTwilio()
+    {
+        Twilio::message('+995598980526', 'Hello from twilio');
+    }
+}
