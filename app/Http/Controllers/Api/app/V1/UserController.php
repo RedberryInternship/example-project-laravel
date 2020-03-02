@@ -76,7 +76,7 @@ class UserController extends Controller
             ]);
         }
 
-        Twilio::message('+995' . $request -> get('phone_number'), $rand);
+        Twilio::message($request -> get('phone_number'), $rand);
 
         return response() -> json([
             'json_status' => $json_status
