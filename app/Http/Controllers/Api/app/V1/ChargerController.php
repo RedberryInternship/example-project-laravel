@@ -39,6 +39,11 @@ class ChargerController extends Controller
         {
             $charger = $charger -> filterByBusiness($filters['businessID']);
         }
+
+        if (isset($filters) && isset($filters['text']))
+        {
+            $charger = $charger -> filterByText($filters['text']);
+        }
             
         return new ChargerCollection(
             $charger
