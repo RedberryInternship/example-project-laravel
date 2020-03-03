@@ -118,6 +118,16 @@ class Charger extends Model
         return $query -> where('user_id', $businessID);
     }
 
+    public function scopeFilterByText($query, $text)
+    {
+        return $query -> where(function($q) use ($text) {
+            return $q
+                -> where('location->en', 'like', '%' . $text . '%')
+                -> orWhere('location->ka', 'like', '%' . $text . '%')
+                -> orWhere('location->ru', 'like', '%' . $text . '%');
+        });
+    }
+
     public function scopeWithAllAttributes($query)
     {
         return $query -> with([
