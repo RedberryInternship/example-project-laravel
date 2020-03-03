@@ -34,6 +34,11 @@ class ChargerController extends Controller
         {
             $charger = $charger -> filterByPublicOrNot($filters['public']);
         }
+
+        if (isset($filters) && isset($filters['businessID']))
+        {
+            $charger = $charger -> filterByBusiness($filters['businessID']);
+        }
             
         return new ChargerCollection(
             $charger
