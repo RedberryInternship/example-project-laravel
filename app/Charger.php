@@ -113,6 +113,11 @@ class Charger extends Model
         return $query -> where('public', $public);
     }
 
+    public function scopeFilterByBusiness($query, $businessID)
+    {
+        return $query -> where('user_id', $businessID);
+    }
+
     public function scopeWithAllAttributes($query)
     {
         return $query -> with([
