@@ -384,13 +384,8 @@ class UserController extends Controller
         return new ChargerCollection(
             $charger -> whereHas('orders', function($query) use ($user) {
                 return $query -> where('user_id', $user -> id);
-            }) -> with([
-                'tags',
-                'connector_types',
-                'charger_types',
-                'charging_prices',
-                'fast_charging_prices'
-            ])
+            })
+            -> withAllAttributes()
             -> orderBy('id', 'DESC')
             -> take($quantity)
             -> get()

@@ -36,24 +36,25 @@ class ChargerController extends Controller
         }
             
         return new ChargerCollection(
-            $charger -> OrderBy('id', 'desc') -> with([
-                'tags' , 
-                'connector_types', 
-                'charger_types',
-                'charging_prices',
-                'fast_charging_prices'
-            ]) -> get()
+            $charger
+                -> OrderBy('id', 'desc')
+                -> withAllAttributes()
+                -> get()
         );
     }
 
-    public function getSingleCharger($charger_id)
+    /**
+     * Get Single Charger.
+     * 
+     * @param Charger $charger
+     * @param $charger_id
+     */
+    public function getSingleCharger(Charger $charger, $charger_id)
     {
-        return new ChargerResource(Charger::where('id',$charger_id)->with([
-            'tags' , 
-            'connector_types', 
-            'charger_types',
-            'charging_prices',
-            'fast_charging_prices'
-        ]) -> first());
+        return new ChargerResource(
+            $charger
+                -> withAllAttributes()
+                -> find($charger_id)
+        );
     }
 }

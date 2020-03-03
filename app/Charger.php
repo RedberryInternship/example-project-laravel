@@ -112,4 +112,15 @@ class Charger extends Model
     {
         return $query -> where('public', $public);
     }
+
+    public function scopeWithAllAttributes($query)
+    {
+        return $query -> with([
+            'tags',
+            'connector_types',
+            'charger_types',
+            'charging_prices',
+            'fast_charging_prices'
+        ]);
+    }
 }
