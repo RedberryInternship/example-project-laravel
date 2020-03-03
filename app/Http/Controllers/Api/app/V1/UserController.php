@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ChargerCollection;
 
 
 use Schema;
@@ -376,20 +377,24 @@ class UserController extends Controller
         ]);
     }
 
-    public function getUserChargers($quantity = 3)
+    public function getUserChargers(Charger $charger, $quantity = 3)
     {
         $user     = auth('api') -> user();
 
-        $chargers = Charger::whereHas('orders', function($query) use ($user) {
-            return $query -> where('user_id', $user -> id);
-        })
-        -> orderBy('id', 'DESC')
-        -> take($quantity)
-        -> get();
-
-        return response() -> json([
-            'chargers' => $chargers
-        ]);
+        return new ChargerCollection(
+            $charger -> whereHas('orders', function($query) use ($user) {
+                return $query -> where('user_id', $user -> id);
+            }) -> with([
+                'tags',
+                'connector_types',
+                'charger_types',
+                'charging_prices',
+                'fast_charging_prices'
+            ])
+            -> orderBy('id', 'DESC')
+            -> take($quantity)
+            -> get()
+        );
     }
 
     public function testTwilio()
