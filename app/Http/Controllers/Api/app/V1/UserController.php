@@ -19,6 +19,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ChargerCollection;
+use App\Http\Resources\OrdersCollection;
 
 
 use Schema;
@@ -364,22 +365,21 @@ class UserController extends Controller
 
     public function getOrders(Order $order)
     {
-        $user   = auth('api') -> user();
+        $user = auth('api') -> user();
 
-        $orders = $order -> where('user_id', $user -> id)
-                         -> with('charger')
-                         -> confirmed()
-                         -> confirmedPaymentsWithUserCards()
-                         -> get();
-
-        return response() -> json([
-            'orders' => $orders
-        ]);
+        return new OrdersCollection(
+            $order
+                -> where('user_id', $user -> id)
+                -> with('charger')
+                -> confirmed()
+                -> confirmedPaymentsWithUserCards()
+                -> get()
+        );
     }
 
     public function getUserChargers(Charger $charger, $quantity = 3)
     {
-        $user     = auth('api') -> user();
+        $user = auth('api') -> user();
 
         return new ChargerCollection(
             $charger -> whereHas('orders', function($query) use ($user) {
