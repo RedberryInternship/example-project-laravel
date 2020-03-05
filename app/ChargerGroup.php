@@ -23,6 +23,8 @@ class ChargerGroup extends Model
 
     public function scopeWithChargers($query)
     {
-        return $query -> with('chargers');
+        return $query -> with(['chargers' => function($q) {
+            return $q -> withAllAttributes();
+        }]);
     }
 }
