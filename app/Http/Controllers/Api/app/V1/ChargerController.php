@@ -16,33 +16,31 @@ class ChargerController extends Controller
      */
     public function getChargers(Request $request, Charger $charger)
     {
-        $filters = $request -> get('filters');
-
         $charger = $charger -> active();
 
-        if (isset($filters) && isset($filters['free']))
+        if ($request -> has('free'))
         {
-            $charger = $charger -> filterByFreeOrNot($filters['free']);
+            $charger = $charger -> filterByFreeOrNot($request -> get('free'));
         }
 
-        if (isset($filters) && isset($filters['type']))
+        if ($request -> has('type'))
         {
-            $charger = $charger -> filterByType($filters['type']);
+            $charger = $charger -> filterByType($request -> get('type'));
         }
 
-        if (isset($filters) && isset($filters['public']))
+        if ($request -> has('public'))
         {
-            $charger = $charger -> filterByPublicOrNot($filters['public']);
+            $charger = $charger -> filterByPublicOrNot($request -> get('public'));
         }
 
-        if (isset($filters) && isset($filters['businessID']))
+        if ($request -> has('businessID'))
         {
-            $charger = $charger -> filterByBusiness($filters['businessID']);
+            $charger = $charger -> filterByBusiness($request -> get('businessID'));
         }
 
-        if (isset($filters) && isset($filters['text']))
+        if ($request -> has('text'))
         {
-            $charger = $charger -> filterByText($filters['text']);
+            $charger = $charger -> filterByText($request -> get('text'));
         }
             
         return new ChargerCollection(
