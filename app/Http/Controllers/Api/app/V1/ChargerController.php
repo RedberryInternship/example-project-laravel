@@ -42,6 +42,8 @@ class ChargerController extends Controller
         {
             $charger = $charger -> filterByText($request -> get('text'));
         }
+
+        $charger  = $charger -> groupedChargersWithSibblingChargers();
             
         return new ChargerCollection(
             $charger
