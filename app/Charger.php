@@ -128,6 +128,28 @@ class Charger extends Model
         });
     }
 
+    public function scopeFilterGroupedChargers($query)
+    {
+        return
+            $query
+                -> has('charger_group')
+                -> with(['charger_group' => function($q) {
+                    return $q -> withChargers();
+                }]);
+    }
+
+    public function scopeFilterNotGroupedChargers($query)
+    {
+        return $query -> doesntHave('charger_group');
+    }
+
+    public function scopeGroupedChargersWithSibblingChargers($query)
+    {
+        return $query -> with(['charger_group' => function($q) {
+            return $q -> withChargers();
+        }]);
+    }
+
     public function scopeWithAllAttributes($query)
     {
         return $query -> with([

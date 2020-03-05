@@ -20,4 +20,9 @@ class ChargerGroup extends Model
     {
     	return $this -> hasMany('App\Charger');
     }
+
+    public function scopeWithChargers($query)
+    {
+        return $query -> with('chargers');
+    }
 }
