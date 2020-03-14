@@ -319,8 +319,8 @@ class UserController extends Controller
         if($user)
         {
             $user_car    = UserCarModel::where([
-                'user_id', $user -> id,
-                'model_id', $request -> get('model_id')
+                ['user_id', $user -> id],
+                ['model_id', $request -> get('car_model_id')],
             ]) -> first();
             if($user_car)
             {
