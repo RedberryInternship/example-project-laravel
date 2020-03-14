@@ -275,6 +275,10 @@ class UserController extends Controller
 
     public function getUserCars(Request $request)
     {   
+        
+        $json_status = 'Success';
+        $status      = 200;
+        
         $user_cars = [];
         $user = auth('api') -> user();
         if($user)
@@ -297,8 +301,7 @@ class UserController extends Controller
                             'model_name' => $model_name
                         ),
                     );
-                    $json_status = 'Success';
-                    $status      = 200;
+                    
                 }
             }
         }else{
