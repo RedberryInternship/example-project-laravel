@@ -20,18 +20,25 @@ class Base {
     protected function sendRequest($serviceUrl)
     {
         $response = $this -> guzzleClient -> request('GET', $serviceUrl);
-        $this -> displayParsedResponse($response);
+
+        return $this -> parseResponse($response);
     }
 
-    private function displayParsedResponse($response){
+    private function parseResponse($response){
 
         $data = [
-            'status-code' => $response -> getStatusCode(), // 200
-            'content-type' => $response -> getHeaderLine('content-type'), // 'application/json; charset=utf8'
+            'status-code' => $response -> getStatusCode(),
             'body' => json_decode($response -> getBody() -> getContents(), true),
-        ];
+        ];  
 
-        dd($data);
+        return $data;
+    }
 
+    protected function isOk($response){
+        if($response['status-code'] == 200){
+            return true;
+        }
+
+        return false;
     }
 }

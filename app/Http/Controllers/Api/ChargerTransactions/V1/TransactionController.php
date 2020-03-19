@@ -20,5 +20,4 @@ class TransactionController extends Controller{
         ]
       );
   }
-
 }

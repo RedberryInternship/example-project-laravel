@@ -7,34 +7,88 @@ use Exception;
 class Charger extends Base
 {
     
+    private $response = [
+        'status_code' => null,
+        'data' => null,
+    ];
+
+
+
     public function all(){
         $service_url = $this -> url . '/es-services/mobile/ws/chargers';
-        return $this -> sendRequest($service_url);
+        return $this -> fetchData($service_url);
     }
 
+    
+    
+    
     public function find($charger_id)
     {
+        $service_url = $this -> url 
+                        . '/es-services/mobile/ws/charger/info/' 
+                        . $charger_id;
+        
+        return $this -> fetchData($service_url);        
+     }
 
-        if (isset($charger_id) && $charger_id)
-        {
-            $service_url = $this -> url . '/es-services/mobile/ws/charger/info/' . $charger_id;
-            return $this -> sendRequest($service_url);
+    
+    
+    
+     public function start($charger_id, $connector_id){
+        $service_url = $this -> url 
+                        . '/es-services/mobile/ws/charger/start/'
+                        . $charger_id .'/' 
+                        . $connector_id;
+
+        return $this -> fetchData($service_url);
+    }
+
+    
+    
+    public function stop($charger_id, $transaction){
+        $service_url = $this -> url 
+                        . '/es-services/mobile/ws/charger/stop/'
+                        . $charger_id .'/' 
+                        . $transaction;
+        
+        return $this -> fetchData($service_url);
+    }
+
+    
+    
+    public function transactionInfo($id){
+        $service_url = $this -> url 
+                        . '/es-services/mobile/ws/transaction/info/'
+                        . $id;
+        
+        return $this -> fetchData($service_url);
+    }
+
+    
+    
+    
+    private function fetchData($service_url){
+        try{
+            $response = $this -> sendRequest($service_url);
+
+            if($this -> isOk($response)){
+                $this -> setResponse(700, $response['body']['data']);
+            }
+            else{
+                throw new Exception();
+            }
+        }
+        catch(Exception $e){
+            $this -> setResponse(707);
+        }
+        finally{
+            return $this -> response;
         }
     }
 
-    public function start($charger_id, $connector_id){
-        $service_url = $this -> url . '/es-services/mobile/ws/charger/start/'. $charger_id .'/' . $connector_id;
-        dd($service_url);
-    }
-
-    public function stop($charger_id, $transaction){
-        $service_url = $this -> url . '/es-services/mobile/ws/charger/stop/'. $charger_id .'/' . $transaction;
-        dd($service_url);
-    }
-
-    public function transactionInfo($id){
-        $service_url = $this -> url . '/es-services/mobile/ws/transaction/info/'. $id;
-        dd($service_url);
+    private function setResponse( $code, $data = null){
+        $this -> response ['status_code'] = $code;
+        $this -> response ['data'] = $data; 
     }
 
 

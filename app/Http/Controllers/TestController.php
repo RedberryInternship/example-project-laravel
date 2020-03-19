@@ -13,17 +13,25 @@ class TestController extends Controller
 	
 	public function index(){
 
-      dd(Simulator::disconnect(2));
-      dd(Simulator::remove(1));
-      dd(Simulator::add(1));
-      dd(Simulator::activateSimulatorMode(1));
+      // dd(Simulator::plugOffCable(29));
+      // dd(Simulator::upAndRunning(29));
+      // dd(Simulator::shutDown(29));
+      // dd(Simulator::activateSimulatorMode(29));
 
-      dd(Charger::transactionInfo(2));
-      dd(Charger::stop(1,2));
-      dd(Charger::start(1,2));
-      dd(Charger::all());
-      dd(Charger::find(1));
+      // dd(Charger::transactionInfo(2));
+      // dd(Charger::stop(1,2));
+      // dd(Charger::start(29,1));
+      // dd(Charger::all());
+      // dd(Charger::find(29));
       
       exit();
+    }
+
+    public function charger($id){
+      dd(Charger::find($id)['body']['data']);
+    }
+
+    public function allCharger(){
+      return Charger::all();
     }
   }
