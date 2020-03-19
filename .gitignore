@@ -21,3 +21,4 @@ yarn-error.log
 .env.development
 .DS_Store
 storage/debugbar
+.vscode
