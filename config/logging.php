@@ -41,6 +41,18 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'transaction_update' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/chargerTransactions/update.log'),
+            'level' => 'debug',
+        ],
+
+        'transaction_stop' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/chargerTransactions/stop.log'),
+            'level' => 'debug',
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

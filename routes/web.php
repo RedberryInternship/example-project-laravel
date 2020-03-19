@@ -27,8 +27,9 @@ Route::group(['prefix' => 'business'], function(){
     Route::get('/charger-edit/{charger_id}', 'BusinessController@getChargerEdit');
 });
 
-Route::group(['prefix' => 'test-chargers'], function(){
-   
+Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers/transactions'], function(){
+    Route::get('finish/{transaction_id}','TransactionController@finish');
+    Route::get('update/{transaction_id}/{value}','TransactionController@update');
 });
 
 Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
