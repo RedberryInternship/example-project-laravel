@@ -16,16 +16,16 @@ class FavoriteController extends Controller
     	$user       = auth('api') -> user();
     	$user_id 	= $user -> id;
     	$charger    = Charger::where('id', $charger_id) -> first();
-    	$status     = false;
+    	$status     = 400;
     	$favorite   = Favorite::where([['user_id', $user_id],['charger_id', $charger_id]]) -> first();
 
     	if(is_null($favorite))
     	{
     		$user->favorites()->attach($charger_id);
-    		$status = true;
+    		$status = 200;
     	}
 
-    	return response() -> json(['status' => $status]);
+    	return response() -> json(['status' => $status], $status);
     }
 
     public function postRemoveFavotite(Request $request)
@@ -34,15 +34,15 @@ class FavoriteController extends Controller
     	$user_id 	= $user -> id;
     	$charger_id = $request -> charger_id;
     	$favorite   = Favorite::where([['user_id', $user_id],['charger_id', $charger_id]]) -> first();
-    	$status		= false;
+    	$status		= 400;
 
     	if($favorite)
     	{
     		$user->favorites()->detach($charger_id);
-    		$status = true;
+    		$status = 200;
     	}
 
-    	return response() -> json(['status' => $status]);
+    	return response() -> json(['status' => $status], $status);
     }
 
     public function getUserFavorites()

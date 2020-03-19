@@ -103,6 +103,7 @@ class Charger extends Model
             return $query;
         }
 
+
         return $query -> whereHas('connector_types', function($query) use($connectorTypeNames) {
             return $query -> whereIn('connector_types.name', $connectorTypeNames);
         });
