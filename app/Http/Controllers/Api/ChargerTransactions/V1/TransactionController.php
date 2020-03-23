@@ -15,6 +15,7 @@ class TransactionController extends Controller
       'transaction_id' => $transaction_id,
       'additional_data' => request() -> all(),
     ]);
+
   }
 
   public function update($transaction_id, $value)
