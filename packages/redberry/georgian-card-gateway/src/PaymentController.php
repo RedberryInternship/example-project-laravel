@@ -71,7 +71,7 @@ class PaymentController extends Controller
         }
     }
 
-    public function getFailed()
+    public function getFailed(Request $request)
    	{
    		Log::info($request -> all());
    	}
