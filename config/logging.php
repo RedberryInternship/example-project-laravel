@@ -42,13 +42,13 @@ return [
         ],
 
         'transaction_update' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/chargerTransactions/update.log'),
             'level' => 'debug',
         ],
 
         'transaction_stop' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/chargerTransactions/stop.log'),
             'level' => 'debug',
         ],

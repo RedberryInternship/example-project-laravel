@@ -19,9 +19,6 @@ class Charger extends Base
         return $this -> fetchData($service_url);
     }
 
-    
-    
-    
     public function find($charger_id)
     {
         $service_url = $this -> url 
@@ -30,9 +27,6 @@ class Charger extends Base
         
         return $this -> fetchData($service_url);        
      }
-
-    
-    
     
      public function start($charger_id, $connector_id){
         $service_url = $this -> url 
@@ -42,8 +36,6 @@ class Charger extends Base
 
         return $this -> fetchData($service_url);
     }
-
-    
     
     public function stop($charger_id, $transaction_id){
         $service_url = $this -> url 
@@ -54,8 +46,6 @@ class Charger extends Base
         return $this -> fetchData($service_url);
     }
 
-    
-    
     public function transactionInfo($id){
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/transaction/info/'
@@ -63,9 +53,7 @@ class Charger extends Base
         
         return $this -> fetchData($service_url);
     }
-
-    
-    
+  
     
     private function fetchData($service_url){
         try{

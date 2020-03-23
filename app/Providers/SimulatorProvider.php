@@ -19,8 +19,8 @@ class SimulatorProvider extends ServiceProvider
 
         $this -> app -> bind('simulator', function(){
             
-            $mishasBackIp = env('MISHAS_BACK_IP') ?? '13.92.63.164';
-            $mishasBackProtocol = env('MISHAS_BACK_PROTOCOL') ?? 'http';    
+            $mishasBackIp = config('espace.mishas_back_ip');
+            $mishasBackProtocol = config('espace.mishas_back_protocol');    
             $guzzle = new Client();
             
             return new Simulator(

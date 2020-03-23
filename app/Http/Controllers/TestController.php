@@ -15,6 +15,11 @@ class TestController extends Controller
 	
 	  public function index(){
 
+
+      var_dump(
+        config('espace.mishas_back_protocol')
+      );
+
       // set up
       // var_dump(
       //   Simulator::activateSimulatorMode(29),
@@ -29,12 +34,12 @@ class TestController extends Controller
 
 
       // get transaction info
-      var_dump(
-        Charger::transactionInfo(74446),
-      );
+      // var_dump(
+      //   Charger::transactionInfo(74447),
+      // );
 
     
-      // plug cable off the charger
+      // // plug cable off the charger
       // var_dump(
       //   Simulator::plugOffCable(29),
       // );
@@ -43,7 +48,7 @@ class TestController extends Controller
 
       // stop charging [from app]
       // var_dump(
-      //   Charger::stop(29, 74446),
+      //   Charger::stop(29, 74447),
       // );
 
 
