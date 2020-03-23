@@ -8,7 +8,6 @@ use Log;
 
 class PaymentController extends Controller
 {
-    dd('test');
     public function getPayment(Request $request, $param)
     {
 	    Log::info($request -> all());
