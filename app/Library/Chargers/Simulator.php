@@ -4,7 +4,8 @@ namespace App\Library\Chargers;
 
 use Exception;
 
-class Simulator extends Base {
+class Simulator extends Base 
+{
 
     private $response = [
         'status' => null,
@@ -19,19 +20,23 @@ class Simulator extends Base {
         try{
             $response = $this->sendRequest($service_url);
             
-            if($this -> isOk($response)){
+            if($this -> isOk($response))
+            {
                 $this -> response ['status'] = 'Keba Simulator Activated!';
                 $this -> response ['status_code'] = 700;
             }
-            else{
+            else
+            {
                 throw new Exception();
             }
         }
-        catch(Exception $e){
+        catch(Exception $e)
+        {
             $this -> response ['status'] = 'Keba Simulator Couldn\'t be Activated!';
             $this -> response ['status_code'] = 707;
         }
-        finally{
+        finally
+        {
             return $this -> response;
         }
     }
@@ -44,68 +49,82 @@ class Simulator extends Base {
         try{
             $response = $this->sendRequest($service_url);
             
-            if($this -> isOk($response)){
+            if($this -> isOk($response))
+            {
                 $this -> response ['status'] = 'Charger is Up and Running!';
                 $this -> response ['status_code'] = 700;
             }
-            else{
+            else
+            {
                 throw new Exception();
             }
             
         }
-        catch(Exception $e){
+        catch(Exception $e)
+        {
             $this -> response ['status'] = 'Charger Can\'t be brought Up and Running!';
             $this -> response ['status_code'] = 707;
         }
-        finally{
+        finally
+        {
             return $this -> response;
         }
     }
 
 
-    public function plugOffCable($charger_id){
+    public function plugOffCable($charger_id)
+    {
         $service_url = $this -> url . ':12801/api/simulator/cp/disconnect/'. $charger_id;
         
         try{
             $response = $this->sendRequest($service_url);
 
-            if($this -> isOk($response)){
+            if($this -> isOk($response))
+            {
                 $this -> response ['status'] = 'Charger Cable is Off!';
                 $this -> response ['status_code'] = 700;
             }
-            else{
+            else
+            {
                 throw new Exception();
             }
         }
-        catch(Exception $e){
+        catch(Exception $e)
+        {
             $this -> response ['status'] = 'Charger Cable can\'t be Plugged Off!';
             $this -> response ['status_code'] = 707;
         }
-        finally{
+        finally
+        {
             return $this -> response;
         }
     }
 
 
-    public function shutdown($charger_id){
+    public function shutdown($charger_id)
+    {
         $service_url = $this -> url . ':12801/api/simulator/cp/remove/'. $charger_id;
         
         try{
             $response = $this->sendRequest($service_url);
             
-            if($this -> isOk($response)){
+            if($this -> isOk($response))
+            {
                 $this -> response ['status'] = 'Charger is Shut Down!';
                 $this -> response ['status_code'] = 700;
             }
-            else{
+            else
+            {
                 throw new Exception();
             }     
         }
-        catch(Exception $e){
+        catch(Exception $e)
+        {
             $this -> response ['status'] = 'Charger can\'t be Shut Down!';
             $this -> response ['status_code'] = 707;
         }
-        finally{
+        finally
+        {
             return $this -> response;
         }
     }

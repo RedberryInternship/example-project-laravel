@@ -14,7 +14,8 @@ class Charger extends Base
 
 
 
-    public function all(){
+    public function all()
+    {
         $service_url = $this -> url . '/es-services/mobile/ws/chargers';
         return $this -> fetchData($service_url);
     }
@@ -28,7 +29,8 @@ class Charger extends Base
         return $this -> fetchData($service_url);        
      }
     
-     public function start($charger_id, $connector_id){
+     public function start($charger_id, $connector_id)
+     {
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/start/'
                         . $charger_id .'/' 
@@ -37,7 +39,8 @@ class Charger extends Base
         return $this -> fetchData($service_url);
     }
     
-    public function stop($charger_id, $transaction_id){
+    public function stop($charger_id, $transaction_id)
+    {
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/stop/'
                         . $charger_id .'/' 
@@ -46,7 +49,8 @@ class Charger extends Base
         return $this -> fetchData($service_url);
     }
 
-    public function transactionInfo($id){
+    public function transactionInfo($id)
+    {
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/transaction/info/'
                         . $id;
@@ -55,26 +59,32 @@ class Charger extends Base
     }
   
     
-    private function fetchData($service_url){
+    private function fetchData($service_url)
+    {
         try{
             $response = $this -> sendRequest($service_url);
     
-            if($this -> isOk($response)){
+            if($this -> isOk($response))
+            {
                 $this -> setResponse(700, json_decode($response['body']));
             }
-            else{
+            else
+            {
                 throw new Exception();
             }
         }
-        catch(Exception $e){
+        catch(Exception $e)
+        {
             $this -> setResponse(707);
         }
-        finally{
+        finally
+        {
             return $this -> response;
         }
     }
 
-    private function setResponse( $code, $data = null){
+    private function setResponse( $code, $data = null)
+    {
         $this -> response ['status_code'] = $code;
         $this -> response ['data'] = $data; 
     }
