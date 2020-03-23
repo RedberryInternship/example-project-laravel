@@ -85,9 +85,9 @@ class Simulator extends Base {
             return $this -> response;
         }
     }
-    
 
-    public function shutDown($charger_id){
+
+    public function shutdown($charger_id){
         $service_url = $this -> url . ':12801/api/simulator/cp/remove/'. $charger_id;
         
         try{

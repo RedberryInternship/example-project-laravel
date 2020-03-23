@@ -45,11 +45,11 @@ class Charger extends Base
 
     
     
-    public function stop($charger_id, $transaction){
+    public function stop($charger_id, $transaction_id){
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/stop/'
                         . $charger_id .'/' 
-                        . $transaction;
+                        . $transaction_id;
         
         return $this -> fetchData($service_url);
     }
@@ -70,9 +70,9 @@ class Charger extends Base
     private function fetchData($service_url){
         try{
             $response = $this -> sendRequest($service_url);
-
+    
             if($this -> isOk($response)){
-                $this -> setResponse(700, $response['body']['data']);
+                $this -> setResponse(700, json_decode($response['body']));
             }
             else{
                 throw new Exception();

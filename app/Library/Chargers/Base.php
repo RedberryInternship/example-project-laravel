@@ -26,9 +26,10 @@ class Base {
 
     private function parseResponse($response){
 
+        
         $data = [
             'status-code' => $response -> getStatusCode(),
-            'body' => json_decode($response -> getBody() -> getContents(), true),
+            'body' => $response -> getBody() -> getContents(),
         ];  
 
         return $data;
