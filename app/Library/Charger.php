@@ -9,7 +9,7 @@ class Charger
 	{
 		$chargers_array = [];
     	foreach($chargers as $charger)
-    	{	
+    	{
     		$tags_array = [];
     		if($charger -> tags)
     		{
@@ -30,7 +30,7 @@ class Charger
     				$charger_type = ChargerType::where('id',$connector_type -> pivot -> charger_type_id) -> first();
     				$charger_attributes[] = array(
     					'connector_type_id'  => $connector_type -> id,
-    					'connecot_type_name' => $connector_type -> name,
+    					'connector_type_name' => $connector_type -> name,
     					'charger_type_id'	 => $connector_type -> pivot -> charger_type_id,
     					'charger_type_name'	 => $charger_type 	-> name
     				);
@@ -58,13 +58,14 @@ class Charger
     				'en'	=> array_key_exists('en',$charger -> translations['location']) ? $charger -> translations['location']['en'] : '',
     				'ru'	=> array_key_exists('ru',$charger -> translations['location']) ? $charger -> translations['location']['ru'] : '',
     			),
-    			'public' 	  			=> $charger -> public,
+          'public' 	  			=> $charger -> public,
     			'active'	  			=> $charger -> active,
     			'lat'		  			=> $charger -> lat,
     			'lng'		  			=> $charger -> lng,
     			'charger_group_id' 		=> $charger -> charger_group_id,
     			'iban'					=> $charger -> iban,
     			'last_update'			=> $charger -> last_update
+
     		);
     	}
 		return [

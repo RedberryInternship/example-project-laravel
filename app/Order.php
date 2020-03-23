@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Interfaces\Charger;	
 
 class Order extends Model
 {
@@ -25,6 +26,7 @@ class Order extends Model
         'comment',
         'status',
     ];
+
 
     public function user()
     {
