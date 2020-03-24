@@ -380,8 +380,9 @@ class UserController extends Controller
         );
     }
 
-    public function getUserChargers(Charger $charger, $quantity = 3, Charger $chargerModel)
+    public function getUserChargers(Charger $charger, $quantity = 3)
     {
+        $chargerModel = new Charger();
         $user = auth('api') -> user();
         $favoriteChargers = $user -> favorites -> pluck('id') -> toArray();
 
