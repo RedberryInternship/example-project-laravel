@@ -19,33 +19,44 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'app/V1'], function () {
 
-	Route::post('/login', 'Api\app\V1\UserController@authenticate');
-	Route::post('/send-sms-code','Api\app\V1\UserController@postSendSmsCode');
-	Route::post('/verify-code','Api\app\V1\UserController@postVerifyCode');
-	Route::post('/verify-code-for-password-recovery','Api\app\V1\UserController@postVerifyCodeForPasswordRecovery');
-	Route::post('/register', 'Api\app\V1\UserController@register');
-	Route::post('/reset-password', 'Api\app\V1\UserController@postResetPassword');
-	Route::post('/edit-password', 'Api\app\V1\UserController@postEditPassword');
-
-	Route::group(['middleware' => ['jwt.verify']], function() {
-		Route::post('/add-user-car', 'Api\app\V1\UserController@postAddUserCar');
-		Route::get('/get-user-cars' , 'Api\app\V1\UserController@getUserCars');
-		Route::post('/delete-user-car', 'Api\app\V1\UserController@postDeleteUserCar');
-		Route::post('/add-favorite', 'Api\app\V1\FavoriteController@postAddFavorite');
-		Route::post('/remove-favorite', 'Api\app\V1\FavoriteController@postRemoveFavotite');
-		Route::get('/user-favorites', 'Api\app\V1\FavoriteController@getUserFavorites');
-		Route::get('/user-orders', 'Api\app\V1\UserController@getOrders');
-		Route::get('/user-chargers/{quantity?}', 'Api\app\V1\UserController@getUserChargers');
-		Route::post('/update-user-info','Api\app\V1\UserController@postUpdateUserInfo');
-		Route::post('/update-user-info','Api\app\V1\UserController@postUpdateUserInfo');
-		Route::get('/me', 'Api\app\V1\UserController@getMe');
+	/* User Auth / Register */
+	Route::group(['namespace' => 'Api\app\V1'], function(){
+		Route::post('/login', 'UserController@authenticate');
+		Route::post('/send-sms-code','UserController@postSendSmsCode');
+		Route::post('/verify-code','UserController@postVerifyCode');
+		Route::post('/verify-code-for-password-recovery','UserController@postVerifyCodeForPasswordRecovery');
+		Route::post('/register', 'UserController@register');
+		Route::post('/reset-password', 'UserController@postResetPassword');
+		Route::post('/edit-password', 'UserController@postEditPassword');
 	});
 
-	Route::get('/charger/{charger_id}', 'Api\app\V1\ChargerController@getSingleCharger');
-	Route::get('/chargers', 'Api\app\V1\ChargerController@getChargers');
-	Route::get('/get-models-and-marks', 'Api\app\V1\GetModelsAndMarksController@getModelsAndMarks');
-	Route::get('/phone-codes' , 'Api\app\V1\PhoneCodesController@getPhoneCodes');
-	Route::get('/geo-ip', 'Api\app\V1\LocationController@getLocation');
-	Route::get('/faq', 'Api\app\V1\FAQController');
-	Route::get('/partners', 'Api\app\V1\PartnerController');
+
+	/* User Authenticated use functionality */
+	Route::group(['middleware' => ['jwt.verify']], function() {
+		Route::group(['namespace' => 'Api\app\V1'], function(){
+			Route::post('/add-user-car', 'UserController@postAddUserCar');
+			Route::get('/get-user-cars' , 'UserController@getUserCars');
+			Route::post('/delete-user-car', 'UserController@postDeleteUserCar');
+			Route::post('/add-favorite', 'FavoriteController@postAddFavorite');
+			Route::post('/remove-favorite', 'FavoriteController@postRemoveFavotite');
+			Route::get('/user-favorites', 'FavoriteController@getUserFavorites');
+			Route::get('/user-orders', 'UserController@getOrders');
+			Route::get('/user-chargers/{quantity?}', 'UserController@getUserChargers');
+			Route::post('/update-user-info','UserController@postUpdateUserInfo');
+			Route::post('/update-user-info','UserController@postUpdateUserInfo');
+			Route::get('/me', 'UserController@getMe');
+
+		});
+	});
+
+	/* Rest functionality */
+	Route::group(['namespace' => 'Api\app\V1'], function(){
+		Route::get('/charger/{charger_id}', 'ChargerController@getSingleCharger');
+		Route::get('/chargers', 'ChargerController@getChargers');
+		Route::get('/get-models-and-marks', 'GetModelsAndMarksController@getModelsAndMarks');
+		Route::get('/phone-codes' , 'PhoneCodesController@getPhoneCodes');
+		Route::get('/geo-ip', 'LocationController@getLocation');
+		Route::get('/faq', 'FAQController');
+		Route::get('/partners', 'PartnerController');
+	});
 });	
