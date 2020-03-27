@@ -46,6 +46,12 @@ Route::group(['prefix' => 'app/V1'], function () {
 			Route::post('/update-user-info','UserController@postUpdateUserInfo');
 			Route::get('/me', 'UserController@getMe');
 
+			Route::group(['namespace' => 'Chargers'], function() {
+				Route::post('/charging/start', 'ChargingController@start');
+				Route::post('/charging/stop', 'ChargingController@stop');
+				Route::get('/charging/status', 'StatusController@transactionInfo');
+			});
+
 		});
 	});
 
