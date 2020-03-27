@@ -6,7 +6,8 @@ use App\User as UserModel;
 trait User{
 
 
-  public function createUserAndReturnToken($phone_number = '+995591935080', $password = '+995591935080'){
+  public function createUserAndReturnToken($phone_number = '+995591935080', $password = '+995591935080')
+  {
     factory(UserModel::class)->create([
       'phone_number' => $phone_number,
       'password' => bcrypt($password),
