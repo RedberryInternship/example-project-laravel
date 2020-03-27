@@ -23,8 +23,14 @@ Route::group(['prefix' => 'business'], function(){
     Route::post('/register', 'UserController@postRegister');
     Route::post('/login', 'UserController@postAuthenticate');
     Route::get('/logout', 'UserController@getLogout');
-    Route::get('/chargers', 'BusinessController@getChargers');
-    Route::get('/charger-edit/{charger_id}', 'BusinessController@getChargerEdit');
+    Route::get('/chargers', 'ChargerController@getChargers');
+    Route::get('/charger-services/{charger_id}', 'ChargerController@getChargerServices');
+    Route::post('/add-charger-bussiness-service', 'ChargerController@postChargerBusinessService');
+    Route::get('/delete-charger-business-service/{charger_business_service_id}', 'ChargerController@getDeleteChargerBusinessService');
+    Route::get('/business-services', 'ChargerBusinessServiceController@getBusinessServices');
+    Route::get('/add-business-service', 'ChargerBusinessServiceController@getAddBusinessService');
+    Route::post('/add-business-service', 'ChargerBusinessServiceController@postAddBusinessService');
+    Route::get('/delete-business-service/{service_id}', 'ChargerBusinessServiceController@getDeleteBusinessService');
 });
 
 Route::group(['prefix' => 'test-chargers'], function(){

@@ -65,7 +65,7 @@ class PaymentController extends Controller
                     </register-payment-response>';
                     Log::info($response);
             }
-
+             Log::info($response);
             return Response($response);
 
         }
