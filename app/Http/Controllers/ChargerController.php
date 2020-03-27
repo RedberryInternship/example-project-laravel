@@ -33,7 +33,8 @@ class ChargerController extends Controller
             'connector_types', 
             'charger_types',
             'charging_prices',
-            'fast_charging_prices'
+            'fast_charging_prices',
+            'business_services'
         ]) -> first());
 
         $charger_business_service 		    = ChargerBusinessService::where('charger_id', $charger -> id) 

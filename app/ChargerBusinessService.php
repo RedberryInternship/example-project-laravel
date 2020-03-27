@@ -12,8 +12,12 @@ class ChargerBusinessService extends Model
         'business_service_id'
     ];
 
-    public function business_service()
+    public function business_services()
     {
     	return $this -> belongsTo('App\BusinessService');
+    }
+    public function chargers()
+    {
+        return $this -> belongsTo('App/Charger','charger_tags');
     }
 }

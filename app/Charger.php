@@ -75,6 +75,10 @@ class Charger extends Model
     {
         return $this -> hasMany('App\Order');
     }
+    public function business_services()
+    {
+        return $this -> belongsToMany('App\BusinessService', 'charger_business_services');
+    }
 
     public function scopeActive($query)
     {
@@ -157,7 +161,8 @@ class Charger extends Model
             'connector_types',
             'charger_types',
             'charging_prices',
-            'fast_charging_prices'
+            'fast_charging_prices',
+            'business_services'
         ]);
     }
 }
