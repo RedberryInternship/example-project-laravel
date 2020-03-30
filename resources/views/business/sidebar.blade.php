@@ -1,16 +1,12 @@
     <!-- BEGIN: SideNav-->
     <aside class="sidenav-main nav-expanded nav-lock nav-collapsible sidenav-dark sidenav-active-rounded">
         <div class="brand-sidebar">
-            <h1 class="logo-wrapper"><a class="brand-logo darken-1" href="{{ url('/business') }}"><img class="hide-on-med-and-down " src="../../../app-assets/images/logo/materialize-logo.png" alt="materialize logo" /><img class="show-on-medium-and-down hide-on-med-and-up" src="../../../app-assets/images/logo/materialize-logo-color.png" alt="materialize logo" /><span class="logo-text hide-on-med-and-down">Business</span></a><a class="navbar-toggler" href="#"><i class="material-icons">radio_button_checked</i></a></h1>
+            <h1 class="logo-wrapper"><a class="brand-logo darken-1" href="{{ url('/business') }}"><img class="hide-on-med-and-down " src="../../../app-assets/images/logo/materialize-logo.png" alt="materialize logo" /><img class="show-on-medium-and-down hide-on-med-and-up" src="../../../app-assets/images/logo/materialize-logo-color.png" alt="materialize logo" /><span class="logo-text hide-on-med-and-down">Admin</span></a><a class="navbar-toggler" href="#"><i class="material-icons">radio_button_checked</i></a></h1>
         </div>
         <ul class="sidenav sidenav-collapsible leftside-navigation collapsible sidenav-fixed menu-shadow" id="slide-out" data-menu="menu-navigation" data-collapsible="accordion">
-            <li class="navigation-header"><a class="navigation-header-text">Applications</a><i class="navigation-header-icon material-icons">more_horiz</i>
+            <li class="bold" style="margin-top: 3rem;"><a class="waves-effect waves-cyan " href="/business/charger-groups"><i class="material-icons">group_work</i><span class="menu-title" data-i18n="Chat">დამტენების ჯგუფები</span></a>
             </li>
-            <li class="bold"><a class="waves-effect waves-cyan " href="/business/charger-groups"><i class="material-icons">group_work</i><span class="menu-title" data-i18n="Chat">Charger Groups</span></a>
-            </li>
-            <li class="bold"><a class="waves-effect waves-cyan " href="/business/chargers"><i class="material-icons">battery_charging_full</i><span class="menu-title" data-i18n="Chat">Chargers</span></a>
-            </li>
-            <li class="navigation-header"><a class="navigation-header-text">Pages </a><i class="navigation-header-icon material-icons">more_horiz</i>
+            <li class="bold"><a class="waves-effect waves-cyan " href="/business/chargers"><i class="material-icons">battery_charging_full</i><span class="menu-title" data-i18n="Chat">დამტენები</span></a>
             </li>
             <li class="bold"><a class="waves-effect waves-cyan " href="user-profile-page.html"><i class="material-icons">person_outline</i><span class="menu-title" data-i18n="User Profile">User Profile</span></a>
             </li>

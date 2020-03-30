@@ -14,46 +14,49 @@
 				<div class="card-content">
 					<div class="row">
 						<div class="col s12 m6 l10">
-	                        <h4 class="card-title">Chargers</h4>
+	                        <h4 class="card-title">დამტენები</h4>
 	                    </div>
 	                    <div id="view-borderless-table" class="active">
 	                        <div class="row">
 	                            <div class="col s12">
 									<table class="responsive-table">
-										<tr>
-											<th>ID</th>
-											<th>Name</th>
-											<th>Charger ID</th>
-											<th>Charger Group</th>
-											<th>Code</th>
-											<th>Public</th>
-											<th>Active</th>
-											<th>Edit</th>
-										</tr>
-										@foreach($chargers as $charger)
+										<thead>
 											<tr>
-												<td>{{ $charger -> id }}</td>
-												<td>{{ $charger -> name }}</td>
-												<td>{{ $charger -> charger_id }}</td>
-												<td>{{ $charger -> charger_group ? $charger -> charger_group -> name : null }}</td>
-												<td>{{ $charger -> code }}</td>
-												<td>
-													<i class="material-icons dp48" style="{{ $charger -> public ? 'color: green' : 'color: red' }}">
-														{{ $charger -> public ? 'check' : 'close' }}
-													</i>
-												</td>
-												<td>
-													<i class="material-icons dp48" style="{{ $charger -> active ? 'color: green' : 'color: red' }}">
-														{{ $charger -> active ? 'check' : 'close' }}
-													</i>
-												</td>
-												<td>
-													<a href="/business/chargers/{{ $charger -> id }}/edit" class="edit-link">
-														<i class="material-icons">edit</i>
-													</a>
-												</td>
+												<th>ID</th>
+												<th>სახელი</th>
+												<th>კოდი</th>
+												<th>დამტენის ჯგუფი</th>
+												<th style="text-align: center;">საჯარო</th>
+												<th style="text-align: center;">აქტიური</th>
+												<th style="text-align: center;">რედაქტირება</th>
 											</tr>
-										@endforeach
+										</thead>
+
+										<tbody>
+											@foreach($chargers as $charger)
+												<tr>
+													<td>{{ $charger -> id }}</td>
+													<td>{{ $charger -> name }}</td>
+													<td>{{ $charger -> code }}</td>
+													<td>{{ $charger -> charger_group ? $charger -> charger_group -> name : null }}</td>
+													<td style="text-align: center;">
+														<i class="material-icons dp48" style="{{ $charger -> public ? 'color: green' : 'color: red' }}">
+															{{ $charger -> public ? 'check' : 'close' }}
+														</i>
+													</td>
+													<td style="text-align: center;">
+														<i class="material-icons dp48" style="{{ $charger -> active ? 'color: green' : 'color: red' }}">
+															{{ $charger -> active ? 'check' : 'close' }}
+														</i>
+													</td>
+													<td style="text-align: center;">
+														<a href="/business/chargers/{{ $charger -> id }}/edit" class="edit-link">
+															<i class="material-icons">edit</i>
+														</a>
+													</td>
+												</tr>
+											@endforeach
+										</tbody>
 									</table>
 								</div>
 							</div>

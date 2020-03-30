@@ -14,7 +14,7 @@
 				<div class="card-content">
 					<div class="row">
 						<div class="col s12 m6 l10">
-	                        <h4 class="card-title">Charger Groups</h4>
+	                        <h4 class="card-title">დამტენების ჯგუფები</h4>
 	                    </div>
 	                    <div id="view-borderless-table" class="active">
 	                        <div class="row">
@@ -22,16 +22,16 @@
 									<table class="responsive-table">
 										<tr>
 											<th>ID</th>
-											<th>Name</th>
-											<th>Chargers Count</th>
-											<th>Edit</th>
+											<th>სახელი</th>
+											<th style="text-align: center;">დამტენების რაოდენობა</th>
+											<th style="text-align: center;">რედაქტირება</th>
 										</tr>
 										@foreach($chargerGroups as $chargerGroup)
 											<tr>
 												<td>{{ $chargerGroup -> id }}</td>
 												<td>{{ $chargerGroup -> name }}</td>
-												<td>{{ $chargerGroup -> chargers -> count() }}</td>
-												<td>
+												<td style="text-align: center;">{{ $chargerGroup -> chargers -> count() }}</td>
+												<td style="text-align: center;">
 													<a href="/business/charger-groups/{{ $chargerGroup -> id }}/edit" class="edit-link">
 														<i class="material-icons">edit</i>
 													</a>

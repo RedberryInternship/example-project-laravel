@@ -71,17 +71,19 @@ class ChargerController extends Controller
      */
     public function edit($id)
     {
-        $user = Auth::user();
-        //$charger = Charger::where('id', $id) -> first();
-        $charger = new ChargerResource(Charger::where('id',$id)->with([
+        $user    = Auth::user();
+        $charger = Charger::where('id', $id) -> with([
             'tags' , 
             'connector_types', 
             'charger_types',
             'charging_prices',
             'fast_charging_prices'
-        ]) -> first());
+        ]) -> first();
+
+        $languages = ['ka', 'en', 'ru'];
 
         return view('business.chargers.edit') -> with([
+            'languages'      => $languages,
             'tabTitle'       => 'რედაქტირება',
             'activeMenuItem' => 'charger',
             'charger'        => $charger,
@@ -96,9 +98,14 @@ class ChargerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Charger $charger)
     {
-        //
+        $charger -> setTranslations('name', $request -> get('names'))
+                 -> setTranslations('description', $request -> get('descriptions'))
+                 -> setTranslations('location', $request -> get('locations'))
+                 -> save();
+
+        return redirect() -> back();
     }
 
     /**
