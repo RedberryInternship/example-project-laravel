@@ -47,7 +47,11 @@
 														{{ $charger -> active ? 'check' : 'close' }}
 													</i>
 												</td>
-												<td><a href="/business/charger-edit/{{ $charger -> id }}" class="edit-link"><i class="material-icons">edit</i></a></td>
+												<td>
+													<a href="/business/chargers/{{ $charger -> id }}/edit" class="edit-link">
+														<i class="material-icons">edit</i>
+													</a>
+												</td>
 											</tr>
 										@endforeach
 									</table>

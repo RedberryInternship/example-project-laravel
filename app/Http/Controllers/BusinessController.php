@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Charger;
 use App\ChargerGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,39 +55,6 @@ class BusinessController extends Controller
             'tabTitle'       => 'დამტენების ჯგუფები',
             'activeMenuItem' => 'chargers',
             'chargerGroups'  => $chargerGroups,
-            'user'           => $user
-        ]);
-    }
-
-    public function getChargers()
-    {
-        $user     = Auth::user();
-        $chargers = Charger::where('user_id', $user -> id) -> with('charger_group') -> orderBy('id', 'DESC') -> get();
-
-        return view('business.chargers') -> with([
-            'tabTitle'       => 'დამტენები',
-            'activeMenuItem' => 'chargers',
-            'chargers'       => $chargers,
-            'user'           => $user
-        ]);
-    }
-
-    public function getChargerEdit($charger_id)
-    {
-        $user    = Auth::user();
-        //$charger = Charger::where('id', $charger_id) -> first();
-        $charger = new ChargerResource(Charger::where('id',$charger_id)->with([
-            'tags' , 
-            'connector_types', 
-            'charger_types',
-            'charging_prices',
-            'fast_charging_prices'
-        ]) -> first());
-
-        return view('business.charger-edit') -> with([
-            'tabTitle'       => 'რედაქტირება',
-            'activeMenuItem' => 'charger',
-            'charger'        => $charger,
             'user'           => $user
         ]);
     }

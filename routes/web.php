@@ -23,7 +23,7 @@ Route::group(['prefix' => 'business'], function() {
     Route::post('/register', 'UserController@postRegister');
     Route::post('/login', 'UserController@postAuthenticate');
     Route::get('/logout', 'UserController@getLogout');
-    Route::get('/chargers', 'BusinessController@getChargers');
     Route::get('/charger-groups', 'BusinessController@getChargerGroups');
-    Route::get('/charger-edit/{charger_id}', 'BusinessController@getChargerEdit');
+
+    Route::resource('/chargers', 'Business\ChargerController');
 });
