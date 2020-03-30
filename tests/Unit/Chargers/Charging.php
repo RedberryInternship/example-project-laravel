@@ -4,7 +4,6 @@ namespace Tests\Unit\Chargers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\User;
 
 use App\Traits\Testing\User as UserTrait;
 

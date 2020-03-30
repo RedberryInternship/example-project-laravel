@@ -26,7 +26,8 @@ class ChargingController extends Controller
   }
 
 
-  public function stop(StopCharging $request){
+  public function stop(StopCharging $request)
+  {
     return response() -> json("ok");
   }
 
