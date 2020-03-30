@@ -23,7 +23,7 @@
 										<th>Code</th>
 										<th>Public</th>
 										<th>Active</th>
-										<th>Edit</th>
+										<th>Services</th>
 									</tr>
 									@foreach($chargers as $charger)
 										<tr>
@@ -33,7 +33,7 @@
 											<td>{{ $charger -> code }}</td>
 											<td>{{ $charger -> public }}</td>
 											<td>{{ $charger -> active }}</td>
-											<td><a href="/business/charger-edit/{{ $charger -> id }}" class="edit-link"><i class="material-icons">edit</i></a></td>
+											<td><a href="/business/charger-services/{{ $charger -> id }}" class="remove_red_eye"><i class="material-icons">remove_red_eye</i></a></td>
 										</tr>
 									@endforeach
 								</table>
