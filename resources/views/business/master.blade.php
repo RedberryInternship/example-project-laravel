@@ -131,6 +131,8 @@
     <!-- BEGIN PAGE LEVEL JS-->
     <script src="../../../app-assets/js/scripts/dashboard-ecommerce.js"></script>
     <!-- END PAGE LEVEL JS-->
+
+    @yield('js')
 </body>
 
 </html>

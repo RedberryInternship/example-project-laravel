@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix' => 'business'], function(){
+Route::group(['prefix' => 'business'], function() {
     Route::get('/', 'BusinessController@getIndex');
     Route::get('/login', 'BusinessController@getLogin');
     Route::get('/register', 'BusinessController@getRegister');
