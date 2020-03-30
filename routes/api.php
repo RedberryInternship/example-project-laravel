@@ -18,6 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'app/V1'], function () {
+
 	Route::post('/login', 'Api\app\V1\UserController@authenticate');
 	Route::post('/send-sms-code','Api\app\V1\UserController@postSendSmsCode');
 	Route::post('/verify-code','Api\app\V1\UserController@postVerifyCode');

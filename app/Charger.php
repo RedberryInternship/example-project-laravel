@@ -107,6 +107,7 @@ class Charger extends Model
             return $query;
         }
 
+
         return $query -> whereHas('connector_types', function($query) use($connectorTypeNames) {
             return $query -> whereIn('connector_types.name', $connectorTypeNames);
         });
@@ -164,5 +165,24 @@ class Charger extends Model
             'fast_charging_prices',
             'business_services'
         ]);
+    }
+
+    public function addFilterAttributeToChargers(&$chargers, $favoriteChargers, $inner = false)
+    {
+        foreach ($chargers as &$charger)
+        {
+            $isFavorite = false;
+            if (in_array($charger -> id, $favoriteChargers))
+            {
+                $isFavorite = true;
+            }
+
+            $charger -> is_favorite = $isFavorite;
+
+            if ( ! $inner && isset($charger -> charger_group) && isset($charger -> charger_group -> chargers) && ! empty($charger -> charger_group -> chargers))
+            {
+                $this -> addFilterAttributeToChargers($charger -> charger_group -> chargers, $favoriteChargers, true);
+            }
+        }
     }
 }

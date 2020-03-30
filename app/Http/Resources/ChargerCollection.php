@@ -15,7 +15,7 @@ class ChargerCollection extends ResourceCollection
      * @return array
      */
     public function toArray($request)
-    {   
+    {
         return parent::toArray($request);
     }
 
