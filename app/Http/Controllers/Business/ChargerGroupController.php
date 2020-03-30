@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Business;
 
-use App\Charger;
+use App\ChargerGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Charger as ChargerResource;
 
-class ChargerController extends Controller
+class ChargerGroupController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,16 +16,16 @@ class ChargerController extends Controller
      */
     public function index()
     {
-        $user     = Auth::user();
-        $chargers = Charger::where('user_id', $user -> id)
-                          -> with('charger_group')
-                          -> orderBy('id', 'DESC')
-                          -> get();
+        $user          = Auth::user();
+        $chargerGroups = ChargerGroup::where('user_id', $user -> id)
+                                    -> with('chargers')
+                                    -> orderBy('id', 'DESC')
+                                    -> get();
 
-        return view('business.chargers.index') -> with([
-            'tabTitle'       => 'დამტენები',
+        return view('business.charger-groups.index') -> with([
+            'tabTitle'       => 'დამტენების ჯგუფები',
             'activeMenuItem' => 'chargers',
-            'chargers'       => $chargers,
+            'chargerGroups'  => $chargerGroups,
             'user'           => $user
         ]);
     }
@@ -71,22 +70,7 @@ class ChargerController extends Controller
      */
     public function edit($id)
     {
-        $user = Auth::user();
-        //$charger = Charger::where('id', $id) -> first();
-        $charger = new ChargerResource(Charger::where('id',$id)->with([
-            'tags' , 
-            'connector_types', 
-            'charger_types',
-            'charging_prices',
-            'fast_charging_prices'
-        ]) -> first());
-
-        return view('business.chargers.edit') -> with([
-            'tabTitle'       => 'რედაქტირება',
-            'activeMenuItem' => 'charger',
-            'charger'        => $charger,
-            'user'           => $user
-        ]);
+        //
     }
 
     /**

@@ -31,7 +31,11 @@
 												<td>{{ $chargerGroup -> id }}</td>
 												<td>{{ $chargerGroup -> name }}</td>
 												<td>{{ $chargerGroup -> chargers -> count() }}</td>
-												<td><a href="/business/charger-group-edit/{{ $chargerGroup -> id }}" class="edit-link"><i class="material-icons">edit</i></a></td>
+												<td>
+													<a href="/business/charger-groups/{{ $chargerGroup -> id }}/edit" class="edit-link">
+														<i class="material-icons">edit</i>
+													</a>
+												</td>
 											</tr>
 										@endforeach
 									</table>
