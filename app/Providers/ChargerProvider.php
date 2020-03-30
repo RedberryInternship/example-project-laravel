@@ -30,7 +30,6 @@ class ChargerProvider extends ServiceProvider
                     $mishasBackIp, 
                     $guzzle
                 );
-
         });
         
     }
