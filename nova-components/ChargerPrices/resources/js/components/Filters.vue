@@ -6,7 +6,7 @@
             <div class="charger-filter charger-filter-input groups">
                 <select class="form-control form-select" v-model="activeGroup">
                     <option value="0" selected>All Chargers</option>
-                    <option v-for="group in groups" :value="group.id">
+                    <option v-for="(group, index) in groups" :value="group.id" :key="index">
                         {{ group.name }}
                     </option>
                 </select>
@@ -36,11 +36,11 @@
             </div>
 
             <div class="charger-items">
-                <div class="charger-item" v-for="charger in chargers">
+                <div class="charger-item" v-for="(charger, index) in chargers" :key="index">
                     <h3>{{ charger.name.en }}</h3>
 
                     <div class="connector-types">
-                        <div class="connector-type" v-for="(connectorType, connectorTypeIndex) in charger.connector_types">
+                        <div class="connector-type" v-for="(connectorType, connectorTypeIndex) in charger.connector_types" :key="connectorTypeIndex">
                             <input
                                 type="checkbox"
                                 v-model="connectorType.activeInput"
