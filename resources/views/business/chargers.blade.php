@@ -15,7 +15,6 @@
 					<div class="row">
 						<div class="col s12 m6 l10">
 	                        <h4 class="card-title">Chargers</h4>
-	                        <p>{{ $user -> first_name }}'s chargers list.</p>
 	                    </div>
 	                    <div id="view-borderless-table" class="active">
 	                        <div class="row">

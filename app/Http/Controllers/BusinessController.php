@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+
 use App\Charger;
+use App\ChargerGroup;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Charger as ChargerResource;
 
 class BusinessController extends Controller
@@ -43,6 +45,19 @@ class BusinessController extends Controller
             'activeMenuItem'      => 'forgot_password',
             'backgroundClassName' => 'forgot'
         ]);       
+    }
+
+    public function getChargerGroups()
+    {
+        $user          = Auth::user();
+        $chargerGroups = ChargerGroup::where('user_id', $user -> id) -> with('chargers') -> orderBy('id', 'DESC') -> get();
+
+        return view('business.charger-groups') -> with([
+            'tabTitle'       => 'დამტენების ჯგუფები',
+            'activeMenuItem' => 'chargers',
+            'chargerGroups'  => $chargerGroups,
+            'user'           => $user
+        ]);
     }
 
     public function getChargers()

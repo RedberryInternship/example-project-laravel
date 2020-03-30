@@ -6,6 +6,8 @@
         <ul class="sidenav sidenav-collapsible leftside-navigation collapsible sidenav-fixed menu-shadow" id="slide-out" data-menu="menu-navigation" data-collapsible="accordion">
             <li class="navigation-header"><a class="navigation-header-text">Applications</a><i class="navigation-header-icon material-icons">more_horiz</i>
             </li>
+            <li class="bold"><a class="waves-effect waves-cyan " href="/business/charger-groups"><i class="material-icons">group_work</i><span class="menu-title" data-i18n="Chat">Charger Groups</span></a>
+            </li>
             <li class="bold"><a class="waves-effect waves-cyan " href="/business/chargers"><i class="material-icons">battery_charging_full</i><span class="menu-title" data-i18n="Chat">Chargers</span></a>
             </li>
             <li class="navigation-header"><a class="navigation-header-text">Pages </a><i class="navigation-header-icon material-icons">more_horiz</i>
