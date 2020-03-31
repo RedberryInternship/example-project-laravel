@@ -11,8 +11,8 @@ class PaymentController extends Controller
     public function getPayment(Request $request, $param)
     {
 	    Log::info($request -> all());
-
         if($param == 'avail-check'){
+            Log::info($request -> all());
             $response  = 
             '<payment-avail-response>
                 <result>
@@ -53,7 +53,7 @@ class PaymentController extends Controller
                     <desc>OK</desc>
                     </result>
                     </register-payment-response>';
-
+                    Log::info($response);
                     // CREATE DATABASE RECORD
 
             }elseif($result_code == 2){
@@ -63,16 +63,17 @@ class PaymentController extends Controller
                     <desc>Temporary unavailable</desc>
                     </result>
                     </register-payment-response>';
+                    Log::info($response);
             }
-
+             Log::info($response);
             return Response($response);
 
         }
     }
 
-    public function getFailed()
+    public function getFailed(Request $request)
    	{
-   		
+   		Log::info($request -> all());
    	}
    	public function getSucceed(Request $request)
    	{

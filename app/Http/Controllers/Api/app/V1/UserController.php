@@ -382,16 +382,22 @@ class UserController extends Controller
 
     public function getUserChargers(Charger $charger, $quantity = 3)
     {
+        $chargerModel = new Charger();
         $user = auth('api') -> user();
+        $favoriteChargers = $user -> favorites -> pluck('id') -> toArray();
+
+        $chargers = $charger -> whereHas('orders', function($query) use ($user) {
+            return $query -> where('user_id', $user -> id);
+        })
+        -> withAllAttributes()
+        -> orderBy('id', 'DESC')
+        -> take($quantity)
+        -> get();
+
+        $chargerModel -> addFilterAttributeToChargers($chargers, $favoriteChargers);
 
         return new ChargerCollection(
-            $charger -> whereHas('orders', function($query) use ($user) {
-                return $query -> where('user_id', $user -> id);
-            })
-            -> withAllAttributes()
-            -> orderBy('id', 'DESC')
-            -> take($quantity)
-            -> get()
+            $chargers
         );
     }
 

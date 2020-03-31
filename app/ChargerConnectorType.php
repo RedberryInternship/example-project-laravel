@@ -8,6 +8,8 @@ class ChargerConnectorType extends Model
 {
     protected $fillable = [
         'charger_id',
+        'min_price',
+        'max_price',
         'charger_type_id',
         'connector_type_id'
     ];
@@ -18,8 +20,8 @@ class ChargerConnectorType extends Model
     // 	return $this -> belongsTo('App\ChargerType');
     // }
 
-    // public function connector_type()
-    // {
-    // 	return $this -> belongsTo('App\ConnectorType');
-    // }
+    public function connector_type()
+    {
+    	return $this -> belongsTo('App\ConnectorType');
+    }
 }
