@@ -1,0 +1,86 @@
+<template>
+	<div>
+		<heading class="mb-6">Filter Chargers</heading>
+
+        <div class="chargers-form">
+            <div class="row">
+                <form class="form card" action="#">
+                    <div class="form-group">
+                        <div class="w-1/5 px-8 py-6">
+                            <label for="price">Price</label>
+                        </div>
+                        <div class="py-6 px-8 w-1/2">
+                            <input type="number" id="price" name="price" step=".5" class="w-full form-control form-input form-input-bordered" v-model="price">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="w-1/5 px-8 py-6">
+                            <label for="min-price">Min Price</label>
+                        </div>
+                        <div class="py-6 px-8 w-1/2">
+                            <input type="number" id="min-price" name="min-price" step=".5" class="w-full form-control form-input form-input-bordered" v-model="minPrice">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="w-1/5 px-8 py-6">
+                            <label for="max-price">Max Price</label>
+                        </div>
+                        <div class="py-6 px-8 w-1/2">
+                            <input type="number" id="max-price" name="max-price" step=".5" class="w-full form-control form-input form-input-bordered" v-model="maxPrice">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="w-1/5 px-8 py-6">
+                            <input type="button" class="w-full btn btn-default btn-primary" @click="attachPrices" value="Submit">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+	</div>
+</template>
+
+<script>
+    export default {
+    	props: [
+			'chargers'
+		],
+        data() {
+            return {
+                price: '',
+                minPrice: '',
+                maxPrice: ''
+            };
+        },
+        methods: {
+            attachPrices() {
+                axios({
+	                method: 'post',
+	                url: '/nova-vendor/charger-prices/attach',
+	                data: {
+	                    price: this.price,
+	                    minPrice: this.minPrice,
+	                    maxPrice: this.maxPrice,
+	                    chargers: this.chargers
+	                }
+	            }).then(response => {
+	                console.log(response);
+	            });
+            }
+        }
+    }
+</script>
+
+<style lang="scss">
+    .form-group {
+        display: flex;
+
+        > div {
+            display: flex;
+            align-items: center;
+        }
+    }
+</style>

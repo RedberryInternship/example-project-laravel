@@ -2,7 +2,8 @@
 
 namespace App\Library\Chargers;
 
-class Base {
+class Base 
+{
 
     protected $protocol;
     protected $ip;
@@ -24,7 +25,8 @@ class Base {
         return $this -> parseResponse($response);
     }
 
-    private function parseResponse($response){
+    private function parseResponse($response)
+    {
 
         
         $data = [
@@ -35,8 +37,10 @@ class Base {
         return $data;
     }
 
-    protected function isOk($response){
-        if($response['status-code'] == 200){
+    protected function isOk($response)
+    {
+        if($response['status-code'] == 200)
+        {
             return true;
         }
 

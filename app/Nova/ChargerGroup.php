@@ -2,12 +2,14 @@
 
 namespace App\Nova;
 
+use App\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\BelongsToMany;
 
 class ChargerGroup extends Resource
@@ -43,11 +45,16 @@ class ChargerGroup extends Resource
      */
     public function fields(Request $request)
     {
+        $users = User::where('role_id', 3) -> get() -> keyBy('id') -> map(function($u) {
+            return $u -> first_name . ' ' . $u -> last_name;
+        }) -> toArray();
+
         return [
             ID::make()->sortable(),
             Text::make('name')
                 ->sortable(),
-            BelongsTo::make('User','user', 'App\Nova\User'),
+            Select::make('User','user_id')
+                ->options($users),
             HasMany::make('Chargers','chargers', 'App\Nova\Charger')
         ];
     }

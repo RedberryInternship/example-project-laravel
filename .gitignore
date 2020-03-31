@@ -19,7 +19,9 @@ yarn-error.log
 .env.production
 .env.staging
 .env.development
+.env.testing
 .DS_Store
 storage/debugbar
 .vscode
 swagger.yaml
+composer.lock

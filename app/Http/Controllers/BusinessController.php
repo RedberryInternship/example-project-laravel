@@ -1,17 +1,25 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\Charger as ChargerResource;
 
 class BusinessController extends Controller
 {
-    public function getIndex(){
-        $user   = Auth::user();
-        if(!$user)
-        {
-            return redirect('/business/login');
-        }
+    /**
+     * BusinessController Constructor. 
+     */
+    public function __construct()
+    {
+        $this -> middleware('auth') -> except(['getLogin', 'getForgotPassword']);
+    }
+
+    public function getIndex()
+    {
+        $user = Auth::user();
+
         return view('business.dashboard')-> with([
             'tabTitle'       => 'მთავარი გვერდი',
             'activeMenuItem' => 'dashboard',
@@ -19,13 +27,15 @@ class BusinessController extends Controller
         ]);
     }
 
-    public function getLogin(){
+    public function getLogin()
+    {
         return view('business.login') -> with([
             'tabTitle'            => 'ავტორიზაცია',
             'activeMenuItem'      => 'login',
             'backgroundClassName' => 'login'
         ]);
     }
+
     public function getForgotPassword()
     {
          return view('business.forgot-password') -> with([

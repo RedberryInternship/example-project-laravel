@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\User;
 use App\ChargerType;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
@@ -42,7 +43,8 @@ class Charger extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name'
+        'id',
+        'name'
     ];
 
     /**
@@ -60,6 +62,10 @@ class Charger extends Resource
      */
     public function fields(Request $request)
     {
+        $users = User::where('role_id', 3) -> get() -> keyBy('id') -> map(function($u) {
+            return $u -> first_name . ' ' . $u -> last_name;
+        }) -> toArray();
+
         $fieldsArr = [
             ID::make()->sortable(),
 
@@ -127,8 +133,10 @@ class Charger extends Resource
             // })-> onlyOnIndex(),
 
             BelongsToMany::make('Charger Tags','Tags', 'App\Nova\Tag'),
-            BelongsTo::make('user'),
+            Select::make('User','user_id')
+                ->options($users),
             BelongsTo::make('charger_group')
+                -> nullable()
         ];
 
         $charger_type_id = null;

@@ -48,12 +48,24 @@ class Charger extends Model
 
     public function connector_types()
     {
-        return $this -> belongsToMany('App\ConnectorType', 'charger_connector_types') -> withPivot('charger_type_id');
+        return $this
+                    -> belongsToMany('App\ConnectorType', 'charger_connector_types')
+                    -> withPivot([
+                        'min_price',
+                        'max_price',
+                        'charger_type_id'
+                    ]);
     }
 
     public function charger_types()
     {
-      return $this -> belongsToMany('App\ChargerType', 'charger_connector_types') -> withPivot('charger_type_id');
+      return $this
+                -> belongsToMany('App\ChargerType', 'charger_connector_types')
+				-> withPivot([
+					'min_price',
+        			'max_price',
+					'charger_type_id'
+				]);
     }
     
     public function charging_prices()
@@ -69,6 +81,26 @@ class Charger extends Model
     public function charger_group()
     {
         return $this -> belongsTo('App\ChargerGroup');
+    }
+
+    public function scopeFilterBy($query, $param, $value)
+    {
+        if (isset($param) && $param && isset($value) && $value)
+        {
+            if (is_array($value))
+            {
+                if ($value[0])
+                {
+                    $query = $query -> whereIn($param, $value);
+                }
+            }
+            else
+            {
+                $query = $query -> where($param, $value);
+            }
+        }
+
+        return $query;
     }
 
     public function orders()
@@ -95,11 +127,11 @@ class Charger extends Model
         $connectorTypeNames = [];
         if ($type == 'level2')
         {
-            $connectorTypeNames = ['Type 2', 'Combo 2'];
+            $connectorTypeNames = ['Type 2'];
         }
         else if ($type == 'fast')
         {
-            $connectorTypeNames = ['CHadeMO'];
+            $connectorTypeNames = ['Combo 2', 'CHadeMO'];
         }
 
         if (empty($connectorTypeNames))
@@ -186,3 +218,4 @@ class Charger extends Model
         }
     }
 }
+

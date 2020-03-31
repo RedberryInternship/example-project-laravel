@@ -24,7 +24,8 @@
         "spatie/laravel-schemaless-attributes": "^1.6",
         "spatie/laravel-translatable": "^4.2",
         "spatie/nova-translatable": "^2.0",
-        "tymon/jwt-auth": "dev-develop"
+        "tymon/jwt-auth": "dev-develop",
+        "redberry/charger-prices": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
@@ -32,12 +33,16 @@
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^8.0"
+        "phpunit/phpunit": "^8.3"
     },
     "repositories": [
         {
             "type": "path",
             "url": "./nova"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/ChargerPrices"
         }
     ],
     "config": {
