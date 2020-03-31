@@ -183,6 +183,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\SimulatorProvider::class,
         App\Providers\ChargerProvider::class,
+        App\Providers\ChargerSync::class,
     ],
 
     /*

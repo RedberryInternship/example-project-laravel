@@ -2,11 +2,10 @@
 
 namespace App\Facades;
 
-class Simulator extends Facade 
-{
+class ChargerSyncer extends Facade{
+  
   protected static function resolveFacade()
   {
-    return resolve('simulator');
+    return resolve('chargerSyncer');
   }
-
 }
