@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Business;
 
 use App\Charger;
+use App\ChargerConnectorType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -71,18 +72,18 @@ class ChargerController extends Controller
      */
     public function edit($id)
     {
-        $user    = Auth::user();
-        $charger = Charger::where('id', $id) -> with([
-            'tags' , 
-            'connector_types', 
-            'charger_types',
+        $user           = Auth::user();
+        $charger        = Charger::where('id', $id) -> with([
+            'charger_group',
             'charging_prices',
-            'fast_charging_prices'
+            'fast_charging_prices',
         ]) -> first();
+        $connectorTypes = ChargerConnectorType::where('charger_id', $id) -> get();
 
         $languages = ['ka', 'en', 'ru'];
 
         return view('business.chargers.edit') -> with([
+            'connectorTypes' => $connectorTypes,
             'languages'      => $languages,
             'tabTitle'       => 'რედაქტირება',
             'activeMenuItem' => 'charger',

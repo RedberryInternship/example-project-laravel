@@ -6,11 +6,7 @@
 
 @section('body')
 	<div class="row">
-			
-	</div>
-
-	<div class="row">
-		<div class="col s4">
+		<div class="col s12">
 			<div class="card">
 				<div class="card-content">
 					<table class="striped">
@@ -81,8 +77,10 @@
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<div class="col s8">
+	<div class="row">
+		<div class="col s12">
 			<div class="card card-tabs">
 				<div class="card-content">
 					<div class="row">
@@ -131,4 +129,8 @@
 			</div>
 		</div>
 	</div>
+
+	@include('business.connector-types.lvl2')
+
+	@include('business.connector-types.fast')
 @endsection
