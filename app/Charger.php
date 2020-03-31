@@ -33,7 +33,8 @@ class Charger extends Model
     ];
 
     protected $casts = [
-      'name' => 'array'
+      'name' => 'array',
+      'charger_id' => 'int',
     ];
 
     public function user()
