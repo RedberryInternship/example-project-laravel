@@ -27,3 +27,12 @@ Route::group(['prefix' => 'business'], function() {
     Route::resource('/chargers', 'Business\ChargerController');
     Route::resource('/charger-groups', 'Business\ChargerGroupController');
 });
+
+Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers/transactions'], function(){
+    Route::get('finish/{transaction_id}','TransactionController@finish');
+    Route::get('update/{transaction_id}/{value}','TransactionController@update');
+});
+
+Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
+
+Route::get('test','TestController@index');

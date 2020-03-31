@@ -170,6 +170,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Redberry\GeorgianCardGateway\GeorgianCardGatewayServiceProvider::class,
         PulkitJalan\GeoIP\GeoIPServiceProvider::class,
+        Aloha\Twilio\Support\Laravel\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -180,7 +181,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\NovaServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        App\Providers\SimulatorProvider::class,
+        App\Providers\ChargerProvider::class,
     ],
 
     /*
@@ -235,6 +237,7 @@ return [
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'GeoIP' => PulkitJalan\GeoIP\Facades\GeoIP::class,
+        'Twilio' => Aloha\Twilio\Support\Laravel\Facade::class,
     ],
 
 ];

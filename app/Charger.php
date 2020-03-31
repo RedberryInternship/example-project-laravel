@@ -102,4 +102,115 @@ class Charger extends Model
 
         return $query;
     }
+
+    public function orders()
+    {
+        return $this -> hasMany('App\Order');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query -> where('active', 1);
+    }
+
+    public function scopeFilterByFreeOrNot($query, $free)
+    {
+        return $query;
+    }
+
+    public function scopeFilterByType($query, $type)
+    {
+        $connectorTypeNames = [];
+        if ($type == 'level2')
+        {
+            $connectorTypeNames = ['Type 2'];
+        }
+        else if ($type == 'fast')
+        {
+            $connectorTypeNames = ['Combo 2', 'CHadeMO'];
+        }
+
+        if (empty($connectorTypeNames))
+        {
+            return $query;
+        }
+
+
+        return $query -> whereHas('connector_types', function($query) use($connectorTypeNames) {
+            return $query -> whereIn('connector_types.name', $connectorTypeNames);
+        });
+    }
+
+    public function scopeFilterByPublicOrNot($query, $public)
+    {
+        return $query -> where('public', $public);
+    }
+
+    public function scopeFilterByBusiness($query, $businessID)
+    {
+        return $query -> where('user_id', $businessID);
+    }
+
+    public function scopeFilterByText($query, $text)
+    {
+        return $query -> where(function($q) use ($text) {
+            return $q
+                -> where('location->en', 'like', '%' . $text . '%')
+                -> orWhere('location->ka', 'like', '%' . $text . '%')
+                -> orWhere('location->ru', 'like', '%' . $text . '%');
+        });
+    }
+
+    public function scopeFilterGroupedChargers($query)
+    {
+        return
+            $query
+                -> has('charger_group')
+                -> with(['charger_group' => function($q) {
+                    return $q -> withChargers();
+                }]);
+    }
+
+    public function scopeFilterNotGroupedChargers($query)
+    {
+        return $query -> doesntHave('charger_group');
+    }
+
+    public function scopeGroupedChargersWithSibblingChargers($query)
+    {
+        return $query -> with(['charger_group' => function($q) {
+            return $q -> withChargers();
+        }]);
+    }
+
+    public function scopeWithAllAttributes($query)
+    {
+        return $query -> with([
+            'tags',
+            'connector_types',
+            'charger_types',
+            'charging_prices',
+            'fast_charging_prices'
+        ]);
+    }
+
+    public function addFilterAttributeToChargers(&$chargers, $favoriteChargers, $inner = false)
+    {
+        foreach ($chargers as &$charger)
+        {
+            $isFavorite = false;
+            if (in_array($charger -> id, $favoriteChargers))
+            {
+                $isFavorite = true;
+            }
+
+            $charger -> is_favorite = $isFavorite;
+
+            if ( ! $inner && isset($charger -> charger_group) && isset($charger -> charger_group -> chargers) && ! empty($charger -> charger_group -> chargers))
+            {
+                $this -> addFilterAttributeToChargers($charger -> charger_group -> chargers, $favoriteChargers, true);
+            }
+        }
+    }
 }
+

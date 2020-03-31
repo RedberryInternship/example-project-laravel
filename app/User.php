@@ -54,6 +54,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -63,7 +64,7 @@ class User extends Authenticatable implements JWTSubject
         return $this -> belongsToMany('App\CarModel', 'user_car_models','user_id','model_id') -> withPivot('user_id');
     }
 
-    public function user_card()
+    public function user_cards()
     {
         return $this -> hasMany('App\UserCard');
     }
@@ -91,5 +92,4 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this -> hasMany('App\ChargerUser');
     }
-
 }

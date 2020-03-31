@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers\Api\app\V1;
 
-use App\Http\Controllers\Controller;
-use App\User;
-use Illuminate\Http\Request;
+use Twilio;
 use JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
+use App\User;
+use App\Order;
+use App\Charger;
+use App\CarModel;
+use App\TempSmsCode;
+use App\UserCarModel;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\TempSmsCode;
-use Carbon\Carbon;
-use App\CarModel;
-use App\UserCarModel;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\ChargerCollection;
+use App\Http\Resources\OrdersCollection;
+
 
 use Schema;
 
@@ -35,8 +42,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-    public function guard()
-    {
+      public function guard()
+      {
         return Auth::Guard('api');
     }
 
@@ -44,7 +51,7 @@ class UserController extends Controller
     {
         return response()->json([
             'access_token'  => $token,
-            'user'          => $this->guard()->user()->load('user_card','user_cars'),
+            'user'          => $this->guard()->user()->load('user_cards','user_cars','car_models'),
             'token_type'    => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL()
         ]);
@@ -62,16 +69,22 @@ class UserController extends Controller
             $temp -> code         = $rand;
             $temp -> updated_at   = Carbon::now();
             $temp -> save();
-        }else{
+        }
+        else
+        {
             $temp = TempSmsCode::create([
                 'phone_number' => $request -> get('phone_number'),
                 'code'         => $rand
             ]);
         }
+
+        Twilio::message($request -> get('phone_number'), $rand);
+
         return response() -> json([
             'json_status' => $json_status
         ]);
     }
+
     public function postVerifyCode(Request $request)
     {
         $json_status  = 'Not found';
@@ -107,7 +120,6 @@ class UserController extends Controller
             'phone_number' => $request -> get('phone_number')
         ], $status);
     }
-
 
     public function postVerifyCodeForPasswordRecovery(Request $request)
     {
@@ -147,6 +159,8 @@ class UserController extends Controller
             'phone_number' => $request -> get('phone_number')
         ], $status);
     }
+
+
 
     public function register(Request $request)
     {
@@ -209,6 +223,27 @@ class UserController extends Controller
         ], $status);
     }
 
+    public function postEditPassword(Request $request)
+    {   
+        $json_status = "User Not Found";
+        $status      = 401;
+
+        $user        = User::where('phone_number', $request -> phone_number) -> first();
+        
+        if($user && Hash::check($request -> old_password, $user -> password))
+        {
+            $user -> password = Hash::make($request -> new_password);
+            $user -> save();
+            $json_status = 'Password Edited';
+            $status      = 200;
+        }
+
+        return response() -> json([
+            'json_status' => $json_status,
+            'status_code' => $status
+        ], $status);
+    }
+
     public function postAddUserCar(Request $request)
     {
         $json_status = 'Not added!';
@@ -240,6 +275,10 @@ class UserController extends Controller
 
     public function getUserCars(Request $request)
     {   
+        
+        $json_status = 'Success';
+        $status      = 200;
+        
         $user_cars = [];
         $user = auth('api') -> user();
         if($user)
@@ -262,8 +301,7 @@ class UserController extends Controller
                             'model_name' => $model_name
                         ),
                     );
-                    $json_status = 'Success';
-                    $status      = 200;
+                    
                 }
             }
         }else{
@@ -274,15 +312,15 @@ class UserController extends Controller
     }
 
     public function postDeleteUserCar(Request $request)
-    {   
+    {
         $json_status = 'Not Deleted';
         $status      = 404;
         $user = auth('api') -> user();
         if($user)
         {
             $user_car    = UserCarModel::where([
-                'user_id', $user -> id,
-                'model_id', $request -> get('model_id')
+                ['user_id', $user -> id],
+                ['model_id', $request -> get('car_model_id')],
             ]) -> first();
             if($user_car)
             {
@@ -320,5 +358,45 @@ class UserController extends Controller
         return response() -> json(['updated' => $checker]);
     }
 
-}
+    public function getMe()
+    {
+        $user = auth('api') -> user();
+        $user -> load('user_cards','user_cars','car_models');
 
+        return response() -> json($user);
+    }
+
+    public function getOrders(Order $order)
+    {
+        $user = auth('api') -> user();
+
+        return new OrdersCollection(
+            $order
+                -> where('user_id', $user -> id)
+                -> with('charger')
+                -> confirmed()
+                -> confirmedPaymentsWithUserCards()
+                -> get()
+        );
+    }
+
+    public function getUserChargers(Charger $charger, $quantity = 3)
+    {
+        $user = auth('api') -> user();
+
+        return new ChargerCollection(
+            $charger -> whereHas('orders', function($query) use ($user) {
+                return $query -> where('user_id', $user -> id);
+            })
+            -> withAllAttributes()
+            -> orderBy('id', 'DESC')
+            -> take($quantity)
+            -> get()
+        );
+    }
+
+    public function testTwilio()
+    {
+        Twilio::message('+995598980526', 'Hello from twilio');
+    }
+}

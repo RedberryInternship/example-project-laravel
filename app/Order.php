@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Interfaces\Charger;	
 
 class Order extends Model
 {
@@ -25,6 +26,7 @@ class Order extends Model
         'comment',
         'status',
     ];
+
 
     public function user()
     {
@@ -49,5 +51,29 @@ class Order extends Model
     public function charging_type()
     {
     	return $this -> belongsTo('App\ChargingType');
+    }
+
+    public function payments()
+    {
+        return $this -> hasMany('App\Payment');
+    }
+
+    public function scopeConfirmed($query)
+    {
+        return $query -> where('confirmed', 1);
+    }
+
+    public function scopeConfirmedPayments($query)
+    {
+        return $query -> with(['payments' => function($q) {
+            return $q -> confirmed();
+        }]);
+    }
+
+    public function scopeConfirmedPaymentsWithUserCards($query)
+    {
+        return $query -> with(['payments' => function($q) {
+            return $q -> confirmed() -> withUserCards();
+        }]);
     }
 }
