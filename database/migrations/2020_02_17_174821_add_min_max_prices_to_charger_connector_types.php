@@ -14,8 +14,8 @@ class AddMinMaxPricesToChargerConnectorTypes extends Migration
     public function up()
     {
         Schema::table('charger_connector_types', function (Blueprint $table) {
-            $table->float('min_price', 5, 2);
-            $table->float('max_price', 5, 2);
+            $table->float('min_price', 5, 2) -> default(0);
+            $table->float('max_price', 5, 2) -> default(0);
         });
     }
 
