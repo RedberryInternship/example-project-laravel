@@ -5,21 +5,21 @@ namespace App\Console\Commands\Sync;
 use Illuminate\Console\Command;
 use App\Facades\ChargerSyncer;
 
-class SyncChargers extends Command
+class SyncSingleCharger extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'sync:chargers';
+    protected $signature = 'sync:single';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Synchronize all the chargers from Misha\'s back';
+    protected $description = 'Sync specific charger with [Charger -> charger_id]';
 
     /**
      * Create a new command instance.
@@ -38,11 +38,10 @@ class SyncChargers extends Command
      */
     public function handle()
     {
-        $this -> info("Started charger synchronizing from Misha's back...");
+        $charger_id = $this -> ask('Gimme charger_id[ Charger -> charger_id] to update the charger.');
         
-        ChargerSyncer::insertOrUpdate();
+        ChargerSyncer::insertOrUpdateOne($charger_id);
 
-        $this -> info('');
-        $this -> info("Synchronizing completed successfully!");
+        $this -> info('Charger successfully updated!');
     }
 }
