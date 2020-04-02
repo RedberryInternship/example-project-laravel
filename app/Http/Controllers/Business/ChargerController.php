@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Business;
 
 use App\Charger;
 use App\ChargerConnectorType;
+use App\Helpers\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -11,6 +12,14 @@ use App\Http\Resources\Charger as ChargerResource;
 
 class ChargerController extends Controller
 {
+    /**
+     * ChargerController Constructor. 
+     */
+    public function __construct()
+    {
+        $this -> middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -80,7 +89,7 @@ class ChargerController extends Controller
         ]) -> first();
         $connectorTypes = ChargerConnectorType::where('charger_id', $id) -> get();
 
-        $languages = ['ka', 'en', 'ru'];
+        $languages = Language::all();
 
         return view('business.chargers.edit') -> with([
             'connectorTypes' => $connectorTypes,

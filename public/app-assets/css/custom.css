@@ -7,3 +7,7 @@
 .delete-link{
 	color: #d82222;
 }
+
+#toast-container {
+	display: none !important;
+}
