@@ -50,11 +50,19 @@ class Charger extends Model
     public function connector_types()
     {
         return $this
+                    -> connector_types_all()
+                    -> where('status','active');
+    }
+
+    public function connector_types_all()
+    {
+        return $this
                     -> belongsToMany('App\ConnectorType', 'charger_connector_types')
                     -> withPivot([
                         'min_price',
                         'max_price',
-                        'charger_type_id'
+                        'charger_type_id',
+                        'status'
                     ]);
     }
 
