@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Library\Chargers\Sync;
-use App\ConnectorType;
 
 class ChargerSync extends ServiceProvider
 {
