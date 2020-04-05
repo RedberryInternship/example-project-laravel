@@ -13,7 +13,8 @@ class BusinessController extends Controller
      */
     public function __construct()
     {
-        $this -> middleware('auth') -> except(['getLogin', 'getForgotPassword']);
+        $this -> middleware('business.auth')
+              -> except(['getLogin', 'getForgotPassword']);
     }
 
     public function getIndex()

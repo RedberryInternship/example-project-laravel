@@ -16,7 +16,7 @@ class ServiceController extends Controller
      */
     public function __construct()
     {
-        $this -> middleware('auth');
+        $this -> middleware('business.auth');
 
         View::share([
             'languages' => Language::all()
