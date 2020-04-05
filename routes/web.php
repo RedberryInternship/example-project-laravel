@@ -24,10 +24,6 @@ Route::group(['prefix' => 'business'], function() {
     Route::post('/login', 'UserController@postAuthenticate');
     Route::get('/logout', 'UserController@getLogout');
 
-    // Route::get('/charger-services/{charger_id}', 'ChargerController@getChargerServices');
-    // Route::post('/add-charger-bussiness-service', 'ChargerController@postChargerBusinessService');
-    // Route::get('/delete-charger-business-service/{charger_business_service_id}', 'ChargerController@getDeleteChargerBusinessService');
-
     Route::resource('/chargers', 'Business\ChargerController');
     Route::resource('/services', 'Business\ServiceController');
     Route::resource('/charger-groups', 'Business\ChargerGroupController');

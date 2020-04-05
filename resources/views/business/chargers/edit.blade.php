@@ -118,8 +118,26 @@
 								@endforeach
 					      	</div>
 
+					      	<div class="row" style="margin-bottom: 1rem;">
+					      		<div class="input-field col s12">
+					      			<label for="charger_business_services">ბიზნეს სერვისები</label>
+					      		</div>
+				      		</div>
+
+				      		<div class="row">
+					      		<div class="input-field col s12">
+					      			<select id="charger_business_services" name="charger_business_services[]" class="select2 browser-default" multiple="multiple">
+					      				@foreach ($businessServices as $businessService)
+					      					<option value="{{ $businessService -> id }}" @if(in_array($businessService -> id, $chargerBusinessServices)) selected @endif>
+					      						{{ $businessService -> getTranslation('title', 'ka') }}
+					      					</option>
+					      				@endforeach
+					      			</select>
+					      		</div>
+					      	</div>
+
 					      	<div class="row">
-					      		<div class="col s12" style="display: flex; justify-content: flex-end;">
+					      		<div class="input-field col s12" style="display: flex; justify-content: flex-end;">
 					      			<button type="submit" class="btn waves-effect waves-light cyan">დამახსოვრება</button>
 					      		</div>
 					      	</div>

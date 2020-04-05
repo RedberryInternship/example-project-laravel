@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Business;
 
 use App\Charger;
+use App\BusinessService;
 use App\ChargerConnectorType;
 use App\Helpers\Language;
 use Illuminate\Http\Request;
@@ -86,18 +87,25 @@ class ChargerController extends Controller
             'charger_group',
             'charging_prices',
             'fast_charging_prices',
+            'business_services',
         ]) -> first();
-        $connectorTypes = ChargerConnectorType::where('charger_id', $id) -> get();
 
-        $languages = Language::all();
+        $connectorTypes          = ChargerConnectorType::where('charger_id', $id) -> get();
+
+        $languages               = Language::all();
+
+        $businessServices        = BusinessService::all();
+        $chargerBusinessServices = $charger -> business_services -> pluck('id') -> toArray();
 
         return view('business.chargers.edit') -> with([
-            'connectorTypes' => $connectorTypes,
-            'languages'      => $languages,
-            'tabTitle'       => 'რედაქტირება',
-            'activeMenuItem' => 'charger',
-            'charger'        => $charger,
-            'user'           => $user
+            'chargerBusinessServices' => $chargerBusinessServices,
+            'businessServices'        => $businessServices,
+            'connectorTypes'          => $connectorTypes,
+            'languages'               => $languages,
+            'tabTitle'                => 'რედაქტირება',
+            'activeMenuItem'          => 'charger',
+            'charger'                 => $charger,
+            'user'                    => $user
         ]);
     }
 
@@ -114,6 +122,8 @@ class ChargerController extends Controller
                  -> setTranslations('description', $request -> get('descriptions'))
                  -> setTranslations('location', $request -> get('locations'))
                  -> save();
+
+        $charger -> business_services() -> sync($request -> get('charger_business_services'));
 
         return redirect() -> back();
     }

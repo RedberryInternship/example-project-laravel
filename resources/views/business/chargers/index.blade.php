@@ -50,7 +50,7 @@
 														</i>
 													</td>
 													<td style="text-align: center;">
-														<a href="/business/chargers/{{ $charger -> id }}/edit" class="edit-link">
+														<a href="/business/chargers/{{ $charger -> id }}/edit" class="btn waves-effect waves-light btn-small">
 															<i class="material-icons">edit</i>
 														</a>
 													</td>
