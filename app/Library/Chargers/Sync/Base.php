@@ -1,25 +1,19 @@
 <?php
 
-namespace App\Library\Chargers;
+namespace App\Library\Chargers\Sync;
 
 use App\ConnectorType;
-use App\Facades\Charger;
 use App\Charger as OurCharger;
-use App\Library\Testing\MishasMockCharger;
 use Faker\Generator as Faker;
 
-class Sync
+class Base
 {
-
-
   /**
    * Existing Charger Connector Types.
    *
    * @var array<string>
    */
   private $connectorTypes = [];
-  
-  
   
   /**
    * Our Database Chargers Collection
@@ -33,19 +27,21 @@ class Sync
    * 
    * @var Faker\Generator
    */
-  private $faker;
-
+  protected $faker;
   
   /**
    * @param App\ConnectorType $connector_types
    * @param App\Charger $ourChargers
+   * @param Faker\Generator $faker
+   * 
    * @return void
    */
   public function __construct(ConnectorType $connector_types, OurCharger $ourChargers, Faker $faker)
   {
     $connector_types = $connector_types -> all();
 
-    foreach($connector_types as $conn_type){
+    foreach($connector_types as $conn_type)
+    {
       $this -> connectorTypes[ strtolower($conn_type -> name) ] = $conn_type -> id;
     }
 
@@ -53,103 +49,16 @@ class Sync
     $this -> faker = $faker;
   }
 
-  /**
-   * Insert or update existing charger records in 
-   * database with Misha's Chargers
-   * 
-   * @return void
-   */
-  public function insertOrUpdate()
-  {
-
-    $mishasChargers = $this -> getAllChargers();
-    
-    $this -> insertOrUpdateChargers($mishasChargers);
-  }
-
-  /**
-   * Insert or update one.
-   * 
-   * @param object $charger_id
-   * 
-   * @return void
-   */
-  public function insertOrUpdateOne($charger_id)
-  {
-    $m_charger = $this -> getCharger($charger_id);
-
-    $parsed_connectors = $this -> parseConnectors($m_charger -> connectors);
-    $m_charger = $this -> parseCharger($m_charger);
-
-    $this -> insertOrUpdateSingleCharger($m_charger, $parsed_connectors);
-  }
-
-  /**
-   * insert or update with custom Mock Misha's chargers
-   * 
-   * @param array<App\Library\Testing\MishasMockCharger> $mockChargers
-   */
-  public function mockInsertOrUpdate($mockChargers = null)
-  {
-
-    if(!$mockChargers)
-    {
-      $n = random_int(10, 20);
-      $mockChargers = $this -> generateMockChargers($n);
-    }
-
-    $this -> insertOrUpdateChargers($mockChargers);
-  }
-
-  /**
-   * Mock insert or update one
-   * 
-   * @param object $m_charger
-   */
-  public function mockInsertOrUpdateOne($m_charger)
-  {
-    $parsed_connectors = $this -> parseConnectors($m_charger -> connectors);
-    $m_charger = $this -> parseCharger($m_charger);
-
-    $this -> insertOrUpdateSingleCharger($m_charger, $parsed_connectors);
-  }
-
-  /**
-   * Generate mock chargers
-   * 
-   * @param int $numberOfInstances
-   * @return array<App\Library\Testing\MishasMockCharger> 
-   */
-  public function generateMockChargers($numberOfInstances)
-  {
-    $mockChargers = [];
-    while($numberOfInstances--){
-      $mockChargers []= $this -> generateSingleMockCharger();
-    }
-
-    return $mockChargers;
-  }
-
-  /**
-   * Generate new mock charger
-   * 
-   * @return App\Library\Testing\MishasMockCharger
-   */
-  public function generateSingleMockCharger() 
-  {
-    return new MishasMockCharger($this -> faker);
-  }
-
 
   /**
    * Insert or update existing charger records in database
    * 
-   * @param array<object> $mishasChargers
+   * @param array<object> $chargers
    */
-  private function insertOrUpdateChargers($mishasChargers)
+  protected function insertOrUpdateChargers($chargers)
   {
-    $parsedChargers = $this -> structuredChargers($mishasChargers);
-    $parsedConnectors = $this -> structuredConnectors($mishasChargers);
+    $parsedChargers = $this -> structuredChargers($chargers);
+    $parsedConnectors = $this -> structuredConnectors($chargers);
 
     foreach($parsedChargers as $charger)
     {
@@ -167,7 +76,7 @@ class Sync
    * @param array $charger_parsed_connectors
    * @return void
    */
-  private function insertOrUpdateSingleCharger($charger, $charger_parsed_connectors){
+  protected function insertOrUpdateSingleCharger($charger, $charger_parsed_connectors){
     $db_charger = $this -> getChargerFromLoadedCollection($charger['charger_id']);
 
     if($db_charger)
@@ -195,33 +104,11 @@ class Sync
   }
 
 
-  /**
-   * Get All the chargers from Misha's Database.
-   * 
-   * @return array<object>
-   */
-  private function getAllChargers()
-  {  
-    $response = Charger::all(); 
-    return $response['data'] -> data -> chargers;
-  }
 
   /**
-   * Get specific charger from Misha's Database.
+   * Structure chargers for insertion(or update)
    * 
-   * @param int $id
-   * @return array
-   */
-   private function getCharger($id){
-      $response = Charger::find($id);
-      return $response['data'] -> data; 
-   }
-
-
-
-  /**
-   * Structure retrieved chargers for insertion(or update)
-   * 
+   * @param array<object> $chargers
    * @return array<array>
    */
   private function structuredChargers($chargers)
@@ -238,9 +125,10 @@ class Sync
   /**
    * Parse each Misha's charger data into insertable record.
    * 
+   * @param object $charger
    * @return array
    */
-  private function parseCharger($charger)
+  protected function parseCharger($charger)
   {  
     $is_charger_active = $charger -> status == -1 ? false : true;
 
@@ -271,7 +159,7 @@ class Sync
 
 
   /**
-   * Find out if charger is updated in Misha's back or not
+   * Find out if charger is updated or not
    * 
    * @param App\Charger $db_charger
    * @param array $m_charger
@@ -291,7 +179,7 @@ class Sync
    * Find out if connectors are updated.
    * 
    * @param int $charger_id
-   * @param array $connectors
+   * @param array<object> $connectors
    * @return bool
    */
   private function areConnectorsUpdated($charger_id, $connectors)
@@ -301,58 +189,44 @@ class Sync
       -> where('charger_id', $charger_id) 
       -> first() 
       -> connector_types
-      -> pluck('name')
+      -> pluck('name', 'pivot.m_connector_type_id')
       -> all();
     
     $old_connectors = array_map('strtolower', $old_connectors);
-    sort($old_connectors);
 
-    $new_connectors = array_map('strtolower', $connectors);
-    sort($new_connectors);
 
+    array_walk($connectors, function(&$item) { $item = (array) $item; });
+    $connector_ids = array_column($connectors, 'id');
+    $connector_types = array_column($connectors, 'type');
+    $new_connectors = array_combine($connector_ids, $connector_types);
+    $new_connectors = array_map('strtolower', $new_connectors);
+
+    ksort($old_connectors);
+    ksort($new_connectors);
 
     return $old_connectors != $new_connectors;
   }
 
   /**
-   * Structure connectors from misha's chargers 
-   * in a way to easily insert them into db.
+   * Structure connectors in a way 
+   * to easily insert them into db.
    * 
    * @param array<object> $m_chargers
-   * 
    * @return array
    */
-
   private function structuredConnectors($m_chargers)
   {
     $structuredConnectors = [];
     foreach($m_chargers as $charger)
     {
-      $structuredConnectors [$charger -> id]= $this -> parseConnectors($charger -> connectors);
+      $structuredConnectors [$charger -> id]= $charger -> connectors;
     }
 
     return $structuredConnectors;
   }
 
   /**
-   * Parse each connector from Misha's chargers
-   * 
-   * @param object $conn
-   * @return array
-   */
-  private function parseConnectors($conns)
-  {
-    $connector_types = [];
-    foreach($conns as $conn)
-    {
-      $connector_types []= $conn -> type;
-    }
-
-    return $connector_types;
-  }
-
-  /**
-   * Check if this connector from Misha's Chargers exits, 
+   * Check if this connector exits, 
    * and if not add into the database
    * 
    * @param string $connector
@@ -363,9 +237,9 @@ class Sync
     $connector = strtolower($connector);
 
     $conn_types = array_keys($this -> connectorTypes);
-    $is_in_array = in_array($connector, $conn_types);
+    $is_not_in_array = !in_array($connector, $conn_types);
 
-    if(!$is_in_array){
+    if($is_not_in_array){
       $new_connector_type = ConnectorType::create([
         'name' => $connector
       ]);
@@ -375,11 +249,10 @@ class Sync
   }
 
   /**
-   * Update charger connectors
+   * Update charger connectors.
    * 
    * @param App\Charger $db_charger
    * @param array $connectors
-   * 
    * @return void
    */
    private function updateChargerConnectors($db_charger, $connectors)
@@ -393,14 +266,16 @@ class Sync
       -> connector_types()
       -> updateExistingPivot($existingConnTypeIds, ['status' => 'inactive']);
     
-    foreach($connectors as $connector){
-      
-      $connector = strtolower($connector);
-      $this -> addConnectorIfNotAdded($connector);
+    foreach($connectors as $connector)
+    {  
+      $connector_type = strtolower($connector -> type);
+      $this -> addConnectorIfNotAdded($connector_type);
       
       $db_charger
         -> connector_types()
-        -> attach($this -> connectorTypes[strtolower($connector)]);
+        -> attach($this -> connectorTypes[$connector_type],[
+          'm_connector_type_id' => $connector -> id,
+        ]);
     }
    }
 
@@ -414,13 +289,15 @@ class Sync
     */
    private function insertNewChargerWithConnectors($charger, $connectors)
    {
+
     $newCharger = OurCharger::create($charger);
     foreach($connectors as $connector)
     { 
-      $connector = strtolower($connector);
-      $this -> addConnectorIfNotAdded($connector);
-      $newCharger -> connector_types() -> attach( $this -> connectorTypes[$connector] );
+      $connector_type = strtolower($connector -> type);
+      $this -> addConnectorIfNotAdded($connector_type);
+      $newCharger -> connector_types() -> attach( $this -> connectorTypes[$connector_type], [
+        'm_connector_type_id' => $connector -> id
+      ]);
     }
    }
-
 }
