@@ -25,7 +25,7 @@ class ChargingController extends Controller
 
     // Start Charging With Misha's Charger
 
-    return response() -> json("Ok");
+    return response() -> json("Ok", $this -> status_code);
   }
 
 
@@ -34,7 +34,7 @@ class ChargingController extends Controller
 
     // Stop Charging With Misha's Charger
     
-    return response() -> json("ok");
+    return response() -> json("ok", $this -> status_code);
   }
 
 }
