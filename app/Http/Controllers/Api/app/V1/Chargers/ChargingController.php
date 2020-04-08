@@ -22,13 +22,19 @@ class ChargingController extends Controller
   public function start(StartCharging $request)
   {
 
-    return response() -> json("Ok");
+
+    // Start Charging With Misha's Charger
+
+    return response() -> json("Ok", $this -> status_code);
   }
 
 
   public function stop(StopCharging $request)
   {
-    return response() -> json("ok");
+
+    // Stop Charging With Misha's Charger
+    
+    return response() -> json("ok", $this -> status_code);
   }
 
 }
