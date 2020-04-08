@@ -62,7 +62,8 @@ class Charger extends Model
                         'min_price',
                         'max_price',
                         'charger_type_id',
-                        'status'
+                        'status',
+                        'm_connector_type_id',
                     ]);
     }
 
