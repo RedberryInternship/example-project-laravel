@@ -15,11 +15,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ChargerCollection;
 use App\Http\Resources\OrdersCollection;
+use App\Facades\Charger as MishasCharger;
 
 
 use Schema;
@@ -396,9 +395,10 @@ class UserController extends Controller
 
         $chargerModel -> addFilterAttributeToChargers($chargers, $favoriteChargers);
 
-        return new ChargerCollection(
-            $chargers
-        );
+        $free_charger_ids = MishasCharger::getActiveChargersIds();
+        Charger::addIsFreeAttributeToChargers($chargers, $free_charger_ids);
+
+        return new ChargerCollection($chargers);
     }
 
     public function testTwilio()

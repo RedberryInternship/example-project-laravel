@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
+use App\Facades\Charger as MishasCharger;
 
 class Charger extends Model
 {
@@ -59,6 +60,7 @@ class Charger extends Model
         return $this
                     -> belongsToMany('App\ConnectorType', 'charger_connector_types')
                     -> withPivot([
+                        'id',
                         'min_price',
                         'max_price',
                         'charger_type_id',
@@ -190,7 +192,7 @@ class Charger extends Model
         return $query -> doesntHave('charger_group');
     }
 
-    public function scopeGroupedChargersWithSibblingChargers($query)
+    public function scopeGroupedChargersWithSiblingChargers($query)
     {
         return $query -> with(['charger_group' => function($q) {
             return $q -> withChargers();
@@ -226,6 +228,38 @@ class Charger extends Model
                 $this -> addFilterAttributeToChargers($charger -> charger_group -> chargers, $favoriteChargers, true);
             }
         }
+    }
+
+    public static function addIsFreeAttributeToChargers(&$chargers, $free_charger_ids, $inner = false)
+    {
+        foreach ($chargers as &$charger)
+        {
+            $isFree = false;
+            if (in_array($charger -> charger_id, $free_charger_ids))
+            {
+                $isFree = true;
+            }
+
+            $charger -> is_free = $isFree;
+            
+            $is_it_parent_charger = ! $inner 
+                && isset($charger -> charger_group) 
+                && isset($charger -> charger_group -> chargers) 
+                && ! empty($charger -> charger_group -> chargers);
+            
+            if ($is_it_parent_charger)
+            {
+                static::addFilterAttributeToChargers(
+                    $charger -> charger_group -> chargers, 
+                    $free_charger_ids, 
+                    true,
+                );
+            }
+        }
+    }
+
+    public static function addIsFreeAttributeToCharger(&$charger){
+        $charger -> is_free = MishasCharger::isChargerFree( $charger -> charger_id );
     }
 }
 

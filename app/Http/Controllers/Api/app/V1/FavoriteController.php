@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\app\V1;
 
 use App\Http\Controllers\Controller;
+use App\Facades\Charger as MishasCharger;
 use Illuminate\Http\Request;
 use App\Charger;
 use App\Favorite;
@@ -47,7 +48,12 @@ class FavoriteController extends Controller
 
     public function getUserFavorites()
     {
-    	$user  	  = auth('api') -> user();
-    	return response() -> json(['user_favorite_chargers' => $user -> favorites]);
+			$user  	  				 = auth('api') -> user();
+			$favorite_chargers = $user -> favorites;
+
+			$free_charger_ids = MishasCharger::getActiveChargersIds();
+      Charger::addIsFreeAttributeToChargers($favorite_chargers, $free_charger_ids);
+			
+			return response() -> json(['user_favorite_chargers' => $favorite_chargers]);
     }
 }
