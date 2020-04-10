@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\App\V1\Chargers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use App\Charger as ChargerModel;
+
 use App\ChargerTransaction;
+use App\ChargerConnectorType;
 
 use App\Http\Requests\StartCharging;
 use App\Http\Requests\StopCharging;
@@ -48,42 +48,20 @@ class ChargingController extends Controller
   public function start(StartCharging $request)
   {
 
-
-    /** 
-     * get connector_type_id from request
-     * and retrieve charger_connector_type record
-     */
     $charger_connector_type_id = $request -> get('charger_connector_type_id');
-    $charger_connector_type = DB::table('charger_connector_types')
-      -> where('id', $charger_connector_type_id ) -> first();
+    $charger_connector_type = ChargerConnectorType::find($charger_connector_type_id);
 
-    /**
-     * get charger with 
-     * charger_connector_type -> charger_id
-     */
-    $charger = ChargerModel::find($charger_connector_type -> charger_id);
+    $charger = $charger_connector_type -> charger;
     
+    $transactionID = $this -> startCharging(
+      $charger -> charger_id, 
+      $charger_connector_type -> m_connector_type_id
+    );
     
-    /**
-     * start charging with misha's back, which if succeeds
-     * will return TransactionID if not 
-     * it's gonna give us false.
-     */
-    $transactionID = $this -> startCharging($charger -> charger_id, $charger_connector_type -> m_connector_type_id);
-    
-    /**
-     * if charging couldn't be started
-     * respond with appropriate response.
-     */
     if(!$transactionID){
       return $this -> respond();
     }
 
-
-    /**
-     * if start charging went well,
-     * we will create new charger_transaction record.
-     */
     $charger_transaction = ChargerTransaction::create([
       'charger_id' => $charger -> id,
       'connector_type_id' => $charger_connector_type -> connector_type_id,
@@ -91,11 +69,8 @@ class ChargingController extends Controller
       'transactionID' => $transactionID,
     ]);
 
-    /**
-     * then we're gonna add current kilowatt value
-     * to our transaction record. 
-     */
-    $charger_transaction -> createKilowatt(0);
+    $transaction_info = $this -> getTransactionInfo($transactionID);
+    $charger_transaction -> createKilowatt($transaction_info -> consumed);
 
     $this -> message = 'Charging successfully started!';
     return $this -> respond();
@@ -145,7 +120,8 @@ class ChargingController extends Controller
    */
   private function getTransactionInfo($transactionID)
   {
-    return $info = Charger::transactionInfo($transactionID);
+    $info = Charger::transactionInfo($transactionID);
+    return $info['data'] -> data;
   }
 
 
@@ -157,10 +133,39 @@ class ChargingController extends Controller
    */
   public function stop(StopCharging $request)
   {
-
-    // Stop Charging With Misha's Charger
+    $charger_connector_type_id = $request -> get('charger_connector_type_id');
+    $charger_connector_type = ChargerConnectorType::find($charger_connector_type_id);
     
-    return response() -> json("ok", $this -> status_code);
+    $charger = $charger_connector_type -> charger;
+    $charger_transaction = $charger_connector_type -> charger_transaction_first();
+    $transactionID = $charger_transaction -> transactionID;
+   
+    $has_charging_stopped = $this -> sendStopChargingRequestToMisha($charger -> charger_id, $transactionID);
+    
+    if($has_charging_stopped){
+      $charger_transaction -> status = 'CHARGED';
+      $charger_transaction -> save();
+
+      $this -> message = "Charging successfully stopped!";
+   }
+   else{
+     $this -> message = "Something Went Wrong!";
+   }
+
+   return $this -> respond();
+  }
+
+  /**
+   * Send stop charging request to Misha's back
+   * 
+   * @param int $charger_id
+   * @param string $transactionID
+   * @return bool
+   */
+  public function sendStopChargingRequestToMisha($charger_id, $transactionID)
+  {
+    $result = Charger::stop($charger_id, $transactionID) ;
+    return $result['data'] -> data == $transactionID;
   }
 
   /**
