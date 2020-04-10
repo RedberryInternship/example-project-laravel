@@ -96,7 +96,7 @@ class Charging extends TestCase {
 
 
   /** @test */  
-  public function stop_charging_has_charger_ID_error_when_not_providing_it()
+  public function stop_charging_has_charger_connector_type_id_error_when_not_providing_it()
   {
     $response = $this
       -> withHeader('Authorization','Bearer '.$this -> token)
@@ -104,9 +104,43 @@ class Charging extends TestCase {
       'transaction_id' => 7
     ]);
     
-    $response -> assertJsonValidationErrors(['charger_id']);
+    $response -> assertJsonValidationErrors(['charger_connector_type_id']);
   }
 
+
+  /** @test */
+  public function stop_charging_sends_stop_charging_call_and_updates_db()
+  {
+    $this -> initiateChargerTransactionWithIdOf_29();
+
+    $charger_connector_type = DB::table('charger_connector_types') -> first();
+
+    $this -> withHeader('Authorization', 'Bearer '.$this -> token)
+      -> post($this -> uri . 'charging/stop', [
+        'charger_connector_type_id' => $charger_connector_type -> id,
+      ]);
+    
+    $charger_transaction = ChargerTransaction::where('charger_id', $charger_connector_type -> charger_id)
+        -> where('connector_type_id', $charger_connector_type -> connector_type_id)
+        -> where('m_connector_type_id', $charger_connector_type -> m_connector_type_id)
+        -> first();
+
+    $this -> assertEquals("CHARGED", $charger_transaction -> status);
+  }
+
+  /** @test */
+  public function when_charger_transaction_is_initiated_status_is_INITIATED()
+  {
+    $this -> initiateChargerTransactionWithIdOf_29();
+    $charger_connector_type = DB::table('charger_connector_types') -> first();
+
+    $response = $this -> withHeader('Authorization', 'Bearer '. $this -> token)
+      -> get($this -> uri .'charging/status/'. $charger_connector_type -> id);
+
+    $response = $response -> decodeResponseJson();
+
+    $this -> assertEquals('INITIATED', $response['payload']['status']);
+  }
 
   /*************** Helpers *****************/ 
 
