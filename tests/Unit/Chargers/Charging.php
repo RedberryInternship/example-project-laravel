@@ -140,8 +140,25 @@ class Charging extends TestCase {
     $this -> assertEquals('INITIATED', $response['payload']['status']);
   }
 
+  /** @test */
+  public function when_charger_is_not_free_dont_charge()
+  {
+    $this -> initiateChargerTransactionWithIdOf_29();
 
-  
+
+
+    $response = $this -> withHeader('token', 'Bearer ' . $this -> token)
+      -> post($this -> uri . 'charging/start', [
+        'charger_connector_type_id' => ChargerConnectorType::first() -> id
+      ]);
+
+    $response = (object) $response -> decodeResponseJson();
+
+    $this -> assertEquals('The Charger is not free.', $response -> message);
+  }
+
+
+
 
   /*************** Helpers *****************/ 
 

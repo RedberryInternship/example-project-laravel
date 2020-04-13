@@ -46,12 +46,17 @@ class ChargingController extends Controller
    * @return Illuminate\Http\JsonResponse
    */
   public function start(StartCharging $request)
-  {
+  { 
 
     $charger_connector_type_id = $request -> get('charger_connector_type_id');
     $charger_connector_type = ChargerConnectorType::find($charger_connector_type_id);
 
     $charger = $charger_connector_type -> charger;
+    
+    if( ! Charger::isChargerFree( $charger -> charger_id )){
+      $this -> message = 'The Charger is not free.';
+      return $this -> respond();
+    }
     
     $transactionID = $this -> startCharging(
       $charger -> charger_id, 
