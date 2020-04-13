@@ -25,6 +25,16 @@ class ChargerTransaction extends Model
         return $this -> hasOne(Kilowatt::class);
     }
 
+    /**
+     * Relationship with chargers.
+     * 
+     * @return App\Charger
+     */
+    public function charger()
+    {
+        return $this -> belongsTo(Charger::class);
+    }
+
 
     /**
      * Helper to create new kilowatt record
@@ -74,4 +84,33 @@ class ChargerTransaction extends Model
             ]);
         }
     }
+
+
+    /** 
+     * Get Free Chargers IDs
+     * 
+     * @return array
+     */
+     public static function getFreeChargersIds()
+     {
+         $freeChargersIds = ChargerTransaction::with('charger') 
+         -> where('status','!=', 'FINISHED')
+         -> get() 
+         -> pluck('charger.id')
+         -> toArray();
+
+        return array_values(
+            array_unique($freeChargersIds)
+        );
+     }
+
+     /**
+      * Is the charger free
+      *
+      * @return bool
+      */
+      public static function isChargerFree($id)
+      {
+          return in_array( $id, static::getFreeChargersIds());
+      }
 }

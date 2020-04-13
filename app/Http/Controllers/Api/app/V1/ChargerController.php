@@ -60,8 +60,7 @@ class ChargerController extends Controller
             $chargerModel -> addFilterAttributeToChargers($chargers, $favoriteChargers);
         }
 
-        $free_charger_ids = MishasCharger::getActiveChargersIds();
-        Charger::addIsFreeAttributeToChargers($chargers, $free_charger_ids);
+        Charger::addIsFreeAttributeToChargers($chargers);
 
         return new ChargerCollection($chargers);
     }

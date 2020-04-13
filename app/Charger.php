@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 use App\Facades\Charger as MishasCharger;
+use App\ChargerTransaction;
 
 class Charger extends Model
 {
@@ -230,8 +231,16 @@ class Charger extends Model
         }
     }
 
-    public static function addIsFreeAttributeToChargers(&$chargers, $free_charger_ids, $inner = false)
+    public static function addIsFreeAttributeToChargers(&$chargers, $inner = false)
     {
+        /**
+         * get free_charger_ids from our db
+         * 
+         * $free_charger_ids = ChargerTransaction::getFreeChargersIds();
+         */
+
+        $free_charger_ids = MishasCharger::getFreeChargersIds();
+
         foreach ($chargers as &$charger)
         {
             $isFree = false;
@@ -259,6 +268,13 @@ class Charger extends Model
     }
 
     public static function addIsFreeAttributeToCharger(&$charger){
+
+        /**
+         * set is free attribute for charger from out db
+         * 
+         * $charger -> is_free = ChargerTransaction::isChargerFree( $charger -> charger_id );
+         */
+        
         $charger -> is_free = MishasCharger::isChargerFree( $charger -> charger_id );
     }
 }

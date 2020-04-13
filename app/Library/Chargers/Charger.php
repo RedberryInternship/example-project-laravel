@@ -30,7 +30,7 @@ class Charger extends Base
      * 
      * @return array
      */
-    public function getActiveChargersIds()
+    public function getFreeChargersIds()
     {    
         $free_chargers_ids = [];
         $all_chargers_info = $this -> all();

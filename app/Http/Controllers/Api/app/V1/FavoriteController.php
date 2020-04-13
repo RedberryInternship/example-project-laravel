@@ -51,8 +51,7 @@ class FavoriteController extends Controller
 			$user  	  				 = auth('api') -> user();
 			$favorite_chargers = $user -> favorites;
 
-			$free_charger_ids = MishasCharger::getActiveChargersIds();
-      Charger::addIsFreeAttributeToChargers($favorite_chargers, $free_charger_ids);
+      Charger::addIsFreeAttributeToChargers($favorite_chargers);
 			
 			return response() -> json(['user_favorite_chargers' => $favorite_chargers]);
     }
