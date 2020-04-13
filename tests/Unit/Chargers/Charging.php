@@ -12,6 +12,7 @@ use App\Charger;
 use App\ChargerTransaction;
 use App\Facades\MockSyncer;
 use App\Kilowatt;
+use App\ChargerConnectorType;
 use App\Traits\Testing\User as UserTrait;
 
 class Charging extends TestCase {
@@ -113,17 +114,14 @@ class Charging extends TestCase {
   {
     $this -> initiateChargerTransactionWithIdOf_29();
 
-    $charger_connector_type = DB::table('charger_connector_types') -> first();
+    $charger_connector_type = ChargerConnectorType::first();
 
     $this -> withHeader('Authorization', 'Bearer '.$this -> token)
       -> post($this -> uri . 'charging/stop', [
         'charger_connector_type_id' => $charger_connector_type -> id,
       ]);
     
-    $charger_transaction = ChargerTransaction::where('charger_id', $charger_connector_type -> charger_id)
-        -> where('connector_type_id', $charger_connector_type -> connector_type_id)
-        -> where('m_connector_type_id', $charger_connector_type -> m_connector_type_id)
-        -> first();
+    $charger_transaction = $charger_connector_type -> charger_transaction_first();
 
     $this -> assertEquals("CHARGED", $charger_transaction -> status);
   }
@@ -141,6 +139,9 @@ class Charging extends TestCase {
 
     $this -> assertEquals('INITIATED', $response['payload']['status']);
   }
+
+
+  
 
   /*************** Helpers *****************/ 
 
