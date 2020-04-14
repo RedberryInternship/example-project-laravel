@@ -16,7 +16,6 @@ class SimulatorProvider extends ServiceProvider
      */
     public function register()
     {   
-
         $this -> app -> bind('simulator', function(){
             
             $mishasBackIp = config('espace.mishas_back_ip');

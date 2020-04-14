@@ -21,17 +21,16 @@ class ChargerTransactions extends TestCase{
   {
     parent::setUp();
     
-    $this -> uri        = config('app')['uri'];
+    $this -> uri        = config( 'app' )['uri'];
     $this -> update_url = '/chargers/transactions/update/';
     $this -> stop_url   = '/chargers/transactions/stop/';
-
   }
 
 
     /** @test */
     public function charger_transaction_returns_valid_unfinished_transactions()
     {
-      DB::table('charger_transactions') -> insert([
+      DB::table( 'charger_transactions' ) -> insert([
         [
           'charger_id'          => 1,
           'connector_type_id'   => 1,
@@ -85,8 +84,8 @@ class ChargerTransactions extends TestCase{
       $free_chargers_ids        = ChargerTransaction::getFreeChargersIds();
       $is_charger_of_id_1_free  = ChargerTransaction::isChargerFree(1);
       
-      $this -> assertEquals(2, count($free_chargers_ids));
-      $this -> assertTrue($is_charger_of_id_1_free);
+      $this -> assertEquals( 2, count( $free_chargers_ids ));
+      $this -> assertTrue( $is_charger_of_id_1_free );
     }
 
     /** @test */
@@ -95,9 +94,9 @@ class ChargerTransactions extends TestCase{
       $transaction_ID           = '19815';
       $mishas_mock_charger_data = MockSyncer::generateSingleMockCharger();
       
-      MockSyncer::insertOrUpdate([$mishas_mock_charger_data]);
+      MockSyncer::insertOrUpdate([ $mishas_mock_charger_data ]);
 
-      $charger                = Charger::with('connector_types') -> first();
+      $charger                = Charger::with( 'connector_types' ) -> first();
       $charger_connector_type = $charger -> connector_types -> first();      
 
       $charger_transaction = ChargerTransaction::create([
@@ -108,14 +107,14 @@ class ChargerTransactions extends TestCase{
         'status'              => 'INITIATED',
       ]);
       
-      $this -> get($this -> update_url . $transaction_ID . '/'. 10);
-      $this -> get($this -> update_url . $transaction_ID . '/'. 20);
-      $this -> get($this -> update_url . $transaction_ID . '/'. 27);
+      $this -> get($this -> update_url . $transaction_ID . '/'. 10 );
+      $this -> get($this -> update_url . $transaction_ID . '/'. 20 );
+      $this -> get($this -> update_url . $transaction_ID . '/'. 27 );
 
       $last_consumed_kilowatt = $charger_transaction -> getLastConsumedKilowatt() -> value;
       $consumed_kilowatts     = $charger_transaction -> consumedKilowatts();
       
-      $this -> assertEquals($last_consumed_kilowatt, 27);
-      $this -> assertCount(3, $consumed_kilowatts);
+      $this -> assertEquals( $last_consumed_kilowatt, 27 );
+      $this -> assertCount( 3, $consumed_kilowatts );
     }
 }
