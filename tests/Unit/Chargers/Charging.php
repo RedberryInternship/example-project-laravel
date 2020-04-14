@@ -27,8 +27,8 @@ class Charging extends TestCase {
   {
     parent::setUp();
 
-    $this -> token = $this -> createUserAndReturnToken();
-    $this -> uri = config('app')['uri'];
+    $this -> token  = $this -> createUserAndReturnToken();
+    $this -> uri    = config('app')['uri'];
   }
 
   /** @test */  
@@ -44,20 +44,18 @@ class Charging extends TestCase {
   /** @test */
   public function start_charging_creates_new_charger_transaction_record_with_kilowatt()
   {
-
     $this -> initiateChargerTransactionWithIdOf_29();
-
       
     $charger_transactions_count = ChargerTransaction::count();
-    $kilowatt_count = Kilowatt::count();
+    $kilowatt_count             = Kilowatt::count();
 
     $this -> assertTrue($charger_transactions_count > 0);
     $this -> assertTrue($kilowatt_count > 0);
   }
 
   /** @test */
-  public function update_charger_transaction_adds_kilowatt_record(){
-    
+  public function update_charger_transaction_adds_kilowatt_record()
+  {  
     $this -> initiateChargerTransactionWithIdOf_29();
     
     $charger_transaction = ChargerTransaction::first();
@@ -66,6 +64,7 @@ class Charging extends TestCase {
     $this -> get('/chargers/transactions/update/'.$charger_transaction -> transactionID.'/14');
 
     $kilowatts = $charger_transaction -> kilowatt -> consumed;
+    
     $this -> assertCount(3, $kilowatts);
   }
 
@@ -79,6 +78,7 @@ class Charging extends TestCase {
     $this -> get('/chargers/transactions/finish/'. $charger_transaction -> transactionID);
 
     $new_charger_transaction_status = ChargerTransaction::first() -> status;
+    
     $this -> assertEquals('FINISHED', $new_charger_transaction_status);
   }
 
@@ -130,10 +130,11 @@ class Charging extends TestCase {
   public function when_charger_transaction_is_initiated_status_is_INITIATED()
   {
     $this -> initiateChargerTransactionWithIdOf_29();
+    
     $charger_connector_type = DB::table('charger_connector_types') -> first();
 
     $response = $this -> withHeader('Authorization', 'Bearer '. $this -> token)
-      -> get($this -> uri .'charging/status/'. $charger_connector_type -> id);
+                      -> get($this -> uri .'charging/status/'. $charger_connector_type -> id);
 
     $response = $response -> decodeResponseJson();
 
@@ -166,9 +167,9 @@ class Charging extends TestCase {
     Simulator::plugOffCable(29);
     for($i=0; $i < 10000000; $i+= 0.04); // Wait to perfectly finish disconnecting
 
-    $new_charger = MockSyncer::generateSingleMockCharger();
-    $new_charger_id = 29;
-    $new_charger -> id = $new_charger_id;
+    $new_charger        = MockSyncer::generateSingleMockCharger();
+    $new_charger_id     = 29;
+    $new_charger -> id  = $new_charger_id;
 
     MockSyncer::insertOrUpdateOne($new_charger);
 

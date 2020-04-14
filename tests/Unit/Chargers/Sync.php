@@ -3,12 +3,14 @@
 namespace Tests\Unit\Chargers;
 
 use Tests\TestCase;
-use App\Facades\Charger;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use App\Charger as OurCharger;
 use App\ConnectorType;
+
 use App\Facades\ChargerSyncer;
 use App\Facades\MockSyncer;
+use App\Facades\Charger;
 
 class Sync extends TestCase
 {
@@ -23,6 +25,7 @@ class Sync extends TestCase
     $this -> assertTrue($response['status_code'] == 700);
     
     $chargers = $response['data']->data->chargers;
+
     $this -> assertTrue(count($chargers) > 0);
   }
 
@@ -37,25 +40,26 @@ class Sync extends TestCase
   public function mass_insert_and_update_works()
   {
     $CUSTOM_CHARGER_DESCRIPTION = 'UPDATED_DESCRIPTION';
+    
     ChargerSyncer::insertOrUpdate();
 
-    $charger_id = $this -> getRandomChargerIdFromDB();
+    $charger_id       = $this -> getRandomChargerIdFromDB();
     $notYetExistingId = $this -> getNonExistingId();
-    $count_chargers = OurCharger::count();
+    $count_chargers   = OurCharger::count();
 
     /**
      * Make first mock charger that is going to
      * update existing one.
      */
-    $newCharger1 = MockSyncer::generateSingleMockCharger();
-    $newCharger1 -> id =  $charger_id;
+    $newCharger1                = MockSyncer::generateSingleMockCharger();
+    $newCharger1 -> id          =  $charger_id;
     $newCharger1 -> description = $CUSTOM_CHARGER_DESCRIPTION;
     
     /**
      * Make another mock charger that is going to be inserted.
      */
-    $newCharger2 = MockSyncer::generateSingleMockCharger();
-    $newCharger2 -> id = $notYetExistingId;
+    $newCharger2        = MockSyncer::generateSingleMockCharger();
+    $newCharger2 -> id  = $notYetExistingId;
 
     MockSyncer::insertOrUpdate([
       $newCharger1,
@@ -74,12 +78,10 @@ class Sync extends TestCase
     ChargerSyncer::insertOrUpdate();
     
     $NEW_CONNECTOR = 'FateZero';
-
     
-    $newCharger = MockSyncer::generateSingleMockCharger();
-    $newCharger -> id = $this -> getNonExistingId();
+    $newCharger                 = MockSyncer::generateSingleMockCharger();
+    $newCharger -> id           = $this -> getNonExistingId();
     $newCharger -> connectors []= $this -> makeNewConnectorObject($NEW_CONNECTOR);
-    
     
     MockSyncer::insertOrUpdate([
       $newCharger,
@@ -94,11 +96,12 @@ class Sync extends TestCase
   public function connectors_should_be_updated()
   {
     ChargerSyncer::insertOrUpdate();
-    $NEW_CONNECTOR1 = 'Maker 2';
-    $NEW_CONNECTOR1_ID = 7;
+    
+    $NEW_CONNECTOR1     = 'Maker 2';
+    $NEW_CONNECTOR1_ID  = 7;
 
-    $NEW_CONNECTOR2 = 'Starscrim 1';
-    $NEW_CONNECTOR2_ID = 8;
+    $NEW_CONNECTOR2     = 'Starscrim 1';
+    $NEW_CONNECTOR2_ID  = 8;
 
     $updated_charger_id = $this ->getRandomChargerIdFromDB();
     
@@ -110,10 +113,10 @@ class Sync extends TestCase
     
     $updated_charger = MockSyncer::generateSingleMockCharger();
 
-    $updated_charger -> id = $updated_charger_id;
-    $updated_charger -> connectors = [];
-    $updated_charger -> connectors []= $this -> makeNewConnectorObject($NEW_CONNECTOR2, $NEW_CONNECTOR2_ID);
-    $updated_charger -> connectors []= $this -> makeNewConnectorObject($NEW_CONNECTOR1, $NEW_CONNECTOR1_ID);
+    $updated_charger -> id            = $updated_charger_id;
+    $updated_charger -> connectors    = [];
+    $updated_charger -> connectors  []= $this -> makeNewConnectorObject($NEW_CONNECTOR2, $NEW_CONNECTOR2_ID);
+    $updated_charger -> connectors  []= $this -> makeNewConnectorObject($NEW_CONNECTOR1, $NEW_CONNECTOR1_ID);
 
     MockSyncer::insertOrUpdate([
       $updated_charger,
@@ -143,10 +146,11 @@ class Sync extends TestCase
   public function new_charger_can_be_inserted()
   {
     ChargerSyncer::insertOrUpdate();
-    $old_chargers_count = OurCharger::count(); 
-    $notYetExistingId = $this -> getNonExistingId();
 
-    $newCharger = MockSyncer::generateSingleMockCharger();
+    $old_chargers_count = OurCharger::count(); 
+    $notYetExistingId   = $this -> getNonExistingId();
+
+    $newCharger       = MockSyncer::generateSingleMockCharger();
     $newCharger -> id = $notYetExistingId;
 
     MockSyncer::insertOrUpdateOne($newCharger);
@@ -157,13 +161,13 @@ class Sync extends TestCase
   /** @test */
   public function mishas_connector_type_id_gets_inserted()
   {
-    $new_charger = MockSyncer::generateSingleMockCharger();
-    $new_connector = $this -> makeNewConnectorObject('Type 2');
+    $new_charger      = MockSyncer::generateSingleMockCharger();
+    $new_connector    = $this -> makeNewConnectorObject('Type 2');
 
-    $new_charger_id = $new_charger -> id;
+    $new_charger_id   = $new_charger -> id;
     $new_connector_id = $new_connector -> id;
 
-    $new_charger -> connectors = [];
+    $new_charger -> connectors   = [];
     $new_charger -> connectors []= $new_connector;
 
     MockSyncer::insertOrUpdateOne($new_charger);
@@ -202,7 +206,8 @@ class Sync extends TestCase
   private function getNonExistingId()
   {
     $notYetExistingId = 0;
-    $existingIds = OurCharger::pluck('charger_id')->all();
+    $existingIds      = OurCharger::pluck('charger_id')->all();
+    
     while(in_array($notYetExistingId, $existingIds))
     {
       $notYetExistingId = random_int(1, 1000);
@@ -221,8 +226,8 @@ class Sync extends TestCase
   public function makeNewConnectorObject($connector_name, $connector_id = null)
   {
     $new_connector = [
-      'id' => $connector_id ?? random_int(3, 10),
-      'type' => $connector_name,
+      'id'    => $connector_id ?? random_int(3, 10),
+      'type'  => $connector_name,
     ];
 
     return (object) $new_connector;

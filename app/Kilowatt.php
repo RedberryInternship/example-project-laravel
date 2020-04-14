@@ -9,7 +9,7 @@ class Kilowatt extends Model
     protected $guarded = [];
     
     protected $casts = [
-        'consumed' => 'array'
+        'consumed' => 'object'
     ];
 
     public function chargerTransaction()

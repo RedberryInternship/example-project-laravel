@@ -8,7 +8,7 @@ use Carbon\Carbon;
 class ChargerTransaction extends Model
 {
     /**
-     * Laravel $guarded attribute
+     * Laravel $guarded attribute.
      * 
      * @var array
      */
@@ -37,7 +37,7 @@ class ChargerTransaction extends Model
 
 
     /**
-     * Helper to create new kilowatt record
+     * Helper to create new kilowatt record.
      * 
      * @param int|float $consumed
      * @return void
@@ -85,9 +85,31 @@ class ChargerTransaction extends Model
         }
     }
 
+    /**
+     * Get latest consumed kilowatt.
+     * 
+     * @return object
+     */
+    public function getLastConsumedKilowatt()
+    {   
+        return $this -> consumedKilowatts() -> last();
+    }
+
+    /**
+     * Get all consumed kilowatt data.
+     * 
+     * @return Illuminate\Http\Collection
+     */
+    public function consumedKilowatts()
+    {
+        $consumed_kilowatts     = $this -> load('kilowatt') 
+                                        -> kilowatt 
+                                        -> consumed;
+        return collect($consumed_kilowatts);
+    }
 
     /** 
-     * Get Free Chargers IDs
+     * Get free chargers IDs.
      * 
      * @return array
      */
@@ -105,7 +127,7 @@ class ChargerTransaction extends Model
      }
 
      /**
-      * Is the charger free
+      * Is the charger free.
       *
       * @return bool
       */
