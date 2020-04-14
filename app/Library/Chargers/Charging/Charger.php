@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Library\Chargers;
+namespace App\Library\Chargers\Charging;
 
 use Exception;
 

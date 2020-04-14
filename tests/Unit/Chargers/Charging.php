@@ -145,8 +145,6 @@ class Charging extends TestCase {
   {
     $this -> initiateChargerTransactionWithIdOf_29();
 
-
-
     $response = $this -> withHeader('token', 'Bearer ' . $this -> token)
       -> post($this -> uri . 'charging/start', [
         'charger_connector_type_id' => ChargerConnectorType::first() -> id
