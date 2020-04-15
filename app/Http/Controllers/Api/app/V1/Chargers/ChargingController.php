@@ -57,7 +57,7 @@ class ChargingController extends Controller
       return $this -> respond();
     }
     
-    $transactionID = $this -> startCharging(
+    $transactionID = Charger::start(
       $charger                -> charger_id, 
       $charger_connector_type -> m_connector_type_id
     );
@@ -73,62 +73,11 @@ class ChargingController extends Controller
       'transactionID'       => $transactionID,
     ]);
 
-    $transaction_info = $this -> getTransactionInfo( $transactionID );
+    $transaction_info = Charger::transactionInfo( $transactionID );
     $charger_transaction -> createKilowatt( $transaction_info -> consumed );
 
     $this -> message = 'Charging successfully started!';
     return $this -> respond();
-  }
-
-  /**
-   * private method for starting charging with Misha's back
-   * and parsing responses to appropriate messages.
-   * 
-   * @param int $charger_id
-   * @param int $connector_id
-   * @return false|string
-   */
-  private function startCharging( $charger_id, $connector_id )
-  {
-    $result = Charger::start( $charger_id, $connector_id );
-    
-    if( $result['status_code'] == 700 )
-    {
-      switch( $result['data'] -> status )
-      {
-        case -2:
-          $this -> status_code  = 400;
-          $this -> message      = 'No such charger with charger_id of ' . $charger_id;
-          return false;
-
-        case -100:
-          $this -> status_code  = 400;
-          $this -> message      = 'Charger with charger_id of ' . $charger_id . ' is already charging!';
-        return false;
-
-        case 0:
-          $transactionID        = $result[ 'data' ] -> data;
-          return $transactionID;
-      }
-    }
-    else
-    {
-      $this -> status_code      = 707;
-      $this -> message          = 'Misha\'s Error';
-      return false;
-    }
-  }
-
-  /**
-   * Get transaction info from Misha's back.
-   * 
-   * @param string $transactionID
-   * @return object
-   */
-  private function getTransactionInfo( $transactionID )
-  {
-    $info = Charger::transactionInfo( $transactionID );
-    return $info[ 'data' ] -> data;
   }
 
 
@@ -173,8 +122,7 @@ class ChargingController extends Controller
    */
   public function sendStopChargingRequestToMisha( $charger_id, $transactionID )
   {
-    $result = Charger::stop( $charger_id, $transactionID );
-    return $result[ 'data' ] -> data == $transactionID;
+    return Charger::stop( $charger_id, $transactionID );
   }
 
   /**
