@@ -20,12 +20,9 @@ class Sync extends TestCase
   /** @test */
   public function do_we_get_the_chargers()
   {
-    $response = Charger::all();
+    $chargers = Charger::all();
 
-    $this -> assertTrue($response['status_code'] == 700);
-    
-    $chargers = $response['data']->data->chargers;
-
+    $this -> assertTrue(!!$chargers);
     $this -> assertTrue(count($chargers) > 0);
   }
 
