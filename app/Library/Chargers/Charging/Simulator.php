@@ -2,76 +2,67 @@
 
 namespace App\Library\Chargers\Charging;
 
+use App\Exceptions\SimulatorException;
 use Exception;
 
 class Simulator extends Base 
 {
 
-    private $response = [
-        'status' => null,
-        'status_code' => null,
-    ];
-
-
+    /**
+     * Tell charger that it is Lvl 2 charger.
+     * 
+     * @param int $charger_id
+     */
     public function activateSimulatorMode($charger_id)
     {
         $service_url = $this -> url . ':12801/api/simulator/cp/type/'. $charger_id . '/SIMULATOR_KEBA';
-        
-        try{
-            $response = $this->sendRequest($service_url);
+        try
+        {
+            $response    = $this->sendRequest($service_url);
             
             if($this -> isOk($response))
             {
-                $this -> response ['status'] = 'Keba Simulator Activated!';
-                $this -> response ['status_code'] = 700;
+                return 'Keba Simulator Activated!';
             }
-            else
-            {
-                throw new Exception();
-            }
+            throw new Exception();   
         }
         catch(Exception $e)
         {
-            $this -> response ['status'] = 'Keba Simulator Couldn\'t be Activated!';
-            $this -> response ['status_code'] = 707;
-        }
-        finally
-        {
-            return $this -> response;
+            return 'Keba simulator couldn\'t be activated!';
         }
     }
 
-
+    /**
+     * Give charger voltage.
+     * 
+     * @param int $charger_id
+     */
     public function upAndRunning($charger_id)
     {
         $service_url = $this -> url . ':12801/api/simulator/cp/add/'. $charger_id;
-        
-        try{
+       
+        try
+        {
             $response = $this->sendRequest($service_url);
             
             if($this -> isOk($response))
             {
-                $this -> response ['status'] = 'Charger is Up and Running!';
-                $this -> response ['status_code'] = 700;
+                return 'Charger is up and running!';
             }
-            else
-            {
-                throw new Exception();
-            }
-            
+            throw new Exception();
         }
         catch(Exception $e)
         {
-            $this -> response ['status'] = 'Charger Can\'t be brought Up and Running!';
-            $this -> response ['status_code'] = 707;
+            return 'Charger can\'t be brought up and running!';
         }
-        finally
-        {
-            return $this -> response;
-        }
+        
     }
 
-
+    /**
+     * Plug connector cable of the charger.
+     * 
+     * @param int $charger_id
+     */
     public function plugOffCable($charger_id)
     {
         $service_url = $this -> url . ':12801/api/simulator/cp/disconnect/'. $charger_id;
@@ -81,8 +72,7 @@ class Simulator extends Base
 
             if($this -> isOk($response))
             {
-                $this -> response ['status'] = 'Charger Cable is Off!';
-                $this -> response ['status_code'] = 700;
+                return  'Charger cable is off!';
             }
             else
             {
@@ -91,42 +81,35 @@ class Simulator extends Base
         }
         catch(Exception $e)
         {
-            $this -> response ['status'] = 'Charger Cable can\'t be Plugged Off!';
-            $this -> response ['status_code'] = 707;
+            return 'Charger cable can\'t be plugged off!';
         }
-        finally
-        {
-            return $this -> response;
-        }
+        
     }
 
-
+    /**
+     * Disconnect charger from voltage.
+     * 
+     * @param int $charger_id
+     */
     public function shutdown($charger_id)
     {
         $service_url = $this -> url . ':12801/api/simulator/cp/remove/'. $charger_id;
         
-        try{
+        try
+        {
             $response = $this->sendRequest($service_url);
-            
+
             if($this -> isOk($response))
             {
-                $this -> response ['status'] = 'Charger is Shut Down!';
-                $this -> response ['status_code'] = 700;
+                return 'Charger is shut down!';
             }
-            else
-            {
-                throw new Exception();
-            }     
+            throw new Exception();
         }
         catch(Exception $e)
         {
-            $this -> response ['status'] = 'Charger can\'t be Shut Down!';
-            $this -> response ['status_code'] = 707;
+            return 'Charger can\'t be shut down!';
         }
-        finally
-        {
-            return $this -> response;
-        }
+        
     }
 
 }
