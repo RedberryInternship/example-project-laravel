@@ -2,41 +2,94 @@
 
 namespace App\Library\Chargers\Charging;
 
+use App\Exceptions\Charger\MishasBackException;
+use Exception;
+
 class Base 
 {
-
+    /**
+     * Misha's protocol.
+     * 
+     * @var string $protocol
+     */
     protected $protocol;
-    protected $ip;
-    protected $url      = '';
 
+    /**
+     * Misha's ip.
+     * 
+     * @var string $ip
+     */
+    protected $ip;
+
+    /**
+     * Misha's url.
+     * 
+     * @var string $url
+     */
+    protected $url;
+
+
+    /**
+     * GuzzleClient.
+     * 
+     * @var \GuzzleHttp\Client $guzzleClient
+     */
     protected $guzzleClient;
 
-    public function __construct($protocol, $ip, $guzzleClient)
-    {
 
-        $this -> url = $protocol . '://' . $ip;
-        $this -> guzzleClient = $guzzleClient;
+    /**
+     * Instantiate config parameters.
+     * 
+     * @return void
+     */
+    public function __construct( $protocol, $ip, $guzzleClient )
+    {
+        $this -> guzzleClient  = $guzzleClient;
+        $this -> url           = $protocol . '://' . $ip;
     }
 
-    protected function sendRequest($serviceUrl)
+    /**
+     * Send request with guzzle and parse response.
+     * 
+     * @param string $serviceUrl
+     * @return array
+     */
+    protected function sendRequest( $serviceUrl )
     {
-        $response = $this -> guzzleClient -> request('GET', $serviceUrl);
+        try
+        {
+            $response = $this -> guzzleClient -> request( 'GET', $serviceUrl );
+        }
+        catch( Exception $e )
+        {
+            throw new MishasBackException();
+        }
 
-        return $this -> parseResponse($response);
+        return $this -> parseResponse( $response );
     }
 
-    private function parseResponse($response)
+    /**
+     * Parse request response.
+     * 
+     * @param GuzzleHttp\Psr7\Response $response
+     * @return array
+     */
+    private function parseResponse( $response )
     {
-
-        
         $data = [
-            'status-code' => $response -> getStatusCode(),
-            'body' => $response -> getBody() -> getContents(),
+            'status-code'  => $response -> getStatusCode(),
+            'body'         => $response -> getBody() -> getContents(),
         ];  
 
         return $data;
     }
 
+    /**
+     * Determine if response status is ok.
+     * 
+     * @param array $response
+     * @return bool
+     */
     protected function isOk($response)
     {
         if($response['status-code'] == 200)
