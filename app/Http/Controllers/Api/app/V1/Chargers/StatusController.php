@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\Api\App\V1\Chargers;
 
-
-use App\ChargerTransaction;
 use App\ChargerConnectorType;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 
 class StatusController extends Controller{
 
@@ -40,8 +37,8 @@ class StatusController extends Controller{
    public function __construct()
    {
      $this -> status_code = 200;
-     $this -> message = '';
-     $this -> payload = [];
+     $this -> message     = '';
+     $this -> payload     = [];
    }
 
   /**
@@ -49,35 +46,34 @@ class StatusController extends Controller{
    * 
    * @param int $charger_connector_id
    */
-  public function getChargingStatus($charger_connector_type_id)
+  public function getChargingStatus( $charger_connector_type_id )
   {
 
-    $charger_connector_type = ChargerConnectorType::find($charger_connector_type_id);
+    $charger_connector_type = ChargerConnectorType::find( $charger_connector_type_id );
     
-    if(!$charger_connector_type)
+    if( ! $charger_connector_type )
     {
       $this -> status_code = 204;
-      $this -> message = 'There is no charger transaction '
-        . 'with charger_connector_type_id of '
-        . $charger_connector_type_id .'.';
+      $this -> message     = 'There is no charger transaction '
+                              . 'with charger_connector_type_id of '
+                              . $charger_connector_type_id .'.';
     }
     else
     {
       $charger_transaction =  $charger_connector_type -> charger_transaction_first();
 
-      if($charger_transaction){
-        $this -> message = "Charging status successfully retrieved.";
-        $this -> payload['status'] = $charger_transaction -> status;
+      if( $charger_transaction ){
+        $this -> payload[ 'status' ] = $charger_transaction -> status;
+        $this -> message             = "Charging status successfully retrieved.";
       }
       else
       {
-        $this -> message = 'There is no charger transaction '
-          . 'with charger_connector_type_id of '
-          . $charger_connector_type_id .'.';
-        $this -> status_code = 204;
+        $this -> status_code  = 204;
+        $this -> message      = 'There is no charger transaction '
+                                . 'with charger_connector_type_id of '
+                                . $charger_connector_type_id .'.';
       }
     }
-
     return $this -> respond();
   }
 
@@ -91,8 +87,8 @@ class StatusController extends Controller{
   {
     return response() -> json([
       'status-code' => $this -> status_code,
-      'message' => $this -> message,
-      'payload' => $this -> payload,
+      'message'     => $this -> message,
+      'payload'     => $this -> payload,
     ], $this -> status_code);
   }
 }

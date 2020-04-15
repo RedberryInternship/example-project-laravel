@@ -36,7 +36,7 @@ class ChargingController extends Controller
   public function __construct()
   {
     $this -> status_code = 200;
-    $this -> message = '';
+    $this -> message     = '';
   }
 
   /**
@@ -47,35 +47,34 @@ class ChargingController extends Controller
    */
   public function start(StartCharging $request)
   { 
-
-    $charger_connector_type_id = $request -> get('charger_connector_type_id');
-    $charger_connector_type = ChargerConnectorType::find($charger_connector_type_id);
-
-    $charger = $charger_connector_type -> charger;
+    $charger_connector_type_id = $request -> get( 'charger_connector_type_id' );
+    $charger_connector_type    = ChargerConnectorType::find( $charger_connector_type_id );
+    $charger                   = $charger_connector_type -> charger;
     
-    if( ! Charger::isChargerFree( $charger -> charger_id )){
+    if( ! Charger::isChargerFree( $charger -> charger_id ))
+    {
       $this -> message = 'The Charger is not free.';
       return $this -> respond();
     }
     
     $transactionID = $this -> startCharging(
-      $charger -> charger_id, 
+      $charger                -> charger_id, 
       $charger_connector_type -> m_connector_type_id
     );
     
-    if(!$transactionID){
+    if( ! $transactionID ){
       return $this -> respond();
     }
 
     $charger_transaction = ChargerTransaction::create([
-      'charger_id' => $charger -> id,
-      'connector_type_id' => $charger_connector_type -> connector_type_id,
+      'charger_id'          => $charger -> id,
+      'connector_type_id'   => $charger_connector_type -> connector_type_id,
       'm_connector_type_id' => $charger_connector_type -> m_connector_type_id,
-      'transactionID' => $transactionID,
+      'transactionID'       => $transactionID,
     ]);
 
-    $transaction_info = $this -> getTransactionInfo($transactionID);
-    $charger_transaction -> createKilowatt($transaction_info -> consumed);
+    $transaction_info = $this -> getTransactionInfo( $transactionID );
+    $charger_transaction -> createKilowatt( $transaction_info -> consumed );
 
     $this -> message = 'Charging successfully started!';
     return $this -> respond();
@@ -89,30 +88,33 @@ class ChargingController extends Controller
    * @param int $connector_id
    * @return false|string
    */
-  private function startCharging($charger_id, $connector_id){
-    $result = Charger::start($charger_id, $connector_id);
+  private function startCharging( $charger_id, $connector_id )
+  {
+    $result = Charger::start( $charger_id, $connector_id );
     
-    if($result['status_code'] == 700){
-      switch($result['data'] -> status){
+    if( $result['status_code'] == 700 )
+    {
+      switch( $result['data'] -> status )
+      {
         case -2:
-          $this -> status_code = 400;
-          $this -> message = 'No such charger with charger_id of '. $charger_id;
+          $this -> status_code  = 400;
+          $this -> message      = 'No such charger with charger_id of ' . $charger_id;
           return false;
 
         case -100:
-          $this -> status_code = 400;
-          $this -> message = 'Charger with charger_id of '.$charger_id.' is already charging!';
+          $this -> status_code  = 400;
+          $this -> message      = 'Charger with charger_id of ' . $charger_id . ' is already charging!';
         return false;
 
         case 0:
-          $transactionID = $result['data'] -> data;
+          $transactionID        = $result[ 'data' ] -> data;
           return $transactionID;
       }
     }
     else
     {
-      $this -> status_code = 707;
-      $this -> message = 'Misha\'s Error';
+      $this -> status_code      = 707;
+      $this -> message          = 'Misha\'s Error';
       return false;
     }
   }
@@ -123,10 +125,10 @@ class ChargingController extends Controller
    * @param string $transactionID
    * @return object
    */
-  private function getTransactionInfo($transactionID)
+  private function getTransactionInfo( $transactionID )
   {
-    $info = Charger::transactionInfo($transactionID);
-    return $info['data'] -> data;
+    $info = Charger::transactionInfo( $transactionID );
+    return $info[ 'data' ] -> data;
   }
 
 
@@ -136,24 +138,26 @@ class ChargingController extends Controller
    * @param App\Http\Requests\StopCharging $request
    * @return Illuminate\Http\JsonResponse
    */
-  public function stop(StopCharging $request)
+  public function stop( StopCharging $request )
   {
-    $charger_connector_type_id = $request -> get('charger_connector_type_id');
-    $charger_connector_type = ChargerConnectorType::find($charger_connector_type_id);
+    $charger_connector_type_id  = $request -> get( 'charger_connector_type_id' );
+    $charger_connector_type     = ChargerConnectorType::find( $charger_connector_type_id );
     
-    $charger = $charger_connector_type -> charger;
-    $charger_transaction = $charger_connector_type -> charger_transaction_first();
-    $transactionID = $charger_transaction -> transactionID;
+    $charger                    = $charger_connector_type -> charger;
+    $charger_transaction        = $charger_connector_type -> charger_transaction_first();
+    $transactionID              = $charger_transaction -> transactionID;
    
-    $has_charging_stopped = $this -> sendStopChargingRequestToMisha($charger -> charger_id, $transactionID);
+    $has_charging_stopped       = $this -> sendStopChargingRequestToMisha( $charger -> charger_id, $transactionID );
     
-    if($has_charging_stopped){
+    if( $has_charging_stopped )
+    {
       $charger_transaction -> status = 'CHARGED';
       $charger_transaction -> save();
 
       $this -> message = "Charging successfully stopped!";
    }
-   else{
+   else
+   {
      $this -> message = "Something Went Wrong!";
    }
 
@@ -167,10 +171,10 @@ class ChargingController extends Controller
    * @param string $transactionID
    * @return bool
    */
-  public function sendStopChargingRequestToMisha($charger_id, $transactionID)
+  public function sendStopChargingRequestToMisha( $charger_id, $transactionID )
   {
-    $result = Charger::stop($charger_id, $transactionID) ;
-    return $result['data'] -> data == $transactionID;
+    $result = Charger::stop( $charger_id, $transactionID );
+    return $result[ 'data' ] -> data == $transactionID;
   }
 
   /**
@@ -184,7 +188,7 @@ class ChargingController extends Controller
     return response() 
       -> json([
         'status-code' => $this -> status_code,
-        'message' => $this -> message,
+        'message'     => $this -> message,
       ], $this -> status_code);
   }
 
