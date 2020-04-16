@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Library\Chargers\Simulator;
+use App\Library\Chargers\Charging\Simulator;
 use \GuzzleHttp\Client;
 
 
@@ -16,7 +16,6 @@ class SimulatorProvider extends ServiceProvider
      */
     public function register()
     {   
-
         $this -> app -> bind('simulator', function(){
             
             $mishasBackIp = config('espace.mishas_back_ip');

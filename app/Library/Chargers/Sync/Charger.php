@@ -43,9 +43,8 @@ class Charger extends Base
    * @return array<object>
    */
   private function getAllChargers()
-  {  
-    $response = MishasCharger::all(); 
-    return $response['data'] -> data -> chargers;
+  {   
+    return MishasCharger::all();
   }
 
   /**
@@ -55,8 +54,7 @@ class Charger extends Base
    * @return object
    */
    private function getCharger($id){
-      $response = MishasCharger::find($id);
-      return $response['data'] -> data; 
+      return MishasCharger::find($id);; 
    }
 
 }

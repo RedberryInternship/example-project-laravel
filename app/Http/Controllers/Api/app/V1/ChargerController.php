@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Charger;
 use App\Http\Resources\ChargerCollection;
 use App\Http\Resources\Charger as ChargerResource;
+use App\Facades\Charger as MishasCharger;
 
 class ChargerController extends Controller
 {
@@ -44,7 +45,8 @@ class ChargerController extends Controller
             $charger = $charger -> filterByText($request -> get('text'));
         }
 
-        $charger  = $charger -> groupedChargersWithSibblingChargers();
+
+        $charger  = $charger -> groupedChargersWithSiblingChargers();
 
         $chargers = $charger
                 -> OrderBy('id', 'desc')
@@ -58,6 +60,8 @@ class ChargerController extends Controller
             $chargerModel -> addFilterAttributeToChargers($chargers, $favoriteChargers);
         }
 
+        Charger::addIsFreeAttributeToChargers($chargers);
+
         return new ChargerCollection($chargers);
     }
 
@@ -69,10 +73,12 @@ class ChargerController extends Controller
      */
     public function getSingleCharger(Charger $charger, $charger_id)
     {
-        return new ChargerResource(
-            $charger
-                -> withAllAttributes()
-                -> find($charger_id)
-        );
+        $charger = $charger
+            -> withAllAttributes()
+            -> find($charger_id);
+
+        Charger::addIsFreeAttributeToCharger($charger);
+
+        return new ChargerResource($charger);
     }
 }
