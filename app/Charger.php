@@ -258,7 +258,7 @@ class Charger extends Model
             
             if ($is_it_parent_charger)
             {
-                static::addFilterAttributeToChargers(
+                static::addIsFreeAttributeToChargers(
                     $charger -> charger_group -> chargers, 
                     $free_charger_ids, 
                     true,
