@@ -45,7 +45,7 @@ class ChargerGroup extends Resource
      */
     public function fields(Request $request)
     {
-        $users = User::where('role_id', 3) -> get() -> keyBy('id') -> map(function($u) {
+        $users = User::where('role_id', 2) -> orWhere('role_id', 3) -> get() -> keyBy('id') -> map(function($u) {
             return $u -> first_name . ' ' . $u -> last_name;
         }) -> toArray();
 
