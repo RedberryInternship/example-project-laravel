@@ -37,6 +37,11 @@ class Payment extends Resource
     ];
 
     /**
+     * Grouping nova resource.
+     */
+    public static $group = 'User Resources';
+
+    /**
      * Eager Loading.
      *
      * @var string

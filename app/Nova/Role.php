@@ -33,6 +33,11 @@ class Role extends Resource
     ];
 
     /**
+     * Grouping nova resource.
+     */
+    public static $group = 'User Resources';
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
