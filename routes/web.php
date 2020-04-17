@@ -36,4 +36,4 @@ Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers
 
 Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
 
-Route::get('test','TestController@index');
+//Route::get('test','TestController@index');

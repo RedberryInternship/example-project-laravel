@@ -18,6 +18,10 @@
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
+
+        <testsuite name="Chargers">
+            <directory suffix=".php">./tests/Unit/Chargers</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
@@ -33,5 +37,6 @@
         <server name="SESSION_DRIVER" value="array"/>
         <server name="DB_CONNECTION" value="sqlite"/>
         <server name="DB_DATABASE" value=":memory:"/>
+        
     </php>
 </phpunit>
