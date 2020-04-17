@@ -26,6 +26,11 @@ class UserSmsCode extends Resource
     public static $title = 'name';
 
     /**
+     * Grouping nova resource.
+     */
+    public static $group = 'User Resources';
+
+    /**
      * The columns that should be searched.
      *
      * @var array

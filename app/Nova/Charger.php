@@ -47,6 +47,11 @@ class Charger extends Resource
     ];
 
     /**
+     * Grouping nova resource.
+     */
+    public static $group = 'Charger Resources';
+
+    /**
      * Eager Loading.
      *
      * @var string
