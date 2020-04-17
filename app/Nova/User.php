@@ -63,14 +63,7 @@ class User extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('role_id', function() {
-                if($this -> role_id == 2){
-                    return 'Admin';
-                }
-                else{
-                    return 'Personal User';
-                }
-            }) -> sortable(),
+            BelongsTo::make('Role'),
 
             Gravatar::make(),
             

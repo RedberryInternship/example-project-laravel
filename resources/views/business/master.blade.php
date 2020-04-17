@@ -15,6 +15,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- BEGIN: VENDOR CSS-->
     <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/select2/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/select2/select2-materialize.css">
     <!-- END: VENDOR CSS-->
     <!-- BEGIN: Page Level CSS-->
     <link rel="stylesheet" type="text/css" href="../../../app-assets/css/themes/vertical-dark-menu-template/materialize.css">
@@ -71,6 +73,7 @@
     <!-- END: Footer-->
     <!-- BEGIN VENDOR JS-->
     <script src="../../../app-assets/js/vendors.min.js"></script>
+    <script src="../../../app-assets/vendors/select2/select2.full.min.js"></script>
     <!-- BEGIN VENDOR JS-->
     <!-- BEGIN PAGE VENDOR JS-->
     <script src="../../../app-assets/vendors/chartjs/chart.min.js"></script>

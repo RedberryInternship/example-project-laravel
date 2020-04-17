@@ -17,7 +17,6 @@ class CreateChargerConnectorTypesTable extends Migration
             $table->bigIncrements('id');
             $table->integer('charger_id');
             $table->integer('connector_type_id')->nullable();
-            $table->integer('charger_type_id')->nullable();
             $table->timestamps();
         });
     }

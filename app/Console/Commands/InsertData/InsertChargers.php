@@ -2,13 +2,11 @@
 
 namespace App\Console\Commands\InsertData;
 
-use Illuminate\Console\Command;
-use App\Charger;
 use App\Tag;
+use App\Charger;
 use App\ChargerTag;
 use App\ChargerConnectorType;
-use App\FastChargingPrice;
-use App\ChargingPrice;
+use Illuminate\Console\Command;
 
 class InsertChargers extends Command
 {
@@ -49,7 +47,6 @@ class InsertChargers extends Command
 
         foreach($json as $chargers_arrays)
         {   
-           
             foreach($chargers_arrays as $charger_array)
             {
                 $old_id      = $charger_array['id'];
@@ -58,31 +55,24 @@ class InsertChargers extends Command
                 $public      = $charger_array['paid'];
                 $lat         = $charger_array['latitude'];               
                 $lng         = $charger_array['longitude'];           
-                $type        = $charger_array['type'];       
                 $status      = $charger_array['status'];        
                 $category_id = $charger_array['category_id'];
                 $iban        = $charger_array['iban'];
                 $tag_id      = null;
 
-                if($category_id)
+                if ($category_id)
                 {
                     $tag         = Tag::where('old_id',$category_id)->first();
                     $tag_id      = $tag -> id;
                 }
 
-                if($type == 0)
-                {
-                    $type = 1;
-
-                }elseif($type == 1){
-                    $type = 2;
-                }
-
-                if($status == -1)
+                if ($status == -1)
                 {
                     $status = 0;
 
-                }elseif($status == 0){
+                }
+                elseif ($status == 0)
+                {
                     $status = 1;
                 }
 
@@ -122,71 +112,13 @@ class InsertChargers extends Command
                     ]);
                 }
 
-                if($type)
-                {
-                    if($type == 1)
-                    {
-                        $lvl2_charging_price = ChargingPrice::create([
-                            'charger_id' => $charger -> id,
-                            'min_kwt'    => '0',
-                            'max_kwt'    => '5',
-                            'start_time' => 0,
-                            'end_time'   => 24,
-                            'price'      => 0
-                        ]);
-                        $lvl2_charging_price = ChargingPrice::create([
-                            'charger_id' => $charger -> id,
-                            'min_kwt'    => '5',
-                            'max_kwt'    => '10',
-                            'start_time' => 0,
-                            'end_time'   => 24,
-                            'price'      => 0
-                        ]);
-                        $lvl2_charging_price = ChargingPrice::create([
-                            'charger_id' => $charger -> id,
-                            'min_kwt'    => '10',
-                            'max_kwt'    => '15',
-                            'start_time' => 0,
-                            'end_time'   => 24,
-                            'price'      => 0
-                        ]);
-                        $lvl2_charging_price = ChargingPrice::create([
-                            'charger_id' => $charger -> id,
-                            'min_kwt'    => '15',
-                            'max_kwt'    => '21',
-                            'start_time' => 0,
-                            'end_time'   => 24,
-                            'price'      => 0
-                        ]);
-                    }elseif($type == 2)
-                    {
-                        $fast_charging_price = FastChargingPrice::create([
-                            'charger_id' => $charger -> id,
-                            'start_minutes' => 0,
-                            'end_minutes'   => 20,
-                            'price'         => 0.5
-                        ]);
-                        $fast_charging_price = FastChargingPrice::create([
-                            'charger_id' => $charger -> id,
-                            'start_minutes' => 20,
-                            'end_minutes'   => 40,
-                            'price'         => 0.35
-                        ]);
-                        $fast_charging_price = FastChargingPrice::create([
-                            'charger_id' => $charger -> id,
-                            'start_minutes' => 40,
-                            'end_minutes'   => 10000000000000,
-                            'price'         => 0.25
-                        ]);
-                    }
-                    $charger_type = ChargerConnectorType::create([
-                        'charger_id'        => $charger -> id,
-                        'charger_type_id'   => $type,
-                        'connector_type_id' => 9
-                    ]);
-                }
+                $charger_type = ChargerConnectorType::create([
+                    'charger_id'        => $charger -> id,
+                    'connector_type_id' => 9
+                ]); 
             }   
         }
+
         $this->info('Finished inserting chargers');
     }
 }

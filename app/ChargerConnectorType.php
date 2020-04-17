@@ -15,8 +15,6 @@ class ChargerConnectorType extends Model
      */
     protected $guarded = [];
 
-
-
     /**
      * BelongsTo relationship with connector_types.
      * 

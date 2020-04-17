@@ -17,12 +17,8 @@ class CreateBusinessServicesTable extends Migration
         Schema::create('business_services', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
-            $table->string('title_en');
-            $table->string('title_ka');
-            $table->string('title_ru');
-            $table->text('description_en');
-            $table->text('description_ka');
-            $table->text('description_ru');
+            $table->json('title')->nullable();
+            $table->json('description')->nullable();
             $table->text('image');
             $table->timestamps();
         });

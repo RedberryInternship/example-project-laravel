@@ -13,6 +13,8 @@ class AddMinMaxPricesToChargerConnectorTypes extends Migration
      */
     public function up()
     {
+        #TODO: Needs Refactor
+
         if(app() ->runningUnitTests())
         {
             Schema::table('charger_connector_types', function (Blueprint $table) {

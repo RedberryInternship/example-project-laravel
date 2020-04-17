@@ -3,18 +3,21 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
 
 class BusinessService extends Model
 {
+	use HasTranslations;
+
 	protected $fillable = [
 	    'user_id',
-	    'title_en',
-	    'title_ka',
-	    'title_ru',
-	    'description_en',
-	    'description_ka',
-	    'description_ru',
-	    'image'
+	    'title',
+	    'description',
+	    'image',
 	];
-	
+
+	public $translatable = [
+      'title',
+      'description',
+    ];
 }

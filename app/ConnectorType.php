@@ -18,18 +18,6 @@ class ConnectorType extends Model
 				-> withPivot([
 					'min_price',
         			'max_price',
-					'charger_type_id'
                 ]);
-    }
-
-    public function charger_types()
-    {
-	  return $this
-				-> belongsToMany('App\ChargerType', 'charger_connector_types')
-				-> withPivot([
-					'min_price',
-        			'max_price',
-					'charger_type_id'
-				]);
     }
 }

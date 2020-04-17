@@ -24,6 +24,7 @@ class ChargerTypes extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
+        return $query;
         return $query->whereHas('charger_types', function($query) use ($value) {
             $query->where('charger_type_id', $value);
         });

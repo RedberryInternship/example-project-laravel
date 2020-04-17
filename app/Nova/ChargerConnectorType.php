@@ -46,7 +46,6 @@ class ChargerConnectorType extends Resource
         return [
             ID::make()->sortable(),
             Text::make('connector_type_id'),
-            Text::make('charger_type_id')
         ];
     }
 

@@ -64,31 +64,9 @@ class Charger extends Model
                         'id',
                         'min_price',
                         'max_price',
-                        'charger_type_id',
                         'status',
                         'm_connector_type_id',
                     ]);
-    }
-
-    public function charger_types()
-    {
-      return $this
-                -> belongsToMany('App\ChargerType', 'charger_connector_types')
-				-> withPivot([
-					'min_price',
-        			'max_price',
-					'charger_type_id'
-				]);
-    }
-    
-    public function charging_prices()
-    {
-        return $this -> hasMany('App\ChargingPrice');
-    }
-
-    public function fast_charging_prices()
-    {
-        return $this -> hasMany('App\FastChargingPrice');
     }
 
     public function charger_group()
@@ -205,7 +183,6 @@ class Charger extends Model
         return $query -> with([
             'tags',
             'connector_types',
-            'charger_types',
             'charging_prices',
             'fast_charging_prices',
             'business_services'
@@ -267,8 +244,8 @@ class Charger extends Model
         }
     }
 
-    public static function addIsFreeAttributeToCharger(&$charger){
-
+    public static function addIsFreeAttributeToCharger(&$charger)
+    {
         /**
          * set is free attribute for charger from out db
          * 
