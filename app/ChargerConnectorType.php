@@ -14,12 +14,6 @@ class ChargerConnectorType extends Model
         'connector_type_id'
     ];
 
-
-    // public function charger_type()
-    // {
-    // 	return $this -> belongsTo('App\ChargerType');
-    // }
-
     public function connector_type()
     {
     	return $this -> belongsTo('App\ConnectorType');

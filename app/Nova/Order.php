@@ -46,7 +46,7 @@ class Order extends Resource
      *
      * @var string
      */
-    public static $with = ['user.role', 'charger_type', 'charging_type', 'connector_type', 'charger'];
+    public static $with = ['user.role', 'charging_type', 'connector_type', 'charger'];
 
     /**
      * Get the fields displayed by the resource.

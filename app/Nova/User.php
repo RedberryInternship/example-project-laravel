@@ -64,10 +64,12 @@ class User extends Resource
             ID::make()->sortable(),
 
             Text::make('role_id', function() {
-                if($this -> role_id == 2){
+                if($this -> role_id == 2)
+                {
                     return 'Admin';
                 }
-                else{
+                else
+                {
                     return 'Personal User';
                 }
             }) -> sortable(),

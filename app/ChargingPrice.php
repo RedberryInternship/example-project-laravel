@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ChargingPrice extends Model
 {
     protected $fillable = [
-        'charger_id',
+        'charger_connector_type_id',
         'min_kwt',
         'max_kwt',
         'start_time',
@@ -15,8 +15,8 @@ class ChargingPrice extends Model
         'price'
     ];
 
-    public function charger()
+    public function chargerConnectorType()
     {
-    	return $this -> belongsTo('App\Charger');
+    	return $this -> belongsTo('App\ChargerConnectorType');
     }
 }

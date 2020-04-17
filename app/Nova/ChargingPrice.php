@@ -43,7 +43,7 @@ class ChargingPrice extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Charger Name','charger', 'App\Nova\Charger'),
+            BelongsTo::make('Charger Connector Type', 'chargerConnectorType', 'App\Nova\ChargerConnectorType'),
             Text::make('min_kwt'),
             Text::make('max_kwt'),
             Text::make('start_time'),

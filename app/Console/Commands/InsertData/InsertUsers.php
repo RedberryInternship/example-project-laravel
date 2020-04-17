@@ -52,31 +52,36 @@ class InsertUsers extends Command
                 $last_name    = $user_array['last_name'];
                 $phone_number = $user_array['phone_number'];
                 $phone_number = str_replace(" ","",$phone_number);
-                if(substr($phone_number, 0,4) == "+995")
+ 
+                if (substr($phone_number, 0,4) == "+995")
                 {
-                    $phone_number = substr($phone_number,4);
-                }elseif(substr($phone_number, 0,3) == '995')
-                {
-                    $phone_number = substr($phone_number,3);
+                    $phone_number = substr($phone_number, 4);
                 }
-                $password     = $user_array['password'];
-                $active       = 1;
-                $verified     = 0;
-                $role         = 1;
-                $user   = User::create([
-                    'old_id'                => intval($old_id),
-                    'first_name'            => $first_name,
-                    'last_name'             => $last_name,
-                    'full_name'             => $first_name ." ". $last_name,
-                    'email'                 => $email,
-                    'password'              => $password,
-                    'phone_number'          => $phone_number,
-                    'active'                => $active,
-                    'verified'              => $verified,
-                    'role_id'               => $role
+                elseif (substr($phone_number, 0,3) == '995')
+                {
+                    $phone_number = substr($phone_number, 3);
+                }
+
+                $active   = 1;
+                $verified = 0;
+                $role     = 1;
+                $password = $user_array['password'];
+
+                $user     = User::create([
+                    'old_id'       => intval($old_id),
+                    'first_name'   => $first_name,
+                    'last_name'    => $last_name,
+                    'full_name'    => $first_name ." ". $last_name,
+                    'email'        => $email,
+                    'password'     => $password,
+                    'phone_number' => $phone_number,
+                    'active'       => $active,
+                    'verified'     => $verified,
+                    'role_id'      => $role
                 ]);
             }
         }
-        $this->info('Finished inserting users');
+
+        $this -> info('Finished inserting users');
     }
 }

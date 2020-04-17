@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands\InsertData;
 
-use Illuminate\Console\Command;
 use App\Charger;
-use App\ChargerConnectorType;
 use App\ConnectorType;
+use App\ChargerConnectorType;
+use Illuminate\Console\Command;
 
 class InsertChargerConnectorTypes extends Command
 {
@@ -70,14 +70,7 @@ class InsertChargerConnectorTypes extends Command
 
                 $charger_connector_types = ChargerConnectorType::where('charger_id', $charger_id) -> update([
                     'connector_type_id'       => $connector_type_id
-                ]);
-
-                // foreach($charger_connector_types as $charger_connector_types)
-                // {
-                //     $charger_types_connector_type = ChargerConnectorType::update([
-                //         'connector_type_id'       => $connector_type_id
-                //     ]);
-                // }
+                ]); 
             }   
         }
         $this->info('Finished inserting charger connector types');

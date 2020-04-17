@@ -44,7 +44,7 @@ class FastChargingPrice extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Charger Name','charger', 'App\Nova\Charger'),
+            BelongsTo::make('Charger Connector Type', 'chargerConnectorType', 'App\Nova\ChargerConnectorType'),
             Text::make('start_minutes'),
             Text::make('end_minutes'),
             Text::make('price'),
