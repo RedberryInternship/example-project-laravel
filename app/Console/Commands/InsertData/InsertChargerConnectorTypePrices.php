@@ -44,7 +44,7 @@ class InsertChargerConnectorTypePrices extends Command
 
         foreach ($chargerConnectorTypes as $chargerConnectorType)
         {
-            if ($chargerConnectorType == 1) // Level 2
+            if ($chargerConnectorType -> connector_type_id == 1) // Level 2
             {
                 $prices = [
                     ['min_kwt' => 0, 'max_kwt' => 5, 'price' => 0],

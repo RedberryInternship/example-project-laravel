@@ -35,6 +35,21 @@ class ChargerConnectorType extends Model
         return $this -> belongsTo(Charger::class);
     }
 
+    /**
+     * Charging Prices.
+     */
+    public function charging_prices()
+    {
+        return $this -> hasMany(ChargingPrice::class);
+    }
+
+    /**
+     * Fast Charging Prices.
+     */
+    public function fast_charging_prices()
+    {
+        return $this -> hasMany(FastChargingPrice::class);
+    }
 
     /**
      * Get the newest charger transaction.
