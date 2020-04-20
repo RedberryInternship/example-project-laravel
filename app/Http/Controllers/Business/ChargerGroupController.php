@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Business;
 
+use App\Charger;
 use App\ChargerGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -91,9 +92,15 @@ class ChargerGroupController extends Controller
             }
         ]);
 
-        // dd($chargerGroup -> toArray());
+        $user -> load([
+            'chargers' => function($query) {
+                $query -> with('charger_group')
+                       -> orderBy('id', 'DESC');
+            }
+        ]);
 
         return view('business.charger-groups.edit') -> with([
+            'user'         => $user,
             'chargerGroup' => $chargerGroup
         ]); 
     }
