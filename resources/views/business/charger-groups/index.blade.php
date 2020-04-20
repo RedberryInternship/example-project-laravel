@@ -20,24 +20,29 @@
 	                        <div class="row">
 	                            <div class="col s12">
 									<table class="responsive-table">
-										<tr>
-											<th>ID</th>
-											<th>სახელი</th>
-											<th style="text-align: center;">დამტენების რაოდენობა</th>
-											<th style="text-align: center;">რედაქტირება</th>
-										</tr>
-										@foreach($chargerGroups as $chargerGroup)
-											<tr>
-												<td>{{ $chargerGroup -> id }}</td>
-												<td>{{ $chargerGroup -> name }}</td>
-												<td style="text-align: center;">{{ $chargerGroup -> chargers -> count() }}</td>
-												<td style="text-align: center;">
-													<a href="/business/charger-groups/{{ $chargerGroup -> id }}/edit" class="edit-link">
-														<i class="material-icons">edit</i>
-													</a>
-												</td>
-											</tr>
-										@endforeach
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>სახელი</th>
+                                                <th style="text-align: center;">დამტენების რაოდენობა</th>
+                                                <th style="text-align: center;">რედაქტირება</th>                                                
+                                            </tr>
+                                        </thead>
+
+										<tbody>
+                                            @foreach($chargerGroups as $chargerGroup)
+                                                <tr>
+                                                    <td>{{ $chargerGroup -> id }}</td>
+                                                    <td>{{ $chargerGroup -> name }}</td>
+                                                    <td style="text-align: center;">{{ $chargerGroup -> chargers -> count() }}</td>
+                                                    <td style="text-align: center;">
+                                                        <a href="/business/charger-groups/{{ $chargerGroup -> id }}/edit" class="btn waves-effect waves-light btn-small">
+                                                            <i class="material-icons">edit</i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
 									</table>
 								</div>
 							</div>

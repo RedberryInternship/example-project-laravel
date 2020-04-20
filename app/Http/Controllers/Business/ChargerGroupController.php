@@ -76,9 +76,26 @@ class ChargerGroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(ChargerGroup $chargerGroup)
     {
-        //
+        $user = Auth::user();
+        
+        if ($chargerGroup -> user_id != $user -> id)
+        {
+            return redirect() -> back();
+        }
+
+        $chargerGroup -> load([
+            'chargers' => function($query) {
+                $query -> orderBy('id', 'DESC');
+            }
+        ]);
+
+        // dd($chargerGroup -> toArray());
+
+        return view('business.charger-groups.edit') -> with([
+            'chargerGroup' => $chargerGroup
+        ]); 
     }
 
     /**
