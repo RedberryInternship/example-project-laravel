@@ -22,13 +22,13 @@ class Simulator extends Base
             
             if($this -> isOk($response))
             {
-                return 'Keba Simulator Activated!';
+                return 'Charger switched into Lvl 2!';
             }
             throw new Exception();   
         }
         catch(Exception $e)
         {
-            return 'Keba simulator couldn\'t be activated!';
+            return 'Charger couldn\'t be switched into Lvl 2!';
         }
     }
 
