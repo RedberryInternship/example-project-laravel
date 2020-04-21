@@ -28,7 +28,8 @@ class StartCharging extends FormRequest
     public function rules()
     {
         return [
-            'charger_connector_type_id' => 'required|integer'
+            'charger_connector_type_id' => 'required|integer',
+            'charging_type'             => 'required|string',
         ];
     }
 
