@@ -57,7 +57,15 @@ class ChargerGroupController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = Auth::user();
+
+        $request -> merge([
+            'user_id' => $user -> id
+        ]);
+
+        ChargerGroup::create($request -> all());
+
+        return redirect() -> back();
     }
 
     /**
@@ -120,11 +128,18 @@ class ChargerGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  ChargerGroup  $chargerGroup
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(ChargerGroup $chargerGroup)
     {
-        //
+        Charger::where(['charger_group_id' => $chargerGroup -> id]) -> update([
+            'charger_group_id' => null
+        ]);
+
+        $chargerGroup -> delete();
+
+        return redirect() -> back();
     }
 }
+
