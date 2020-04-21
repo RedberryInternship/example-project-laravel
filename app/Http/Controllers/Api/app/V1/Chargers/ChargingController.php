@@ -59,7 +59,8 @@ class ChargingController extends Controller
 
     if( ! Charger::isChargerFree( $charger -> charger_id ))
     {
-      $this -> message = 'The Charger is not free.';
+      $this -> status_code  = 422;
+      $this -> message      = 'The Charger is not free.';
       return $this -> respond();
     }
     
