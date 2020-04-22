@@ -27,8 +27,9 @@ class UserController extends Controller
         {  
             if (Hash::check($password, $user -> password))
             {
-                Auth::login($user);                
-                return redirect('/business/');
+                Auth::login($user);
+
+                return redirect('/business');
             }
             else
             {
@@ -40,8 +41,12 @@ class UserController extends Controller
             return back() -> withErrors(['No Such User']);
         }
     }
-    public function getlogout(Request $request) {
+
+    public function getlogout(Request $request)
+    {
       Auth::logout();
+
       return redirect('/business/login');
     }
 }
+
