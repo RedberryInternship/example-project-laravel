@@ -28,9 +28,14 @@
                                             <td>{{ $chargingPrice -> max_kwt }}</td>
                                             <td>{{ $chargingPrice -> price }}</td>
                                             <td style="text-align: right;">
-                                                <a href="{{ url('/business/charging-prices/' . $chargingPrice -> id . '/destroy') }}" class="btn waves-effect waves-light red accent-2">
-                                                    წაშლა
-                                                </a>
+                                                <form action="{{ url('/business/charging-prices/' . $chargingPrice -> id) }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="_method" value="delete">
+
+                                                    <button type="submit" class="btn waves-effect waves-light btn-small red">
+                                                        <i class="material-icons">cancel</i>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endif
