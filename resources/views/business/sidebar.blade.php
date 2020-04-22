@@ -54,6 +54,15 @@
                     </ul>
                 </div>
             </li>
+
+
+            <li class="bold">
+                <a class="waves-effect waves-cyan " href="/business/logout">
+                    <i class="material-icons" style="transform: rotate(180deg);">exit_to_app</i>
+
+                    <span class="menu-title" data-i18n="Chat">გამოსვლა</span>
+                </a>
+            </li>
         </ul>
 
         <div class="navigation-background"></div><a class="sidenav-trigger btn-sidenav-toggle btn-floating btn-medium waves-effect waves-light hide-on-large-only" href="#" data-target="slide-out"><i class="material-icons">menu</i></a>
