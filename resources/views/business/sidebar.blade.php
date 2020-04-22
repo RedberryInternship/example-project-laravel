@@ -5,7 +5,7 @@
         </div>
         <ul class="sidenav sidenav-collapsible leftside-navigation collapsible sidenav-fixed menu-shadow" id="slide-out" data-menu="menu-navigation" data-collapsible="accordion">
             <li class="bold" style="margin-top: 3rem;">
-                <a class="waves-effect waves-cyan " href="/business/charger-groups">
+                <a class="waves-effect waves-cyan {{ isset($activeMenuItem) && $activeMenuItem == 'chargerGroups' ? 'active' : NULL }}" href="/business/charger-groups">
                     <i class="material-icons">group_work</i>
 
                     <span class="menu-title" data-i18n="Chat">დამტენების ჯგუფები</span>
@@ -13,7 +13,7 @@
             </li>
 
             <li class="bold">
-                <a class="waves-effect waves-cyan " href="/business/chargers">
+                <a class="waves-effect waves-cyan {{ isset($activeMenuItem) && $activeMenuItem == 'chargers' ? 'active' : NULL }}" href="/business/chargers">
                     <i class="material-icons">battery_charging_full</i>
 
                     <span class="menu-title" data-i18n="Chat">დამტენები</span>
@@ -35,26 +35,6 @@
                     <span class="menu-title" data-i18n="User Profile">User Profile</span>
                 </a>
             </li>
-
-            <li class="bold">
-                <a class="collapsible-header waves-effect waves-cyan " href="JavaScript:void(0)">
-                    <i class="material-icons">face</i>
-
-                    <span class="menu-title" data-i18n="User">User</span>
-                </a>
-
-                <div class="collapsible-body">
-                    <ul class="collapsible collapsible-sub" data-collapsible="accordion">
-                        <li><a href="page-users-list.html"><i class="material-icons">radio_button_unchecked</i><span data-i18n="List">List</span></a>
-                        </li>
-                        <li><a href="page-users-view.html"><i class="material-icons">radio_button_unchecked</i><span data-i18n="View">View</span></a>
-                        </li>
-                        <li><a href="page-users-edit.html"><i class="material-icons">radio_button_unchecked</i><span data-i18n="Edit">Edit</span></a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-
 
             <li class="bold">
                 <a class="waves-effect waves-cyan " href="/business/logout">

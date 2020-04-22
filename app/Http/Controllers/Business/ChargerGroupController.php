@@ -33,7 +33,7 @@ class ChargerGroupController extends Controller
 
         return view('business.charger-groups.index') -> with([
             'tabTitle'       => 'დამტენების ჯგუფები',
-            'activeMenuItem' => 'chargers',
+            'activeMenuItem' => 'chargerGroups',
             'chargerGroups'  => $chargerGroups,
             'user'           => $user
         ]);
@@ -108,8 +108,9 @@ class ChargerGroupController extends Controller
         ]);
 
         return view('business.charger-groups.edit') -> with([
-            'user'         => $user,
-            'chargerGroup' => $chargerGroup
+            'user'           => $user,
+            'chargerGroup'   => $chargerGroup,
+            'activeMenuItem' => 'chargerGroups'
         ]); 
     }
 

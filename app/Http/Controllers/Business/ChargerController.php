@@ -103,7 +103,7 @@ class ChargerController extends Controller
             'chargerConnectorTypes'   => $chargerConnectorTypes,
             'languages'               => $languages,
             'tabTitle'                => 'რედაქტირება',
-            'activeMenuItem'          => 'charger',
+            'activeMenuItem'          => 'chargers',
             'charger'                 => $charger,
             'user'                    => $user
         ]);
