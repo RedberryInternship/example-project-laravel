@@ -37,6 +37,7 @@ trait Charger
     $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
           -> post($this -> uri .'charging/start', [
               'charger_connector_type_id' => $charger_connector_type_id ,
+              'charging_type'             => 'FULL-CHARGE'
               ]);
   }
 

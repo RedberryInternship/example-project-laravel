@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\App\V1\Chargers;
 
 use App\Http\Controllers\Controller;
 
+use App\Traits\Message;
+
 use App\ChargerTransaction;
 use App\ChargerConnectorType;
 
@@ -14,6 +16,8 @@ use App\Facades\Charger;
 
 class ChargingController extends Controller
 {
+  use Message;
+
   /**
    * Status code for response.
    * 
@@ -48,19 +52,20 @@ class ChargingController extends Controller
   public function start(StartCharging $request)
   { 
     $charger_connector_type_id = $request -> get( 'charger_connector_type_id' );
-    $charging_type             = $request -> get('charging_type');
+    $charging_type             = $request -> get( 'charging_type' );
     $charger_connector_type    = ChargerConnectorType::find( $charger_connector_type_id );
     $charger                   = $charger_connector_type -> charger;
     
-    if( ! $charger_connector_type ){
-      $this -> status_code = 204;
-      $this -> message = 'There is no such charger_connector_type_id';
+    if( $charging_type == 'BY-AMOUNT' )
+    {
+      $price = $request -> get( 'price' );
     }
 
     if( ! Charger::isChargerFree( $charger -> charger_id ))
     {
-      $this -> status_code  = 422;
-      $this -> message      = 'The Charger is not free.';
+      $this -> message      = $this -> messages [ 'charger_is_not_free' ];
+      $this -> status       = 'Charger is not free.';
+      $this -> status_code  = 400;
       return $this -> respond();
     }
     
@@ -79,7 +84,8 @@ class ChargingController extends Controller
     $transaction_info = Charger::transactionInfo( $transactionID );
     $charger_transaction -> createKilowatt( $transaction_info -> consumed );
 
-    $this -> message = 'Charging successfully started!';
+    $this -> message = $this -> messages[ 'charging_successfully_started' ];
+    $this -> status  = 'Charging Successfully started!';
     return $this -> respond();
   }
 
@@ -139,8 +145,8 @@ class ChargingController extends Controller
   {
     return response() 
       -> json([
-        'status-code' => $this -> status_code,
-        'message'     => $this -> message,
+        'status_code' => $this -> status_code,
+        'message'     => (object) $this -> message,
       ], $this -> status_code);
   }
 

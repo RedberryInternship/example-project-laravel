@@ -3,9 +3,12 @@
 namespace App\Exceptions\Charger;
 
 use Exception;
+use App\Traits\Message;
 
 class StartChargingException extends Exception
 {
+    use Message;
+
     /**
      * Report the exception.
      *
@@ -25,8 +28,9 @@ class StartChargingException extends Exception
     public function render($request)
     {
         return response() -> json([
-            'message' => $this -> message ?: 'Charging couldn\'t be started.',
-            'code'    => $this -> code    ?: 500,
+            'message'     => $this -> messages [ 'cant_charge' ],
+            'status'      => $this -> message ?: 'Charging couldn\'t be started!',
+            'status_code' => $this -> code    ?: 500,
         ], $this -> code ?: 500 );
     }
 }
