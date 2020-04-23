@@ -13,7 +13,7 @@ use App\Traits\Message;
 	
     public function __invoke()
     {
-      Charger :: start( 29, 1 );
+      Charger :: stop( 29, 1 );
     }
 
     public function all()

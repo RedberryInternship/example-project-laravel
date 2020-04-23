@@ -23,14 +23,19 @@ class ChargingController extends Controller
    * 
    * @var int
    */
-  private $status_code;
+  private   $status_code;
 
   /**
-   * Message for response.
+   * Status message for concrete description.
+   */
+  private   $status;
+
+  /**
+   * Message for app notifications.
    * 
    * @var string
    */
-  private $message;
+  private   $message;
 
   /**
    * Constructor for initializing response parameters.
@@ -40,6 +45,7 @@ class ChargingController extends Controller
   public function __construct()
   {
     $this -> status_code = 200;
+    $this -> status      = '';
     $this -> message     = '';
   }
 
@@ -105,21 +111,14 @@ class ChargingController extends Controller
     $charger_transaction        = $charger_connector_type -> charger_transaction_first();
     $transactionID              = $charger_transaction -> transactionID;
    
-    $has_charging_stopped       = $this -> sendStopChargingRequestToMisha( $charger -> charger_id, $transactionID );
-    
-    if( $has_charging_stopped )
-    {
-      $charger_transaction -> status = 'CHARGED';
-      $charger_transaction -> save();
+    $this -> sendStopChargingRequestToMisha( $charger -> charger_id, $transactionID );
+  
+    $charger_transaction -> status = 'CHARGED';
+    $charger_transaction -> save();
 
-      $this -> message = "Charging successfully stopped!";
-   }
-   else
-   {
-     $this -> status_code = 500;
-     $this -> message     = "Something Went Wrong!";
-   }
-
+    $this -> message = $this -> messages [ 'charging_successfully_finished' ];
+    $this -> status  = 'Charging successfully finished!';
+   
    return $this -> respond();
   }
 
@@ -146,6 +145,7 @@ class ChargingController extends Controller
     return response() 
       -> json([
         'status_code' => $this -> status_code,
+        'status'      => $this -> status,
         'message'     => (object) $this -> message,
       ], $this -> status_code);
   }
