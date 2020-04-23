@@ -15,10 +15,10 @@ class ChargerController extends Controller
      * @param Request $request
      * @param Charger $charger
      */
-    public function getChargers(Request $request, Charger $chargerModel)
+    public function getChargers(Request $request, Charger $charger)
     {
         $user    = auth('api') -> user();
-        $charger = $chargerModel -> active();
+        $charger = $charger -> active();
 
         if ($request -> has('free'))
         {
@@ -45,7 +45,6 @@ class ChargerController extends Controller
             $charger = $charger -> filterByText($request -> get('text'));
         }
 
-
         $charger  = $charger -> groupedChargersWithSiblingChargers();
 
         $chargers = $charger
@@ -55,10 +54,10 @@ class ChargerController extends Controller
 
         if ($user)
         {
-            $favoriteChargers = $user -> favorites -> pluck('id') -> toArray();
-
-            $chargerModel -> addFilterAttributeToChargers($chargers, $favoriteChargers);
+            Charger::addFilterAttributeToChargers($chargers);
         }
+
+        Charger::addChargingPrices($chargers);
 
         Charger::addIsFreeAttributeToChargers($chargers);
 
