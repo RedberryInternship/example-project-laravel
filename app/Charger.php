@@ -252,7 +252,6 @@ class Charger extends Model
 
     public static function addIsFreeAttributeToChargers(&$chargers, $inner = false)
     {
-    return;
         /**
          * get free_charger_ids from our db
          * 
@@ -289,7 +288,6 @@ class Charger extends Model
 
     public static function addIsFreeAttributeToCharger(&$charger)
     {
-    return;
         /**
          * set is free attribute for charger from out db
          * 
