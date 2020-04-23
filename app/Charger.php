@@ -182,8 +182,7 @@ class Charger extends Model
     {
         return $query -> with([
             'tags',
-            'connector_types.charging_prices',
-            'connector_types.fast_charging_prices',
+            'connector_types',
             'business_services'
         ]);
     }
