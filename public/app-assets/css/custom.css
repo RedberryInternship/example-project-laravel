@@ -1,9 +1,11 @@
 .view-link{
 	color: gray;
 }
+
 .edit-link{
 	color: #2087e0;
 }
+
 .delete-link{
 	color: #d82222;
 }
@@ -11,3 +13,16 @@
 #toast-container {
 	display: none !important;
 }
+
+.flex {
+    display: flex;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.justify-center {
+    justify-content: center;
+}
+

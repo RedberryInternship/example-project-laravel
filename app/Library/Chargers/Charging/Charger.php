@@ -123,7 +123,7 @@ class Charger extends Base
 
             case -2:
                 throw new StartChargingException(
-                    'No such charger with charger_id of ' . $charger_id,
+                    'No such charger with charger_id of ' . $charger_id . '.',
                     400,
                 );
 

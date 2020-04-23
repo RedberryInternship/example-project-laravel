@@ -53,7 +53,7 @@ class StatusController extends Controller{
     
     if( ! $charger_connector_type )
     {
-      $this -> status_code = 204;
+      $this -> status_code = 404;
       $this -> message     = 'There is no charger transaction '
                               . 'with charger_connector_type_id of '
                               . $charger_connector_type_id .'.';
@@ -68,7 +68,7 @@ class StatusController extends Controller{
       }
       else
       {
-        $this -> status_code  = 204;
+        $this -> status_code  = 404;
         $this -> message      = 'There is no charger transaction '
                                 . 'with charger_connector_type_id of '
                                 . $charger_connector_type_id .'.';
