@@ -18,15 +18,15 @@ class AddMinMaxPricesToChargerConnectorTypes extends Migration
         if(app() ->runningUnitTests())
         {
             Schema::table('charger_connector_types', function (Blueprint $table) {
-                $table->float('min_price', 5, 2) -> default(0) -> after('charger_type_id');
-                $table->float('max_price', 5, 2) -> default(0) -> after('charger_type_id');
+                $table->float('min_price', 5, 2) -> default(0);
+                $table->float('max_price', 5, 2) -> default(0);
             });
         }
         else 
         {
             Schema::table('charger_connector_types', function (Blueprint $table) {
-                $table->float('min_price', 5, 2) -> after('charger_type_id');
-                $table->float('max_price', 5, 2) -> after('charger_type_id');
+                $table->float('min_price', 5, 2);
+                $table->float('max_price', 5, 2);
             });
         }
     }
