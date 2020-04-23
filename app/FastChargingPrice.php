@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class FastChargingPrice extends Model
 {
     protected $fillable = [
-        'charger_id',
+        'charger_connector_type_id',
         'start_minutes',
         'end_minutes',
         'price'
     ];
 
-    public function charger()
+    public function chargerConnetorType()
     {
-    	return $this -> belongsTo('App\Charger');
+    	return $this -> belongsTo('App\ChargerConnectorType');
     }
 }

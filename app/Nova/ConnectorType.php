@@ -29,8 +29,13 @@ class ConnectorType extends Resource
      * @var array
      */
     public static $search = [
-        'id','name'
+        'id', 'name'
     ];
+
+    /**
+     * Grouping nova resource.
+     */
+    public static $group = 'Charger Resources';
 
     /**
      * Get the fields displayed by the resource.

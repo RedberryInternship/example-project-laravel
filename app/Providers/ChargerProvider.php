@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Library\Chargers\Charger;
+use App\Library\Chargers\Charging\Charger;
 use \GuzzleHttp\Client;
 
 
@@ -30,7 +30,6 @@ class ChargerProvider extends ServiceProvider
                     $mishasBackIp, 
                     $guzzle
                 );
-
         });
         
     }

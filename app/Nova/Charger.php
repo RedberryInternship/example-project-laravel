@@ -2,7 +2,7 @@
 
 namespace App\Nova;
 
-use App\ChargerType;
+use App\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -17,7 +17,7 @@ use Laravel\Nova\Fields\Select;
 use App\Nova\Filters\ChargerPublished;
 use App\Nova\Filters\ChargerActive;
 use App\Nova\Filters\ChargerTags;
-use App\Nova\Filters\ChargerTypes;
+//use App\Nova\Filters\ChargerTypes;
 use App\Nova\Filters\ChargerConnectorTypes;
 
 class Charger extends Resource
@@ -42,15 +42,21 @@ class Charger extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name'
+        'id',
+        'name'
     ];
+
+    /**
+     * Grouping nova resource.
+     */
+    public static $group = 'Charger Resources';
 
     /**
      * Eager Loading.
      *
      * @var string
      */
-    public static $with = ['charger_types'];
+    public static $with = [];
 
     /**
      * Get the fields displayed by the resource.
@@ -60,6 +66,10 @@ class Charger extends Resource
      */
     public function fields(Request $request)
     {
+        $users = User::whereIn('role_id', [2, 3]) -> get() -> keyBy('id') -> map(function($u) {
+            return $u -> first_name . ' ' . $u -> last_name;
+        }) -> toArray();
+
         $fieldsArr = [
             ID::make()->sortable(),
 
@@ -127,32 +137,11 @@ class Charger extends Resource
             // })-> onlyOnIndex(),
 
             BelongsToMany::make('Charger Tags','Tags', 'App\Nova\Tag'),
-            BelongsTo::make('user'),
+            Select::make('User','user_id')
+                ->options($users),
             BelongsTo::make('charger_group')
+                -> nullable()
         ];
-
-        $charger_type_id = null;
-        if ($this -> charger_types)
-        {
-            foreach ($this -> charger_types as $charger_type) {
-                $charger_type_id = $charger_type -> id;
-                if($charger_type_id == 1)
-                {
-                    array_push($fieldsArr, HasMany::make('Charging Prices','charging_prices', 'App\Nova\ChargingPrice'));
-                }
-            }
-        }
-
-        if ($this -> charger_types)
-        {   
-            foreach ($this -> charger_types as $charger_type) {
-                $charger_type_id = $charger_type -> id;
-                if($charger_type_id == 2)
-                {
-                    array_push($fieldsArr, HasMany::make('Fast Charging Prices','fast_charging_prices', 'App\Nova\FastChargingPrice'));
-                }
-            }
-        }
 
         return $fieldsArr;
     }
@@ -180,7 +169,7 @@ class Charger extends Resource
             new ChargerPublished,
             new ChargerActive,
             new ChargerTags,
-            new ChargerTypes,
+            //new ChargerTypes,
             new ChargerConnectorTypes
         ];
     }

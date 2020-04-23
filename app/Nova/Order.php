@@ -42,11 +42,16 @@ class Order extends Resource
     ];
 
     /**
+     * Grouping nova resource.
+     */
+    public static $group = 'User Resources';
+
+    /**
      * Eager Loading.
      *
      * @var string
      */
-    public static $with = ['user.role', 'charger_type', 'charging_type', 'connector_type', 'charger'];
+    public static $with = ['user.role', 'charging_type', 'connector_type', 'charger'];
 
     /**
      * Get the fields displayed by the resource.

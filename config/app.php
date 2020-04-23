@@ -53,7 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-
+    'uri' => env('APP_URI', '/api/app/V1/'),
     'asset_url' => env('ASSET_URL', null),
 
     /*
@@ -183,6 +183,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\SimulatorProvider::class,
         App\Providers\ChargerProvider::class,
+        App\Providers\ChargerSync::class,
     ],
 
     /*

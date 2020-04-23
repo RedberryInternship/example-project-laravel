@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
+use App\Facades\Charger as MishasCharger;
+use App\ChargerTransaction;
 
 class Charger extends Model
 {
@@ -33,7 +35,8 @@ class Charger extends Model
     ];
 
     protected $casts = [
-      'name' => 'array'
+      'name' => 'array',
+      'charger_id' => 'int',
     ];
 
     public function user()
@@ -48,22 +51,22 @@ class Charger extends Model
 
     public function connector_types()
     {
-        return $this -> belongsToMany('App\ConnectorType', 'charger_connector_types') -> withPivot('charger_type_id');
+        return $this
+                    -> connector_types_all()
+                    -> where('status','active');
     }
 
-    public function charger_types()
+    public function connector_types_all()
     {
-      return $this -> belongsToMany('App\ChargerType', 'charger_connector_types') -> withPivot('charger_type_id');
-    }
-    
-    public function charging_prices()
-    {
-        return $this -> hasMany('App\ChargingPrice');
-    }
-
-    public function fast_charging_prices()
-    {
-        return $this -> hasMany('App\FastChargingPrice');
+        return $this
+                    -> belongsToMany('App\ConnectorType', 'charger_connector_types')
+                    -> withPivot([
+                        'id',
+                        'min_price',
+                        'max_price',
+                        'status',
+                        'm_connector_type_id',
+                    ]);
     }
 
     public function charger_group()
@@ -71,9 +74,33 @@ class Charger extends Model
         return $this -> belongsTo('App\ChargerGroup');
     }
 
+    public function scopeFilterBy($query, $param, $value)
+    {
+        if (isset($param) && $param && isset($value) && $value)
+        {
+            if (is_array($value))
+            {
+                if ($value[0])
+                {
+                    $query = $query -> whereIn($param, $value);
+                }
+            }
+            else
+            {
+                $query = $query -> where($param, $value);
+            }
+        }
+
+        return $query;
+    }
+
     public function orders()
     {
         return $this -> hasMany('App\Order');
+    }
+    public function business_services()
+    {
+        return $this -> belongsToMany('App\BusinessService', 'charger_business_services');
     }
 
     public function scopeActive($query)
@@ -91,11 +118,11 @@ class Charger extends Model
         $connectorTypeNames = [];
         if ($type == 'level2')
         {
-            $connectorTypeNames = ['Type 2', 'Combo 2'];
+            $connectorTypeNames = ['Type 2'];
         }
         else if ($type == 'fast')
         {
-            $connectorTypeNames = ['CHadeMO'];
+            $connectorTypeNames = ['Combo 2', 'CHadeMO'];
         }
 
         if (empty($connectorTypeNames))
@@ -144,7 +171,7 @@ class Charger extends Model
         return $query -> doesntHave('charger_group');
     }
 
-    public function scopeGroupedChargersWithSibblingChargers($query)
+    public function scopeGroupedChargersWithSiblingChargers($query)
     {
         return $query -> with(['charger_group' => function($q) {
             return $q -> withChargers();
@@ -156,9 +183,9 @@ class Charger extends Model
         return $query -> with([
             'tags',
             'connector_types',
-            'charger_types',
             'charging_prices',
-            'fast_charging_prices'
+            'fast_charging_prices',
+            'business_services'
         ]);
     }
 
@@ -180,4 +207,52 @@ class Charger extends Model
             }
         }
     }
+
+    public static function addIsFreeAttributeToChargers(&$chargers, $inner = false)
+    {
+        /**
+         * get free_charger_ids from our db
+         * 
+         * $free_charger_ids = ChargerTransaction::getFreeChargersIds();
+         */
+
+        $free_charger_ids = MishasCharger::getFreeChargersIds();
+
+        foreach ($chargers as &$charger)
+        {
+            $isFree = false;
+            if (in_array($charger -> charger_id, $free_charger_ids))
+            {
+                $isFree = true;
+            }
+
+            $charger -> is_free = $isFree;
+            
+            $is_it_parent_charger = ! $inner 
+                && isset($charger -> charger_group) 
+                && isset($charger -> charger_group -> chargers) 
+                && ! empty($charger -> charger_group -> chargers);
+            
+            if ($is_it_parent_charger)
+            {
+                static::addIsFreeAttributeToChargers(
+                    $charger -> charger_group -> chargers, 
+                    $free_charger_ids, 
+                    true,
+                );
+            }
+        }
+    }
+
+    public static function addIsFreeAttributeToCharger(&$charger)
+    {
+        /**
+         * set is free attribute for charger from out db
+         * 
+         * $charger -> is_free = ChargerTransaction::isChargerFree( $charger -> charger_id );
+         */
+        
+        $charger -> is_free = MishasCharger::isChargerFree( $charger -> charger_id );
+    }
 }
+

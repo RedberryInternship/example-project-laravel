@@ -7,6 +7,7 @@ use Laravel\Nova\Cards\Help;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\NovaApplicationServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use Redberry\ChargerPrices\ChargerPrices;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -80,7 +81,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     public function tools()
     {
-        return [];
+        return [
+            new ChargerPrices
+        ];
     }
 
     /**
@@ -90,6 +93,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     public function register()
     {
-        //
+        Nova::style('admin', public_path('/css/custom-nova.css'));
     }
 }

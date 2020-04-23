@@ -59,6 +59,11 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
+    public function chargers()
+    {
+        return $this -> hasMany(Charger::class);
+    }
+
     public function car_models()
     {
         return $this -> belongsToMany('App\CarModel', 'user_car_models','user_id','model_id') -> withPivot('user_id');
@@ -91,5 +96,10 @@ class User extends Authenticatable implements JWTSubject
     public function user_chargers()
     {
         return $this -> hasMany('App\ChargerUser');
+    }
+
+    public function business_services()
+    {
+        return $this -> hasMany(BusinessService::class);
     }
 }

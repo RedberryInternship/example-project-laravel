@@ -31,7 +31,6 @@ class User extends Resource
      */
     public static $title = 'first_name';
 
-
     /**
      * The columns that should be searched.
      *
@@ -41,9 +40,18 @@ class User extends Resource
         'id', 'first_name', 'last_name', 'email',
     ];
 
-    public function title() {
+    /**
+     * The way, how user will be displayed from other resources.
+     */
+    public function title()
+    {
         return $this -> first_name . ' ' . $this -> last_name;
     }
+
+    /**
+     * Grouping nova resource.
+     */
+    public static $group = 'User Resources';
 
     /**
      * Eager Loading.
@@ -63,14 +71,7 @@ class User extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('role_id', function() {
-                if($this -> role_id == 2){
-                    return 'Admin';
-                }
-                else{
-                    return 'Personal User';
-                }
-            }) -> sortable(),
+            BelongsTo::make('Role'),
 
             Gravatar::make(),
             
