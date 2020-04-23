@@ -46,7 +46,7 @@ Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers
 });
 
 Route::group(['prefix' => 'chargers_back'], function(){
-    
+
     Route::get('start-charging/{charger_id}/{connector_id}', 'TestController@start');
     Route::get('stop-charging/{charger_id}/{transactionID}', 'TestController@stop');
     Route::get('transaction-info/{transaction_id}',          'TestController@transactionInfo');
@@ -61,5 +61,5 @@ Route::group(['prefix' => 'chargers_back'], function(){
 });
 
 Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
-
+        
 Route::get('test','TestController');
