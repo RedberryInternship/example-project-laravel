@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -36,6 +38,21 @@ Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers
     Route::get('update/{transaction_id}/{value}','TransactionController@update');
 });
 
-Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
+Route::group(['prefix' => 'chargers_back'], function(){
 
-//Route::get('test','TestController@index');
+    Route::get('start-charging/{charger_id}/{connector_id}', 'TestController@start');
+    Route::get('stop-charging/{charger_id}/{transactionID}', 'TestController@stop');
+    Route::get('transaction-info/{transaction_id}',          'TestController@transactionInfo');
+    Route::get('find/{charger_id}',                          'TestController@find');
+    Route::get('all',                                        'TestController@all');
+
+    Route::get('charger/{charger_id}/switch-to-lvl2',        'TestController@switchChargerIntoLvl2');
+    Route::get('charger/{charger_id}/bring-online',          'TestController@bringChargerOnline');
+    Route::get('charger/{charger_id}/plug-off',              'TestController@plugOffChargerConnectorCable');
+    Route::get('charger/{charger_id}/shutdown',              'TestController@shutdown');
+
+});
+
+Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
+        
+Route::get('test','TestController');

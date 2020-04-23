@@ -7,14 +7,14 @@ use Illuminate\Http\JsonResponse;
 
 trait ValidatorCustomJsonResponse{
 
-  private function respond($validator, $status_code = 400)
+  private function respond($validator, $status_code = 400, $message = null)
   {
     if($validator -> fails())
     {
         $resData = array_merge(
             [   
-                'message' => 'The given data was invalid.',
-                'status_code' => $status_code,
+                'message' => $message ?: 'The given data was invalid.',
+                'status_code' => $status_code ?: 500,
             ],
             [
                 'errors' => $validator -> errors()
