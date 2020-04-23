@@ -24,9 +24,13 @@
 								<td>
 									დამტენის ჯგუფი
 								</td>
-								<td class="users-view-username">
+								<td class="users-view-username" style="width: 600px;">
 									@if ($charger -> charger_group)
 										{{ $charger -> charger_group -> name }}
+
+					      			    <a href="{{ url('/business/charger-groups/' . $charger -> charger_group -> id . '/edit') }}" class="btn waves-effect waves-light btn-small" style="margin-left: 4rem;">
+                                            რედაქტირება
+                                        </a> 
 									@else
 										<i class="material-icons dp48">remove</i>
 									@endif
@@ -138,7 +142,7 @@
 
 					      	<div class="row">
 					      		<div class="input-field col s12" style="display: flex; justify-content: flex-end;">
-					      			<button type="submit" class="btn waves-effect waves-light cyan">დამახსოვრება</button>
+					      			<button type="submit" class="btn waves-effect waves-light green">დამახსოვრება</button>
 					      		</div>
 					      	</div>
 					    </form>

@@ -19,13 +19,7 @@ class BusinessController extends Controller
 
     public function getIndex()
     {
-        $user = Auth::user();
-
-        return view('business.dashboard')-> with([
-            'tabTitle'       => 'მთავარი გვერდი',
-            'activeMenuItem' => 'dashboard',
-            'user'           => $user
-        ]);
+        return redirect('/business/charger-groups');
     }
 
     public function getLogin()
@@ -46,3 +40,4 @@ class BusinessController extends Controller
         ]);       
     }
 }
+

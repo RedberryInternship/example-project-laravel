@@ -82,15 +82,15 @@ class ChargerController extends Controller
      */
     public function edit($id)
     {
-        $user           = Auth::user();
-        $charger        = Charger::where('id', $id) -> with([
+        $user    = Auth::user();
+        $charger = Charger::where('id', $id) -> with([
             'charger_group',
-            'charging_prices',
-            'fast_charging_prices',
             'business_services',
         ]) -> first();
 
-        $connectorTypes          = ChargerConnectorType::where('charger_id', $id) -> get();
+        $chargerConnectorTypes   = ChargerConnectorType::with(['connector_type', 'charging_prices', 'fast_charging_prices'])
+                                                      -> where('charger_id', $id)
+                                                      -> get();
 
         $languages               = Language::all();
 
@@ -100,10 +100,10 @@ class ChargerController extends Controller
         return view('business.chargers.edit') -> with([
             'chargerBusinessServices' => $chargerBusinessServices,
             'businessServices'        => $businessServices,
-            'connectorTypes'          => $connectorTypes,
+            'chargerConnectorTypes'   => $chargerConnectorTypes,
             'languages'               => $languages,
             'tabTitle'                => 'რედაქტირება',
-            'activeMenuItem'          => 'charger',
+            'activeMenuItem'          => 'chargers',
             'charger'                 => $charger,
             'user'                    => $user
         ]);

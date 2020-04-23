@@ -23,10 +23,12 @@ Route::group(['prefix' => 'business'], function() {
     Route::post('/register', 'UserController@postRegister');
     Route::post('/login', 'UserController@postAuthenticate');
     Route::get('/logout', 'UserController@getLogout');
+    Route::post('/charger-transfer', 'Business\ChargerTransferController');
 
     Route::resource('/chargers', 'Business\ChargerController');
     Route::resource('/services', 'Business\ServiceController');
     Route::resource('/charger-groups', 'Business\ChargerGroupController');
+    Route::resource('/charging-prices', 'Business\ChargingPricesController');
 });
 
 Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers/transactions'], function(){
