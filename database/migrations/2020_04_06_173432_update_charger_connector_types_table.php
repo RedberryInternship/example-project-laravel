@@ -14,7 +14,7 @@ class UpdateChargerConnectorTypesTable extends Migration
     public function up()
     {
         Schema::table('charger_connector_types', function (Blueprint $table){
-            $table -> unsignedInteger('m_connector_type_id') -> nullable(true) -> after('charger_type_id');
+            $table -> unsignedInteger('m_connector_type_id') -> nullable(true);
         });
     }
 
