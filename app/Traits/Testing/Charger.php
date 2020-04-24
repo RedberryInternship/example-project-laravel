@@ -5,6 +5,11 @@ namespace App\Traits\Testing;
 use App\Facades\MockSyncer;
 use App\Facades\Simulator;
 
+use Illuminate\Support\Facades\DB;
+
+use App\ConnectorType;
+use App\ChargerConnectorType;
+
 use App\Charger as AppCharger;
 
 
@@ -44,5 +49,9 @@ trait Charger
   public function finish_charger_transaction_with_ID_of_29()
   {
     $this -> initiated && Simulator::plugOffCable( 29 );
+
+    ChargerConnectorType :: truncate();
+    ConnectorType        :: truncate();
+    DB                   :: table('chargers') -> delete();
   }
 }
