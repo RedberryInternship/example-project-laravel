@@ -3,7 +3,7 @@
 namespace Tests\Unit\Chargers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 use App\ChargerConnectorType;
@@ -255,7 +255,7 @@ class StartCharging extends TestCase {
 
 
   /** @test */
-  public function start_charging_has_400_status_code_when_bad_request()
+  public function start_charging_has_422_status_code_when_bad_request()
   {
 
     // not providing with [charger_connector_id] array
@@ -263,30 +263,21 @@ class StartCharging extends TestCase {
       -> withHeader( 'Authorization','Bearer ' . $this -> token )
       -> post( $this -> uri . 'charging/start' );
     
-    $response -> assertStatus( 400 );
+    $response -> assertStatus( 422 );
   }
 
 
   /** @test */
   public function when_charger_transaction_is_initiated_status_is_INITIATED()
   {
-    ChargerConnectorType :: truncate();
-    dd(
-      Charger :: all() -> toArray()
-    );
     $this -> initiate_charger_transaction_with_ID_of_29();
-    dd(
-      Charger              :: all() -> toArray(),
-      ConnectorType        :: all() -> toArray(),
-      ChargerConnectorType :: all() -> toArray(),
-    );
     $charger_connector_type = ChargerConnectorType::first();
 
     $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
                       -> get( $this -> uri .'charging/status/' . $charger_connector_type -> id );
 
     $response = $response -> decodeResponseJson();
-    dd($response);
+
     $this -> assertEquals( 'INITIATED', $response['payload']['status']);
 
     $this -> finish_charger_transaction_with_ID_of_29();
@@ -295,7 +286,6 @@ class StartCharging extends TestCase {
   /** @test */
   public function when_charger_is_not_free_dont_charge()
   {
- 
     $this -> initiate_charger_transaction_with_ID_of_29();
 
     $response = $this -> withHeader( 'token', 'Bearer ' . $this -> token)
@@ -305,7 +295,7 @@ class StartCharging extends TestCase {
       ]);
 
     $response = (object) $response -> decodeResponseJson();
-
+    
     $this -> assertEquals( $this -> messages [ 'charger_is_not_free' ], $response -> message );
 
     $this -> finish_charger_transaction_with_ID_of_29();
