@@ -1,9 +1,7 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\OldTests;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Charger;
 use App\User;

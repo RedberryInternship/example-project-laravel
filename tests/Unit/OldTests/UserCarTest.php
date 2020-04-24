@@ -1,12 +1,9 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\OldTests;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\User;
-use App\UserCarModel;
 use App\CarModel;
 
 class UserCarTest extends TestCase
