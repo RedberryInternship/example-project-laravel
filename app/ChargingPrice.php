@@ -20,3 +20,4 @@ class ChargingPrice extends Model
     	return $this -> belongsTo('App\ChargerConnectorType');
     }
 }
+
