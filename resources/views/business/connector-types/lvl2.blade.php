@@ -42,9 +42,64 @@
                                 @endforeach
                             @endif
                         @endforeach
+
+
+                        <tr>
+                            <form action="{{ url('/business/charging-prices') }}" method="POST">
+                                @csrf
+
+                                <td>
+                                    <select id="charger_connector_type_id" name="charger_connector_type_id" class="select2 browser-default">
+                                        @foreach ($chargerConnectorTypes as $chargerConnectorType)
+                                            <option value="{{ $chargerConnectorType -> id }}">
+                                                {{ $chargerConnectorType -> connector_type -> name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="input-field">
+                                        <label for="start_time">დაწყების დრო</label>
+                                        <input type="text" id="start_time" name="start_time">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-field">
+                                        <label for="end_time">დამთავრების დრო</label>
+                                        <input type="text" id="end_time" name="end_time">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-field">
+                                        <label for="min_kwt">მინიმალური კილოვატი</label>
+                                        <input type="text" id="min_kwt" name="min_kwt">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-field">
+                                        <label for="max_kwt">დამთავრების დრო</label>
+                                        <input type="text" id="max_kwt" name="max_kwt">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-field">
+                                        <label for="price">ღირებულება</label>
+                                        <input type="text" id="price" name="price">
+                                    </div>
+                                </td>
+                                <td class="right">
+                                    <div class="input-field">
+                                        <button type="submit" class="btn waves-effect waves-light btn-small green">
+                                            <i class="material-icons">check</i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </form>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+

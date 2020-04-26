@@ -45,7 +45,9 @@ class ChargingPricesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        ChargingPrice::create($request -> all());
+
+        return redirect() -> back();
     }
 
     /**
