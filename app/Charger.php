@@ -296,5 +296,26 @@ class Charger extends Model
         
         $charger -> is_free = MishasCharger::isChargerFree( $charger -> charger_id );
     }
+
+    
+    public function hasChargingConnector($type, $chargerConnectorTypes)
+    {
+        $connectorTypes = $type == 'fast' ? ['combo 2', 'chademo'] : ['type 2'];   
+
+        $hasChargingConnector = false;
+        foreach ($chargerConnectorTypes as $chargerConnectorType)
+        {
+            $connectorName = $chargerConnectorType -> connector_type -> name;
+
+            if (in_array(strToLower($connectorName), $connectorTypes))
+            {
+                $hasChargingConnector = true;
+
+                break;
+            }
+        }
+
+        return $hasChargingConnector;
+    }
 }
 
