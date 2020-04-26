@@ -111,9 +111,9 @@ class User extends Resource
                 ->creationRules('required', 'string', 'min:8')
                 ->updateRules('nullable', 'string', 'min:8'),
                 
-            HasMany::make('User Cards','user_card','App\Nova\UserCard'),
-            HasMany::make('Orders','orders','App\Nova\Order'),
-            BelongsTo::make('Role', 'role', 'App\Nova\Role')
+            HasMany::make('User Cards'),
+
+            HasMany::make('Orders'),
         ];
     }
 

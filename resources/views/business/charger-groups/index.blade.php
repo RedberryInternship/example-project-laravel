@@ -35,48 +35,50 @@
                         </form>
                     </div>
 
-                    <div class="row">
-	                    <div class="col s12">
-                            <div id="view-borderless-table" class="active">
-                                <table class="responsive-table">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>სახელი</th>
-                                            <th class="center">დამტენების რაოდენობა</th>
-                                            <th class="center">რედაქტირება</th>                                                
-                                            <th class="center">წაშლა</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        @foreach($chargerGroups as $chargerGroup)
+                    @if ($chargerGroups -> count())
+                        <div class="row">
+                            <div class="col s12">
+                                <div id="view-borderless-table" class="active">
+                                    <table class="responsive-table">
+                                        <thead>
                                             <tr>
-                                                <td>{{ $chargerGroup -> id }}</td>
-                                                <td>{{ $chargerGroup -> name }}</td>
-                                                <td class="center">{{ $chargerGroup -> chargers -> count() }}</td>
-                                                <td class="center">
-                                                    <a href="/business/charger-groups/{{ $chargerGroup -> id }}/edit" class="btn waves-effect waves-light btn-small">
-                                                        <i class="material-icons">edit</i>
-                                                    </a>
-                                                </td>
-                                                <td class="center">
-                                                    <form action="{{ url('/business/charger-groups/' . $chargerGroup -> id) }}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="_method" value="delete">
-
-                                                        <button class="btn waves-effect waves-light btn-small red">
-                                                            <i class="material-icons">cancel</i>
-                                                        </button>
-                                                    </form>
-                                                </td>
+                                                <th>ID</th>
+                                                <th>სახელი</th>
+                                                <th class="center">დამტენების რაოდენობა</th>
+                                                <th class="center">რედაქტირება</th>                                                
+                                                <th class="center">წაშლა</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+
+                                        <tbody>
+                                            @foreach($chargerGroups as $chargerGroup)
+                                                <tr>
+                                                    <td>{{ $chargerGroup -> id }}</td>
+                                                    <td>{{ $chargerGroup -> name }}</td>
+                                                    <td class="center">{{ $chargerGroup -> chargers -> count() }}</td>
+                                                    <td class="center">
+                                                        <a href="/business/charger-groups/{{ $chargerGroup -> id }}/edit" class="btn waves-effect waves-light btn-small">
+                                                            <i class="material-icons">edit</i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="center">
+                                                        <form action="{{ url('/business/charger-groups/' . $chargerGroup -> id) }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="_method" value="delete">
+
+                                                            <button class="btn waves-effect waves-light btn-small red">
+                                                                <i class="material-icons">cancel</i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-					</div>
+                    @endif
 				</div>
 			</div>
 		</div>
