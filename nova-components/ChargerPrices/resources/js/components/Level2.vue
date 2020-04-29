@@ -81,7 +81,7 @@
                             <th>Start Time</th>
                             <th>End Time</th>
                             <th>Price</th>
-                            <th>Delete</th>
+                            <th>Remove</th>
                         </tr>
                     </thead>
 

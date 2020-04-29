@@ -140,3 +140,10 @@ Route::post('/remove-charging-price', function(Request $request) {
 
 	return response() -> json(true, 200);
 });
+
+
+Route::post('/remove-fast-charging-price', function(Request $request) {
+	FastChargingPrice::where('id', $request -> get('fastChargingPriceID')) -> delete();
+
+	return response() -> json(true, 200);
+});

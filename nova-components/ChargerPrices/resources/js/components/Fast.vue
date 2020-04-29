@@ -6,9 +6,9 @@
             <div class="go-back" @click="goBack">< Back</div>
         </header>
 
-        <div class="chargers-form">
+        <div class="chargers-form card mb-4">
             <div class="row">
-                <form class="form card" action="#">
+                <form class="form" action="#">
                     <div class="form-group">
                         <div class="w-1/5 px-8 py-6">
                             <label for="start-minutes">Start Minutes</label>
@@ -44,6 +44,51 @@
                 </form>
             </div>
         </div>
+
+        <div class="charger-prices-listing card">
+            <div class="row">
+                <table cellpadding="0" cellspacing="0" data-testid="resource-table" class="table w-full">
+                    <thead>
+                        <tr>
+                            <th>Charger</th>
+                            <th>Connector Type</th>
+                            <th>Start Minutes</th>
+                            <th>End Minutes</th>
+                            <th>Price</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <template v-for="charger in chargers">
+                            <template v-for="connectorType in charger.connector_types">
+                                <template v-if="connectorType.activeInput">
+                                    <tr v-for="fastChargingPrice in connectorType.fast_charging_prices" :class="{ 'removed': fastChargingPrice.removed }" :key="fastChargingPrice.id">
+                                        <td>{{ charger.name.en }}</td>
+                                        <td>{{ connectorType.name }}</td>
+                                        <td class="center">{{ fastChargingPrice.min_kwt }}</td>
+                                        <td class="center">{{ fastChargingPrice.max_kwt }}</td>
+                                        <td class="center">{{ fastChargingPrice.start_time }}</td>
+                                        <td class="center">{{ fastChargingPrice.end_time }}</td>
+                                        <td class="center">{{ fastChargingPrice.price }}</td>
+                                        <td class="center">
+                                            <template v-if=" ! fastChargingPrice.removed">
+                                                <button class="btn btn-default btn-danger" @click="removeFastChargingPrice(fastChargingPrice)">
+                                                    Remove
+                                                </button>
+                                            </template>
+                                            <template v-else>
+                                                Removed
+                                            </template>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 	</div>
 </template>
 
@@ -74,6 +119,19 @@
             },
             goBack() {
                 this.$emit('goBack');
+            },
+            removeFastChargingPrice(fastChargingPrice) {
+                axios({
+	                method: 'post',
+	                url: '/nova-vendor/charger-prices/remove-fast-charging-price',
+	                data: {
+	                    fastChargingPriceID: fastChargingPrice.id
+	                }
+	            }).then(() => {
+                    fastChargingPrice.removed = true;
+
+                    this.$forceUpdate();
+                });
             }
         }
     }
