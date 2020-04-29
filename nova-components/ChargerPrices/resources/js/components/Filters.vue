@@ -23,14 +23,38 @@
             <heading class="mb-6">Chargers</heading>
 
             <div class="chargers-header">
-                <div class="mb-6">
-                    <input type="checkbox" @change="toggleAllConnectorTypes">
-                    <span class="toggle-checkboxes-text">Toggle Checkboxes</span>
+                <div>
+                    <input type="checkbox" id="toggle-all-connector-types" @change="toggleAllConnectorTypes">
+                    <label for="toggle-all-connector-types" class="toggle-checkboxes-text">Toggle Checkboxes</label>
                 </div>
 
-                <div class="mb-6">
-                    <button class="btn btn-default btn-primary" @click="continueWithSelectedChargerTypes">
-                        Continue with selected charger Types
+                <div>
+                    <input type="checkbox" id="toggle-lvl2-connector-types" @change="toggleLvl2ConnectorTypes">
+                    <label for="toggle-lvl2-connector-types" class="toggle-checkboxes-text">Toggle Level2 Connectors</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="toggle-fast-connector-types" @change="toggleFastConnectorTypes">
+                    <label for="toggle-fast-connector-types" class="toggle-checkboxes-text">Toggle Fast Connectors</label>
+                </div>
+
+                <div>
+                    <button class="btn btn-default btn-primary" @click="clearConnectorTypes">
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <div class="chargers-header">
+                <div>
+                    <button class="btn btn-default btn-primary" @click="goToPage('level2')">
+                        Leve2 Prices
+                    </button>
+                </div>
+
+                <div>
+                    <button class="btn btn-default btn-primary" @click="goToPage('min-max')">
+                        Min/Max Prices
                     </button>
                 </div>
             </div>
@@ -91,20 +115,31 @@
 	        },
 	        toggleAllConnectorTypes() {
 	            this.changeConnectorTypesActiveStatus(this.chargers);
+            },
+            toggleLvl2ConnectorTypes() {
+	            this.changeConnectorTypesActiveStatus(this.chargers, undefined, ['type 2']);
+            },
+            toggleFastConnectorTypes() {
+	            this.changeConnectorTypesActiveStatus(this.chargers, undefined, ['combo 2', 'chademo']);
+            },
+            clearConnectorTypes() {
+	            this.changeConnectorTypesActiveStatus(this.chargers, false);
 	        },
-	        changeConnectorTypesActiveStatus(chargers, val = undefined) {
+	        changeConnectorTypesActiveStatus(chargers, val = undefined, connectorTypes = []) {
 	            chargers.forEach(charger => {
 	                charger.connector_types.forEach(connectorType => {
+                        if (connectorTypes.length && ! connectorTypes.includes(connectorType.name.toLowerCase()))
+                            return;
+
 	                    connectorType.activeInput = val != undefined ? val : ! connectorType.activeInput;
 	                });
 	            });
 	        },
-	        continueWithSelectedChargerTypes() {
+	        goToPage(page) {
                 let chosenChargers = this.getChosenChargers();
 
-	            this.$emit('goToActionsPage', chosenChargers);
+	            this.$emit('goTo', { 'page': page, 'chargers': chosenChargers });
             },
-            
             getChosenChargers() {
                 return this.chargers.filter(charger => {
                     let hasChosenConnector = false;
@@ -145,6 +180,8 @@
         width: 100%;
         display: flex;
         text-align: center;
+        align-items: center;
+        margin-bottom: 2rem;
         justify-content: space-between;
 
         .toggle-checkboxes-text {

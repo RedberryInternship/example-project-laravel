@@ -15,6 +15,8 @@ class ChargingPrice extends Model
         'price'
     ];
 
+    public $timestamps = true;
+
     public function chargerConnectorType()
     {
     	return $this -> belongsTo('App\ChargerConnectorType');
