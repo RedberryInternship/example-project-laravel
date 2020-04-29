@@ -70,9 +70,7 @@
                         price: this.price,
                         chargers: this.chargers
 	                }
-	            }).then(response => {
-	                this.goBack();
-	            });
+	            }).then(() => this.goBack());
             },
             goBack() {
                 this.$emit('goBack');

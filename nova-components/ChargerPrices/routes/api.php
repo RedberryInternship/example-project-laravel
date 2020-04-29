@@ -36,6 +36,8 @@ Route::get('/chargers', function (Request $request, Charger $charger) {
 						 -> with('connector_types')
 						 -> get();
 
+	Charger::addChargingPrices($chargers);
+
 	return [
 		'chargers' => $chargers
 	];
@@ -128,6 +130,13 @@ Route::post('/save-fast', function (Request $request, ChargerConnectorType $char
 	}
 
 	FastChargingPrice::insert($queryRaws);
+
+	return response() -> json(true, 200);
+});
+
+
+Route::post('/remove-charging-price', function(Request $request) {
+	ChargingPrice::where('id', $request -> get('chargingPriceID')) -> delete();
 
 	return response() -> json(true, 200);
 });

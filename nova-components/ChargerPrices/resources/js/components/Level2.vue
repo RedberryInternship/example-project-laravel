@@ -6,9 +6,15 @@
             <div class="go-back" @click="goBack">< Back</div>
         </header>
 
-        <div class="chargers-form">
+        <div class="chargers-form card mb-4">
             <div class="row">
-                <form class="form card" action="#">
+                <form class="form" action="#">
+                    <div class="form-group">
+                        <div class="w-1/5 px-8 py-6">
+                            <h4>Add New Price</h4>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <div class="w-1/5 px-8 py-6">
                             <label for="min-kwt">Min Kwt</label>
@@ -62,6 +68,53 @@
                 </form>
             </div>
         </div>
+
+        <div class="charger-prices-listing card">
+            <div class="row">
+                <table cellpadding="0" cellspacing="0" data-testid="resource-table" class="table w-full">
+                    <thead>
+                        <tr>
+                            <th>Charger</th>
+                            <th>Connector Type</th>
+                            <th>Min Kwt</th>
+                            <th>Max Kwt</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Price</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <template v-for="charger in chargers">
+                            <template v-for="connectorType in charger.connector_types">
+                                <template v-if="connectorType.activeInput">
+                                    <tr v-for="chargingPrice in connectorType.charging_prices" :class="{ 'removed': chargingPrice.removed }" :key="chargingPrice.id">
+                                        <td>{{ charger.name.en }}</td>
+                                        <td>{{ connectorType.name }}</td>
+                                        <td class="center">{{ chargingPrice.min_kwt }}</td>
+                                        <td class="center">{{ chargingPrice.max_kwt }}</td>
+                                        <td class="center">{{ chargingPrice.start_time }}</td>
+                                        <td class="center">{{ chargingPrice.end_time }}</td>
+                                        <td class="center">{{ chargingPrice.price }}</td>
+                                        <td class="center">
+                                            <template v-if=" ! chargingPrice.removed">
+                                                <button class="btn btn-default btn-danger" @click="removeChargingPrice(chargingPrice)">
+                                                    Remove
+                                                </button>
+                                            </template>
+                                            <template v-else>
+                                                Removed
+                                            </template>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 	</div>
 </template>
 
@@ -92,12 +145,23 @@
                         price: this.price,
                         chargers: this.chargers
 	                }
-	            }).then(response => {
-	                this.goBack();
-	            });
+	            }).then(() => this.goBack());
             },
             goBack() {
                 this.$emit('goBack');
+            },
+            removeChargingPrice(chargingPrice) {
+                axios({
+	                method: 'post',
+	                url: '/nova-vendor/charger-prices/remove-charging-price',
+	                data: {
+	                    chargingPriceID: chargingPrice.id
+	                }
+	            }).then(() => {
+                    chargingPrice.removed = true;
+
+                    this.$forceUpdate();
+                });
             }
         }
     }
@@ -123,6 +187,29 @@
         > div {
             display: flex;
             align-items: center;
+        }
+    }
+
+    table tbody {
+        tr.removed {
+            background-color: #e53e3e !important;
+
+            &:hover {
+                background-color: #e53e3e !important;
+            }
+
+            td {
+                color: white !important;
+                background-color: inherit !important;
+
+                &:hover {
+                    background-color: inherit !important;
+                }
+            }
+        }
+
+        td.center {
+            text-align: center;
         }
     }
 </style>

@@ -30,6 +30,8 @@
             goToPage(data) {
                 this.chargers = data.chargers;
 
+                console.log(this.chargers);
+
                 this.displayPage(data.page);
             },
             displayPage(page) {

@@ -296,7 +296,6 @@ class Charger extends Model
         
         $charger -> is_free = MishasCharger::isChargerFree( $charger -> charger_id );
     }
-
     
     public function hasChargingConnector($type, $chargerConnectorTypes)
     {
