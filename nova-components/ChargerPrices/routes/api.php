@@ -3,6 +3,7 @@
 use App\Charger;
 use App\ChargerGroup;
 use App\ChargingPrice;
+use App\FastChargingPrice;
 use App\ChargerConnectorType;
 use Redberry\Library\ChargerPrices\ChargerPrices;
 use Illuminate\Http\Request;
@@ -27,6 +28,7 @@ Route::get('/charger-groups', function (Request $request) {
 	];
 });
 
+
 Route::get('/chargers', function (Request $request, Charger $charger) {
 	$group 	  = $request -> get('group');
 
@@ -38,6 +40,7 @@ Route::get('/chargers', function (Request $request, Charger $charger) {
 		'chargers' => $chargers
 	];
 });
+
 
 Route::post('/save-min-max', function (Request $request, ChargerConnectorType $chargerConnectorType, ChargerPrices $chargerPrices) {
 	$minPrice = $request -> get('minPrice');
@@ -64,6 +67,7 @@ Route::post('/save-min-max', function (Request $request, ChargerConnectorType $c
 
 	return response() -> json(true, 200);
 });
+
 
 Route::post('/save-level2', function (Request $request, ChargerConnectorType $chargerConnectorType, ChargerPrices $chargerPrices) {
 	$minKwt    = $request -> get('minKwt');
@@ -98,3 +102,32 @@ Route::post('/save-level2', function (Request $request, ChargerConnectorType $ch
 	return response() -> json(true, 200);
 });
 
+
+Route::post('/save-fast', function (Request $request, ChargerConnectorType $chargerConnectorType, ChargerPrices $chargerPrices) {
+	$startMinutes = $request -> get('startMinutes');
+	$endMinutes   = $request -> get('endMinutes');
+	$price     	  = $request -> get('price');
+	$chargers  	  = $request -> get('chargers');
+
+	$connectorTypes = $chargerPrices -> getChargersConnectorTypes($chargers);
+
+	$chargerConnectorTypes = $chargerConnectorType -> whereIn('id', $connectorTypes) -> get();
+
+	$queryRaws = [];
+	$timeNow   = date('Y-m-d H:i:s');
+	foreach ($chargerConnectorTypes as $chargerConnectorType)
+	{
+		$queryRaws[] = [
+			'start_minutes' 			=> $startMinutes,
+			'end_minutes' 				=> $endMinutes,
+			'price' 					=> $price,
+			'charger_connector_type_id' => $chargerConnectorType -> id,
+			'created_at' 				=> $timeNow,
+			'updated_at' 				=> $timeNow
+		];
+	}
+
+	FastChargingPrice::insert($queryRaws);
+
+	return response() -> json(true, 200);
+});

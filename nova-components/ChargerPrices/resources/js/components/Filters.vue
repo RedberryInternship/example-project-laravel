@@ -48,7 +48,13 @@
             <div class="chargers-header">
                 <div>
                     <button class="btn btn-default btn-primary" @click="goToPage('level2')">
-                        Leve2 Prices
+                        Level2 Connector Prices
+                    </button>
+                </div>
+
+                <div>
+                    <button class="btn btn-default btn-primary" @click="goToPage('fast')">
+                        Fast Connector Prices
                     </button>
                 </div>
 

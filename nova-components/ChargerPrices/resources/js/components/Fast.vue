@@ -1,7 +1,7 @@
 <template>
 	<div>
         <header>
-		    <heading class="mb-6">Level2 Connector Types</heading>
+		    <heading class="mb-6">Fast Connector Types</heading>
 
             <div class="go-back" @click="goBack">< Back</div>
         </header>
@@ -11,37 +11,19 @@
                 <form class="form card" action="#">
                     <div class="form-group">
                         <div class="w-1/5 px-8 py-6">
-                            <label for="min-kwt">Min Kwt</label>
+                            <label for="start-minutes">Start Minutes</label>
                         </div>
                         <div class="py-6 px-8 w-1/2">
-                            <input type="number" id="min-kwt" name="min-kwt" step=".5" class="w-full form-control form-input form-input-bordered" v-model="minKwt">
+                            <input type="number" id="start-minutes" name="start-minutes" step="1" class="w-full form-control form-input form-input-bordered" v-model="startMinutes">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="w-1/5 px-8 py-6">
-                            <label for="max-price">Max kwt</label>
+                            <label for="end-minutes">End Minutes</label>
                         </div>
                         <div class="py-6 px-8 w-1/2">
-                            <input type="number" id="max-kwt" name="max-kwt" step=".5" class="w-full form-control form-input form-input-bordered" v-model="maxKwt">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="w-1/5 px-8 py-6">
-                            <label for="start-time">Start Time</label>
-                        </div>
-                        <div class="py-6 px-8 w-1/2">
-                            <input type="number" id="start-time" name="start-time" step="1" class="w-full form-control form-input form-input-bordered" v-model="startTime">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="w-1/5 px-8 py-6">
-                            <label for="end-time">End Time</label>
-                        </div>
-                        <div class="py-6 px-8 w-1/2">
-                            <input type="number" id="end-time" name="end-time" step="1" class="w-full form-control form-input form-input-bordered" v-model="endTime">
+                            <input type="number" id="end-minutes" name="end-minutes" step="1" class="w-full form-control form-input form-input-bordered" v-model="endMinutes">
                         </div>
                     </div>
 
@@ -72,10 +54,8 @@
 		],
         data() {
             return {
-                minKwt: '',
-                maxKwt: '',
-                startTime: '',
-                endTime: '',
+                startMinutes: '',
+                endMinutes: '',
                 price: ''
             };
         },
@@ -83,12 +63,10 @@
             save() {
                 axios({
 	                method: 'post',
-	                url: '/nova-vendor/charger-prices/save-level2',
+	                url: '/nova-vendor/charger-prices/save-fast',
 	                data: {
-	                    minKwt: this.minKwt,
-	                    maxKwt: this.maxKwt,
-	                    startTime: this.startTime,
-	                    endTime: this.endTime,
+	                    startMinutes: this.startMinutes,
+	                    endMinutes: this.endMinutes,
                         price: this.price,
                         chargers: this.chargers
 	                }
