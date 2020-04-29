@@ -19,9 +19,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ChargerCollection;
 use App\Http\Resources\OrdersCollection;
 use App\Facades\Charger as MishasCharger;
-
-
-use Schema;
+use Illuminate\Support\Facades\Schema;
 
 class UserController extends Controller
 {
@@ -110,7 +108,7 @@ class UserController extends Controller
                 }
             }
         }else{
-            $json_status = 'This phone number is alreayd registered!';
+            $json_status = 'This phone number is already registered!';
             $status      = 409;
         }
         return response() -> json([
@@ -183,7 +181,7 @@ class UserController extends Controller
             'phone_number'      => $request ->get('phone_number'),
             'email'             => $request ->get('email'),
             'verified'          => 1,
-            'acitve'            => 0,
+            'active'            => 0,
             'password'          => Hash::make($request ->get('password'))
         ]);
 
