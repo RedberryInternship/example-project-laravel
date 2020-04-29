@@ -2,8 +2,10 @@
 
 use App\Charger;
 use App\ChargerGroup;
+use App\ChargingPrice;
+use App\FastChargingPrice;
 use App\ChargerConnectorType;
-use Redberry\Library\ChargerPrices;
+use Redberry\Library\ChargerPrices\ChargerPrices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +28,7 @@ Route::get('/charger-groups', function (Request $request) {
 	];
 });
 
+
 Route::get('/chargers', function (Request $request, Charger $charger) {
 	$group 	  = $request -> get('group');
 
@@ -33,26 +36,23 @@ Route::get('/chargers', function (Request $request, Charger $charger) {
 						 -> with('connector_types')
 						 -> get();
 
+	Charger::addChargingPrices($chargers);
+
 	return [
 		'chargers' => $chargers
 	];
 });
 
-Route::post('/attach', function (Request $request, ChargerConnectorType $chargerConnectorType, ChargerPrices $chargerPrices) {
-	$price 	  = $request -> get('price');
+
+Route::post('/save-min-max', function (Request $request, ChargerConnectorType $chargerConnectorType, ChargerPrices $chargerPrices) {
 	$minPrice = $request -> get('minPrice');
 	$maxPrice = $request -> get('maxPrice');
 	$chargers = $request -> get('chargers');
 
-	$connectorTypes = $chargerPrices -> getChargersConnectorTypes();
-
-	if (isset($price) && $price != '')
-	{
-		// 
-	}
+	$connectorTypes = $chargerPrices -> getChargersConnectorTypes($chargers);
 
 	$chargerConnectorTypes = $chargerConnectorType -> whereIn('id', $connectorTypes);
-	
+
 	if (isset($minPrice) && $minPrice != '')
 	{
 		$chargerConnectorTypes -> update([
@@ -67,7 +67,83 @@ Route::post('/attach', function (Request $request, ChargerConnectorType $charger
 		]);
 	}
 
-	return [
-		
-	];
+	return response() -> json(true, 200);
+});
+
+
+Route::post('/save-level2', function (Request $request, ChargerConnectorType $chargerConnectorType, ChargerPrices $chargerPrices) {
+	$minKwt    = $request -> get('minKwt');
+	$maxKwt    = $request -> get('maxKwt');
+	$startTime = $request -> get('startTime');
+	$endTime   = $request -> get('endTime');
+	$price     = $request -> get('price');
+	$chargers  = $request -> get('chargers');
+
+	$connectorTypes = $chargerPrices -> getChargersConnectorTypes($chargers);
+
+	$chargerConnectorTypes = $chargerConnectorType -> whereIn('id', $connectorTypes) -> get();
+
+	$queryRaws = [];
+	$timeNow   = date('Y-m-d H:i:s');
+	foreach ($chargerConnectorTypes as $chargerConnectorType)
+	{
+		$queryRaws[] = [
+			'min_kwt' 					=> $minKwt,
+			'max_kwt' 					=> $maxKwt,
+			'start_time' 				=> $startTime,
+			'end_time' 					=> $endTime,
+			'price' 					=> $price,
+			'charger_connector_type_id' => $chargerConnectorType -> id,
+			'created_at' 				=> $timeNow,
+			'updated_at' 				=> $timeNow
+		];
+	}
+
+	ChargingPrice::insert($queryRaws);
+
+	return response() -> json(true, 200);
+});
+
+
+Route::post('/save-fast', function (Request $request, ChargerConnectorType $chargerConnectorType, ChargerPrices $chargerPrices) {
+	$startMinutes = $request -> get('startMinutes');
+	$endMinutes   = $request -> get('endMinutes');
+	$price     	  = $request -> get('price');
+	$chargers  	  = $request -> get('chargers');
+
+	$connectorTypes = $chargerPrices -> getChargersConnectorTypes($chargers);
+
+	$chargerConnectorTypes = $chargerConnectorType -> whereIn('id', $connectorTypes) -> get();
+
+	$queryRaws = [];
+	$timeNow   = date('Y-m-d H:i:s');
+	foreach ($chargerConnectorTypes as $chargerConnectorType)
+	{
+		$queryRaws[] = [
+			'start_minutes' 			=> $startMinutes,
+			'end_minutes' 				=> $endMinutes,
+			'price' 					=> $price,
+			'charger_connector_type_id' => $chargerConnectorType -> id,
+			'created_at' 				=> $timeNow,
+			'updated_at' 				=> $timeNow
+		];
+	}
+
+	FastChargingPrice::insert($queryRaws);
+
+	return response() -> json(true, 200);
+});
+
+
+Route::post('/remove-charging-price', function(Request $request) {
+	ChargingPrice::where('id', $request -> get('chargingPriceID')) -> delete();
+
+	return response() -> json(true, 200);
+});
+
+
+Route::post('/remove-fast-charging-price', function(Request $request) {
+	FastChargingPrice::where('id', $request -> get('fastChargingPriceID')) -> delete();
+
+	return response() -> json(true, 200);
 });
