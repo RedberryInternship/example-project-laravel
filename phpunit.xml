@@ -11,17 +11,19 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit</directory>
-        </testsuite>
-
-        <testsuite name="Feature">
-            <directory suffix="Test.php">./tests/Feature</directory>
-        </testsuite>
-
+        
         <testsuite name="Chargers">
             <directory suffix=".php">./tests/Unit/Chargers</directory>
         </testsuite>
+
+        <testsuite name="Orders">
+            <directory suffix=".php">./tests/Unit/Orders</directory>
+        </testsuite>
+        
+        <testsuite name="ChargerConnectorTypes">
+            <directory suffix=".php">./tests/Unit/ChargerConnectorTypes</directory>
+        </testsuite>
+
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
