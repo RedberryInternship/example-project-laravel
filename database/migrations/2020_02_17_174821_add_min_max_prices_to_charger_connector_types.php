@@ -14,8 +14,9 @@ class AddMinMaxPricesToChargerConnectorTypes extends Migration
     public function up()
     {
         #TODO: Needs Refactor
+# Giuna # Why ?
 
-        if(app() ->runningUnitTests())
+        if( app() -> runningUnitTests() )
         {
             Schema::table('charger_connector_types', function (Blueprint $table) {
                 $table->float('min_price', 5, 2) -> default(0);

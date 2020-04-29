@@ -14,9 +14,7 @@ class ModifyPaymentsTable extends Migration
     public function up()
     {
         Schema :: table( 'payments', function( Blueprint $table ){
-            $table -> dropColumn( 'active' );
-            $table -> dropColumn( 'date' );
-            $table -> dropColumn( 'status' );
+            $table -> dropColumn([ 'active', 'date', 'status' ]);
         });
     }
 
