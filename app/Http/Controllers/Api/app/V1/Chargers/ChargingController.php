@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Traits\Message;
 
-use App\ChargerTransaction;
+use App\Order;
 use App\ChargerConnectorType;
 
 use App\Http\Requests\StartCharging;
@@ -57,12 +57,12 @@ class ChargingController extends Controller
    */
   public function start(StartCharging $request)
   { 
-    $charger_connector_type_id = $request -> get( 'charger_connector_type_id' );
-    $charging_type             = $request -> get( 'charging_type' );
-    $charger_connector_type    = ChargerConnectorType::find( $charger_connector_type_id );
-    $charger                   = $charger_connector_type -> charger;
+    $chargerConnectorTypeId   = $request -> get( 'charger_connector_type_id' );
+    $chargingType             = $request -> get( 'charging_type' );
+    $chargerConnectorType     = ChargerConnectorType::find( $chargerConnectorTypeId );
+    $charger                  = $chargerConnectorType -> charger;
     
-    if( $charging_type == 'BY-AMOUNT' )
+    if( $chargingType == 'BY-AMOUNT' )
     {
       $price = $request -> get( 'price' );
     }
@@ -77,18 +77,17 @@ class ChargingController extends Controller
     
     $transactionID = Charger::start(
       $charger                -> charger_id, 
-      $charger_connector_type -> m_connector_type_id
+      $chargerConnectorType   -> m_connector_type_id
     );
 
-    $charger_transaction = ChargerTransaction::create([
-      'charger_id'          => $charger -> id,
-      'connector_type_id'   => $charger_connector_type -> connector_type_id,
-      'm_connector_type_id' => $charger_connector_type -> m_connector_type_id,
-      'transactionID'       => $transactionID,
+    $order = Order::create([
+      'charger_connector_type_id' => $chargerConnectorTypeId,
+      'charger_transaction_id'    => $transactionID,
+      'charging_status'           => 'INITIATED',
     ]);
 
     $transaction_info = Charger::transactionInfo( $transactionID );
-    $charger_transaction -> createKilowatt( $transaction_info -> consumed );
+    $order -> createKilowatt( $transaction_info -> consumed );
 
     $this -> message = $this -> messages[ 'charging_successfully_started' ];
     $this -> status  = 'Charging Successfully started!';
@@ -105,16 +104,16 @@ class ChargingController extends Controller
   public function stop( StopCharging $request )
   {
     $charger_connector_type_id  = $request -> get( 'charger_connector_type_id' );
-    $charger_connector_type     = ChargerConnectorType::find( $charger_connector_type_id );
+    $charger_connector_type     = ChargerConnectorType :: with('orders') -> find( $charger_connector_type_id );
     
     $charger                    = $charger_connector_type -> charger;
-    $charger_transaction        = $charger_connector_type -> charger_transaction_first();
-    $transactionID              = $charger_transaction -> transactionID;
+    $order                      = $charger_connector_type -> orders -> first();
+    $transactionID              = $order -> charger_transaction_id;
    
     $this -> sendStopChargingRequestToMisha( $charger -> charger_id, $transactionID );
   
-    $charger_transaction -> status = 'CHARGED';
-    $charger_transaction -> save();
+    $order -> charging_status = 'CHARGED';
+    $order -> save();
 
     $this -> message = $this -> messages [ 'charging_successfully_finished' ];
     $this -> status  = 'Charging successfully finished!';

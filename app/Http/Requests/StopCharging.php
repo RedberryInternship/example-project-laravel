@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+
 use App\Traits\ValidatorCustomJsonResponse as Response;
+use App\Traits\Message;
 
 use App\Rules\ModelHasRelation;
 
@@ -12,7 +14,8 @@ use App\ChargerConnectorType;
 class StopCharging extends FormRequest
 {
 
-    use Response;
+    use Response,
+        Message;
 
     /**
      * Determine if the user is authorized to make this request.

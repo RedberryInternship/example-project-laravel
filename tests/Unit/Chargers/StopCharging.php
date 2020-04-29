@@ -3,7 +3,7 @@
 namespace Tests\Unit\Chargers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 use App\ChargerConnectorType;
@@ -28,6 +28,18 @@ class Charging extends TestCase {
     $this -> uri    = config( 'app' )[ 'uri' ];
   }
 
+  protected function tearDown(): void
+  {
+    $this -> beforeApplicationDestroyed( function (){
+      foreach( DB :: getConnections() as $connection )
+      {
+        $connection -> disconnect();
+      }
+    });
+
+    parent :: tearDown();
+  }
+
 
   /** @test */  
   public function stop_charging_has_charger_connector_type_id_error_when_not_providing_it()
@@ -45,19 +57,21 @@ class Charging extends TestCase {
   /** @test */
   public function stop_charging_sends_stop_charging_call_and_updates_db()
   {
-    $this -> initiate_charger_transaction_with_ID_of_29();
+    $this -> create_order_with_charger_id_of_29();
 
-    $charger_connector_type = ChargerConnectorType::first();
-
+    $chargerConnectorType = ChargerConnectorType::first();
+  
     $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
       -> post($this -> uri . 'charging/stop', [
-        'charger_connector_type_id' => $charger_connector_type -> id,
+        'charger_connector_type_id' => $chargerConnectorType -> id,
       ]);
     
-    $charger_transaction = $charger_connector_type -> charger_transaction_first();
-
-    $this -> assertEquals( "CHARGED", $charger_transaction -> status );
+    $chargerConnectorType -> load ( 'orders' );
     
-    $this -> finish_charger_transaction_with_ID_of_29();
+    $order = $chargerConnectorType -> orders -> first();
+
+    $this -> assertEquals( "CHARGED", $order -> charging_status );
+    
+    $this -> tear_down_order_data_with_charger_id_of_29();
   }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Unit\Chargers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -11,10 +12,13 @@ use App\ChargerTransaction;
 use App\ConnectorType;
 use App\Kilowatt;
 use App\Charger;
+use App\Order;
 
 use App\Traits\Testing\Charger as ChargerTrait;
 use App\Traits\Testing\User as UserTrait;
 use App\Traits\Message;
+
+use App\Facades\Simulator;
 
 class StartCharging extends TestCase {
   
@@ -34,6 +38,17 @@ class StartCharging extends TestCase {
     $this -> token  = $this -> createUserAndReturnToken();
     $this -> uri    = config( 'app' )['uri'];
     $this -> url    = $this -> uri . 'charging/start';
+  }
+
+  protected function tearDown(): void
+  {
+    $this -> beforeApplicationDestroyed( function () {
+      foreach(DB::getConnections() as $connection )
+      {
+        $connection -> disconnect();
+      }
+    });
+    parent :: tearDown();
   }
 
   /** @test */  
@@ -68,12 +83,14 @@ class StartCharging extends TestCase {
   {
 
     factory( ChargerConnectorType::class ) -> create();
+    DB :: table( 'chargers' ) -> delete();
 
     $response = $this 
       -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
       -> post( $this -> url, [
         'charger_connector_type_id' => 1,
         'charging_type'             => 'BY-AMOUNT',
+        'price'                     => 50,
       ]);
 
     $responseErrors = $response -> decodeResponseJson() [ 'errors' ][ 'charger_connector_type_id' ];
@@ -85,7 +102,12 @@ class StartCharging extends TestCase {
   /** @test */
   public function start_charging_doesnt_have_charger_error_when_it_exists()
   {
-    $charger = factory( Charger::class ) -> create();
+
+    Simulator :: plugOffCable( 29 );
+    Simulator :: upAndRunning( 29 );
+    sleep( 1 );
+
+    $charger = factory( Charger::class ) -> create([ 'charger_id' => 29 ]);
 
     factory( ChargerConnectorType::class ) -> create([
       'charger_id' => $charger -> id
@@ -96,12 +118,10 @@ class StartCharging extends TestCase {
       -> post( $this -> url, [
         'charger_connector_type_id' => 1,
         'charging_type'             => 'BY-AMOUNT',
+        'price'                     => 50,
       ]);
-
-    $responseErrors = $response -> decodeResponseJson() [ 'errors' ][ 'charger_connector_type_id' ];
-    $hasError       = ! in_array( 'ChargerConnectorType doesn\'t have charger relation.', $responseErrors );
-    
-    $this -> assertTrue( $hasError );
+        
+    $response -> assertJsonMissingValidationErrors( 'charger_connector_type_id' );
   }
 
   /** @test */
@@ -240,17 +260,17 @@ class StartCharging extends TestCase {
   }
 
   /** @test */
-  public function start_charging_creates_new_charger_transaction_record_with_kilowatt()
+  public function start_charging_creates_new_order_record_with_kilowatt()
   {
-    $this -> initiate_charger_transaction_with_ID_of_29();
+    $this -> create_order_with_charger_id_of_29();
       
-    $charger_transactions_count = ChargerTransaction::count();
-    $kilowatt_count             = Kilowatt::count();
+    $orders_count   = Order::count();
+    $kilowatt_count = Kilowatt::count();
 
-    $this -> assertTrue( $charger_transactions_count > 0 );
+    $this -> assertTrue( $orders_count > 0 );
     $this -> assertTrue( $kilowatt_count > 0 );
 
-    $this -> finish_charger_transaction_with_ID_of_29();
+    $this -> tear_down_order_data_with_charger_id_of_29();
   }
 
 
@@ -268,9 +288,9 @@ class StartCharging extends TestCase {
 
 
   /** @test */
-  public function when_charger_transaction_is_initiated_status_is_INITIATED()
+  public function when_order_is_created_status_is_INITIATED()
   {
-    $this -> initiate_charger_transaction_with_ID_of_29();
+    $this -> create_order_with_charger_id_of_29();
     $charger_connector_type = ChargerConnectorType::first();
 
     $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
@@ -280,13 +300,13 @@ class StartCharging extends TestCase {
 
     $this -> assertEquals( 'INITIATED', $response['payload']['status']);
 
-    $this -> finish_charger_transaction_with_ID_of_29();
+    $this -> tear_down_order_data_with_charger_id_of_29();
   }
 
   /** @test */
   public function when_charger_is_not_free_dont_charge()
   {
-    $this -> initiate_charger_transaction_with_ID_of_29();
+    $this -> create_order_with_charger_id_of_29();
 
     $response = $this -> withHeader( 'token', 'Bearer ' . $this -> token)
       -> post($this -> uri . 'charging/start', [
@@ -298,6 +318,6 @@ class StartCharging extends TestCase {
     
     $this -> assertEquals( $this -> messages [ 'charger_is_not_free' ], $response -> message );
 
-    $this -> finish_charger_transaction_with_ID_of_29();
+    $this -> tear_down_order_data_with_charger_id_of_29();
   }
 }
