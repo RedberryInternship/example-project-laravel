@@ -3,8 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\ChargerTransaction;
-
 
 class ChargerConnectorType extends Model
 {
@@ -22,7 +20,7 @@ class ChargerConnectorType extends Model
      */
     public function connector_type()
     {
-    	return $this -> belongsTo(ConnectorType::class);
+    	return $this -> belongsTo( ConnectorType :: class );
     }
 
     /**
@@ -32,50 +30,36 @@ class ChargerConnectorType extends Model
      */
     public function charger()
     {
-        return $this -> belongsTo(Charger::class);
+        return $this -> belongsTo( Charger :: class );
+    }
+
+    /** 
+     * HasMany relationship with Order. 
+     * 
+     * @return Illuminate\Database\Eloquent\Collection 
+     */
+    public function orders()
+    {
+        return $this -> hasMany( Order :: class );
     }
 
     /**
-     * Charging Prices.
+     * hasMany relationship with ChargingPrice.
+     * 
+     * @return Illuminate\Database\Eloquent\Collection
      */
     public function charging_prices()
     {
-        return $this -> hasMany(ChargingPrice::class);
+        return $this -> hasMany( ChargingPrice :: class );
     }
 
     /**
-     * Fast Charging Prices.
+     * hasMany relationship with FastChargingPrice.
+     * 
+     * @return Illuminate\Database\Eloquent\Collection
      */
     public function fast_charging_prices()
     {
-        return $this -> hasMany(FastChargingPrice::class);
-    }
-
-    /**
-     * Get the newest charger transaction.
-     * 
-     * @return App\ChargerTransaction 
-     */
-    public function charger_transaction_first()
-    {
-        return ChargerTransaction::where('charger_id', $this -> charger_id)
-            -> where('connector_type_id', $this -> connector_type_id)
-            -> where('m_connector_type_id', $this -> m_connector_type_id)
-            -> first();
-    }
-
-    /**
-     * Get all the charger transactions
-     * related to this ChargerConnectorType.
-     * 
-     * @return Illuminate\Database\Eloquent\Collection < App\ChargerTransactions >
-     */
-    public function charger_transaction_all()
-    {
-        return ChargerTransaction::where('charger_id', $this -> charger_id)
-            -> where('connector_type_id', $this -> connector_type_id)
-            -> where('m_connector_type_id', $this -> m_connector_type_id)
-            -> get();
-    }
-
+        return $this -> hasMany( FastChargingPrice :: class );
+    }   
 }

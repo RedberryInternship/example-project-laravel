@@ -5,17 +5,17 @@ namespace App\Exceptions\Charger;
 use Exception;
 use App\Traits\Message;
 
-class MishasBackException extends Exception
+class TransactionAlreadyFinishedException extends Exception
 {
     use Message;
 
-    /**
+     /**
      * Report the exception.
      *
      * @return void
      */
-     public function report()
-     {
+    public function report()
+    {
         //
     }
 
@@ -28,9 +28,9 @@ class MishasBackException extends Exception
     public function render($request)
     {
         return response() -> json([
-            'message' => $this -> messages [ 'something_went_wrong' ],
-            'status'  => 'Something went wrong in Misha\'s Side',
-            'code'    => 400,
-        ], 400);
+            'message'     => $this -> messages [ 'charger_transaction_already_stopped' ],
+            'status'      => 'Transaction is already finished!',
+            'status_code' => 400,
+        ], $this -> code ?: 400 );
     }
 }

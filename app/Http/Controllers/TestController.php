@@ -5,15 +5,30 @@ namespace App\Http\Controllers;
 use App\Facades\Charger;
 use App\Facades\Simulator;
 
-use App\Traits\Message;
+use App\Enums\PaymentType;
 
- class TestController extends Controller 
+use App\Traits\Message;
+ 
+class TestController extends Controller 
  {
-   use Message;
-	
+  use Message;
+     
     public function __invoke()
     {
-      Charger :: start( 29, 1 );
+        $payments = $this -> get_json_data( 'payment' );
+
+        dd(
+          $payments -> where( 'actual_price', '!=' , '' ) -> take(10) -> toArray(),
+        );
+    }
+
+    private function get_json_data($data_type)
+    {
+      $path = public_path () . "/jsons". "/" . $data_type . ".json";
+      $json = json_decode(file_get_contents($path));
+      $data = $json -> RECORDS;
+      
+      return collect( $data );
     }
 
     public function all()

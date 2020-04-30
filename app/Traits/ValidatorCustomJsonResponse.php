@@ -21,7 +21,7 @@ trait ValidatorCustomJsonResponse{
             ]
         );
 
-        $response = new JsonResponse($resData, 400);
+        $response = new JsonResponse($resData, $status_code ?: 500);
 
         $e = new ValidationException($validator, $response);
         throw $e;   

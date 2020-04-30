@@ -3,9 +3,12 @@
 namespace Tests\Unit\Chargers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-use App\ChargerTransaction;
+use App\Enums\OrderStatus;
+
+use App\Order;
 
 use App\Traits\Testing\Charger as ChargerTrait;
 use App\Traits\Testing\User as UserTrait;
@@ -30,37 +33,49 @@ class ChargingFeedback extends TestCase
     $this -> uri        = config( 'app' )[ 'uri' ];
   }
 
-  /** @test */
-  public function update_charger_transaction_adds_kilowatt_record()
-  {  
-    $this -> initiate_charger_transaction_with_ID_of_29();
-    
-    $charger_transaction = ChargerTransaction::first();
-    
-    $this -> get( $this -> update_url . $charger_transaction -> transactionID. '/7' );
-    $this -> get( $this -> update_url . $charger_transaction -> transactionID. '/14' );
+  protected function tearDown(): void
+  {
+    $this -> beforeApplicationDestroyed( function (){
+      foreach( DB :: getConnections() as $connection )
+      {
+        $connection -> disconnect();
+      }
+    });
 
-    $kilowatts = $charger_transaction -> kilowatt -> consumed;
-    
-    $this -> assertCount( 3, $kilowatts );
-
-    $this -> finish_charger_transaction_with_ID_of_29();
+    parent :: tearDown();
   }
 
   /** @test */
-  public function charger_transaction_status_becomes_FINISHED_when_finished()
+  public function update_order_adds_kilowatt_record()
+  {  
+    $this -> create_order_with_charger_id_of_29();
+    
+    $order = Order::first();
+    
+    $this -> get( $this -> update_url . $order -> charger_transaction_id . '/7' );
+    $this -> get( $this -> update_url . $order -> charger_transaction_id . '/14' );
+
+    $kilowatts = $order -> kilowatt -> consumed;
+    
+    $this -> assertCount( 3, $kilowatts );
+
+    $this -> tear_down_order_data_with_charger_id_of_29();
+  }
+
+  /** @test */
+  public function order_status_becomes_FINISHED_when_finished()
   {
-    $this -> initiate_charger_transaction_with_ID_of_29();
+    $this -> create_order_with_charger_id_of_29();
     
-    $charger_transaction = ChargerTransaction::first();
+    $order = Order :: first();
 
-    $this -> get( $this -> stop_url . $charger_transaction -> transactionID );
+    $this -> get( $this -> stop_url . $order -> charger_transaction_id );
 
-    $new_charger_transaction_status = ChargerTransaction::first() -> status;
+    $updatedChargingStatus = Order :: first() -> charging_status;
     
-    $this -> assertEquals( 'FINISHED', $new_charger_transaction_status );
+    $this -> assertEquals( OrderStatus :: FINISHED, $updatedChargingStatus );
     
-    $this -> finish_charger_transaction_with_ID_of_29();
+    $this -> tear_down_order_data_with_charger_id_of_29();
   }
 
 }

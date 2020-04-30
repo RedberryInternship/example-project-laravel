@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class InsertConnectorTypes extends Migration
+class AddTypeToPaymentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,9 @@ class InsertConnectorTypes extends Migration
      */
     public function up()
     {
-        DB::table('connector_types')->insert([
-            [
-                'name'  => 'Type 2'
-            ],
-            [
-                'name'  => 'Combo 2'
-            ],
-            [
-                'name'  => 'CHAdeMO'
-            ]
-        ]);
+        Schema::table('payments', function (Blueprint $table) {
+            $table -> string( 'type' ) -> nullable( true ) -> after( 'order_id' );
+        });
     }
 
     /**
@@ -33,6 +25,8 @@ class InsertConnectorTypes extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('payments', function (Blueprint $table) {
+            $table -> dropColumn( 'type' );
+        });
     }
 }

@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 use App\Facades\Charger as MishasCharger;
-use App\ChargerTransaction;
+use Illuminate\Database\Eloquent\Builder;
 
 class Charger extends Model
 {
@@ -17,22 +17,7 @@ class Charger extends Model
       'name'
     ];
 
-    protected $fillable = [
-        'name',
-        'charger_id',
-        'code',
-        'description',
-        'user_id',
-        'location',
-        'public',
-        'active',
-        'lat',
-        'lng',
-        'old_id',
-        'charger_group_id',
-        'iban',
-        'last_update'
-    ];
+    protected $guarded = [];
 
     protected $casts = [
       'name' => 'array',
@@ -69,6 +54,16 @@ class Charger extends Model
                     ]);
     }
 
+    /**
+     * Charger hasMany relationship with ChargerConnectorType.
+     * 
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function charger_connector_types()
+    {
+        return $this -> hasMany( ChargerConnectorType :: class );
+    }
+
     public function charger_group()
     {
         return $this -> belongsTo('App\ChargerGroup');
@@ -94,10 +89,6 @@ class Charger extends Model
         return $query;
     }
 
-    public function orders()
-    {
-        return $this -> hasMany('App\Order');
-    }
     public function business_services()
     {
         return $this -> belongsToMany('App\BusinessService', 'charger_business_services');
@@ -106,8 +97,8 @@ class Charger extends Model
     public function scopeActive($query)
     {
         return $query -> where('active', 1);
-    }
-
+    } 
+ 
     public function scopeFilterByFreeOrNot($query, $free)
     {
         return $query;
@@ -255,7 +246,7 @@ class Charger extends Model
         /**
          * get free_charger_ids from our db
          * 
-         * $free_charger_ids = ChargerTransaction::getFreeChargersIds();
+         * $free_charger_ids = Charger::getFreeChargersIds();
          */
 
         $free_charger_ids = MishasCharger::getFreeChargersIds();
@@ -291,11 +282,45 @@ class Charger extends Model
         /**
          * set is free attribute for charger from out db
          * 
-         * $charger -> is_free = ChargerTransaction::isChargerFree( $charger -> charger_id );
+         * $charger -> is_free = Charger::isChargerFree( $charger -> charger_id );
          */
         
         $charger -> is_free = MishasCharger::isChargerFree( $charger -> charger_id );
     }
+
+    /** 
+     * Get free chargers IDs.
+     * 
+     * @return array
+     */
+    public static function getFreeChargersIds()
+    {
+        $freeChargersIds = Charger :: with('charger_connector_types.orders')
+            -> whereDoesntHave( 'charger_connector_types.orders' )
+            -> orWhere( function ( Builder $builder ){
+                return $builder 
+                    -> whereDoesntHave('charger_connector_types.orders', function( Builder $builder){
+                        return $builder
+                            -> where( 'charging_status', '!=' , 'FINISHED' );
+                    });
+            })
+            -> pluck('id')
+            -> toArray();
+
+       return array_values(
+           array_unique( $freeChargersIds )
+       );
+    }
+
+    /**
+      * Is the charger free.
+      *
+      * @return bool
+      */
+      public static function isChargerFree($id)
+      {
+          return in_array( $id, static::getFreeChargersIds());
+      }
     
     public function hasChargingConnector($type, $chargerConnectorTypes)
     {

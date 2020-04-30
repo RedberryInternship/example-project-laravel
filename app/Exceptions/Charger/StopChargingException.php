@@ -4,8 +4,11 @@ namespace App\Exceptions\Charger;
 
 use Exception;
 
+use App\Traits\Message;
+
 class StopChargingException extends Exception
 {
+    use Message;
     /**
      * Report the exception.
      *
@@ -25,8 +28,9 @@ class StopChargingException extends Exception
     public function render($request)
     {
         return response() -> json([
-            'message' => $this -> message ?: 'Stop charging request couldn\'t be confirmed.',
-            'code'    => $this -> code    ?: 500,
-        ], $this -> code ?: 500 );
+            'message'     => $this -> messages [ 'cant_stop_charging' ],
+            'status'      => $this -> message ?: 'Stop charging request couldn\'t be confirmed.',
+            'status_code' => $this -> code    ?: 400,
+        ], $this -> code ?: 400 );
     }
 }

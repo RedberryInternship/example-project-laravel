@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class InsertConnectorTypes extends Migration
+class ModifyKilowattsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,9 @@ class InsertConnectorTypes extends Migration
      */
     public function up()
     {
-        DB::table('connector_types')->insert([
-            [
-                'name'  => 'Type 2'
-            ],
-            [
-                'name'  => 'Combo 2'
-            ],
-            [
-                'name'  => 'CHAdeMO'
-            ]
-        ]);
+        Schema::table('kilowatts', function (Blueprint $table) {
+            $table -> renameColumn( 'charger_transaction_id', 'order_id' );
+        });
     }
 
     /**
@@ -33,6 +25,8 @@ class InsertConnectorTypes extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('kilowatts', function (Blueprint $table) {
+            $table -> renameColumn( 'order_id', 'charger_transaction_id' );
+        });
     }
 }

@@ -14,8 +14,18 @@ class ChangeChargersToConnectorsInFastChargingPrices extends Migration
     public function up()
     {
         Schema::table('fast_charging_prices', function (Blueprint $table) {
-            $table->integer('charger_connector_type_id')->unsigned();
-            $table->dropColumn('charger_id');
+            $table -> dropColumn('charger_id');
+        });
+
+        Schema::table('fast_charging_prices', function (Blueprint $table){
+            if( app() -> runningUnitTests() )
+            {
+                $table -> integer('charger_connector_type_id') -> nullable( true ) -> unsigned();
+            }
+            else
+            {
+                $table -> integer('charger_connector_type_id') -> unsigned();
+            }
         });
     }
 
