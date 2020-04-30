@@ -174,14 +174,22 @@ class Charger extends Model
         return $query -> with([
             'tags',
             'connector_types',
-            'charging_prices',
-            'fast_charging_prices',
             'business_services'
         ]);
     }
 
-    public function addFilterAttributeToChargers(&$chargers, $favoriteChargers, $inner = false)
+    public static function addFilterAttributeToChargers(&$chargers)
+    { 
+        $user = auth('api') -> user();
+
+        $favoriteChargers = $user -> favorites -> pluck('id') -> toArray();
+
+        self::addFilterAttributeToChargersRecursively($chargers, $favoriteChargers);
+    }
+
+    public static function addFilterAttributeToChargersRecursively(&$chargers, $favoriteChargers, $inner = false)
     {
+    return;
         foreach ($chargers as &$charger)
         {
             $isFavorite = false;
@@ -194,7 +202,41 @@ class Charger extends Model
 
             if ( ! $inner && isset($charger -> charger_group) && isset($charger -> charger_group -> chargers) && ! empty($charger -> charger_group -> chargers))
             {
-                $this -> addFilterAttributeToChargers($charger -> charger_group -> chargers, $favoriteChargers, true);
+                self::addFilterAttributeToChargersRecursively($charger -> charger_group -> chargers, $favoriteChargers, true);
+            }
+        }
+    }
+
+    public static function addChargingPrices(&$chargers)
+    {
+        $chargingPrices     = ChargingPrice::all() -> groupBy('charger_connector_type_id');
+        $fastChargingPrices = FastChargingPrice::all() -> groupBy('charger_connector_type_id');
+
+        self::addChargingPricesRecursively($chargers, $chargingPrices, $fastChargingPrices);
+    }
+
+    public static function addChargingPricesRecursively(&$chargers, $chargingPrices, $fastChargingPrices, $inner = false)
+    {
+        foreach ($chargers as &$charger)
+        {
+            foreach ($charger -> connector_types as &$connectorType)
+            {
+                $connectorType -> charging_prices      = [];
+                $connectorType -> fast_charging_prices = [];
+                if (isset($chargingPrices[$connectorType -> pivot -> id]))
+                {
+                    $connectorType -> charging_prices = $chargingPrices[$connectorType -> pivot -> id] -> toArray();
+                }
+
+                if (isset($fastChargingPrices[$connectorType -> pivot -> id]))
+                {
+                    $connectorType -> fast_charging_prices = $fastChargingPrices[$connectorType -> pivot -> id] -> toArray();
+                }
+            }
+
+            if ( ! $inner && isset($charger -> charger_group) && isset($charger -> charger_group -> chargers) && ! empty($charger -> charger_group -> chargers))
+            {
+                self::addChargingPricesRecursively($charger -> charger_group -> chargers, $chargingPrices, $fastChargingPrices, true);
             }
         }
     }
@@ -279,5 +321,25 @@ class Charger extends Model
       {
           return in_array( $id, static::getFreeChargersIds());
       }
+    
+    public function hasChargingConnector($type, $chargerConnectorTypes)
+    {
+        $connectorTypes = $type == 'fast' ? ['combo 2', 'chademo'] : ['type 2'];   
+
+        $hasChargingConnector = false;
+        foreach ($chargerConnectorTypes as $chargerConnectorType)
+        {
+            $connectorName = $chargerConnectorType -> connector_type -> name;
+
+            if (in_array(strToLower($connectorName), $connectorTypes))
+            {
+                $hasChargingConnector = true;
+
+                break;
+            }
+        }
+
+        return $hasChargingConnector;
+    }
 }
 

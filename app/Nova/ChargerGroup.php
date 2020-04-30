@@ -55,11 +55,16 @@ class ChargerGroup extends Resource
         }) -> toArray();
 
         return [
-            ID::make()->sortable(),
+            ID::make() -> sortable(),
+
             Text::make('name')
-                ->sortable(),
+                -> sortable()
+                -> rules('required'),
+
             Select::make('User','user_id')
-                ->options($users),
+                -> options($users)
+                ->rules('required'),
+
             HasMany::make('Chargers','chargers', 'App\Nova\Charger')
         ];
     }

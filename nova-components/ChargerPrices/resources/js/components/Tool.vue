@@ -1,18 +1,24 @@
 <template>
     <div>
-        <filters class="page" :class="{ active: activePage == 'filters' }" @goToActionsPage="displayActionsPage"></filters>
-        <actions class="page" :class="{ active: activePage == 'actions' }" :chargers="chargers"></actions>
+        <filters class="page" :class="{ active: activePage == 'filters' }" @goTo="goToPage"></filters>
+        <min-max class="page" :class="{ active: activePage == 'min-max' }" @goBack="displayPage('filters')" :chargers="chargers"></min-max>
+        <level2 class="page" :class="{ active: activePage == 'level2' }" @goBack="displayPage('filters')" :chargers="chargers"></level2>
+        <fast class="page" :class="{ active: activePage == 'fast' }" @goBack="displayPage('filters')" :chargers="chargers"></fast>
     </div>
 </template>
 
 <script>
     import Filters from './Filters';
-    import Actions from './Actions';
+    import MinMax from './MinMax';
+    import Level2 from './Level2';
+    import Fast from './Fast';
 
     export default {
         components: {
             Filters,
-            Actions
+            MinMax,
+            Level2,
+            Fast
         },
         data() {
             return {
@@ -21,10 +27,12 @@
             };
         },
         methods: {
-            displayActionsPage(chargers) {
-                this.chargers = chargers;
+            goToPage(data) {
+                this.chargers = data.chargers;
 
-                this.displayPage('actions');
+                console.log(this.chargers);
+
+                this.displayPage(data.page);
             },
             displayPage(page) {
                 this.activePage = page;

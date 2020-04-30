@@ -1,19 +1,14 @@
 <template>
 	<div>
-		<heading class="mb-6">Filter Chargers</heading>
+        <header>
+		    <heading class="mb-6">Min Max Prices</heading>
+
+            <div class="go-back" @click="goBack">< Back</div>
+        </header>
 
         <div class="chargers-form">
             <div class="row">
                 <form class="form card" action="#">
-                    <div class="form-group">
-                        <div class="w-1/5 px-8 py-6">
-                            <label for="price">Price</label>
-                        </div>
-                        <div class="py-6 px-8 w-1/2">
-                            <input type="number" id="price" name="price" step=".5" class="w-full form-control form-input form-input-bordered" v-model="price">
-                        </div>
-                    </div>
-
                     <div class="form-group">
                         <div class="w-1/5 px-8 py-6">
                             <label for="min-price">Min Price</label>
@@ -34,7 +29,7 @@
 
                     <div class="form-group">
                         <div class="w-1/5 px-8 py-6">
-                            <input type="button" class="w-full btn btn-default btn-primary" @click="attachPrices" value="Submit">
+                            <input type="button" class="w-full btn btn-default btn-primary" @click="save" value="Submit">
                         </div>
                     </div>
                 </form>
@@ -50,31 +45,45 @@
 		],
         data() {
             return {
-                price: '',
                 minPrice: '',
                 maxPrice: ''
             };
         },
         methods: {
-            attachPrices() {
+            save() {
                 axios({
 	                method: 'post',
-	                url: '/nova-vendor/charger-prices/attach',
+	                url: '/nova-vendor/charger-prices/save-min-max',
 	                data: {
-	                    price: this.price,
 	                    minPrice: this.minPrice,
 	                    maxPrice: this.maxPrice,
 	                    chargers: this.chargers
 	                }
 	            }).then(response => {
-	                console.log(response);
+	                this.goBack();
 	            });
+            },
+            goBack() {
+                this.$emit('goBack');
             }
         }
     }
 </script>
 
 <style lang="scss">
+    header {
+        width: 100%;
+        display: flex;
+        text-align: center;
+        align-items: center;
+        justify-content: space-between;
+
+        .go-back {
+            cursor: pointer;
+            color: #4099de;
+        }
+    }
+
     .form-group {
         display: flex;
 

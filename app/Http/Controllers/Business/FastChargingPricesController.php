@@ -3,21 +3,13 @@
 namespace App\Http\Controllers\Business;
 
 use Auth;
-use App\ChargingPrice;
+use App\FastChargingPrice;
 use App\ChargerConnectorType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ChargingPricesController extends Controller
+class FastChargingPricesController extends Controller
 {
-    /**
-     * ChargingPricesController Constructor. 
-     */
-    public function __construct()
-    {
-        $this -> middleware('business.auth');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +17,7 @@ class ChargingPricesController extends Controller
      */
     public function index()
     {
-        //
+        $this -> middleware('business.auth');
     }
 
     /**
@@ -52,7 +44,7 @@ class ChargingPricesController extends Controller
 
         if ($chargerConnectorType -> charger -> user -> id == $user -> id)
         {
-            ChargingPrice::create($request -> all());
+            FastChargingPrice::create($request -> all());
         }
 
         return redirect() -> back();
@@ -95,18 +87,18 @@ class ChargingPricesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  ChargingPrice  $chargingPrice
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ChargingPrice $chargingPrice)
+    public function destroy(FastChargingPrice $fastChargingPrice)
     {
         $user = Auth::user();
+        
+        $fastChargingPrice -> load(['chargerConnectorType.charger']);
 
-        $chargingPrice -> load(['chargerConnectorType.charger']);
-
-        if ($chargingPrice -> chargerConnectorType -> charger -> user_id == $user -> id)
+        if ($fastChargingPrice -> chargerConnectorType -> charger -> user_id == $user -> id)
         {
-            $chargingPrice -> delete();
+            $fastChargingPrice -> delete();
         }
 
         return redirect() -> back();
