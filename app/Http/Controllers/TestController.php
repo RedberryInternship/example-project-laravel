@@ -15,9 +15,11 @@ class TestController extends Controller
      
     public function __invoke()
     {
-      dd(
-        PaymentType::getConstantsNames(),
-      );
+        $payments = $this -> get_json_data( 'payment' );
+
+        dd(
+          $payments -> where( 'actual_price', '!=' , '' ) -> take(10) -> toArray(),
+        );
     }
 
     private function get_json_data($data_type)
@@ -26,7 +28,7 @@ class TestController extends Controller
       $json = json_decode(file_get_contents($path));
       $data = $json -> RECORDS;
       
-      return $data;
+      return collect( $data );
     }
 
     public function all()

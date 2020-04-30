@@ -21,12 +21,10 @@ class ModifyOrdersTable extends Migration
                 'refunded', 
                 'finished', 
                 'connector_type_id', 
-                'connector_type_id',
                 'charger_type_id',
                 'charger_id',
-                'connector_type_id',
                 ]
-            );
+            ); 
         });
 
         Schema::table('orders', function( Blueprint $table ){
@@ -35,7 +33,7 @@ class ModifyOrdersTable extends Migration
 
         Schema::table('orders', function( Blueprint $table ){
             $table -> unsignedBigInteger('charger_connector_type_id') -> default(0) -> after('charging_type_id');
-            $table -> json('charging_status_change_dates') -> nullable( true ) -> after('status');
+            $table -> json('charging_status_change_dates') -> nullable( true ) -> after('charging_status');
             $table -> unsignedBigInteger('old_id') -> nullable( true ) -> change();
         });
     }

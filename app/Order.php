@@ -26,7 +26,6 @@ class Order extends Model
      */
     protected $casts = [
         'charging_status_change_dates' => 'array',
-        'confirm_date'                 => 'date',
     ];
 
     /**
