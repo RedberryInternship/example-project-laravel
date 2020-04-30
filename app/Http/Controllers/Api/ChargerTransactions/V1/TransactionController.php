@@ -6,6 +6,8 @@ namespace App\Http\Controllers\Api\ChargerTransactions\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 
+use App\Enums\OrderStatus;
+
 use App\Order;
 
 class TransactionController extends Controller
@@ -23,7 +25,7 @@ class TransactionController extends Controller
     $this -> logFinish( $transaction_id );    
     
     Order :: where( 'charger_transaction_id', $transaction_id ) 
-                      -> update([ 'charging_status' => 'FINISHED' ]);
+                      -> update([ 'charging_status' => OrderStatus :: FINISHED ]);
   }
 
   /**

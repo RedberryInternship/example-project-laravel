@@ -8,6 +8,8 @@ use App\Order;
 use App\ChargerConnectorType;
 use App\ChargingType;
 
+use App\Enums\OrderStatus;
+
 if( ChargingType :: count() == 0 )
 {
     factory( ChargingType :: class ) -> create([ 'name' => 'Full charge' ]);
@@ -27,7 +29,7 @@ return [
         'price'                         => $faker -> unique( true ) -> randomFloat(),
         'target_price'                  => $faker -> unique( true ) -> randomFloat(),
         'requested_already'             => true,
-        'charging_status'               => 'INITIATED',
+        'charging_status'               => OrderStatus :: INITIATED,
         'charging_status_change_dates'  => [],
         'comment'                       => $faker -> sentence(),
     ];

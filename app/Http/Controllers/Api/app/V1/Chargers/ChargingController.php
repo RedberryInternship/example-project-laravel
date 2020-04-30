@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api\App\V1\Chargers;
 
 use App\Http\Controllers\Controller;
 
+use App\Enums\ChargingType;
+use App\Enums\OrderStatus;
+
 use App\Traits\Message;
 
 use App\Order;
@@ -62,7 +65,8 @@ class ChargingController extends Controller
     $chargerConnectorType     = ChargerConnectorType::find( $chargerConnectorTypeId );
     $charger                  = $chargerConnectorType -> charger;
     
-    if( $chargingType == 'BY-AMOUNT' )
+    // TODO: Tell Beqa CHARGING-TYPEs are changed as so [ BY_AMOUNT, FULL_CHARGE ]
+    if( $chargingType == ChargingType :: BY_AMOUNT )
     {
       $price = $request -> get( 'price' );
     }
@@ -83,7 +87,7 @@ class ChargingController extends Controller
     $order = Order::create([
       'charger_connector_type_id' => $chargerConnectorTypeId,
       'charger_transaction_id'    => $transactionID,
-      'charging_status'           => 'INITIATED',
+      'charging_status'           => OrderStatus :: INITIATED,
     ]);
 
     $transaction_info = Charger::transactionInfo( $transactionID );
@@ -112,7 +116,7 @@ class ChargingController extends Controller
    
     $this -> sendStopChargingRequestToMisha( $charger -> charger_id, $transactionID );
   
-    $order -> charging_status = 'CHARGED';
+    $order -> charging_status = OrderStatus :: CHARGED;
     $order -> save();
 
     $this -> message = $this -> messages [ 'charging_successfully_finished' ];

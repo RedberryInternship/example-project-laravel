@@ -6,9 +6,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+use App\Enums\OrderStatus;
 
 use App\ChargerConnectorType;
-use App\ConnectorType;
 use App\Charger;
 use App\Order;
 
@@ -68,12 +68,12 @@ class ChargerModel extends TestCase
       (
         [ 
         'charger_connector_type_id' => $charger1ConnectorType1 -> id, 
-        'charging_status' => 'FINISHED', 
+        'charging_status'           => OrderStatus :: FINISHED, 
         ]
       );
     
     $charger2               = factory( Charger :: class ) -> create(); // free
-    $charger2ConnectorType = factory( ChargerConnectorType :: class )  
+    $charger2ConnectorType  = factory( ChargerConnectorType :: class )  
       -> create
         (
           [ 
@@ -102,7 +102,7 @@ class ChargerModel extends TestCase
         (
           [ 
             'charger_connector_type_id' => $charger3ConnectorType1 -> id, 
-            'charging_status' => 'FINISHED',
+            'charging_status'           => OrderStatus :: FINISHED,
           ]
         );
     $order3                 = factory( Order :: class ) 
@@ -110,7 +110,7 @@ class ChargerModel extends TestCase
         (
           [ 
             'charger_connector_type_id' => $charger3ConnectorType2 -> id, 
-            'charging_status' => 'INITIATED', 
+            'charging_status'           => OrderStatus :: INITIATED, 
           ]
         );
     

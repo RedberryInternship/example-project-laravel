@@ -2,6 +2,8 @@
 
 namespace App\Traits\Testing;
 
+use App\Enums\ChargingType;
+
 use App\Facades\Simulator;
 
 use Illuminate\Support\Facades\DB;
@@ -34,7 +36,7 @@ trait Charger
     $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
           -> post($this -> uri .'charging/start', [
               'charger_connector_type_id' => $chargerConnectorType -> id,
-              'charging_type'             => 'FULL-CHARGE'
+              'charging_type'             => ChargingType :: FULL_CHARGE
               ]);
   }
 

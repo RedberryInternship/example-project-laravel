@@ -11,7 +11,7 @@ if( ConnectorType :: count() == 0 )
 {
   factory( ConnectorType :: class ) -> create([ 'name' => 'Type 2' ]);
   factory( ConnectorType :: class ) -> create([ 'name' => 'Combo 2' ]);
-  factory( ConnectorType :: class ) -> create([ 'name' => 'CHadeMO' ]);
+  factory( ConnectorType :: class ) -> create([ 'name' => 'CHAdeMO' ]);
 }
 
 $connector_type = ConnectorType :: inRandomOrder() -> first();

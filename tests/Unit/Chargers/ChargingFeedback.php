@@ -6,6 +6,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+use App\Enums\OrderStatus;
+
 use App\Order;
 
 use App\Traits\Testing\Charger as ChargerTrait;
@@ -71,7 +73,7 @@ class ChargingFeedback extends TestCase
 
     $updatedChargingStatus = Order :: first() -> charging_status;
     
-    $this -> assertEquals( 'FINISHED', $updatedChargingStatus );
+    $this -> assertEquals( OrderStatus :: FINISHED, $updatedChargingStatus );
     
     $this -> tear_down_order_data_with_charger_id_of_29();
   }

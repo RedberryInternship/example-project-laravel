@@ -6,6 +6,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+use App\Enums\OrderStatus;
+
 use App\ChargerConnectorType;
 
 use App\Traits\Testing\Charger as ChargerTrait;
@@ -70,7 +72,7 @@ class Charging extends TestCase {
     
     $order = $chargerConnectorType -> orders -> first();
 
-    $this -> assertEquals( "CHARGED", $order -> charging_status );
+    $this -> assertEquals( OrderStatus :: CHARGED, $order -> charging_status );
     
     $this -> tear_down_order_data_with_charger_id_of_29();
   }
