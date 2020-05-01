@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Business;
 
 use Auth;
 use App\ChargingPrice;
+use App\ChargerConnectorType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -45,7 +46,16 @@ class ChargingPricesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = Auth::user();
+
+        $chargerConnectorType = ChargerConnectorType::with('charger') -> find($request -> get('charger_connector_type_id'));
+
+        if ($chargerConnectorType -> charger -> user -> id == $user -> id)
+        {
+            ChargingPrice::create($request -> all());
+        }
+
+        return redirect() -> back();
     }
 
     /**

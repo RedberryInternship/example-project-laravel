@@ -26,3 +26,11 @@
     justify-content: center;
 }
 
+.round {
+    border-radius: 50%;
+}
+
+.color-white {
+    color: white;
+}
+

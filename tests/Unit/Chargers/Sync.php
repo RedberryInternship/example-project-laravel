@@ -2,8 +2,9 @@
 
 namespace Tests\Unit\Chargers;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Tests\TestCase;
 
 use App\Charger as OurCharger;
 use App\ConnectorType;
@@ -14,8 +15,19 @@ use App\Facades\Charger;
 
 class Sync extends TestCase
 {
-
   use RefreshDatabase;
+
+  protected function tearDown(): void
+  {
+    $this -> beforeApplicationDestroyed( function (){
+      foreach( DB :: getConnections() as $connection )
+      {
+        $connection -> disconnect();
+      }
+    });
+
+    parent :: tearDown();
+  }
 
   /** @test */
   public function do_we_get_the_chargers()

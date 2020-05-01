@@ -7,6 +7,7 @@ use App\Exceptions\Charger\MishasBackException;
 use App\Exceptions\Charger\StartChargingException;
 use App\Exceptions\Charger\StopChargingException;
 use App\Exceptions\Charger\ChargerTransactionInfoException;
+use App\Exceptions\Charger\TransactionAlreadyFinishedException;
 
 class Charger extends Base
 {
@@ -159,10 +160,7 @@ class Charger extends Base
         switch( $result -> status )
         {
             case -100:
-                throw new StopChargingException(
-                    'Transaction is already finished!',
-                    400,
-                );
+                throw new TransactionAlreadyFinishedException();
             case 0:
                 return $result -> data;
             default:

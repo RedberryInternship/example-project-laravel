@@ -3,9 +3,12 @@
 namespace App\Exceptions\Charger;
 
 use Exception;
+use App\Traits\Message;
 
 class MishasBackException extends Exception
 {
+    use Message;
+
     /**
      * Report the exception.
      *
@@ -25,8 +28,9 @@ class MishasBackException extends Exception
     public function render($request)
     {
         return response() -> json([
-            'message' => 'Something went wrong in Misha\'s Side',
-            'code'    => 500
-        ], 500);
+            'message' => $this -> messages [ 'something_went_wrong' ],
+            'status'  => 'Something went wrong in Misha\'s Side',
+            'code'    => 400,
+        ], 400);
     }
 }

@@ -60,10 +60,10 @@ class StatusController extends Controller{
     }
     else
     {
-      $charger_transaction =  $charger_connector_type -> charger_transaction_first();
+      $order =  $charger_connector_type -> orders -> first();
 
-      if( $charger_transaction ){
-        $this -> payload[ 'status' ] = $charger_transaction -> status;
+      if( $order ){
+        $this -> payload[ 'status' ] = $order -> charging_status;
         $this -> message             = "Charging status successfully retrieved.";
       }
       else

@@ -2,16 +2,34 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Model;
 use Faker\Generator as Faker;
 use App\ChargerConnectorType;
+use App\Charger;
+use App\ConnectorType;
 
-$factory->define(ChargerConnectorType::class, function (Faker $faker) {
+if( ConnectorType :: count() == 0 )
+{
+  factory( ConnectorType :: class ) -> create([ 'name' => 'Type 2' ]);
+  factory( ConnectorType :: class ) -> create([ 'name' => 'Combo 2' ]);
+  factory( ConnectorType :: class ) -> create([ 'name' => 'CHAdeMO' ]);
+}
+
+$connector_type = ConnectorType :: inRandomOrder() -> first();
+
+$factory->define(ChargerConnectorType::class, function (Faker $faker) use($connector_type) {
     return [
-    	'charger_id'          => $faker -> randomNumber(),
-      'connector_type_id'   => $faker -> randomNumber(),
-      'm_connector_type_id' => $faker -> randomNumber(),
+      'charger_id'          => 0,
+      'connector_type_id'   => $connector_type -> id,
+      'm_connector_type_id' => $faker -> numberBetween(1,2),
       'max_price'           => $faker -> randomNumber(),
       'min_price'           => $faker -> randomNumber(),
     ];
+});
+
+$factory -> afterCreating( ChargerConnectorType :: class, function($chargerConnectorType, $faker){
+  if( ! $chargerConnectorType -> charger )
+  {
+    $chargerConnectorType -> charger_id = factory( Charger::class ) -> create() -> id;
+    $chargerConnectorType -> save();
+  }
 });

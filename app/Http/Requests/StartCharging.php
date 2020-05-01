@@ -46,10 +46,10 @@ class StartCharging extends FormRequest
             'charging_type'             => [
                 'required',
                 'string',
-                'in:BY-AMOUNT,FULL-CHARGE',
+                'in:BY_AMOUNT,FULL_CHARGE',
             ],
             'price'                     => [
-                'required_if:charging_type,BY-AMOUNT',
+                'required_if:charging_type,BY_AMOUNT',
                 'numeric',
             ] 
         ];
@@ -64,7 +64,7 @@ class StartCharging extends FormRequest
 
             'charging_type.required'             => 'Charging Type is required.',
             'charging_type.string'               => 'Charging Type should be string.',
-            'charging_type.in'                   => 'Charging Type should be BY-AMOUNT or FULL-CHARGE.',
+            'charging_type.in'                   => 'Charging Type should be BY_AMOUNT or FULL_CHARGE.',
             
             'price.required_if'                  => 'Price field is required.',
             'price.numeric'                      => 'Price must be numeric.',

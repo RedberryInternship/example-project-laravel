@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Api\App\V1\Chargers;
 
 use App\Http\Controllers\Controller;
 
+use App\Enums\ChargingType;
+use App\Enums\OrderStatus;
+
 use App\Traits\Message;
 
-use App\ChargerTransaction;
+use App\Order;
 use App\ChargerConnectorType;
 
 use App\Http\Requests\StartCharging;
@@ -23,14 +26,19 @@ class ChargingController extends Controller
    * 
    * @var int
    */
-  private $status_code;
+  private   $status_code;
 
   /**
-   * Message for response.
+   * Status message for concrete description.
+   */
+  private   $status;
+
+  /**
+   * Message for app notifications.
    * 
    * @var string
    */
-  private $message;
+  private   $message;
 
   /**
    * Constructor for initializing response parameters.
@@ -40,6 +48,7 @@ class ChargingController extends Controller
   public function __construct()
   {
     $this -> status_code = 200;
+    $this -> status      = '';
     $this -> message     = '';
   }
 
@@ -51,12 +60,13 @@ class ChargingController extends Controller
    */
   public function start(StartCharging $request)
   { 
-    $charger_connector_type_id = $request -> get( 'charger_connector_type_id' );
-    $charging_type             = $request -> get( 'charging_type' );
-    $charger_connector_type    = ChargerConnectorType::find( $charger_connector_type_id );
-    $charger                   = $charger_connector_type -> charger;
+    $chargerConnectorTypeId   = $request -> get( 'charger_connector_type_id' );
+    $chargingType             = $request -> get( 'charging_type' );
+    $chargerConnectorType     = ChargerConnectorType::find( $chargerConnectorTypeId );
+    $charger                  = $chargerConnectorType -> charger;
     
-    if( $charging_type == 'BY-AMOUNT' )
+    // TODO: Tell Beqa CHARGING-TYPEs are changed as so [ BY_AMOUNT, FULL_CHARGE ]
+    if( $chargingType == ChargingType :: BY_AMOUNT )
     {
       $price = $request -> get( 'price' );
     }
@@ -71,18 +81,17 @@ class ChargingController extends Controller
     
     $transactionID = Charger::start(
       $charger                -> charger_id, 
-      $charger_connector_type -> m_connector_type_id
+      $chargerConnectorType   -> m_connector_type_id
     );
 
-    $charger_transaction = ChargerTransaction::create([
-      'charger_id'          => $charger -> id,
-      'connector_type_id'   => $charger_connector_type -> connector_type_id,
-      'm_connector_type_id' => $charger_connector_type -> m_connector_type_id,
-      'transactionID'       => $transactionID,
+    $order = Order::create([
+      'charger_connector_type_id' => $chargerConnectorTypeId,
+      'charger_transaction_id'    => $transactionID,
+      'charging_status'           => OrderStatus :: INITIATED,
     ]);
 
     $transaction_info = Charger::transactionInfo( $transactionID );
-    $charger_transaction -> createKilowatt( $transaction_info -> consumed );
+    $order -> createKilowatt( $transaction_info -> consumed );
 
     $this -> message = $this -> messages[ 'charging_successfully_started' ];
     $this -> status  = 'Charging Successfully started!';
@@ -99,27 +108,20 @@ class ChargingController extends Controller
   public function stop( StopCharging $request )
   {
     $charger_connector_type_id  = $request -> get( 'charger_connector_type_id' );
-    $charger_connector_type     = ChargerConnectorType::find( $charger_connector_type_id );
+    $charger_connector_type     = ChargerConnectorType :: with('orders') -> find( $charger_connector_type_id );
     
     $charger                    = $charger_connector_type -> charger;
-    $charger_transaction        = $charger_connector_type -> charger_transaction_first();
-    $transactionID              = $charger_transaction -> transactionID;
+    $order                      = $charger_connector_type -> orders -> first();
+    $transactionID              = $order -> charger_transaction_id;
    
-    $has_charging_stopped       = $this -> sendStopChargingRequestToMisha( $charger -> charger_id, $transactionID );
-    
-    if( $has_charging_stopped )
-    {
-      $charger_transaction -> status = 'CHARGED';
-      $charger_transaction -> save();
+    $this -> sendStopChargingRequestToMisha( $charger -> charger_id, $transactionID );
+  
+    $order -> charging_status = OrderStatus :: CHARGED;
+    $order -> save();
 
-      $this -> message = "Charging successfully stopped!";
-   }
-   else
-   {
-     $this -> status_code = 500;
-     $this -> message     = "Something Went Wrong!";
-   }
-
+    $this -> message = $this -> messages [ 'charging_successfully_finished' ];
+    $this -> status  = 'Charging successfully finished!';
+   
    return $this -> respond();
   }
 
@@ -146,6 +148,7 @@ class ChargingController extends Controller
     return response() 
       -> json([
         'status_code' => $this -> status_code,
+        'status'      => $this -> status,
         'message'     => (object) $this -> message,
       ], $this -> status_code);
   }

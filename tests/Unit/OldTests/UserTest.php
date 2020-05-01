@@ -1,7 +1,8 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\OldTests;
 
+use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\TestCase;
 use App\User;
 

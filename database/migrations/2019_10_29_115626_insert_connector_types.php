@@ -21,7 +21,7 @@ class InsertConnectorTypes extends Migration
                 'name'  => 'Combo 2'
             ],
             [
-                'name'  => 'CHadeMO'
+                'name'  => 'CHAdeMO'
             ]
         ]);
     }

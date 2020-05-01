@@ -31,6 +31,7 @@ Route::group(['prefix' => 'business'], function() {
     Route::resource('/services', 'Business\ServiceController');
     Route::resource('/charger-groups', 'Business\ChargerGroupController');
     Route::resource('/charging-prices', 'Business\ChargingPricesController');
+    Route::resource('/fast-charging-prices', 'Business\FastChargingPricesController');
 });
 
 Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers/transactions'], function(){
