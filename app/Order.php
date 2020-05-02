@@ -4,6 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Exceptions\NoSuchFastChargingPriceException;
+use App\Exceptions\NoSuchChargingPriceException;
+
+use App\Enums\PaymentType as PaymentTypeEnum;
+use App\Enums\ChargerType as ChargerTypeEnum;
+
 use App\ChargerConnectorType;
 use App\ChargingType;
 use Carbon\Carbon;
@@ -59,6 +65,172 @@ class Order extends Model
     }
 
     /**
+     * Count money the user has already paid.
+     * 
+     * @return  float
+     * @example 10.25
+     */
+    public function countPaidMoney()
+    {
+        if( ! isset($this -> payments ))
+        {
+            $this -> load( 'payments' );
+        }
+    
+        $paidMoney = $this 
+            -> payments 
+            -> where( 'type', PaymentTypeEnum :: CUT ) 
+            -> sum( 'price' );
+
+        $paidMoney = round        ( $paidMoney, 2 );
+        $paidMoney = number_format( $paidMoney, 2 );
+        
+        return $paidMoney;
+    }
+
+    /**
+     * Count money the user has already paid with fines.
+     * 
+     * @return  float
+     * @example 10.25
+     */
+    public function countPaidMoneyWithFine()
+    {
+        if( ! isset($this -> payments ))
+        {
+            $this -> load( 'payments' );
+        }
+    
+        $paidCuts = $this 
+            -> payments 
+            -> where    ( 'type', PaymentTypeEnum :: CUT  )
+            -> sum( 'price' );
+
+        $paidFines = $this 
+            -> payments 
+            -> where    ( 'type', PaymentTypeEnum :: FINE )
+            -> sum( 'price' );
+
+        $paidMoney = $paidFines + $paidCuts;
+        $paidMoney = round        ( $paidMoney, 2 );
+
+        return $paidMoney;
+    }
+
+    /**
+     * Count the money user has already consumed(Charged).
+     * 
+     * @return float
+     */
+    public function countConsumedMoney()
+    {
+        $this -> load( 'charger_connector_type' );
+        $this -> load( 'payments' );
+        
+        $chargerType = $this -> charger_connector_type -> determineChargerType();
+
+        $consumedMoney = $chargerType == ChargerTypeEnum :: FAST 
+            ? $this -> countConsumedMoneyByTime()
+            : $this -> countConsumedMoneyByKilowatt();
+        
+        $consumedMoney = round        ( $consumedMoney, 2 );
+
+        return $consumedMoney;
+    }
+
+    /**
+     * Counting consumed money when charger type is FAST.
+     * 
+     * @return float
+     */
+    private function countConsumedMoneyByTime()
+    {
+        $statChargingTime           = $this -> payments -> first() -> confirm_date;
+        $elapsedMinutes             = now() -> diffInMinutes( $statChargingTime );
+        
+        $chargingPrice   = FastChargingPrice :: where(
+            [
+                [ 'charger_connector_type_id', $this -> charger_connector_type -> id ],
+                [ 'start_minutes',  '<='     , $elapsedMinutes ],
+                [ 'end_minutes',    '>='     , $elapsedMinutes ],
+            ]
+        ) -> first();
+
+        if( ! $chargingPrice )
+        {
+            throw new NoSuchFastChargingPriceException();
+        }
+
+        return $chargingPrice -> price;
+    }
+
+    /**
+     * Counting consumed money when charger type is LVL2.
+     * 
+     * @return float
+     */
+    private function countConsumedMoneyByKilowatt()
+    {
+        $consumedKilowatts  = $this -> getLatestConsumedKilowatt() -> value;
+        $kiloWattHour       = $this -> kilowatt -> kilowatt_hour;
+        
+        $startChargingTime  = $this -> payments -> first() -> confirm_date;
+        $startChargingTime  = Carbon :: create( $startChargingTime );
+        $startChargingTime  = $startChargingTime -> toTimeString();
+
+        $rawSql             = $this -> getTimeBetweenSqlQuery( $startChargingTime );
+
+        $chargingPriceInfo  = ChargingPrice :: where(
+                [
+                    [ 'charger_connector_type_id',  $this -> charger_connector_type -> id ],
+                    [ 'min_kwt', '<='            ,  $kiloWattHour ],
+                    [ 'max_kwt', '>='            ,  $kiloWattHour ],
+                ]
+            )
+            -> whereRaw( $rawSql )
+            -> first();
+        
+        if( ! $chargingPriceInfo )
+        {
+            throw new NoSuchChargingPriceException();
+        }
+
+        $chargingPrice = $chargingPriceInfo -> price;
+        $consumedMoney = ( $consumedKilowatts / $kiloWattHour ) * $chargingPrice;
+        
+        return $consumedMoney;
+    }
+
+    /**
+     * Get time between sql raw query.
+     * 
+     * @param   time $startChargingTime
+     * @return  string
+     */
+    private function getTimeBetweenSqlQuery( $startChargingTime )
+    {
+        $rawSql = 'CAST( start_time as time ) '
+        . '<=   CAST( "'. $startChargingTime .'" as time  )'
+        . 'AND  CAST( "'. $startChargingTime .'" as time  )'
+        . '<=   CAST( end_time as time )';
+
+        return $rawSql;
+    } 
+
+    /**
+     * Count money to refund the user.
+     * 
+     * @return float
+     */
+    public function countMoneyToRefund()
+    {
+        $moneyToRefund = $this -> countPaidMoney() - $this -> countConsumedMoney();
+        $moneyToRefund = round( $moneyToRefund, 2 );
+    
+        return $moneyToRefund;
+    }
+
+    /**
      * Order belongsTo relationship with ChargerConnectorType
      * 
      * @return App\ChargerConnectorType
@@ -84,16 +256,17 @@ class Order extends Model
      * @param int|float $consumed
      * @return void
      */
-    public function createKilowatt($consumed)
+    public function createKilowatt($consumed, $kilowatt_hour = null )
     {
         $this -> kilowatt()
             -> create([
-                'consumed' => [
+                'consumed'      => [
                     [
                         'date' => Carbon::now(),
                         'value' => $consumed,
                     ]
                 ],
+                'kilowatt_hour' => $kilowatt_hour,
             ]);
     }
 

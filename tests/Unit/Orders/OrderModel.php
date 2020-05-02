@@ -5,12 +5,21 @@ namespace Tests\Unit\Orders;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
+use Carbon\Carbon;
 
+use App\Enums\ConnectorType as ConnectorTypeEnum;
+use App\Enums\PaymentType as PaymentTypeEnum;
+
+use App\ChargerConnectorType;
+use App\FastChargingPrice;
+use App\ChargingPrice;
+use App\ConnectorType;
 use App\UserCard;
 use App\Kilowatt;
 use App\Payment;
 use App\Order;
 use App\User;
+use Illuminate\Support\Facades\Schema;
 
 class OrderModel extends TestCase
 {
@@ -176,4 +185,270 @@ class OrderModel extends TestCase
     $this -> assertCount( 3, $order -> payments );
     $this -> assertTrue( !! $order -> payments -> first() -> user_card );
   }
+
+  /** @test */
+  public function order_can_count_paid_money()
+  {
+    $order = $this -> order;
+    factory( Payment :: class ) -> create(
+      [ 
+        'order_id' => $order -> id,
+        'type'      => PaymentTypeEnum :: CUT,
+        'price'     => 3.7125,  
+      ]
+    );
+    
+    factory( Payment :: class ) -> create(
+      [ 
+        'order_id' => $order -> id,
+        'type'      => PaymentTypeEnum :: CUT,
+        'price'     => 5.8,  
+      ]
+    );
+    
+    factory( Payment :: class ) -> create(
+      [ 
+        'order_id' => $order -> id,
+        'type'      => PaymentTypeEnum :: FINE,
+        'price'     => 120.9,  
+      ]
+    );
+
+    $order -> load( 'payments' );
+    $paidMoney = $order -> countPaidMoney();
+
+    $this -> assertEquals( 9.51, $paidMoney );
+  }
+
+  /** @test */
+  public function order_can_count_paid_money_with_fine()
+  {
+    $order = $this -> order;
+    factory( Payment :: class ) -> create(
+      [ 
+        'order_id' => $order -> id,
+        'type'      => PaymentTypeEnum :: CUT,
+        'price'     => 3.7125,  
+      ]
+    );
+    
+    factory( Payment :: class ) -> create(
+      [ 
+        'order_id' => $order -> id,
+        'type'      => PaymentTypeEnum :: CUT,
+        'price'     => 5.8,  
+      ]
+    );
+    
+     factory( Payment :: class ) -> create(
+      [ 
+        'order_id' => $order -> id,
+        'type'      => PaymentTypeEnum :: FINE,
+        'price'     => 120.9,  
+      ]
+    );
+
+    $paidMoney = $order -> countPaidMoneyWithFine();
+
+    $this -> assertEquals( 130.41, $paidMoney );
+  }
+
+  /** @test */
+  public function order_can_count_consumed_money_when_charging_with_fast_charger()
+  {
+    $connectorType = ConnectorType :: whereName( ConnectorTypeEnum :: CHADEMO ) -> first();
+    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
+      [
+        'connector_type_id' => $connectorType -> id,
+      ]
+    );
+
+    factory( FastChargingPrice :: class ) -> create(
+      [
+        'start_minutes' => 0,
+        'end_minutes'   => 20,
+        'price'         => 100,
+        'charger_connector_type_id' => $chargerConnectorType -> id, 
+      ]
+    );
+
+    factory( FastChargingPrice :: class ) -> create(
+      [
+        'start_minutes' => 20,
+        'end_minutes'   => 50,
+        'price'         => 130,
+        'charger_connector_type_id' => $chargerConnectorType -> id, 
+      ]
+    );
+
+    factory( FastChargingPrice :: class ) -> create(
+      [
+        'start_minutes' => 50,
+        'end_minutes'   => 1000000,
+        'price'         => 200,
+        'charger_connector_type_id' => $chargerConnectorType -> id, 
+      ]
+    );
+
+    $order = factory( Order :: class ) -> create(
+      [ 
+        'charger_connector_type_id' => $chargerConnectorType -> id 
+      ]
+    );
+
+    $startTime  = now() -> subMinutes( 15 ); 
+    $startTime2 = now() -> subMinutes( 25 );
+    $startTime3 = now() -> subMinutes( 160 );
+
+    // Case 1
+    $payment = factory( Payment :: class ) -> create(
+      [
+        'order_id'     => $order -> id,
+        'confirm_date' => $startTime,
+      ]
+    );
+
+    $consumedMoney = $order -> countConsumedMoney();
+    $this -> assertEquals( 100, $consumedMoney );
+    
+    // Case 2
+    $payment -> confirm_date = $startTime2;
+    $payment -> save();
+
+    $consumedMoney = $order -> countConsumedMoney();
+    $this -> assertEquals( 130, $consumedMoney );
+    
+    // Case 3
+    $payment -> confirm_date = $startTime3;
+    $payment -> save();
+
+    $consumedMoney = $order -> countConsumedMoney();
+    $this -> assertEquals( 200, $consumedMoney );
+  }
+
+  /** @test */
+  public function order_can_count_consumed_money_when_charging_with_lvl2_charger()
+  {
+    $connectorType        = ConnectorType :: whereName( ConnectorTypeEnum :: TYPE_2 ) -> first();
+    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
+      [
+        'connector_type_id' => $connectorType -> id,
+      ]
+    );
+
+    // Night till morning
+    factory( ChargingPrice :: class ) -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'min_kwt'                   => 0,
+        'max_kwt'                   => 5,
+        'start_time'                => '00:00',
+        'end_time'                  => '09:00',
+        'price'                     => 5,
+      ]
+    );
+
+    factory( ChargingPrice :: class ) -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'min_kwt'                   => 6,
+        'max_kwt'                   => 20,
+        'start_time'                => '00:00',
+        'end_time'                  => '09:00',
+        'price'                     => 25,
+      ]
+    );
+    
+    factory( ChargingPrice :: class ) -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'min_kwt'                   => 21,
+        'max_kwt'                   => 10000000,
+        'start_time'                => '00:00',
+        'end_time'                  => '09:00',
+        'price'                     => 40,
+      ]
+    );
+
+    // Morning till night
+    factory( ChargingPrice :: class ) -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'min_kwt'                   => 0,
+        'max_kwt'                   => 5,
+        'start_time'                => '09:01',
+        'end_time'                  => '23:59',
+        'price'                     => 50,
+      ]
+    );
+
+    factory( ChargingPrice :: class ) -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'min_kwt'                   => 6,
+        'max_kwt'                   => 20,
+        'start_time'                => '09:01',
+        'end_time'                  => '23:59',
+        'price'                     => 70,
+      ]
+    );
+    
+    factory( ChargingPrice :: class ) -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'min_kwt'                   => 21,
+        'max_kwt'                   => 10000000,
+        'start_time'                => '09:01',
+        'end_time'                  => '23:59',
+        'price'                     => 95,
+      ]
+    );
+
+    $order    = factory( Order :: class )   -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+      ]
+    );
+
+    $order -> createKilowatt( 0, 1000 );
+
+    // 2019 year, 10 march 00:00:00
+    $now1 = Carbon :: create(2019, 3, 10, 0, 0, 0);
+
+    // 2019 year, 10 march 01:00:00
+    $now2 = Carbon :: create(2019, 3, 10, 1, 0, 0);
+
+    // 2019 year, 10 march 20:00:00
+    $now3 = Carbon :: create(2019, 3, 10, 20, 00, 00);
+
+    // 2019 year, 10 march 21:00:00
+    $now3 = Carbon :: create(2019, 3, 10, 21, 00, 00);
+
+
+    Carbon :: setTestNow( $now1 );
+    $payment  = factory( Payment :: class ) -> create(
+      [
+        'order_id'                  => $order -> id,
+        'confirm_date'              => now(),
+      ]
+    );
+
+    // Case 1 
+    $order -> addKilowatt( 500 );
+    $consumedMoney = $order -> countConsumedMoney();
+    $this -> assertEquals( 20.0, $consumedMoney );
+    
+    $order -> addKilowatt( 5000 );
+    $consumedMoney = $order -> countConsumedMoney();
+    $this -> assertEquals( 200.0, $consumedMoney );
+
+
+    // Case 2
+    $payment -> confirm_date = $now3;
+    $payment -> save();
+    
+    $order -> addKilowatt( 500 );
+    $consumedMoney = $order -> countConsumedMoney();
+    $this -> assertEquals( 47.5, $consumedMoney );
+  } 
 }

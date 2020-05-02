@@ -2,33 +2,21 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use App\Favorite;
+use App\Enums\OrderStatus;
 
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that aren't mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'first_name',
-        'last_name',
-        'phone_number',
-        'email',
-        'active',
-        'verified',
-        'password',
-        'temp_password',
-        'old_id',
-        'role_id'
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -78,6 +66,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this -> hasMany('App\Order');
     }
+
+    public function active_orders()
+    {
+        return $this -> hasMany('App\Order') -> where( 'charging_status', '!=' , OrderStatus :: FINISHED );
+    }
+
     public function user_cars()
     {
         return $this -> hasMany('App\UserCarModel');

@@ -49,8 +49,10 @@ Route::group(['prefix' => 'app/V1'], function () {
 			Route::group(['namespace' => 'Chargers'], function() {
 				Route::post('/charging/start', 'ChargingController@start');
 				Route::post('/charging/stop', 'ChargingController@stop');
-				Route::get('/charging/status/{charger_connector_type_id}', 'StatusController@getChargingStatus');
+				Route::get('/charging/status/{charger_connector_type_id}', 'ActiveOrdersController@getChargingStatus');
+				Route::post('active-orders', 'ActiveOrdersController@get');
 			});
+
 
 		});
 	});

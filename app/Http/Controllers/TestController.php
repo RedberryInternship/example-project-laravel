@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
+
 use App\Facades\Charger;
 use App\Facades\Simulator;
 
 use App\Enums\PaymentType;
-
 use App\Traits\Message;
+
+use App\User;
  
 class TestController extends Controller 
  {
@@ -15,11 +18,7 @@ class TestController extends Controller
      
     public function __invoke()
     {
-        $payments = $this -> get_json_data( 'payment' );
-
-        dd(
-          $payments -> where( 'actual_price', '!=' , '' ) -> take(10) -> toArray(),
-        );
+        
     }
 
     private function get_json_data($data_type)
