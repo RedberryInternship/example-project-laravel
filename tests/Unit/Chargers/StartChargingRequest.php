@@ -6,22 +6,20 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-use App\Enums\OrderStatus;
+use App\Enums\ChargingType;
 
 use App\ChargerConnectorType;
 use App\ConnectorType;
-use App\Kilowatt;
 use App\Charger;
-use App\Enums\ChargingType;
-use App\Order;
 
 use App\Traits\Testing\Charger as ChargerTrait;
 use App\Traits\Testing\User as UserTrait;
 use App\Traits\Message;
 
 use App\Facades\Simulator;
+use App\Facades\Charger as MishasCharger;
 
-class StartCharging extends TestCase {
+class StartChargingRequest extends TestCase {
   
   use RefreshDatabase,
       UserTrait,
@@ -261,21 +259,6 @@ class StartCharging extends TestCase {
   }
 
   /** @test */
-  public function start_charging_creates_new_order_record_with_kilowatt()
-  {
-    $this -> create_order_with_charger_id_of_29();
-      
-    $orders_count   = Order::count();
-    $kilowatt_count = Kilowatt::count();
-
-    $this -> assertTrue( $orders_count > 0 );
-    $this -> assertTrue( $kilowatt_count > 0 );
-
-    $this -> tear_down_order_data_with_charger_id_of_29();
-  }
-
-
-  /** @test */
   public function start_charging_has_422_status_code_when_bad_request()
   {
 
@@ -287,38 +270,36 @@ class StartCharging extends TestCase {
     $response -> assertStatus( 422 );
   }
 
-
   /** @test */
-  public function when_order_is_created_status_is_INITIATED()
+  public function start_charging_has_charger_is_not_free_error_when_charger_is_not_free()
   {
-    $this -> create_order_with_charger_id_of_29();
-    $charger_connector_type = ChargerConnectorType::first();
+    Simulator     :: upAndRunning ( 29 );
+    Simulator     :: plugOffCable ( 29 );
+    sleep( 3 );
+    MishasCharger :: start        ( 29, 1 );
+    sleep( 2 );
 
-    $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
-                      -> get( $this -> uri .'charging/status/' . $charger_connector_type -> id );
+    $charger = factory( Charger::class ) -> create([ 'charger_id' => 29 ]);
 
-    $response = $response -> decodeResponseJson();
+    factory( ChargerConnectorType::class ) -> create([
+      'charger_id' => $charger -> id,
+    ]);
 
-    $this -> assertEquals( OrderStatus :: INITIATED, $response['payload']['status']);
-
-    $this -> tear_down_order_data_with_charger_id_of_29();
-  }
-
-  /** @test */
-  public function when_charger_is_not_free_dont_charge()
-  {
-    $this -> create_order_with_charger_id_of_29();
-
-    $response = $this -> withHeader( 'token', 'Bearer ' . $this -> token)
-      -> post($this -> uri . 'charging/start', [
-        'charger_connector_type_id' => ChargerConnectorType::first() -> id,
-        'charging_type'             => ChargingType :: FULL_CHARGE,
+    $response = $this 
+      -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
+      -> post( $this -> url, [
+        'charger_connector_type_id' => 1,
+        'charging_type'             => ChargingType :: BY_AMOUNT,
+        'price'                     => 50,
       ]);
 
-    $response = (object) $response -> decodeResponseJson();
+    $response -> assertStatus( 400 );
     
-    $this -> assertEquals( $this -> messages [ 'charger_is_not_free' ], $response -> message );
-
-    $this -> tear_down_order_data_with_charger_id_of_29();
+    $response = $response -> decodeResponseJson();
+    
+    $this     -> assertEquals( 
+      $response [ 'message' ],
+      $this -> messages [ 'charger_is_not_free' ],
+     );
   }
 }

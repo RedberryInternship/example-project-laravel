@@ -4,14 +4,14 @@ namespace App\Http\Controllers\Api\App\V1\Chargers;
 
 use App\Http\Controllers\Controller;
 
-use App\Enums\ChargingType;
-use App\Enums\OrderStatus;
+use App\Enums\ChargingType as ChargingTypeEnum;
+use App\Enums\OrderStatus as OrderStatusEnum;
+use App\Enums\ChargerType as ChargerTypeEnum;
 
 use App\Traits\Message;
 
 use App\Order;
 use App\ChargerConnectorType;
-
 use App\Http\Requests\StartCharging;
 use App\Http\Requests\StopCharging;
 
@@ -61,33 +61,47 @@ class ChargingController extends Controller
   public function start(StartCharging $request)
   { 
     $chargerConnectorTypeId   = $request -> get( 'charger_connector_type_id' );
-    $chargingType             = $request -> get( 'charging_type' );
     $chargerConnectorType     = ChargerConnectorType::find( $chargerConnectorTypeId );
-    $charger                  = $chargerConnectorType -> charger;
+    $chargerType              = $chargerConnectorType -> determineChargerType();
     
-    // TODO: Tell Beqa CHARGING-TYPEs are changed as so [ BY_AMOUNT, FULL_CHARGE ]
-    if( $chargingType == ChargingType :: BY_AMOUNT )
-    {
-      $price = $request -> get( 'price' );
-    }
+    return $chargerType == ChargerTypeEnum :: FAST
+      ? $this -> startFastCharging()
+      : $this -> startLvl2Charging();
+  }
 
-    if( ! Charger::isChargerFree( $charger -> charger_id ))
-    {
-      $this -> message      = $this -> messages [ 'charger_is_not_free' ];
-      $this -> status       = 'Charger is not free.';
-      $this -> status_code  = 400;
-      return $this -> respond();
-    }
+  /**
+   * Start charging on fast charger.
+   * 
+   * @return  Illuminate\Http\JsonResponse
+   */
+  private function startFastCharging()
+  {
+    $chargerConnectorTypeId   = request() -> get( 'charger_connector_type_id' );
+    $chargingType             = request() -> get( 'charging_type' );
+    $chargerConnectorType     = ChargerConnectorType::find( $chargerConnectorTypeId );
     
+  }
+
+  /**
+   * Start charging on Lvl 2 charger.
+   * 
+   * @return  Illuminate\Http\JsonResponse
+   */
+  private function startLvl2Charging()
+  {
+    $chargerConnectorTypeId   = request() -> get( 'charger_connector_type_id' );
+    $chargingType             = request() -> get( 'charging_type' );
+    $chargerConnectorType     = ChargerConnectorType :: find( $chargerConnectorTypeId );
+
     $transactionID = Charger::start(
-      $charger                -> charger_id, 
+      $chargerConnectorType   -> charger -> charger_id, 
       $chargerConnectorType   -> m_connector_type_id
     );
 
     $order = Order::create([
-      'charger_connector_type_id' => $chargerConnectorTypeId,
+      'charger_connector_type_id' => $chargerConnectorType -> id,
       'charger_transaction_id'    => $transactionID,
-      'charging_status'           => OrderStatus :: INITIATED,
+      'charging_status'           => OrderStatusEnum :: INITIATED,
     ]);
 
     $transaction_info = Charger::transactionInfo( $transactionID );
@@ -116,7 +130,7 @@ class ChargingController extends Controller
    
     $this -> sendStopChargingRequestToMisha( $charger -> charger_id, $transactionID );
   
-    $order -> charging_status = OrderStatus :: CHARGED;
+    $order -> charging_status = OrderStatusEnum :: CHARGED;
     $order -> save();
 
     $this -> message = $this -> messages [ 'charging_successfully_finished' ];

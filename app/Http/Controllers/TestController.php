@@ -18,8 +18,14 @@ class TestController extends Controller
      
     public function __invoke()
     {
-        
+      
     }
+
+    private function memory()
+    {
+      return memory_get_usage() / 1024 / 1024;
+    }
+
 
     private function get_json_data($data_type)
     {

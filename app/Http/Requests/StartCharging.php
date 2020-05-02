@@ -6,10 +6,12 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Traits\ValidatorCustomJsonResponse as Response;
 use App\Traits\Message;
 
-use App\ChargerConnectorType;
 use App\Rules\ModelHasRelation;
+use App\ChargerConnectorType;
+use App\Rules\BusyCharger;
 
-
+use ReflectionClass;
+use ReflectionMethod;
 
 class StartCharging extends FormRequest
 {
@@ -42,6 +44,7 @@ class StartCharging extends FormRequest
                 'exists:charger_connector_types,id',
                 new ModelHasRelation( ChargerConnectorType::class, 'charger'),
                 new ModelHasRelation( ChargerConnectorType::class, 'connector_type'),
+                new BusyCharger(),
             ],
             'charging_type'             => [
                 'required',
@@ -73,6 +76,24 @@ class StartCharging extends FormRequest
 
     public function withValidator($validator)
     {
-        $this -> respond($validator, 422, $this -> messages [ 'something_went_wrong' ]);
+        $chargerIsFree = $this -> isChargerFree( $validator );
+        
+        if( ! $chargerIsFree )
+        {
+            $this -> respond($validator, 400, $this -> messages [ 'charger_is_not_free' ]);
+        }
+        else
+        {
+            $this -> respond($validator, 422, $this -> messages [ 'something_went_wrong' ]);
+        }
+    }
+
+    private function isChargerFree($validator)
+    {
+        $data                   = $validator -> getData();
+        $chargerConnectorTypeId = $data [ 'charger_connector_type_id' ];
+        $busyCharger            = new BusyCharger();
+        
+        return $busyCharger -> passes( null, $chargerConnectorTypeId );
     }
 }
