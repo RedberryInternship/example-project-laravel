@@ -21,14 +21,6 @@
             </li>
 
             <li class="bold">
-                <a class="waves-effect waves-cyan " href="/business/services">
-                    <i class="material-icons">local_laundry_service</i>
-
-                    <span class="menu-title" data-i18n="Chat">სერვისები</span>
-                </a>
-            </li>
-
-            <li class="bold">
                 <a class="waves-effect waves-cyan " href="user-profile-page.html">
                     <i class="material-icons">person_outline</i>
 
