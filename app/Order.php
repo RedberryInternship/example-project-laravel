@@ -76,6 +76,11 @@ class Order extends Model
         {
             $this -> load( 'payments' );
         }
+
+        if( count( $this -> payments ) == 0 )
+        {
+            return 0.0;
+        }
     
         $paidMoney = $this 
             -> payments 
@@ -83,7 +88,6 @@ class Order extends Model
             -> sum( 'price' );
 
         $paidMoney = round        ( $paidMoney, 2 );
-        $paidMoney = number_format( $paidMoney, 2 );
         
         return $paidMoney;
     }
@@ -99,6 +103,11 @@ class Order extends Model
         if( ! isset($this -> payments ))
         {
             $this -> load( 'payments' );
+        }
+
+        if( count( $this -> payments ) == 0 )
+        {
+            return 0.0;
         }
     
         $paidCuts = $this 
@@ -126,9 +135,15 @@ class Order extends Model
     {
         $this -> load( 'charger_connector_type' );
         $this -> load( 'payments' );
+
+        
+        if( count( $this -> payments ) == 0 )
+        {
+            return 0.0;
+        }
         
         $chargerType = $this -> charger_connector_type -> determineChargerType();
-
+        
         $consumedMoney = $chargerType == ChargerTypeEnum :: FAST 
             ? $this -> countConsumedMoneyByTime()
             : $this -> countConsumedMoneyByKilowatt();
@@ -224,6 +239,11 @@ class Order extends Model
      */
     public function countMoneyToRefund()
     {
+        if( count( $this -> payments ) == 0 )
+        {
+            return 0.0;
+        }
+
         $moneyToRefund = $this -> countPaidMoney() - $this -> countConsumedMoney();
         $moneyToRefund = round( $moneyToRefund, 2 );
     

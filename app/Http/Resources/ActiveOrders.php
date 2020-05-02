@@ -33,4 +33,3 @@ class ActiveOrders extends JsonResource
         ];
     }
 }
-    

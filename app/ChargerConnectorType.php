@@ -81,7 +81,7 @@ class ChargerConnectorType extends Model
 
         $connector_type = $this -> connector_type -> name;
         $fast           = [ ConnectorTypeEnum :: CHADEMO, ConnectorTypeEnum :: COMBO_2 ];
-
+        
         return in_array( $connector_type, $fast ) ? ( ChargerType :: FAST ) : ( ChargerType :: LVL2 );
     }
 }
