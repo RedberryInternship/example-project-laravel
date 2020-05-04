@@ -9,9 +9,7 @@ use App\Traits\Message;
 use App\Rules\ModelHasRelation;
 use App\ChargerConnectorType;
 use App\Rules\BusyCharger;
-
-use ReflectionClass;
-use ReflectionMethod;
+use App\Rules\UserHasUserCard;
 
 class StartCharging extends FormRequest
 {
@@ -54,6 +52,10 @@ class StartCharging extends FormRequest
             'price'                     => [
                 'required_if:charging_type,BY_AMOUNT',
                 'numeric',
+            ],
+            'user_card_id'              => [
+                'required',
+                'exists:user_cards,id',
             ] 
         ];
     }
@@ -71,6 +73,8 @@ class StartCharging extends FormRequest
             
             'price.required_if'                  => 'Price field is required.',
             'price.numeric'                      => 'Price must be numeric.',
+
+            'user_card_id'                       => 'UserCard with such user_card_id doesn\'t exists in db.'
         ];
     }
 
@@ -91,9 +95,17 @@ class StartCharging extends FormRequest
     private function isChargerFree($validator)
     {
         $data                   = $validator -> getData();
-        $chargerConnectorTypeId = $data [ 'charger_connector_type_id' ];
-        $busyCharger            = new BusyCharger();
         
-        return $busyCharger -> passes( null, $chargerConnectorTypeId );
+        if( isset( $data[ 'charger_connector_type_id' ]))
+        {
+            $chargerConnectorTypeId = $data [ 'charger_connector_type_id' ];
+            $busyCharger            = new BusyCharger();
+        
+            return $busyCharger -> passes( null, $chargerConnectorTypeId );
+        }
+        else
+        {
+            return false;
+        }
     }
 }
