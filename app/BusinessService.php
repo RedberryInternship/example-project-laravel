@@ -9,15 +9,33 @@ class BusinessService extends Model
 {
 	use HasTranslations;
 
+	/**
+	 * Fillable fields.
+	 */
 	protected $fillable = [
-	    'user_id',
 	    'title',
 	    'description',
 	    'image',
 	];
 
+	/**
+	 * Define translatable fields.
+	 */
 	public $translatable = [
       'title',
       'description',
-    ];
+	];
+
+	/**
+	 * Append attributes to return query rows.
+	 */
+	protected $appends = ['image_path'];
+
+	/**
+	 * Add Image Path attribute to model.
+	 */
+	public function getImagePathAttribute()
+	{
+		return url('/storage/' . $this -> image);
+	}
 }
