@@ -2,13 +2,15 @@
 
 namespace App\Http\Requests\User;
 
+use App\User;
+use Carbon\Carbon;
 use App\TempSmsCode;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
-class SendCodeRequest extends FormRequest implements ValidatesWhenResolved
+class VerifyCodeRequest extends FormRequest implements ValidatesWhenResolved
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,6 +30,7 @@ class SendCodeRequest extends FormRequest implements ValidatesWhenResolved
     public function rules()
     {
         return [
+            'code'         => 'required',
             'phone_number' => 'required'
         ];
     }
@@ -45,17 +48,34 @@ class SendCodeRequest extends FormRequest implements ValidatesWhenResolved
     }
 
     /**
-     * Update Code in Database if exists, otherwise create new record.
+     * Verify User's entered Code.
      * 
-     * @param @code
-     * 
-     * @return void
+     * @return boolean
      */
-    public function updateOrCreateCode($code)
+    public function verifyCode()
     {
-        TempSmsCode::updateOrCreate(
-            ['phone_number' => $this -> get('phone_number')],
-            ['code'         => $code]
-        ) -> first();
+        $code        = $this -> get('code');
+        $phoneNumber = $this -> get('phone_number');
+
+        $user = User::where('phone_number', $phoneNumber) -> first();
+
+        if ($user) return false;
+
+        $tempSmsCode = TempSmsCode::where([
+            'code'         => $code,
+            'phone_number' => $phoneNumber
+        ]) -> first();
+
+        if ( ! $tempSmsCode) return false;
+
+        $totalDuration = Carbon::now() -> diffInMinutes($tempSmsCode -> updated_at);
+
+        if ($totalDuration > 3) return false;
+
+        $tempSmsCode -> update([
+            'status' => 1
+        ]);
+
+        return true;
     }
 }

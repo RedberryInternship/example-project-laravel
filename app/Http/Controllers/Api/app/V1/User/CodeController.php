@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\SendCodeRequest;
+use App\Http\Requests\User\VerifyCodeRequest;
 
 class CodeController extends Controller
 {
@@ -25,5 +26,24 @@ class CodeController extends Controller
         User::sendSms($request -> get('phone_number'), $code);
 
         return response() -> json([], 200);
+    }
+
+    /**
+     * Verify Tempolary Code.
+     * 
+     * @param VerifyCodeRequest $request
+     * 
+     * @return JSON
+     */
+    public function verifyCode(VerifyCodeRequest $request)
+    {
+        if ( ! $request -> verifyCode())
+        {
+            return response() -> json(['error' => ['verified' => false]], 403);
+        }
+
+        return response() -> json([
+            'phone_number' => $request -> get('phone_number')
+        ]);
     }
 }
