@@ -25,9 +25,11 @@ Route::group(['prefix' => 'app/V1'], function () {
 		Route::post('/send-sms-code','UserController@postSendSmsCode');
 		Route::post('/verify-code','UserController@postVerifyCode');
 		Route::post('/verify-code-for-password-recovery','UserController@postVerifyCodeForPasswordRecovery');
-		Route::post('/register', 'UserController@register');
 		Route::post('/reset-password', 'UserController@postResetPassword');
 		Route::post('/edit-password', 'UserController@postEditPassword');
+		
+		
+		Route::post('/register', 'User\RegistrationController');
 	});
 
 

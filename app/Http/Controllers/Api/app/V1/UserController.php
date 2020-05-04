@@ -157,50 +157,6 @@ class UserController extends Controller
         ], $status);
     }
 
-
-
-    public function register(Request $request)
-    {
-        $json_status = 'Not Registered';
-        $status      = 403;
-
-        $validator = Validator::make($request->all(), [
-            'first_name'        => 'required|string|max:255',
-            'last_name'         => 'required|string|max:255',
-            'phone_number'      => 'required|string|unique:users'
-        ]);
-
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
-        $user = User::create([
-            'role'              => 1,
-            'first_name'        => $request ->get('first_name'),
-            'last_name'         => $request ->get('last_name'),
-            'phone_number'      => $request ->get('phone_number'),
-            'email'             => $request ->get('email'),
-            'verified'          => 1,
-            'active'            => 0,
-            'password'          => Hash::make($request ->get('password'))
-        ]);
-
-        if($user)
-        {
-            $json_status = 'Registered';
-            $status      = 200;
-            $temp  = TempSmsCode::where('phone_number', $request ->get('phone_number')) -> delete();
-        }
-
-        $token = JWTAuth::fromUser($user);
-
-        return response() -> json([
-            'json_status' => $json_status, 
-            'user'        => $user,
-            'token'       => $token
-        ], $status);
-    }
-
     public function postResetPassword(Request $request)
     {   
         $json_status = "User Not Found";
