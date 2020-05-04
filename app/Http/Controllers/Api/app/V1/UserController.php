@@ -45,34 +45,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function postSendSmsCode(Request $request)
-    { 
-        //$rand        = rand(pow(10, 4-1), pow(10, 4)-1);
-        $rand        = 3030;
-        $json_status = 'SMS Sent';
-        $temp = TempSmsCode::where('phone_number', $request -> get('phone_number')) -> first();
-        if($temp)
-        {
-            $temp -> phone_number = $request -> get('phone_number');
-            $temp -> code         = $rand;
-            $temp -> updated_at   = Carbon::now();
-            $temp -> save();
-        }
-        else
-        {
-            $temp = TempSmsCode::create([
-                'phone_number' => $request -> get('phone_number'),
-                'code'         => $rand
-            ]);
-        }
-
-        Twilio::message($request -> get('phone_number'), $rand);
-
-        return response() -> json([
-            'json_status' => $json_status
-        ]);
-    }
-
     public function postVerifyCode(Request $request)
     {
         $json_status  = 'Not found';
