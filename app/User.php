@@ -2,11 +2,12 @@
 
 namespace App;
 
+use Twilio;
+use App\Favorite;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use App\Favorite;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -78,6 +79,26 @@ class User extends Authenticatable implements JWTSubject
             'token_type'    => 'bearer',
             'expires_in'    => auth('api') -> factory() -> getTTL()
         ];
+    }
+
+    /**
+     * Send SMS.
+     * 
+     * @param $phoneNumber
+     * @param $message
+     * 
+     * @return boolean
+     */
+    public static function sendSms($phoneNumber, $message)
+    {
+        if ( ! $phoneNumber)
+        {
+            return false;
+        }
+
+        $phoneNumber = $phoneNumber[0] == '+' ? $phoneNumber : '+' . $phoneNumber;
+
+        Twilio::message($phoneNumber, $message);
     }
 
     public function chargers()
