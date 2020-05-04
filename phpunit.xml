@@ -27,6 +27,10 @@
         <testsuite name="Users">
             <directory suffix=".php">./tests/Unit/Users</directory>
         </testsuite>
+        
+        <testsuite name="ChargingProcess">
+            <directory suffix=".php">./tests/Unit/ChargingProcess</directory>
+        </testsuite>
 
     </testsuites>
     <filter>

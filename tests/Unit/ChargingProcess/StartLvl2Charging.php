@@ -1,22 +1,25 @@
 <?php
 
-namespace Tests\Unit\Chargers;
+namespace Tests\Unit\ChargingProcess;
 
+use App\Charger;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 use App\Enums\ChargingType as ChargingTypeEnum;
+use App\Enums\ConnectorType as ConnectorTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
 use App\ChargerConnectorType;
+use App\ConnectorType;
 use App\Kilowatt;
+use App\UserCard;
 use App\Order;
 
 use App\Traits\Testing\Charger as ChargerTrait;
 use App\Traits\Testing\User as UserTrait;
 use App\Traits\Message;
-
 
 class StartLvl2Charging extends TestCase {
   
@@ -50,7 +53,7 @@ class StartLvl2Charging extends TestCase {
   }
 
   /** @test */
-  public function start_charging_creates_new_order_record_with_kilowatt()
+  public function it_creates_new_order_record_with_kilowatt()
   {
     $this -> create_order_with_charger_id_of_29();
       
@@ -80,20 +83,37 @@ class StartLvl2Charging extends TestCase {
   }
 
   /** @test */
-  public function when_charger_is_not_free_dont_charge()
+  public function lvl_2_charging_returns_valid_data()
   {
-    $this -> create_order_with_charger_id_of_29();
+    $this -> makeChargerFree();
 
-    $response = $this -> withHeader( 'token', 'Bearer ' . $this -> token)
-      -> post($this -> uri . 'charging/start', [
-        'charger_connector_type_id' => ChargerConnectorType::first() -> id,
-        'charging_type'             => ChargingTypeEnum :: FULL_CHARGE,
-      ]);
-
-    $response = (object) $response -> decodeResponseJson();
+    $charger              = factory( Charger :: class ) -> create([ 'charger_id' => 29 ]);
+    $userCard             = factory( UserCard :: class) -> create();
+    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
+      [
+        'charger_id'        => $charger -> id,
+        'connector_type_id' => ConnectorType :: whereName( ConnectorTypeEnum :: TYPE_2 ) -> first(),
+      ]
+    );
     
-    $this -> assertEquals( $this -> messages [ 'charger_is_not_free' ], $response -> message );
+    $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
+      -> post( $this -> url, [
+            'charger_connector_type_id' => $chargerConnectorType -> id,
+            'charging_type'             => ChargingTypeEnum :: FULL_CHARGE,
+            'user_card_id'              => $userCard -> id,
+          ]
+      );
 
-    $this -> tear_down_order_data_with_charger_id_of_29();
+    $response -> assertJsonStructure(
+      [
+      'already_paid',
+      'consumed_money',
+      'refund_money',
+      'charging_status',
+      'charger_connector_type_id',
+      'charger_id',
+      'connector_type_id',
+      ]
+    );
   }
 }

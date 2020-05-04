@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Chargers;
+namespace Tests\Unit\ChargingProcess;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;

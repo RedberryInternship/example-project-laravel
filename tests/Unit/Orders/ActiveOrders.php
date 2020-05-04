@@ -17,11 +17,13 @@ use App\Payment;
 use App\User;
 
 use App\Traits\Testing\User as UserTrait;
+use App\Traits\Testing\Charger as ChargerTrait;
 
 class ActiveOrders extends TestCase
 {
   use RefreshDatabase,
-      UserTrait;
+      UserTrait,
+      ChargerTrait;
 
   
   private $user;
@@ -87,7 +89,7 @@ class ActiveOrders extends TestCase
 
     $response = $this -> request -> post( $this -> url );
     $response = $response -> decodeResponseJson();
-    
+
     $this -> assertCount( 2, $response );
   }
 
