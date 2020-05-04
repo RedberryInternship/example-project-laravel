@@ -30,8 +30,19 @@ class BusyCharger implements Rule
     public function passes($attribute, $value)
     {
         $chargerConnectorType   = ChargerConnectorType :: with( 'charger' ) -> find( $value );
+        
+        if( ! $chargerConnectorType )
+        {
+            return false;
+        }
+
         $charger                = $chargerConnectorType -> charger;
         
+        if( ! $charger )
+        {
+            return false;
+        }
+
         return Charger :: isChargerFree( $charger -> charger_id );
     }
 
