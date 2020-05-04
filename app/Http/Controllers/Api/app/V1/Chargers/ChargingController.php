@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\App\V1\Chargers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Resources\Json\Resource;
 
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
@@ -12,6 +13,7 @@ use App\Traits\Message;
 
 use App\Order;
 use App\ChargerConnectorType;
+use App\Http\Resources\ActiveOrder;
 use App\Http\Requests\StartCharging;
 use App\Http\Requests\StopCharging;
 
@@ -50,6 +52,8 @@ class ChargingController extends Controller
     $this -> status_code = 200;
     $this -> status      = '';
     $this -> message     = '';
+
+    Resource :: withoutWrapping();
   }
 
   /**
@@ -63,7 +67,7 @@ class ChargingController extends Controller
     $chargerConnectorTypeId   = $request -> get( 'charger_connector_type_id' );
     $chargerConnectorType     = ChargerConnectorType::find( $chargerConnectorTypeId );
     $chargerType              = $chargerConnectorType -> determineChargerType();
-    
+
     return $chargerType == ChargerTypeEnum :: FAST
       ? $this -> startFastCharging()
       : $this -> startLvl2Charging();
@@ -90,7 +94,7 @@ class ChargingController extends Controller
   private function startLvl2Charging()
   {
     $chargerConnectorTypeId   = request() -> get( 'charger_connector_type_id' );
-    $chargingType             = request() -> get( 'charging_type' );
+    $userCardId               = request() -> get( 'user_card_id' );
     $chargerConnectorType     = ChargerConnectorType :: find( $chargerConnectorTypeId );
 
     $transactionID = Charger::start(
@@ -102,14 +106,16 @@ class ChargingController extends Controller
       'charger_connector_type_id' => $chargerConnectorType -> id,
       'charger_transaction_id'    => $transactionID,
       'charging_status'           => OrderStatusEnum :: INITIATED,
+      'user_card_id'              => $userCardId,
     ]);
 
     $transaction_info = Charger::transactionInfo( $transactionID );
     $order -> createKilowatt( $transaction_info -> consumed );
 
-    $this -> message = $this -> messages[ 'charging_successfully_started' ];
-    $this -> status  = 'Charging Successfully started!';
-    return $this -> respond();
+    $order -> load( 'charger_connector_type.charger'        );
+    $order -> load( 'charger_connector_type.connector_type' );
+
+    return new ActiveOrder( $order );
   }
 
 
