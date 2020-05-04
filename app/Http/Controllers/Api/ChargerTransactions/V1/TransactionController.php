@@ -10,8 +10,8 @@ use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Enums\PaymentType as PaymentTypeEnum;
 
+use App\Library\Payments\Payment;
 use App\Facades\Charger;
-
 use App\Order;
 
 class TransactionController extends Controller
@@ -85,23 +85,14 @@ class TransactionController extends Controller
          * if it is not above the line then pass.
          */
 
-        $chargerInfo        = Charger :: transactionInfo( $order -> charger_transaction_id );
-        $kiloWattHour       = $chargerInfo -> kiloWattHour;
-        $hasChargingStarted = $this -> hasChargingStarted( $kiloWattHour );
+        
+        $hasChargingStarted = $this -> hasChargingStarted( $order );
 
         if( $hasChargingStarted )
         {
+          $userDefaultCard = $order -> user_card;
 
-          $userDefaultCard = $order -> user -> user_cards() -> whereDefault( true ) -> first();
-
-          /** START:  CHARGE WITH 20 GEL */
-            Log::channel( 'transaction_update' )->info(
-              [
-                'order' => $order -> charger_transaction_id,
-                'pay'   => '20 GEL',
-              ]
-            );
-          /** END:    CHARGE WITH 20 GEL */
+          Payment :: pay( $order, 20, PaymentTypeEnum :: CUT );
 
           $order -> charging_status = OrderStatusEnum :: CHARGING;
           
@@ -127,6 +118,35 @@ class TransactionController extends Controller
          * also check if kiloWattHour is down the line. if so
          * then change status from CHARGING to CHARGED.
          */
+
+         $shouldPay = $this -> shouldPay( $order );
+
+         if( $shouldPay )
+         {
+          $userDefaultCard = $order -> user_card;
+
+          Payment :: pay( $order, 20, PaymentTypeEnum :: CUT );
+
+          $order -> payments() -> create(
+              [
+                'type'          => PaymentTypeEnum :: CUT,
+                'confirmed'     => true,
+                'confirm_date'  => now(),
+                'price'         => 20,
+                'prrn'          => 'SOME_PRRN',
+                'trx_id'        => 'SOME_TRIX_ID',
+                'user_card_id'  => $userDefaultCard -> id,
+              ]
+            );
+         }
+
+         $hasAlreadyCharged = $this -> hasAlreadyCharged( $order );
+         if( $hasAlreadyCharged )
+         {
+           $order -> charging_status = OrderStatusEnum :: CHARGED;
+           $order -> save();
+         }
+
       break;
       
       case OrderStatusEnum :: CHARGED :
@@ -153,11 +173,43 @@ class TransactionController extends Controller
    * @param   float $kiloWattHour
    * @return  bool
    */
-  private function hasChargingStarted( $kiloWattHour )
+  private function hasChargingStarted( $order )
   {
-    $hasStarted = $kiloWattHour > $this -> kiloWattHourLine;
+    $chargerInfo        = Charger :: transactionInfo( $order -> charger_transaction_id );
+    $kiloWattHour       = $chargerInfo -> kiloWattHour;
+    $hasStarted         = $kiloWattHour > $this -> kiloWattHourLine;
     
     return $hasStarted;
+  }
+
+  /**
+   * Determine if car is charged.
+   * 
+   * @param \App\Order $order
+   * @return bool
+   */
+  public function hasAlreadyCharged( $order )
+  {
+    $chargerInfo        = Charger :: transactionInfo( $order -> charger_transaction_id );
+    $kiloWattHour       = $chargerInfo -> kiloWattHour;
+    $hasCharged         = $kiloWattHour < $this -> kiloWattHourLine;
+    
+    return $hasCharged;
+  }
+
+  /**
+   * Determine if consumed kilowatt money is above 
+   * the paid currency.
+   * 
+   * @param \App\Order $order
+   * @return bool
+   */
+  private function shouldPay( $order )
+  {
+    $paidMoney      = $order -> countPaidMoney();
+    $consumedMoney  = $order -> countConsumedMoney();
+    
+    return  $consumedMoney > $paidMoney;
   }
 
   /**

@@ -68,6 +68,18 @@ class OrderModel extends TestCase
   }
 
   /** @test */
+  public function order_has_user_card()
+  {
+    $userCard = factory( UserCard :: class ) -> create();
+    $order    = $this -> order;
+
+    $order -> user_card_id = $userCard -> id;
+    $order -> save();
+
+    $this -> assertTrue( !! $order -> user_card );
+  }
+
+  /** @test */
   public function order_has_charger_connector_type()
   {
     $order = $this -> order -> load( 'charger_connector_type' );

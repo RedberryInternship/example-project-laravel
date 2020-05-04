@@ -10,11 +10,7 @@ use App\Exceptions\NoSuchChargingPriceException;
 use App\Enums\PaymentType as PaymentTypeEnum;
 use App\Enums\ChargerType as ChargerTypeEnum;
 
-use App\ChargerConnectorType;
-use App\ChargingType;
 use Carbon\Carbon;
-use App\Payment;
-use App\User;
 
 class Order extends Model
 {
@@ -62,6 +58,16 @@ class Order extends Model
     public function payments()
     {
         return $this -> hasMany( Payment :: class );
+    }
+
+    /**
+     * Order belongsTo relationship with UserCard.
+     * 
+     * @return UserCard 
+     */
+    public function user_card()
+    {
+        return $this -> belongsTo( UserCard :: class );   
     }
 
     /**
