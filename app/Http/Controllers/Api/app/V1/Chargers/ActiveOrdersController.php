@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\App\V1\Chargers;
 
 use App\Http\Controllers\Controller;
 
-use App\Http\Resources\ActiveOrders;
+use App\Http\Resources\ActiveOrder;
 
 use App\ChargerConnectorType;
 use App\User;
@@ -62,7 +62,7 @@ class ActiveOrdersController extends Controller{
     ]) -> find( $userId );
 
     
-    return ActiveOrders :: collection( $user -> active_orders );
+    return ActiveOrder :: collection( $user -> active_orders );
   }
 
   /**
