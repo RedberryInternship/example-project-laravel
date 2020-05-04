@@ -23,24 +23,15 @@ use Illuminate\Support\Facades\Schema;
 
 class UserController extends Controller
 {
-    public function authenticate(Request $request)
-    {
-        $credentials = $request->only('phone_number', 'password');
-        if (!$token = auth('api')->attempt($credentials)) {
-            return response()->json(['error' => 'User Not Found', 'status' => 401], 401);
-        }
-        return $this->respondWithToken($token);
-    }
-      /**
+    /**
      * Get the token array structure.
      *
      * @param string $token
      *
      * @return \Illuminate\Http\JsonResponse
      */
-
-      public function guard()
-      {
+    public function guard()
+    {
         return Auth::Guard('api');
     }
 

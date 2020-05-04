@@ -42,7 +42,7 @@ class RegistrationRequest extends FormRequest implements ValidatesWhenResolved
      */
     protected function failedValidation(Validator $validator)
     {
-        $jsonResponse = response() -> json($validator -> errors(), 422);
+        $jsonResponse = response() -> json(['error' => $validator -> errors()], 422);
 
         throw new HttpResponseException($jsonResponse);
     }

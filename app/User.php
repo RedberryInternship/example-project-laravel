@@ -40,14 +40,20 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
+     * Casting fields to into another type.
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-
     public function getJWTIdentifier()
     {
-        return $this->getKey();
+        return $this -> getKey();
     }
 
     public function getJWTCustomClaims()
@@ -55,9 +61,24 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    /**
+     * Build User's response array.
+     * 
+     * @param $token
+     */
+    public static function respondWithToken($token)
+    {
+        $user = auth('api') -> user();
+
+        $user -> load('user_cards','user_cars','car_models');
+
+        return [
+            'user'          => $user,
+            'access_token'  => $token,
+            'token_type'    => 'bearer',
+            'expires_in'    => auth('api') -> factory() -> getTTL()
+        ];
+    }
 
     public function chargers()
     {
