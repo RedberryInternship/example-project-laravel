@@ -20,14 +20,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'app/V1'], function () {
 
 	/* User Auth / Register */
-	Route::group(['namespace' => 'Api\app\V1'], function(){
-		Route::post('/login', 'UserController@authenticate');
-		Route::post('/send-sms-code','UserController@postSendSmsCode');
-		Route::post('/verify-code','UserController@postVerifyCode');
-		Route::post('/verify-code-for-password-recovery','UserController@postVerifyCodeForPasswordRecovery');
-		Route::post('/register', 'UserController@register');
-		Route::post('/reset-password', 'UserController@postResetPassword');
+	Route::group(['namespace' => 'Api\app\V1'], function() {
 		Route::post('/edit-password', 'UserController@postEditPassword');
+		
+
+		Route::post('/send-sms-code','User\CodeController@sendCode');
+		Route::post('/verify-code','User\CodeController@verifyCode');
+		Route::post('/verify-code-for-password-recovery','User\CodeController@verifyCodeForPasswordRecovery');
+		Route::post('/reset-password', 'User\CodeController@reset');
+		Route::post('/login', 'User\AuthController');
+		Route::post('/register', 'User\RegistrationController');
 	});
 
 

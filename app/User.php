@@ -2,10 +2,13 @@
 
 namespace App;
 
+use Twilio;
+use App\Favorite;
+use App\Enums\OrderStatus;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use App\Enums\OrderStatus;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -28,14 +31,20 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
+     * Casting fields to into another type.
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-
     public function getJWTIdentifier()
     {
-        return $this->getKey();
+        return $this -> getKey();
     }
 
     public function getJWTCustomClaims()
@@ -43,9 +52,44 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    /**
+     * Build User's response array.
+     * 
+     * @param $token
+     */
+    public static function respondWithToken($token)
+    {
+        $user = auth('api') -> user();
+
+        $user -> load('user_cards','user_cars','car_models');
+
+        return [
+            'user'          => $user,
+            'access_token'  => $token,
+            'token_type'    => 'bearer',
+            'expires_in'    => auth('api') -> factory() -> getTTL()
+        ];
+    }
+
+    /**
+     * Send SMS.
+     * 
+     * @param $phoneNumber
+     * @param $message
+     * 
+     * @return boolean
+     */
+    public static function sendSms($phoneNumber, $message)
+    {
+        if ( ! $phoneNumber)
+        {
+            return false;
+        }
+
+        $phoneNumber = $phoneNumber[0] == '+' ? $phoneNumber : '+' . $phoneNumber;
+
+        Twilio::message($phoneNumber, $message);
+    }
 
     public function chargers()
     {
