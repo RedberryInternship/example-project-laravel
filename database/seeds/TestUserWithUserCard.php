@@ -16,11 +16,12 @@ class TestUserWithUserCard extends Seeder
     {
         $user = factory( User :: class ) -> create(
             [
-                'phone_number'  => '591935080',
+                'phone_number'  => '+995591935080',
                 'first_name'    => 'Liparit',
                 'last_name'     => 'Bagvashi',
                 'email'         => 'liparit@mail.ru',
                 'password'      => bcrypt( 'rati1021' ),
+                'active'        => 1,
             ]
         );
 
