@@ -29,6 +29,7 @@ class TestUserWithUserCard extends Seeder
             [
                 'user_id'     => $user -> id,
                 'card_holder' => 'Liparit Bagvashi',
+                'masked_pan'  => '411634xxxxxx9100',
             ]
         );
     }

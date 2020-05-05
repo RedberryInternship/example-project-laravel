@@ -20,8 +20,8 @@ trait Message
     ],
     'charger_is_not_free'                 => [
       'en' => 'The Charger is not free.',
-      'ka' => 'Зарядное устройство занято.',
-      'ru' => 'დამტენი დაკავებულია.',
+      'ru' => 'Зарядное устройство занято.',
+      'ka' => 'დამტენი დაკავებულია.',
     ],
     'charging_successfully_started'       => [
       'en' => 'Charging successfully started!',

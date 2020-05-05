@@ -58,8 +58,8 @@ class InsertChargerConnectorTypePrices extends Command
                         'charger_connector_type_id' => $chargerConnectorType -> id,
                         'min_kwt'                   => $price['min_kwt'],
                         'max_kwt'                   => $price['max_kwt'],
-                        'start_time'                => 0,
-                        'end_time'                  => 24,
+                        'start_time'                => '00:00',
+                        'end_time'                  => '24:00',
                         'price'                     => $price['price']
                     ]);
                 }
