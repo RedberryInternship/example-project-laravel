@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Enums\ConnectorType as ConnectorTypeEnum;
+use App\Enums\ChargerType;
+
 class ChargerConnectorType extends Model
 {
     /**
@@ -61,5 +64,24 @@ class ChargerConnectorType extends Model
     public function fast_charging_prices()
     {
         return $this -> hasMany( FastChargingPrice :: class );
-    }   
+    }
+    
+    /**
+     * Determine if this connector type 
+     * makes charger Fast or Lvl2
+     * 
+     * @return string
+     */
+    public function determineChargerType()
+    {
+        if( ! isset( $this -> connector_type ))
+        {
+            $this -> load( 'connector_type' );
+        }
+
+        $connector_type = $this -> connector_type -> name;
+        $fast           = [ ConnectorTypeEnum :: CHADEMO, ConnectorTypeEnum :: COMBO_2 ];
+        
+        return in_array( $connector_type, $fast ) ? ( ChargerType :: FAST ) : ( ChargerType :: LVL2 );
+    }
 }
