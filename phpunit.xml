@@ -29,7 +29,8 @@
         </testsuite>
         
         <testsuite name="ChargingProcess">
-            <directory suffix=".php">./tests/Unit/ChargingProcess</directory>
+            <directory suffix=".php">./tests/Unit/ChargingFeedback</directory>
+            <directory suffix=".php">./tests/Unit/ChargingApi</directory>
         </testsuite>
 
     </testsuites>

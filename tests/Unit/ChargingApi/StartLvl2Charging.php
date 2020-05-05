@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\ChargingProcess;
+namespace Tests\Unit\ChargingApi;
 
 use App\Charger;
 use Illuminate\Foundation\Testing\RefreshDatabase;

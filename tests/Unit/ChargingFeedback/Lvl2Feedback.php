@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\ChargingProcess;
+namespace Tests\Unit\ChargingFeedback;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +13,7 @@ use App\Order;
 use App\Traits\Testing\Charger as ChargerTrait;
 use App\Traits\Testing\User as UserTrait;
 
-class ChargingFeedback extends TestCase
+class Lvl2Feedback extends TestCase
 {
   use RefreshDatabase,
       ChargerTrait,
@@ -59,6 +59,7 @@ class ChargingFeedback extends TestCase
     
     $this -> assertCount( 3, $kilowatts );
 
+    
     $this -> tear_down_order_data_with_charger_id_of_29();
   }
 
