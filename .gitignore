@@ -4,6 +4,7 @@
 /public/js
 /public/css
 /public/storage
+/public/phpmyadmin
 /storage/*.key
 /vendor
 /code/espace/database/database.sqlite
