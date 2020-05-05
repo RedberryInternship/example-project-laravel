@@ -28,7 +28,7 @@ class ContactMessageRequest extends FormRequest implements ValidatesWhenResolved
     public function rules()
     {
         return [
-            'message'
+            'message' => 'required'
         ];
     }
 
