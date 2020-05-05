@@ -6,6 +6,7 @@ use App\Charger;
 use App\ConnectorType;
 use App\ChargerConnectorType;
 use Illuminate\Console\Command;
+use App\Enums\ConnectorType as ConnectorTypeEnum;
 
 class InsertChargerConnectorTypes extends Command
 {
@@ -66,10 +67,16 @@ class InsertChargerConnectorTypes extends Command
                 {
                     $connector_type      = ConnectorType::where('name',$connector_type)->first();
                     $connector_type_id   = $connector_type -> id;
+
+                    $m_connector_type_id = ConnectorTypeEnum :: CHADEMO == $connector_type -> name ? 2 : 1;
+
+
+                    
                 }
 
                 $charger_connector_types = ChargerConnectorType::where('charger_id', $charger_id) -> update([
-                    'connector_type_id'       => $connector_type_id
+                    'connector_type_id'       => $connector_type_id,
+                    'm_connector_type_id'     => 1,
                 ]); 
             }   
         }
