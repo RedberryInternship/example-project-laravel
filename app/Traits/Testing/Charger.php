@@ -8,6 +8,7 @@ use App\Facades\Charger as MishasCharger;
 use Illuminate\Support\Facades\DB;
 use App\Charger as AppCharger;
 use App\ChargerConnectorType;
+use App\ChargingPrice;
 use App\Facades\Simulator;
 use App\ConnectorType;
 use App\UserCard;
@@ -31,6 +32,39 @@ trait Charger
           'connector_type_id' => ConnectorType :: whereName( ConnectorTypeEnum :: TYPE_2 ) -> first(),
         ]
       );
+
+    factory( ChargingPrice :: class ) -> create(
+      [
+        'min_kwt'                   => 0,
+        'max_kwt'                   => 5,
+        'start_time'                => '00:00',
+        'end_time'                  => '24:00',
+        'price'                     => 0,
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+      ]
+    ); 
+
+    factory( ChargingPrice :: class ) -> create(
+      [
+        'min_kwt'                   => 6,
+        'max_kwt'                   => 10,
+        'start_time'                => '00:00',
+        'end_time'                  => '24:00',
+        'price'                     => 10,
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+      ]
+    ); 
+
+    factory( ChargingPrice :: class ) -> create(
+      [
+        'min_kwt'                   => 11,
+        'max_kwt'                   => 1000000,
+        'start_time'                => '00:00',
+        'end_time'                  => '24:00',
+        'price'                     => 20,
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+      ]
+    ); 
 
     $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
           -> post($this -> uri .'charging/start', [
