@@ -16,6 +16,7 @@ use App\ConnectorType;
 use App\Kilowatt;
 use App\UserCard;
 use App\Order;
+use App\User;
 
 use App\Traits\Testing\Charger as ChargerTrait;
 use App\Traits\Testing\User as UserTrait;
@@ -29,6 +30,7 @@ class StartLvl2Charging extends TestCase {
       Message;
 
   private $token;
+  private $user;
   private $uri;
   private $url;
 
@@ -37,6 +39,7 @@ class StartLvl2Charging extends TestCase {
     parent::setUp();
 
     $this -> token  = $this -> createUserAndReturnToken();
+    $this -> user   = User :: first();
     $this -> uri    = config( 'app' )['uri'];
     $this -> url    = $this -> uri . 'charging/start';
   }
@@ -69,15 +72,26 @@ class StartLvl2Charging extends TestCase {
   /** @test */
   public function when_order_is_created_status_is_INITIATED()
   {
-    $this -> create_order_with_charger_id_of_29();
-    $charger_connector_type = ChargerConnectorType::first();
+    $this -> withExceptionHandling();
+
+    $this -> create_order_with_charger_id_of_29( $this -> user -> id );
+    $chargerConnectorType = ChargerConnectorType::first();
 
     $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
-                      -> get( $this -> uri .'charging/status/' . $charger_connector_type -> id );
+                      -> get( $this -> uri .'active-orders' );
 
     $response = $response -> decodeResponseJson();
 
-    $this -> assertEquals( OrderStatusEnum :: INITIATED, $response['payload']['status']);
+    $desiredOrder    = null;
+    foreach( $response as $order )
+    {
+      if( $order ['charger_connector_type_id'] == $chargerConnectorType -> id )
+      {
+        $desiredOrder = $order;
+      }
+    }
+    
+    $this -> assertEquals( OrderStatusEnum :: INITIATED, $desiredOrder[ 'charging_status' ]);
 
     $this -> tear_down_order_data_with_charger_id_of_29();
   }

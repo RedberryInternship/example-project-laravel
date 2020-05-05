@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\App\V1\Chargers;
+namespace App\Http\Controllers\Api\app\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\Resource;
@@ -13,9 +13,9 @@ use App\Traits\Message;
 
 use App\Order;
 use App\ChargerConnectorType;
-use App\Http\Resources\ActiveOrder;
 use App\Http\Requests\StartCharging;
 use App\Http\Requests\StopCharging;
+use App\Http\Resources\Order as OrderResource;
 
 use App\Facades\Charger;
 
@@ -107,6 +107,7 @@ class ChargingController extends Controller
       'charger_transaction_id'    => $transactionID,
       'charging_status'           => OrderStatusEnum :: INITIATED,
       'user_card_id'              => $userCardId,
+      'user_id'                   => auth() -> user() -> id,
     ]);
 
     $transaction_info = Charger::transactionInfo( $transactionID );
@@ -115,7 +116,7 @@ class ChargingController extends Controller
     $order -> load( 'charger_connector_type.charger'        );
     $order -> load( 'charger_connector_type.connector_type' );
 
-    return new ActiveOrder( $order );
+    return new OrderResource( $order );
   }
 
 
@@ -135,7 +136,8 @@ class ChargingController extends Controller
     $transactionID              = $order -> charger_transaction_id;
    
     $this -> sendStopChargingRequestToMisha( $charger -> charger_id, $transactionID );
-  
+    
+
     $order -> charging_status = OrderStatusEnum :: CHARGED;
     $order -> save();
 

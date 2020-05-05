@@ -34,6 +34,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 	/* User Authenticated use functionality */
 	Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::group(['namespace' => 'Api\app\V1'], function(){
+			
 			Route::post('/add-user-car', 'UserController@postAddUserCar');
 			Route::get('/get-user-cars' , 'UserController@getUserCars');
 			Route::post('/delete-user-car', 'UserController@postDeleteUserCar');
@@ -46,14 +47,13 @@ Route::group(['prefix' => 'app/V1'], function () {
 			Route::post('/update-user-info','UserController@postUpdateUserInfo');
 			Route::get('/me', 'UserController@getMe');
 
-			Route::group(['namespace' => 'Chargers'], function() {
-				Route::post('/charging/start', 'ChargingController@start');
-				Route::post('/charging/stop', 'ChargingController@stop');
-				Route::get('/charging/status/{charger_connector_type_id}', 'ActiveOrdersController@getChargingStatus');
-				Route::post('active-orders', 'ActiveOrdersController@get');
-			});
-
-
+			/** Charging */
+			Route::post('/charging/start', 'ChargingController@start');
+			Route::post('/charging/stop', 'ChargingController@stop');
+			
+			/** Orders */
+			Route::get('/active-orders', 'OrderController@getActiveOrders');
+			Route::get('/order/{id}', 'OrderController@get');
 		});
 	});
 

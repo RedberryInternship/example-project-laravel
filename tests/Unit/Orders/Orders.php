@@ -12,14 +12,15 @@ use App\ChargingPrice;
 use App\ConnectorType;
 use App\FastChargingPrice;
 use Tests\TestCase;
-use App\Order;
 use App\Payment;
+use App\Charger;
+use App\Order;
 use App\User;
 
 use App\Traits\Testing\User as UserTrait;
 use App\Traits\Testing\Charger as ChargerTrait;
 
-class ActiveOrders extends TestCase
+class Orders extends TestCase
 {
   use RefreshDatabase,
       UserTrait,
@@ -29,7 +30,8 @@ class ActiveOrders extends TestCase
   private $user;
   private $token;
   private $uri;
-  private $url;
+  private $active_orders_url;
+  private $order_url;
   
   protected function setUp(): void
   {
@@ -38,7 +40,8 @@ class ActiveOrders extends TestCase
     $this -> token    = $this -> createUserAndReturnToken();
     $this -> user     = User :: first();
     $this -> uri      = config()[ 'app.uri' ];
-    $this -> url      = $this -> uri . 'active-orders';
+    $this -> active_orders_url      = $this -> uri . 'active-orders';
+    $this -> order_url = $this -> uri . 'order';
     $this -> request  = $this -> withHeader('Authorization', 'Bearer ' . $this -> token ); 
   }
 
@@ -57,7 +60,7 @@ class ActiveOrders extends TestCase
   /** @test */
   public function active_orders_response_is_ok()
   {
-    $response = $this -> request -> post( $this -> url );
+    $response = $this -> request -> get( $this -> active_orders_url );
 
     $response -> assertOk();
   }
@@ -87,7 +90,7 @@ class ActiveOrders extends TestCase
       ]
     );
 
-    $response = $this -> request -> post( $this -> url );
+    $response = $this -> request -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson();
 
     $this -> assertCount( 2, $response );
@@ -155,7 +158,7 @@ class ActiveOrders extends TestCase
     );
     
     // Case 1
-    $response = $this     -> request -> post( $this -> url );
+    $response = $this     -> request -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson() [ 0 ];
     
     $this -> assertEquals( $response[ 'already_paid' ]  , 20 );
@@ -175,7 +178,7 @@ class ActiveOrders extends TestCase
       ]
     );
     
-    $response = $this     -> request -> post( $this -> url );
+    $response = $this     -> request -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson() [ 0 ];
 
     $this -> assertEquals( $response[ 'already_paid' ]  , 40 );
@@ -247,7 +250,7 @@ class ActiveOrders extends TestCase
     $order -> createKilowatt( 0, 7 );
     $order -> addKilowatt( 150 );
 
-    $response = $this -> request -> post( $this -> url );
+    $response = $this -> request -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson() [ 0 ];
 
     $this -> assertEquals( $response[ 'consumed_money' ], 321.43 );
@@ -261,10 +264,42 @@ class ActiveOrders extends TestCase
 
     $order    -> addKilowatt( 44 );
 
-    $response = $this -> request -> post( $this -> url );
+    $response = $this -> request -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson() [ 0 ];
     
     $this -> assertEquals( $response[ 'consumed_money' ], 100 );
     $this -> assertEquals( $response[ 'already_paid' ]  , 20     );
   }
+
+  /** @test */
+  public function it_can_get_one_order()
+  {
+    $charger              = factory( Charger :: class ) -> create();
+    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
+      [ 
+        'charger_id'                => $charger -> id,
+      ]
+    );
+    
+    $order                = factory( Order :: class ) -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+      ]
+    );
+
+    $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
+                      -> get( $this -> order_url . '/'. $order -> id );
+    $response -> assertJsonStructure(
+      [
+        'consumed_money',
+        'already_paid',
+        'refund_money',
+        'charger_connector_type_id',
+        'connector_type_id',
+        'charger_id',
+        'user_card_id',
+      ]
+    );
+  }
+
 }

@@ -9,6 +9,7 @@ use Carbon\Carbon;
 
 use App\Enums\ConnectorType as ConnectorTypeEnum;
 use App\Enums\PaymentType as PaymentTypeEnum;
+use App\Enums\OrderStatus as OrderStatusEnum;
 
 use App\ChargerConnectorType;
 use App\FastChargingPrice;
@@ -19,7 +20,6 @@ use App\Kilowatt;
 use App\Payment;
 use App\Order;
 use App\User;
-use Illuminate\Support\Facades\Schema;
 
 class OrderModel extends TestCase
 {
@@ -463,4 +463,24 @@ class OrderModel extends TestCase
     $consumedMoney = $order -> countConsumedMoney();
     $this -> assertEquals( 47.5, $consumedMoney );
   } 
+
+  /** @test */
+  public function order_can_update_charging_status()
+  {
+    $order = $this -> order;
+
+    $order  -> charging_status = OrderStatusEnum :: INITIATED;
+    $order  -> save();
+
+    $order  -> refresh();
+
+    $this   -> assertEquals( $order -> charging_status, OrderStatusEnum :: INITIATED );
+    
+    $order  -> updateChargingStatus( OrderStatusEnum :: ON_FINE );
+    $this   -> assertEquals( $order -> charging_status, OrderStatusEnum :: ON_FINE );
+    
+    $order  -> refresh();
+    $this   -> assertEquals( $order -> charging_status, OrderStatusEnum :: ON_FINE );
+
+  }
 }

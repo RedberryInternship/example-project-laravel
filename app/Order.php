@@ -12,6 +12,8 @@ use App\Enums\ChargerType as ChargerTypeEnum;
 
 use Carbon\Carbon;
 
+use App\Facades\Charger as MishasCharger;
+
 class Order extends Model
 {
     /**
@@ -68,6 +70,31 @@ class Order extends Model
     public function user_card()
     {
         return $this -> belongsTo( UserCard :: class );   
+    }
+    
+    /**
+     * Update order charging status.
+     * 
+     * @param   string $chargingStatus
+     * @return  void
+     */
+    public function updateChargingStatus( $chargingStatus )
+    {
+        $this -> charging_status = $chargingStatus;
+        $this -> save();
+    }
+
+    /**
+     * Get charging power.
+     * 
+     * @return float
+     */
+    public function getChargingPower()
+    {
+        $chargerInfo   = MishasCharger :: transactionInfo( $this -> charger_transaction_id );
+        $kiloWattHour  = $chargerInfo -> kiloWattHour;
+
+        return $kiloWattHour;
     }
 
     /**
@@ -282,7 +309,7 @@ class Order extends Model
      * @param int|float $consumed
      * @return void
      */
-    public function createKilowatt($consumed, $kilowatt_hour = null )
+    public function createKilowatt($consumed, $kilowatt_hour = 0 )
     {
         $this -> kilowatt()
             -> create([

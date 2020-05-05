@@ -16,13 +16,13 @@ trait Charger
 {
   private $initiated;
 
-  public function create_order_with_charger_id_of_29()
+  public function create_order_with_charger_id_of_29( $user_id = null )
   {
     $this -> initiated = true;
 
     $this -> makeChargerFree();
 
-    $userCard = factory( UserCard :: class ) -> create();
+    $userCard = factory( UserCard :: class ) -> create([ 'user_id' => $user_id ?: 7 ]);
 
     $chargerConnectorType = factory( ChargerConnectorType :: class ) 
       -> create(
