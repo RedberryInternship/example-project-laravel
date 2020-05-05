@@ -21,13 +21,13 @@ Route::group(['prefix' => 'app/V1'], function () {
 
 	/* User Auth / Register */
 	Route::group(['namespace' => 'Api\app\V1'], function() {
-		Route::post('/reset-password', 'UserController@postResetPassword');
 		Route::post('/edit-password', 'UserController@postEditPassword');
 		
 
 		Route::post('/send-sms-code','User\CodeController@sendCode');
 		Route::post('/verify-code','User\CodeController@verifyCode');
 		Route::post('/verify-code-for-password-recovery','User\CodeController@verifyCodeForPasswordRecovery');
+		Route::post('/reset-password', 'User\CodeController@reset');
 		Route::post('/login', 'User\AuthController');
 		Route::post('/register', 'User\RegistrationController');
 	});

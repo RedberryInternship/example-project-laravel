@@ -45,25 +45,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function postResetPassword(Request $request)
-    {   
-        $json_status = "User Not Found";
-        $status      = 401;
-        $user        = User::where('phone_number', $request -> phone_number) -> first();
-        if($user)
-        {
-            $user -> password = Hash::make($request -> password);
-            $user -> save();
-            $temp        = TempSmsCode::where('phone_number', $request -> phone_number) -> delete();
-            $json_status = 'Password Changed';
-            $status      = 200;
-        }
-
-        return response() -> json([
-            'json_status' => $json_status,
-        ], $status);
-    }
-
     public function postEditPassword(Request $request)
     {   
         $json_status = "User Not Found";
