@@ -46,4 +46,23 @@ class CodeController extends Controller
             'phone_number' => $request -> get('phone_number')
         ]);
     }
+
+    /**
+     * Verify Tempolary Code For Password Recovery.
+     * 
+     * @param VerifyCodeRequest $request
+     * 
+     * @return JSON
+     */
+    public function verifyCodeForPasswordRecovery(VerifyCodeRequest $request)
+    {        
+        if ( ! $request -> verifyCode(true))
+        {
+            return response() -> json(['error' => ['verified' => false]], 403);
+        }
+
+        return response() -> json([
+            'phone_number' => $request -> get('phone_number')
+        ]);
+    }
 }

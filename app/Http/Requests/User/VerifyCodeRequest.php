@@ -50,16 +50,18 @@ class VerifyCodeRequest extends FormRequest implements ValidatesWhenResolved
     /**
      * Verify User's entered Code.
      * 
+     * @param $passwordRecovery = false
+     * 
      * @return boolean
      */
-    public function verifyCode()
+    public function verifyCode($passwordRecovery = false)
     {
         $code        = $this -> get('code');
         $phoneNumber = $this -> get('phone_number');
 
         $user = User::where('phone_number', $phoneNumber) -> first();
 
-        if ($user) return false;
+        if ( ($passwordRecovery && ! $user) && ($user && ! $passwordRecovery) ) return false;
 
         $tempSmsCode = TempSmsCode::where([
             'code'         => $code,
