@@ -18,8 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'app/V1'], function () {
-
-	/* User Auth / Register */
+	/* User Auth/Register */
 	Route::group(['namespace' => 'Api\app\V1'], function() {
 		Route::post('/send-sms-code','User\CodeController@sendCode');
 		Route::post('/verify-code','User\CodeController@verifyCode');
@@ -35,8 +34,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 
 	/* User Authenticated use functionality */
 	Route::group(['middleware' => ['jwt.verify']], function() {
-		Route::group(['namespace' => 'Api\app\V1'], function(){
-			
+		Route::group(['namespace' => 'Api\app\V1'], function() {	
 			Route::post('/add-user-car', 'UserController@postAddUserCar');
 			Route::get('/get-user-cars' , 'UserController@getUserCars');
 			Route::post('/delete-user-car', 'UserController@postDeleteUserCar');
@@ -59,8 +57,9 @@ Route::group(['prefix' => 'app/V1'], function () {
 		});
 	});
 
+
 	/* Rest functionality */
-	Route::group(['namespace' => 'Api\app\V1'], function(){
+	Route::group(['namespace' => 'Api\app\V1'], function() {
 		Route::get('/charger/{charger_id}', 'ChargerController@getSingleCharger');
 		Route::get('/chargers', 'ChargerController@getChargers');
 		Route::get('/get-models-and-marks', 'GetModelsAndMarksController@getModelsAndMarks');
@@ -68,5 +67,6 @@ Route::group(['prefix' => 'app/V1'], function () {
 		Route::get('/geo-ip', 'LocationController@getLocation');
 		Route::get('/faq', 'FAQController');
 		Route::get('/partners', 'PartnerController');
+		Route::post('/contact-message', 'ContactMessageController');
 	});
 });	
