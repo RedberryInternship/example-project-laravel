@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use App\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -27,7 +28,8 @@ class PasswordResetRequest extends FormRequest implements ValidatesWhenResolved
     public function rules()
     {
         return [
-            //
+            'password',
+            'phone_number'
         ];
     }
 
@@ -41,5 +43,17 @@ class PasswordResetRequest extends FormRequest implements ValidatesWhenResolved
         $jsonResponse = response() -> json(['error' => $validator -> errors()], 422);
 
         throw new HttpResponseException($jsonResponse);
+    }
+
+    /**
+     * Change User's Password.
+     */
+    public function changePassword()
+    {
+        User::where(
+            'phone_number', $this -> get('phone_number')
+        ) -> update([
+            'password' => bcrypt($this -> get('password'))
+        ]);
     }
 }
