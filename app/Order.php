@@ -220,7 +220,7 @@ class Order extends Model
     private function countConsumedMoneyByKilowatt()
     {
         $consumedKilowatts  = $this -> getLatestConsumedKilowatt() -> value;
-        $kiloWattHour       = $this -> kilowatt -> kilowatt_hour;
+        $chargingPower      = $this -> kilowatt -> charging_power;
         
         $startChargingTime  = $this -> payments -> first() -> confirm_date;
         $startChargingTime  = Carbon :: create( $startChargingTime );
@@ -231,8 +231,8 @@ class Order extends Model
         $chargingPriceInfo  = ChargingPrice :: where(
                 [
                     [ 'charger_connector_type_id',  $this -> charger_connector_type -> id ],
-                    [ 'min_kwt', '<='            ,  $kiloWattHour ],
-                    [ 'max_kwt', '>='            ,  $kiloWattHour ],
+                    [ 'min_kwt', '<='            ,  $chargingPower ],
+                    [ 'max_kwt', '>='            ,  $chargingPower ],
                 ]
             )
             -> whereRaw( $rawSql )
@@ -244,7 +244,7 @@ class Order extends Model
         }
 
         $chargingPrice = $chargingPriceInfo -> price;
-        $consumedMoney = ( $consumedKilowatts / $kiloWattHour ) * $chargingPrice;
+        $consumedMoney = ( $consumedKilowatts / $chargingPower ) * $chargingPrice;
         
         return $consumedMoney;
     }
