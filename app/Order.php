@@ -220,7 +220,7 @@ class Order extends Model
     private function countConsumedMoneyByKilowatt()
     {
         $consumedKilowatts  = $this -> getLatestConsumedKilowatt() -> value;
-        $chargingPower      = $this -> kilowatt -> charging_power;
+        $chargingPower      = $this -> kilowatt -> getChargingPower();
         
         $startChargingTime  = $this -> payments -> first() -> confirm_date;
         $startChargingTime  = Carbon :: create( $startChargingTime );
@@ -309,7 +309,7 @@ class Order extends Model
      * @param int|float $consumed
      * @return void
      */
-    public function createKilowatt($consumed, $kilowatt_hour = 0 )
+    public function createKilowatt($consumed, $chargingPower = 0 )
     {
         $this -> kilowatt()
             -> create([
@@ -319,7 +319,7 @@ class Order extends Model
                         'value' => $consumed,
                     ]
                 ],
-                'kilowatt_hour' => $kilowatt_hour,
+                'charging_power' => $chargingPower,
             ]);
     }
 

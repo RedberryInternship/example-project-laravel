@@ -9,6 +9,7 @@ use Tests\TestCase;
 use App\Enums\OrderStatus;
 
 use App\Order;
+use App\User;
 
 use App\Traits\Testing\Charger as ChargerTrait;
 use App\Traits\Testing\User as UserTrait;
@@ -78,6 +79,35 @@ class Lvl2Feedback extends TestCase
     
     $this -> tear_down_order_data_with_charger_id_of_29();
   }
-  
+
+
+  public function it_returns_updated_currency_fields_after_switched_into_charging_mode()
+  {
+    $user   = User :: first();
+    $this -> create_order_with_charger_id_of_29( $user -> id );
+
+    $order  = Order :: first();
+
+    $this -> get( $this -> update_url . $order -> charger_transaction_id . '/' . 10 );
+
+    sleep(160);
+
+    $this -> get( $this -> update_url . $order -> charger_transaction_id . '/' . 1000 );
+    sleep(3);
+
+    $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token) 
+      -> get( $this -> uri . 'active-orders' );
+
+    dump(
+      $response ->decodeResponseJson(),
+    );
+
+    $order -> refresh();
+    $order -> load( 'kilowatt' );
+
+    dump(
+      $order -> toArray(), 
+    );
+  }
 
 }
