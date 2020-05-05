@@ -25,7 +25,9 @@ class CodeController extends Controller
 
         User::sendSms($request -> get('phone_number'), $code);
 
-        return response() -> json([], 200);
+        return response() -> json([
+            'phone_number' => $request -> get('phone_number')
+        ]);
     }
 
     /**
