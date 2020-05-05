@@ -23,24 +23,15 @@ use Illuminate\Support\Facades\Schema;
 
 class UserController extends Controller
 {
-    public function authenticate(Request $request)
-    {
-        $credentials = $request->only('phone_number', 'password');
-        if (!$token = auth('api')->attempt($credentials)) {
-            return response()->json(['error' => 'User Not Found', 'status' => 401], 401);
-        }
-        return $this->respondWithToken($token);
-    }
-      /**
+    /**
      * Get the token array structure.
      *
      * @param string $token
      *
      * @return \Illuminate\Http\JsonResponse
      */
-
-      public function guard()
-      {
+    public function guard()
+    {
         return Auth::Guard('api');
     }
 
@@ -54,6 +45,7 @@ class UserController extends Controller
         ]);
     }
 
+<<<<<<< HEAD
     public function postSendSmsCode(Request $request)
     { 
         //$rand        = rand(pow(10, 4-1), pow(10, 4)-1);
@@ -220,6 +212,8 @@ class UserController extends Controller
         ], $status);
     }
 
+=======
+>>>>>>> 2316f5b091279bcb29c20305ec7f9d50966bffbd
     public function postEditPassword(Request $request)
     {   
         $json_status = "User Not Found";
