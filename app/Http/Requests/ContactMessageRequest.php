@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests;
 
-use App\User;
+use App\ContactMessage;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
-class PasswordResetRequest extends FormRequest implements ValidatesWhenResolved
+class ContactMessageRequest extends FormRequest implements ValidatesWhenResolved
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,8 +28,7 @@ class PasswordResetRequest extends FormRequest implements ValidatesWhenResolved
     public function rules()
     {
         return [
-            'password'     => 'required',
-            'phone_number' => 'required'
+            'message' => 'required'
         ];
     }
 
@@ -46,16 +45,18 @@ class PasswordResetRequest extends FormRequest implements ValidatesWhenResolved
     }
 
     /**
-     * Change User's Password.
+     * Store Contact Form Message in DB.
      * 
      * @return void
      */
-    public function changePassword()
+    public function store()
     {
-        User::where(
-            'phone_number', $this -> get('phone_number')
-        ) -> update([
-            'password' => bcrypt($this -> get('password'))
+        $user = auth('api') -> user();
+
+        $this -> merge([
+            'user_id' => $user ? $user -> id : null
         ]);
+
+        ContactMessage::create($this -> all());
     }
 }
