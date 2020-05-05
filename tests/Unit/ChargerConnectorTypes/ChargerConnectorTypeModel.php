@@ -4,9 +4,13 @@ namespace Tests\Unit\ChargerConnectorTypes;
 
 use Tests\TestCase;
 
+use App\Enums\ConnectorType as ConnectorTypeEnum;
+use App\Enums\ChargerType as ChargerTypeEnum;
+
 use App\ChargerConnectorType;
 use App\FastChargingPrice;
 use App\ChargingPrice;
+use App\ConnectorType;
 use App\Charger;
 use App\Order;
 
@@ -79,5 +83,21 @@ class ChargerConnectorTypeModel extends TestCase
     $chargerConnectorType -> load( 'orders' );
     
     $this -> assertCount( 2, $chargerConnectorType -> orders );
+  }
+
+  /** @test */
+  public function charger_connector_type_determines_charger_type()
+  {
+    $connectorType = ConnectorType :: whereName( ConnectorTypeEnum :: CHADEMO ) -> first();
+
+    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
+      [
+        'connector_type_id' => $connectorType -> id,
+      ]
+    );
+
+    $chargerType = $chargerConnectorType -> determineChargerType();
+
+    $this -> assertEquals( ChargerTypeEnum :: FAST, $chargerType );
   }
 }
