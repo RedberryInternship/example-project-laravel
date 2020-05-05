@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\app\V1\User;
 
+use App\TempSmsCode;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\PasswordEditRequest;
 use App\Http\Requests\User\PasswordResetRequest;
 
 class PasswordController extends Controller
@@ -16,14 +18,25 @@ class PasswordController extends Controller
      */
     public function reset(PasswordResetRequest $request)
     {
-        $user = User::where('phone_number', $request -> phone_number) -> first();
+        $request -> changePassword();
 
-        if ($user)
+        TempSmsCode::deleteCodesByPhoneNumber($request -> phone_number);
+
+        return response() -> json([]);
+    }
+
+    /**
+     * Edit User's password.
+     * 
+     * @param PasswordEditRequest $request
+     * 
+     * @return JSON
+     */
+    public function edit(PasswordEditRequest $request)
+    {
+        if ( ! $request -> editPassword())
         {
-            $user -> password = bcrypt($request -> password);
-            $user -> save();
-
-            $temp = TempSmsCode::where('phone_number', $request -> phone_number) -> delete();
+            return response() -> json(['error' => 'Incorrect phone number or old password'], 403);
         }
 
         return response() -> json([]);

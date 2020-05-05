@@ -3,12 +3,13 @@
 namespace App\Http\Requests\User;
 
 use App\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
-class PasswordResetRequest extends FormRequest implements ValidatesWhenResolved
+class PasswordEditRequest extends FormRequest implements ValidatesWhenResolved
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,34 +29,32 @@ class PasswordResetRequest extends FormRequest implements ValidatesWhenResolved
     public function rules()
     {
         return [
-            'password',
+            'new_password',
+            'old_password',
             'phone_number'
         ];
     }
 
     /**
-     * Handle Failed Validation.
-     * 
-     * @param Validator $validator
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        $jsonResponse = response() -> json(['error' => $validator -> errors()], 422);
-
-        throw new HttpResponseException($jsonResponse);
-    }
-
-    /**
-     * Change User's Password.
+     * Edit User's Password.
      * 
      * @return void
      */
-    public function changePassword()
+    public function editPassword()
     {
-        User::where(
-            'phone_number', $this -> get('phone_number')
-        ) -> update([
-            'password' => bcrypt($this -> get('password'))
-        ]);
+        $data = $this -> all();
+
+        $user = User::where('phone_number', $data['phone_number']) -> first();
+        
+        if ($user && Hash::check($data['old_password'], $user -> password))
+        {
+            $user -> update([
+                'password' => bcrypt($data['new_password'])
+            ]);
+
+            return true;
+        }
+
+        return false;
     }
 }
