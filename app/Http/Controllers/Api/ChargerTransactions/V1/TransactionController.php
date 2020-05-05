@@ -85,6 +85,7 @@ class TransactionController extends Controller
 
         if( $this -> chargingHasStarted() )
         {
+          $this -> updateChargingPower();
           $order  -> updateChargingStatus( OrderStatusEnum :: CHARGING );    
           $this   -> pay( PaymentTypeEnum :: CUT, 20 );
         }       
@@ -126,6 +127,19 @@ class TransactionController extends Controller
     $kiloWattHourLine = $this   -> kiloWattHourLine;
 
     return $chargingPower > $kiloWattHourLine;
+  }
+
+  /**
+   * Update kilowatt charging power.
+   * 
+   * @return void
+   */
+  private function updateChargingPower()
+  {
+    $order          = $this -> order;
+    $chargingPower  = $order -> getChargingPower();
+
+    $order -> kilowatt -> setChargingPower( $chargingPower );
   }
 
   /**
