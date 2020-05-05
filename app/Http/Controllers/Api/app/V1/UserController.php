@@ -45,27 +45,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function postEditPassword(Request $request)
-    {   
-        $json_status = "User Not Found";
-        $status      = 401;
-
-        $user        = User::where('phone_number', $request -> phone_number) -> first();
-        
-        if($user && Hash::check($request -> old_password, $user -> password))
-        {
-            $user -> password = Hash::make($request -> new_password);
-            $user -> save();
-            $json_status = 'Password Edited';
-            $status      = 200;
-        }
-
-        return response() -> json([
-            'json_status' => $json_status,
-            'status_code' => $status
-        ], $status);
-    }
-
     public function postAddUserCar(Request $request)
     {
         $json_status = 'Not added!';
