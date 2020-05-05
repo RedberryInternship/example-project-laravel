@@ -23,6 +23,14 @@
         <testsuite name="ChargerConnectorTypes">
             <directory suffix=".php">./tests/Unit/ChargerConnectorTypes</directory>
         </testsuite>
+        
+        <testsuite name="Users">
+            <directory suffix=".php">./tests/Unit/Users</directory>
+        </testsuite>
+        
+        <testsuite name="ChargingProcess">
+            <directory suffix=".php">./tests/Unit/ChargingProcess</directory>
+        </testsuite>
 
     </testsuites>
     <filter>

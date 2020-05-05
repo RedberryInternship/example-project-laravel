@@ -1,27 +1,28 @@
 <?php
 
-namespace Tests\Unit\Chargers;
+namespace Tests\Unit\ChargingProcess;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-use App\Enums\OrderStatus;
+use App\Enums\ChargingType as ChargingTypeEnum;
+use App\Enums\ConnectorType as ConnectorTypeEnum;
 
 use App\ChargerConnectorType;
 use App\ConnectorType;
-use App\Kilowatt;
+use App\UserCard;
 use App\Charger;
-use App\Enums\ChargingType;
-use App\Order;
+use App\User;
 
 use App\Traits\Testing\Charger as ChargerTrait;
 use App\Traits\Testing\User as UserTrait;
 use App\Traits\Message;
 
 use App\Facades\Simulator;
+use App\Facades\Charger as MishasCharger;
 
-class StartCharging extends TestCase {
+class StartChargingRequest extends TestCase {
   
   use RefreshDatabase,
       UserTrait,
@@ -39,6 +40,8 @@ class StartCharging extends TestCase {
     $this -> token  = $this -> createUserAndReturnToken();
     $this -> uri    = config( 'app' )['uri'];
     $this -> url    = $this -> uri . 'charging/start';
+
+    
   }
 
   protected function tearDown(): void
@@ -53,8 +56,10 @@ class StartCharging extends TestCase {
   }
 
   /** @test */  
-  public function start_charging_has_charger_connector_type_id_error_when_not_providing_it()
+  public function it_has_charger_connector_type_id_error_when_not_providing_it()
   {
+    $this -> makeChargerFree();
+
     $response = $this 
       -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
       -> post( $this -> url );
@@ -63,14 +68,15 @@ class StartCharging extends TestCase {
   }
 
   /** @test */
-  public function start_charging_has_charger_connector_type_error_when_it_is_doesnt_exist()
+  public function it_has_charger_connector_type_error_when_it_is_doesnt_exist()
   {
+    $this -> makeChargerFree();
 
     $response = $this 
       -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
       -> post( $this -> url, [
         'charger_connector_type_id' => 1,
-        'charging_type'             => ChargingType :: BY_AMOUNT,
+        'charging_type'             => ChargingTypeEnum :: BY_AMOUNT,
       ]);
 
     $responseErrors = $response -> decodeResponseJson() [ 'errors' ][ 'charger_connector_type_id' ];
@@ -80,8 +86,9 @@ class StartCharging extends TestCase {
   }
 
   /** @test */
-  public function start_charging_has_charger_error_when_it_doesnt_exists()
+  public function it_has_charger_error_when_it_doesnt_exists()
   {
+    $this -> makeChargerFree();
 
     factory( ChargerConnectorType::class ) -> create();
     DB :: table( 'chargers' ) -> delete();
@@ -90,7 +97,7 @@ class StartCharging extends TestCase {
       -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
       -> post( $this -> url, [
         'charger_connector_type_id' => 1,
-        'charging_type'             => ChargingType :: BY_AMOUNT,
+        'charging_type'             => ChargingTypeEnum :: BY_AMOUNT,
         'price'                     => 50,
       ]);
 
@@ -101,12 +108,9 @@ class StartCharging extends TestCase {
   }
 
   /** @test */
-  public function start_charging_doesnt_have_charger_error_when_it_exists()
+  public function it_doesnt_have_charger_error_when_it_exists()
   {
-
-    Simulator :: plugOffCable( 29 );
-    Simulator :: upAndRunning( 29 );
-    sleep( 1 );
+    $this -> makeChargerFree();
 
     $charger = factory( Charger::class ) -> create([ 'charger_id' => 29 ]);
 
@@ -118,7 +122,7 @@ class StartCharging extends TestCase {
       -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
       -> post( $this -> url, [
         'charger_connector_type_id' => 1,
-        'charging_type'             => ChargingType :: BY_AMOUNT,
+        'charging_type'             => ChargingTypeEnum :: BY_AMOUNT,
         'price'                     => 50,
       ]);
         
@@ -126,22 +130,24 @@ class StartCharging extends TestCase {
   }
 
   /** @test */
-  public function start_charging_has_connector_type_error_when_it_doesnt_exists()
+  public function it_has_connector_type_error_when_it_doesnt_exists()
   {
+    $this -> makeChargerFree();
 
     ConnectorType::truncate();
     
-    $charger = factory( Charger::class ) -> create();
+    $charger = factory( Charger::class ) -> create(['charger_id' => 29 ]);
 
     $charger_connector_type = factory( ChargerConnectorType::class ) -> create([
-      'charger_id' => $charger -> id
+      'charger_id'        => $charger -> id,
+      'connector_type_id' => 9,
     ]);
 
     $response = $this 
       -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
       -> post( $this -> url, [
         'charger_connector_type_id' => $charger_connector_type -> id,
-        'charging_type'             => ChargingType :: FULL_CHARGE,
+        'charging_type'             => ChargingTypeEnum :: FULL_CHARGE,
       ]);
           
       $responseErrors = $response -> decodeResponseJson() [ 'errors' ][ 'charger_connector_type_id' ];
@@ -152,8 +158,10 @@ class StartCharging extends TestCase {
   }
 
   /** @test */
-  public function start_charging_has_charging_type_error_when_not_providing_it()
-  {
+  public function it_has_charging_type_error_when_not_providing_it()
+  {    
+    $this -> makeChargerFree();
+
     $response = $this
       -> withHeader( 'Authorization', 'Bearer' . $this -> token )
       -> post( $this -> url, [
@@ -165,8 +173,10 @@ class StartCharging extends TestCase {
 
 
   /** @test */
-  public function start_charging_has_charging_type_errors_when_incorrect_attribute()
+  public function it_has_charging_type_errors_when_incorrect_attribute()
   {
+    $this -> makeChargerFree();
+
     $response = $this
       -> withHeader( 'Authorization', 'Bearer' . $this -> token )
       -> post( $this -> url, [
@@ -188,10 +198,11 @@ class StartCharging extends TestCase {
   }
 
   /** @test */
-  public function start_charging_has_price_error_when_charging_type_is_by_amount()
+  public function it_has_price_error_when_charging_type_is_by_amount()
   {
-    
-    $charger = factory( Charger::class ) -> create();
+    $this -> makeChargerFree();
+
+    $charger = factory( Charger::class ) -> create([ 'charger_id' => 29 ]);
 
     factory( ChargerConnectorType::class ) -> create([
       'charger_id'        => $charger -> id,
@@ -202,16 +213,17 @@ class StartCharging extends TestCase {
       -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
       -> post( $this -> url, [
         'charger_connector_type_id' => 1,
-        'charging_type'             => ChargingType :: BY_AMOUNT,
+        'charging_type'             => ChargingTypeEnum :: BY_AMOUNT,
       ]);
 
       $response -> assertJsonValidationErrors('price');
   }
 
   /** @test */
-  public function start_charging_has_no_price_error_when_charging_type_is_not_by_amount()
+  public function it_has_no_price_error_when_charging_type_is_not_by_amount()
   {
-    
+    $this -> makeChargerFree();
+
     $charger = factory( Charger::class ) -> create();
 
     factory( ChargerConnectorType::class ) -> create([
@@ -223,7 +235,7 @@ class StartCharging extends TestCase {
       -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
       -> post( $this -> url, [
         'charger_connector_type_id' => 1,
-        'charging_type'             => ChargingType :: FULL_CHARGE,
+        'charging_type'             => ChargingTypeEnum :: FULL_CHARGE,
       ]);
 
       $response -> assertJsonMissingValidationErrors('price');
@@ -231,8 +243,10 @@ class StartCharging extends TestCase {
 
   /** @test */
   public function charging_price_needs_to_be_numeric()
-  {
-    $charger = factory( Charger::class ) -> create();
+  {    
+    $this -> makeChargerFree();
+
+    $charger = factory( Charger::class ) -> create([ 'charger_id' => 29 ]);
 
     factory( ChargerConnectorType::class ) -> create([
       'charger_id'        => $charger -> id,
@@ -243,7 +257,7 @@ class StartCharging extends TestCase {
       -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
       -> post( $this -> url, [
         'charger_connector_type_id' => 1,
-        'charging_type'             => ChargingType :: BY_AMOUNT,
+        'charging_type'             => ChargingTypeEnum :: BY_AMOUNT,
         'price'                     => 'mas123',
       ]);
 
@@ -252,67 +266,129 @@ class StartCharging extends TestCase {
       -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
       -> post( $this -> url, [
         'charger_connector_type_id' => 1,
-        'charging_type'             => ChargingType :: BY_AMOUNT,
+        'charging_type'             => ChargingTypeEnum :: BY_AMOUNT,
         'price'                     => 2.777
       ]);
     
     $responseWithoutNumeric -> assertJsonValidationErrors('price');
-    $responseWithNumeric -> assertJsonMissingValidationErrors('price');
+    $responseWithNumeric    -> assertJsonMissingValidationErrors('price');
   }
 
   /** @test */
-  public function start_charging_creates_new_order_record_with_kilowatt()
+  public function it_has_has_user_card_id_error_when_not_provided()
   {
-    $this -> create_order_with_charger_id_of_29();
-      
-    $orders_count   = Order::count();
-    $kilowatt_count = Kilowatt::count();
+    $this -> makeChargerFree();
 
-    $this -> assertTrue( $orders_count > 0 );
-    $this -> assertTrue( $kilowatt_count > 0 );
+    $charger              = factory( Charger :: class ) -> create([ 'charger_id' => 29 ]);
+    $chargerConnectorType = factory( ChargerConnectorType :: class) -> create(
+      [
+        'connector_type_id' => ConnectorType :: whereName( ConnectorTypeEnum :: TYPE_2 ) -> first(),
+        'charger_id'        => $charger -> id,
+      ]
+    );
 
-    $this -> tear_down_order_data_with_charger_id_of_29();
+    $response = $this -> withHeader( 'Authorization', 'Bearer '. $this -> token )
+      -> post(
+        $this -> url,
+        [
+          'charger_connector_type_id' => $chargerConnectorType -> id,
+        ]
+      );
+
+    $response -> assertJsonValidationErrors([ 'user_card_id' ]);
   }
 
+  /** @test */
+  public function it_doesnt_have_user_card_id_error_when_valid_id_is_provided()
+  {
+    $this -> makeChargerFree();
+
+    $user                 = User :: first();
+    $userCard             = factory( UserCard :: class ) -> create([ 'user_id' => $user -> id ]);
+    $charger              = factory( Charger :: class ) -> create([ 'charger_id' => 29 ]);
+    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
+      [
+        'charger_id' => $charger -> id,
+        'connector_type_id' => ConnectorType :: whereName( ConnectorTypeEnum :: TYPE_2 ) -> first(),
+      ]
+    );
+    
+    $response             = $this -> withHeader( 'Authorization', 'Bearer '. $this -> token )
+      -> post( $this -> url,
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'user_card_id'              => $userCard -> id,
+      ]);
+
+    $response -> assertJsonMissingValidationErrors([ 'user_card_id' ]);
+  }
 
   /** @test */
-  public function start_charging_has_422_status_code_when_bad_request()
+  public function it_has_422_status_code_when_bad_request()
   {
+    $this -> makeChargerFree();
+
+    $charger = factory( Charger :: class ) -> create([ 'charger_id' => 29 ]);
+
+    $chargerConnectorType = factory( ChargerConnectorType::class ) -> create([
+      'charger_id'        => $charger -> id,
+      'connector_type_id' => 1
+    ]);
 
     // not providing with [charger_connector_id] array
     $response = $this
       -> withHeader( 'Authorization','Bearer ' . $this -> token )
-      -> post( $this -> uri . 'charging/start' );
+      -> post( $this -> uri . 'charging/start',
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+      ]);
     
     $response -> assertStatus( 422 );
   }
 
-
   /** @test */
-  public function when_order_is_created_status_is_INITIATED()
+  public function it_has_charger_is_not_free_error_when_charger_is_not_free()
   {
-    $this -> create_order_with_charger_id_of_29();
-    $charger_connector_type = ChargerConnectorType::first();
+    $this -> makeChargerFree();
 
-    $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
-                      -> get( $this -> uri .'charging/status/' . $charger_connector_type -> id );
+    MishasCharger :: start        ( 29, 1 );
+    sleep( 2 );
 
+    $charger = factory( Charger::class ) -> create([ 'charger_id' => 29 ]);
+
+    factory( ChargerConnectorType::class ) -> create([
+      'charger_id' => $charger -> id,
+    ]);
+
+    $response = $this 
+      -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
+      -> post( $this -> url, [
+        'charger_connector_type_id' => 1,
+        'charging_type'             => ChargingTypeEnum :: BY_AMOUNT,
+        'price'                     => 50,
+      ]);
+
+    $response -> assertStatus( 400 );
+    
     $response = $response -> decodeResponseJson();
-
-    $this -> assertEquals( OrderStatus :: INITIATED, $response['payload']['status']);
-
-    $this -> tear_down_order_data_with_charger_id_of_29();
+    
+    $this     -> assertEquals( 
+      $response [ 'message' ],
+      $this -> messages [ 'charger_is_not_free' ],
+     );
   }
 
   /** @test */
   public function when_charger_is_not_free_dont_charge()
   {
+    $this -> makeChargerFree();
+
     $this -> create_order_with_charger_id_of_29();
 
     $response = $this -> withHeader( 'token', 'Bearer ' . $this -> token)
       -> post($this -> uri . 'charging/start', [
         'charger_connector_type_id' => ChargerConnectorType::first() -> id,
-        'charging_type'             => ChargingType :: FULL_CHARGE,
+        'charging_type'             => ChargingTypeEnum :: FULL_CHARGE,
       ]);
 
     $response = (object) $response -> decodeResponseJson();
@@ -322,3 +398,4 @@ class StartCharging extends TestCase {
     $this -> tear_down_order_data_with_charger_id_of_29();
   }
 }
+

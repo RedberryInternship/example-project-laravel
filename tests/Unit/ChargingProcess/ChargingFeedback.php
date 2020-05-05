@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Chargers;
+namespace Tests\Unit\ChargingProcess;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -77,5 +77,6 @@ class ChargingFeedback extends TestCase
     
     $this -> tear_down_order_data_with_charger_id_of_29();
   }
+  
 
 }
