@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\app\V1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Resources\Json\Resource;
 
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
@@ -11,10 +10,13 @@ use App\Enums\ChargerType as ChargerTypeEnum;
 
 use App\Traits\Message;
 
-use App\Order;
 use App\ChargerConnectorType;
+use App\Order;
+use App\User;
+
 use App\Http\Requests\StartCharging;
 use App\Http\Requests\StopCharging;
+
 use App\Http\Resources\Order as OrderResource;
 
 use App\Facades\Charger;
@@ -129,18 +131,27 @@ class ChargingController extends Controller
    * @param App\Http\Requests\StopCharging $request
    * @return Illuminate\Http\JsonResponse
    */
-  public function stop( StopCharging $request )
+  public function stop()
   {
-    $charger_connector_type_id  = $request -> get( 'charger_connector_type_id' );
-    $charger_connector_type     = ChargerConnectorType :: with('orders') -> find( $charger_connector_type_id );
-    
-    $charger                    = $charger_connector_type -> charger;
-    $order                      = $charger_connector_type -> orders -> first();
-    $transactionID              = $order -> charger_transaction_id;
+    $orderId        = request() -> get( 'order_id' );
+
+    if( ! $orderId )
+    {
+      throw new \Exception( 'Gimme order_id man!' );
+    }
+
+    $order          = Order :: with(
+      [
+        'charger_connector_type.charger',
+        'user',
+      ]
+    ) -> find( $orderId );
+
+    $charger        = $order -> charger_connector_type -> charger;
+    $transactionID  = $order -> charger_transaction_id;
    
     $this -> sendStopChargingRequestToMisha( $charger -> charger_id, $transactionID );
     
-
     $order -> charging_status = OrderStatusEnum :: CHARGED;
     $order -> save();
 

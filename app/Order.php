@@ -271,7 +271,8 @@ class Order extends Model
      */
     private function countConsumedMoneyByKilowatt()
     {
-        $consumedKilowatts  = $this -> getLatestConsumedKilowatt() -> value;
+        $consumedWatts      = $this -> getLatestConsumedKilowatt() -> value;
+        $consumedKilowatts  = $this -> convertWattsIntoKilowatts( $consumedWatts );
         $chargingPower      = $this -> kilowatt -> getChargingPower();
         
         $startChargingTime  = $this -> payments -> first() -> confirm_date;
@@ -333,6 +334,16 @@ class Order extends Model
         $moneyToRefund = round( $moneyToRefund, 2 );
     
         return $moneyToRefund;
+    }
+
+    /**
+     * Convert Wats into kiloWatts.
+     * 
+     * @param float|integer $watts
+     */
+    private function convertWattsIntoKilowatts( $watts )
+    {
+        return $watts / 1000;
     }
 
     /**
