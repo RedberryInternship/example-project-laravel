@@ -7,13 +7,6 @@ use App\Enums\OrderStatus as OrderStatusEnum;
 
 class Order extends JsonResource
 {
-    /**
-     * Set without wrapping property.
-     * 
-     * @var string|null
-     */
-    public static $wrap = null;
-
     /** 
      * Additional data 
      * 
@@ -22,28 +15,28 @@ class Order extends JsonResource
     private $additionalData = [];
 
     /**
-     * Override parent constructor
-     * in order to pass additional data.
-     * 
-     * @param \App\Order    $resource
-     * @param array         $additionalData
-     */
-    public function __construct( $resource, array $additionalData = [] )
-    {
-        parent :: __construct( $resource );
-
-        $this -> setAdditionalData( $additionalData );
-    }
-
-    /**
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function toArray($request)
-    {   
+    {
+        static :: withoutWrapping();
+        
         $startChargingTime = $this -> charging_status_change_dates [ OrderStatusEnum :: CHARGING ];
+
+        /**
+         * Add target price if it charging type is BY_AMOUNT.
+         */
+        if( $this -> target_price )
+        {
+            $this -> setAdditionalData(
+                [
+                    'target_price' => $this -> target_price,
+                ]
+            );
+        }
 
         $mainResourceData = [
             'already_paid'                  => $this -> countPaidMoney(),

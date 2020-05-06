@@ -95,6 +95,8 @@ class ChargingController extends Controller
     $userCardId               = request() -> get( 'user_card_id' );
     $chargerConnectorType     = ChargerConnectorType :: find( $chargerConnectorTypeId );
     $chargingType             = request() -> get( 'charging_type' );
+    $isByAmount               = $chargingType == ChargingTypeEnum :: BY_AMOUNT;
+    $targetPrice              = $isByAmount ? request() -> get( 'price' ) : null;
 
     $transactionID = Charger::start(
       $chargerConnectorType   -> charger -> charger_id, 
@@ -108,6 +110,7 @@ class ChargingController extends Controller
       'user_card_id'              => $userCardId,
       'user_id'                   => auth() -> user() -> id,
       'charging_type'             => $chargingType,
+      'target_price'              => $targetPrice,
     ]);
 
     $transaction_info = Charger::transactionInfo( $transactionID );

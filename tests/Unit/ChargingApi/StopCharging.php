@@ -4,20 +4,18 @@ namespace Tests\Unit\ChargingApi;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\Helper;
 use Tests\TestCase;
 
 use App\Enums\OrderStatus;
 
 use App\ChargerConnectorType;
 
-use App\Traits\Testing\Charger as ChargerTrait;
-use App\Traits\Testing\User as UserTrait;
 
 class Charging extends TestCase {
   
   use RefreshDatabase,
-      UserTrait,
-      ChargerTrait;
+      Helper;
 
   private $token;
   private $uri;
@@ -26,7 +24,7 @@ class Charging extends TestCase {
   {
     parent::setUp();
 
-    $this -> token  = $this -> createUserAndReturnToken();
+    $this -> token  = $this -> create_user_and_return_token();
     $this -> uri    = config( 'app' )[ 'uri' ];
   }
 

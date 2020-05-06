@@ -3,29 +3,29 @@
 namespace Tests\Unit\Orders;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+
+use Tests\Traits\Helper;
+use Tests\TestCase;
+
 use App\Enums\ConnectorType as ConnectorTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Enums\PaymentType as PaymentTypeEnum;
-use Illuminate\Support\Facades\DB;
+
 use App\ChargerConnectorType;
+use App\FastChargingPrice;
 use App\ChargingPrice;
 use App\ConnectorType;
-use App\FastChargingPrice;
-use Tests\TestCase;
 use App\Payment;
 use App\Charger;
 use App\Order;
 use App\User;
 
-use App\Traits\Testing\User as UserTrait;
-use App\Traits\Testing\Charger as ChargerTrait;
 
 class Orders extends TestCase
 {
   use RefreshDatabase,
-      UserTrait,
-      ChargerTrait;
-
+      Helper;
   
   private $user;
   private $token;
@@ -37,7 +37,7 @@ class Orders extends TestCase
   {
     parent :: setUp();
 
-    $this -> token    = $this -> createUserAndReturnToken();
+    $this -> token    = $this -> create_user_and_return_token();
     $this -> user     = User :: first();
     $this -> uri      = config()[ 'app.uri' ];
     $this -> active_orders_url      = $this -> uri . 'active-orders';
@@ -259,7 +259,7 @@ class Orders extends TestCase
 
     // Case 2
     $kilowatt =   $order -> kilowatt;
-    $kilowatt ->  kilowatt_hour = 22;
+    $kilowatt ->  charging_power = 22;
     $kilowatt ->  save();
 
     $order    -> addKilowatt( 44 );
@@ -288,15 +288,14 @@ class Orders extends TestCase
     );
 
     $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
-                      -> get( $this -> order_url . '/'. $order -> id ) -> dump();
-    
-    
+                      -> get( $this -> order_url . '/'. $order -> id );
 
     $response -> assertJsonStructure(
       [
         'consumed_money',
         'already_paid',
         'refund_money',
+        'charging_type',
         'charger_connector_type_id',
         'connector_type_id',
         'charger_id',
