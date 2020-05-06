@@ -106,39 +106,14 @@ class Charger extends Resource
 
             Text::make('lng'),
 
-            // BelongsTo::make('User','user', 'App\Nova\User')
-            //     ->onlyOnForms()
-            //     ->nullable(),
-
-            BelongsToMany::make('Connector Types')
-                -> fields(function () {
-                    return [
-                        Text::make('charger_type_id') -> onlyOnIndex(),
-                        Select::make('charger_type_id') -> options(ChargerType::getChargerTypesKeyValueArray())
-                    ];
-                }),
-            // Text::make('Types') -> displayUsing(function ($types){
-            //     $result = "";
-            //     $i = 0;
-            //     $len = count($types);
-            //     foreach ($types as $type)
-            //     {
-            //         $result .= $type -> name;
-            //         if ($i == $len - 1)
-            //         {
-            //             $result .= ". ";
-            //         } else {
-            //             $result .= ", ";
-            //         }
-            //         $i++;
-            //     }
-            //     return $result;
-            // })-> onlyOnIndex(),
+            BelongsToMany::make('Connector Types'),
 
             BelongsToMany::make('Charger Tags','Tags', 'App\Nova\Tag'),
+
             Select::make('User','user_id')
                 ->options($users),
-            BelongsTo::make('charger_group')
+
+            BelongsTo::make('Charger Group')
                 -> nullable()
         ];
 
@@ -168,7 +143,6 @@ class Charger extends Resource
             new ChargerPublished,
             new ChargerActive,
             new ChargerTags,
-            //new ChargerTypes,
             new ChargerConnectorTypes
         ];
     }
