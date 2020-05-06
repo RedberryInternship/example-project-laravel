@@ -52,8 +52,6 @@ class ChargingController extends Controller
     $this -> status_code = 200;
     $this -> status      = '';
     $this -> message     = '';
-
-    Resource :: withoutWrapping();
   }
 
   /**
