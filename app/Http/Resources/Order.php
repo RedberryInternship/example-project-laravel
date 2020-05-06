@@ -39,6 +39,7 @@ class Order extends JsonResource
         }
 
         $mainResourceData = [
+            'order_id'                      => $this -> id,
             'already_paid'                  => $this -> countPaidMoney(),
             'consumed_money'                => $this -> countConsumedMoney(),
             'refund_money'                  => $this -> countMoneyToRefund(),
