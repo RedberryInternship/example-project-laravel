@@ -133,12 +133,12 @@ class Base
     $is_charger_active = $charger -> status == -1 ? false : true;
 
     return [
-      'charger_id' => (int) $charger -> id,
-      'code' => $charger -> code,
+      'charger_id'  => (int) $charger -> id,
+      'code'        => $charger -> code,
       'description' => $charger -> description,
-      'active' => $is_charger_active,
-      'lat' => $charger -> latitude,
-      'lng' => $charger -> longitude,
+      'active'      => $is_charger_active,
+      'lat'         => $charger -> latitude,
+      'lng'         => $charger -> longitude,
     ]; 
   }
 
@@ -166,12 +166,12 @@ class Base
    */
   private function isChargerUpdated($db_charger, $m_charger)
   {
-    return $db_charger -> charger_id != $m_charger['charger_id']
-          || $db_charger -> code != $m_charger['code'] 
+    return $db_charger   -> charger_id  != $m_charger['charger_id']
+          || $db_charger -> code        != $m_charger['code'] 
           || $db_charger -> description != $m_charger['description'] 
-          || $db_charger -> active != $m_charger['active'] 
-          || $db_charger -> lat != $m_charger['lat'] 
-          || $db_charger -> lng != $m_charger['lng'];
+          || $db_charger -> active      != $m_charger['active'] // TODO: active should be checked differently
+          || $db_charger -> lat         != $m_charger['lat'] 
+          || $db_charger -> lng         != $m_charger['lng'];
 
   }
 
@@ -196,10 +196,10 @@ class Base
 
 
     array_walk($connectors, function(&$item) { $item = (array) $item; });
-    $connector_ids = array_column($connectors, 'id');
-    $connector_types = array_column($connectors, 'type');
-    $new_connectors = array_combine($connector_ids, $connector_types);
-    $new_connectors = array_map('strtolower', $new_connectors);
+    $connector_ids    = array_column($connectors, 'id');
+    $connector_types  = array_column($connectors, 'type');
+    $new_connectors   = array_combine($connector_ids, $connector_types);
+    $new_connectors   = array_map('strtolower', $new_connectors);
 
     ksort($old_connectors);
     ksort($new_connectors);

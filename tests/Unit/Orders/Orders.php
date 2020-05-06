@@ -288,7 +288,7 @@ class Orders extends TestCase
     );
 
     $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
-                      -> get( $this -> order_url . '/'. $order -> id ) -> dump();
+                      -> get( $this -> order_url . '/'. $order -> id );
     
     
 
@@ -297,6 +297,7 @@ class Orders extends TestCase
         'consumed_money',
         'already_paid',
         'refund_money',
+        'charging_type',
         'charger_connector_type_id',
         'connector_type_id',
         'charger_id',
