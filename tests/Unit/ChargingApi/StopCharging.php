@@ -10,7 +10,7 @@ use Tests\TestCase;
 use App\Enums\OrderStatus;
 
 use App\ChargerConnectorType;
-
+use App\Order;
 
 class Charging extends TestCase {
   
@@ -41,35 +41,20 @@ class Charging extends TestCase {
   }
 
 
-  /** @test */  
-  public function stop_charging_has_charger_connector_type_id_error_when_not_providing_it()
-  {
-    $response = $this
-      -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
-      -> post( $this -> uri . 'charging/stop', [
-      'transaction_id' => 7
-    ]);
-    
-    $response -> assertJsonValidationErrors([ 'charger_connector_type_id' ]);
-  }
-
-
   /** @test */
   public function stop_charging_sends_stop_charging_call_and_updates_db()
   {
     $this -> create_order_with_charger_id_of_29();
 
-    $chargerConnectorType = ChargerConnectorType::first();
-  
+    $order = Order :: first();
+
     $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
       -> post($this -> uri . 'charging/stop', [
-        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'order_id' => $order -> id,
       ]);
     
-    $chargerConnectorType -> load ( 'orders' );
+    $order -> refresh();
     
-    $order = $chargerConnectorType -> orders -> first();
-
     $this -> assertEquals( OrderStatus :: CHARGED, $order -> charging_status );
     
     $this -> tear_down_order_data_with_charger_id_of_29();
