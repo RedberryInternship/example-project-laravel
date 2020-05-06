@@ -143,6 +143,7 @@ class ChargingController extends Controller
     $order          = Order :: with(
       [
         'charger_connector_type.charger',
+        'charger_connector_type.connector_type',
         'user',
       ]
     ) -> find( $orderId );
@@ -155,10 +156,15 @@ class ChargingController extends Controller
     $order -> charging_status = OrderStatusEnum :: CHARGED;
     $order -> save();
 
-    $this -> message = $this -> messages [ 'charging_successfully_finished' ];
-    $this -> status  = 'Charging successfully finished!';
-   
-   return $this -> respond();
+
+    $resource = new OrderResource( $order );
+    $resource -> setAdditionalData(
+      [
+        'message' => $this -> messages [ 'charging_successfully_finished' ],
+      ]
+    );
+    
+    return $resource;
   }
 
   /**
