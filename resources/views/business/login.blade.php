@@ -1,42 +1,40 @@
 @extends('business.authenticate')
+
 @section('css')
     <link rel="stylesheet" type="text/css" href="../../../app-assets/css-rtl/pages/login.css">
 @endsection
+
 @section('body')
     <div id="login-page" class="row">
         <div class="col s12 m6 l4 z-depth-4 card-panel border-radius-6 login-card bg-opacity-8">
-            <form class="login-form" action="/business/login" method="POST">
+            <form class="login-form" action="/business/auth" method="POST">
                 @csrf
+
                 <div class="row">
                     <div class="input-field col s12">
-                        <h5 class="ml-4">Sign in</h5>
+                        <h5 class="ml-4">ავტორიზაცია</h5>
                     </div>
                 </div>
+
                 <div class="row margin">
                     <div class="input-field col s12">
-                        <i class="material-icons prefix pt-2">phone</i>
-                        <input id="phone_number" type="text" name="phone_number" autocomplete="off" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" maxlength="11">
-                        <label for="phone_number" class="center-align">Phone Nubmer</label>
+                        <i class="material-icons prefix pt-2">email</i>
+                        <input id="email" type="text" name="email" autocomplete="off">
+                        <label for="email" class="center-align">ელ. ფოსტა</label>
                     </div>
                 </div>
+
                 <div class="row margin">
                     <div class="input-field col s12">
                         <i class="material-icons prefix pt-2">lock_outline</i>
                         <input id="password" type="password" name="password">
-                        <label for="password">Password</label>
+                        <label for="password">პაროლი</label>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="input-field col s12">
-                        <input type="submit" value="Login" name="submit" class="btn waves-effect waves-light border-round gradient-45deg-purple-deep-orange col s12">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s6 m6 l6">
-                        <p class="margin medium-small"><a href="/business/register">Register Now!</a></p>
-                    </div>
-                    <div class="input-field col s6 m6 l6">
-                        <p class="margin right-align medium-small"><a href="/business/forgot-password">Forgot password ?</a></p>
+                        <input type="submit" value="ავტორიზაცია" name="submit" class="btn waves-effect waves-light border-round gradient-45deg-purple-deep-orange col s12">
                     </div>
                 </div>
             </form>
