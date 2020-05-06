@@ -482,4 +482,22 @@ class OrderModel extends TestCase
     $order  -> refresh();
     $this   -> assertEquals( $order -> charging_status, OrderStatusEnum :: ON_FINE );
   }
+
+  /** @test */
+  public function order_sets_charging_status_change_dates_in_the_start()
+  {
+    $order = $this -> order;
+
+    $order -> updateChargingStatus( OrderStatusEnum :: CHARGED );
+
+    $chargingStatusChangeDates = $order -> charging_status_change_dates;
+
+    $structure    = array_keys( $chargingStatusChangeDates );
+    $allStatuses  = OrderStatusEnum :: getConstantsValues();
+    
+    sort( $structure   );
+    sort( $allStatuses );
+
+    $this -> assertEquals( $structure, $allStatuses );
+  }
 }

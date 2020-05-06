@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Enums\OrderStatus as OrderStatusEnum;
 
 class Order extends JsonResource
 {
@@ -42,10 +43,13 @@ class Order extends JsonResource
      */
     public function toArray($request)
     {
+        $startChargingTime = $this -> charging_status_change_dates [ OrderStatusEnum :: CHARGING ];
+
         $mainResourceData = [
             'already_paid'                  => $this -> countPaidMoney(),
             'consumed_money'                => $this -> countConsumedMoney(),
             'refund_money'                  => $this -> countMoneyToRefund(),
+            'start_charging_time'           => $startChargingTime,
             'charging_status'               => $this -> charging_status,
             'charger_connector_type_id'     => $this -> charger_connector_type -> id, 
             'charger_id'                    => $this -> charger_connector_type -> charger -> id,

@@ -9,6 +9,7 @@ use App\Exceptions\NoSuchChargingPriceException;
 
 use App\Enums\PaymentType as PaymentTypeEnum;
 use App\Enums\ChargerType as ChargerTypeEnum;
+use App\Enums\OrderStatus as OrderStatusEnum;
 
 use Carbon\Carbon;
 
@@ -31,6 +32,57 @@ class Order extends Model
     protected $casts = [
         'charging_status_change_dates' => 'array',
     ];
+
+    /**
+     * override model boot to add hooks.
+     * 
+     * @return void
+     */
+    public static function boot()
+    {
+        parent :: boot();
+
+        /** 
+         * Set charging status change dates initial value 
+         * when creating.
+         */
+        static :: creating( function ( $model ) {
+
+            $availableOrderStatuses = OrderStatusEnum :: getConstantsValues();
+            $initialStatuses        = [];
+
+            foreach( $availableOrderStatuses as $status )
+            {
+                $initialStatuses [ $status ] = null;
+            }
+
+            if( $model -> charging_status == OrderStatusEnum :: INITIATED )
+            {
+                $initialStatuses [ OrderStatusEnum :: INITIATED ] = now();
+            }
+            else
+            {
+                $initialStatuses [ OrderStatusEnum :: CHARGING ]  = now();
+            }
+
+            $model -> charging_status_change_dates = $initialStatuses;
+        });
+
+        /**
+         * Set charging status change dates if not set,
+         * when updating.
+         */
+        static :: updating( function ( $model ) {
+            $chargingStatus = $model -> charging_status;
+            $orderChargingStatusChargeDates = $model -> charging_status_change_dates; 
+
+            if( ! $orderChargingStatusChargeDates [ $chargingStatus ] )
+            {
+                $orderChargingStatusChargeDates [ $chargingStatus ] = now();
+                $model -> charging_status_change_dates = $orderChargingStatusChargeDates;
+            }
+        });
+    }
 
     /**
      * Order belongsTo relationship with User.

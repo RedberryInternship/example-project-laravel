@@ -401,20 +401,11 @@ class StartChargingRequest extends TestCase {
   /** @test */
   public function it_returns_correct_user_card_id()
   {
-
     $this -> makeChargerFree();
 
-    $user     = User :: first();
-    $userCard = factory( UserCard :: class ) -> create([ 'user_id' => $user -> id ]);
-
-    $charger              = factory( Charger :: class ) -> create([ 'charger_id' => 29 ]);
-    $connectorTypeId      = ConnectorType :: whereName( ConnectorTypeEnum :: TYPE_2 ) -> first();
-    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
-      [
-        'charger_id'        => $charger -> id,
-        'connector_type_id' => $connectorTypeId,
-      ]
-    );
+    $user                 = User :: first();
+    $userCard             = factory( UserCard :: class ) -> create([ 'user_id' => $user -> id ]);
+    $chargerConnectorType = $this -> prepare_charger_connector_type();
     
     $response             = $this -> withHeader ( 'Authorization', 'Bearer ' . $this -> token )
       -> post( $this -> url, [
@@ -425,7 +416,28 @@ class StartChargingRequest extends TestCase {
     
     $response             = (object) $response -> decodeResponseJson();
 
+    dd(
+      $response,
+    );
+
     $this -> assertEquals( $userCard -> id, $response -> user_card_id );
+  }
+
+
+  /** Helpers */
+  private function prepare_charger_connector_type()
+  {
+
+    $charger              = factory( Charger :: class ) -> create([ 'charger_id' => 29 ]);
+    $connectorTypeId      = ConnectorType :: whereName( ConnectorTypeEnum :: TYPE_2 ) -> first();
+    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
+      [
+        'charger_id'        => $charger -> id,
+        'connector_type_id' => $connectorTypeId,
+      ]
+    );
+    
+    return $chargerConnectorType;
   }
 }
 

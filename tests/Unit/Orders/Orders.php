@@ -288,8 +288,10 @@ class Orders extends TestCase
     );
 
     $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
-                      -> get( $this -> order_url . '/'. $order -> id );
- 
+                      -> get( $this -> order_url . '/'. $order -> id ) -> dump();
+    
+    
+
     $response -> assertJsonStructure(
       [
         'consumed_money',
