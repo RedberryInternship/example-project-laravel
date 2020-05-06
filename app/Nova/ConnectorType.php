@@ -47,6 +47,7 @@ class ConnectorType extends Resource
     {
         return [
             ID::make()->sortable(),
+
             Text::make('name')
                 ->sortable()
                 ->rules('required', 'max:255'),
