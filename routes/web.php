@@ -17,17 +17,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix' => 'business'], function() {
-    Route::get('/', 'BusinessController@getIndex');
-    Route::get('/login', 'Business\AuthController@login');
-    Route::post('/auth', 'Business\AuthController@auth');
-    Route::get('/logout', 'UserController@getLogout');
-    Route::post('/charger-transfer', 'Business\ChargerTransferController');
+Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
+    Route::get('/', 'AuthController@login');
+    Route::get('/login', 'AuthController@login');
+    Route::post('/auth', 'AuthController@auth');
+    Route::get('/logout', 'AuthController@logout');
+    Route::post('/charger-transfer', 'ChargerTransferController');
 
-    Route::resource('/chargers', 'Business\ChargerController');
-    Route::resource('/charger-groups', 'Business\ChargerGroupController');
-    Route::resource('/charging-prices', 'Business\ChargingPricesController');
-    Route::resource('/fast-charging-prices', 'Business\FastChargingPricesController');
+    Route::resource('/chargers', 'ChargerController');
+    Route::resource('/charger-groups', 'ChargerGroupController');
+    Route::resource('/charging-prices', 'ChargingPricesController');
+    Route::resource('/fast-charging-prices', 'FastChargingPricesController');
 });
 
 Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers/transactions'], function(){

@@ -21,6 +21,8 @@ class AuthController extends Controller
 
     /**
      * Login Page.
+     * 
+     * @return view
      */
     public function login()
     {
@@ -35,6 +37,8 @@ class AuthController extends Controller
      * Authenticate Business User.
      * 
      * @param Request $request
+     * 
+     * @return redirect
      */
     public function auth(Request $request)
     {
@@ -52,9 +56,21 @@ class AuthController extends Controller
         {
             Auth::login($user);
 
-            return redirect('/business');
+            return redirect('/business/charger-groups');
         }
 
         return redirect() -> back();
+    }
+
+    /**
+     * Logout Business User from Admin Panel.
+     * 
+     * @return redirect
+     */
+    public function logout()
+    {
+        Auth::logout();
+
+        return redirect('/business/login');
     }
 }
