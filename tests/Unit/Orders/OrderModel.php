@@ -481,6 +481,5 @@ class OrderModel extends TestCase
     
     $order  -> refresh();
     $this   -> assertEquals( $order -> charging_status, OrderStatusEnum :: ON_FINE );
-
   }
 }
