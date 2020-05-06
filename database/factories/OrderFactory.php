@@ -5,10 +5,10 @@
 use Faker\Generator as Faker;
 
 use App\Order;
-use App\ChargerConnectorType;
 use App\ChargingType;
-
-use App\Enums\OrderStatus;
+use App\ChargerConnectorType;
+use App\Enums\OrderStatus as OrderStatusEnum;
+use App\Enums\ChargingType as ChargingTypeEnum;
 
 if( ChargingType :: count() == 0 )
 {
@@ -21,15 +21,15 @@ return [
         'user_id'                       => $faker -> unique( true ) -> randomNumber(),
         'charging_type_id'              => ChargingType :: inRandomOrder() -> first() -> id,
         'charger_connector_type_id'     =>  0,
+        'charging_type'                 => ChargingTypeEnum :: FULL_CHARGE,
         'charge_fee'                    => $faker -> unique( true ) -> randomNumber(),
-        'charge_time'                   => $faker -> unique( true ) -> randomNumber(),
         'charger_transaction_id'        => $faker -> unique( true ) -> randomNumber(5),
         'confirmed'                     => true,
         'confirm_date'                  => now(),
         'price'                         => $faker -> unique( true ) -> randomFloat(),
         'target_price'                  => $faker -> unique( true ) -> randomFloat(),
         'requested_already'             => true,
-        'charging_status'               => OrderStatus :: INITIATED,
+        'charging_status'               => OrderStatusEnum :: INITIATED,
         'charging_status_change_dates'  => [],
         'comment'                       => $faker -> sentence(),
     ];
