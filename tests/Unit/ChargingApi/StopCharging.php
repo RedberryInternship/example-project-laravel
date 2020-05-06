@@ -9,7 +9,6 @@ use Tests\TestCase;
 
 use App\Enums\OrderStatus;
 
-use App\ChargerConnectorType;
 use App\Order;
 
 class Charging extends TestCase {
