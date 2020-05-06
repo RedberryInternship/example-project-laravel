@@ -1,34 +1,74 @@
 <?php
 
-namespace App\Traits\Testing;
+namespace Tests\Traits;
 
-use App\Enums\ConnectorType as ConnectorTypeEnum;
-use App\Enums\ChargingType as ChargingTypeEnum;
-use App\Facades\Charger as MishasCharger;
-use Illuminate\Support\Facades\DB;
-use App\Charger as AppCharger;
-use App\ChargerConnectorType;
-use App\ChargingPrice;
-use App\Facades\Simulator;
-use App\ConnectorType;
+use App\User;
+use App\Charger;
 use App\UserCard;
+use App\ChargingPrice;
+use App\ConnectorType;
+use App\ChargerConnectorType;
 
-trait Charger
+use App\Facades\Simulator;
+use Illuminate\Support\Facades\DB;
+use App\Facades\Charger as MishasCharger;
+
+use App\Enums\ChargingType as ChargingTypeEnum;
+use App\Enums\ConnectorType as ConnectorTypeEnum;
+
+
+Trait Helper
 {
+
   private $initiated;
+
+
+  public function create_user_and_return_token($phone_number = '+995591935080', $password = '+995591935080')
+  {
+    factory( User :: class ) -> create(
+      [
+        'phone_number'  => $phone_number,
+        'password'      => bcrypt($password),
+      ]
+    );
+
+    $response = $this -> post('/api/app/V1/login',[
+      'phone_number'  => $phone_number,
+      'password'      => $password,
+    ]);
+
+    $token = $response -> decodeResponseJson()[ 'access_token' ];
+
+    return $token;
+  }
+
+  private function prepare_charger_connector_type()
+  {
+
+    $charger              = factory( Charger :: class ) -> create([ 'charger_id' => 29 ]);
+    $connectorTypeId      = ConnectorType :: whereName( ConnectorTypeEnum :: TYPE_2 ) -> first();
+    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
+      [
+        'charger_id'        => $charger -> id,
+        'connector_type_id' => $connectorTypeId,
+      ]
+    );
+    
+    return $chargerConnectorType;
+  }
 
   public function create_order_with_charger_id_of_29( $user_id = null )
   {
     $this -> initiated = true;
 
-    $this -> makeChargerFree();
+    $this -> make_charger_free();
 
     $userCard = factory( UserCard :: class ) -> create([ 'user_id' => $user_id ?: 7 ]);
 
     $chargerConnectorType = factory( ChargerConnectorType :: class ) 
       -> create(
         [
-          'charger_id'        => factory( AppCharger :: class ) -> create([ 'charger_id' => 29 ]),
+          'charger_id'        => factory( Charger :: class ) -> create([ 'charger_id' => 29 ]),
           'connector_type_id' => ConnectorType :: whereName( ConnectorTypeEnum :: TYPE_2 ) -> first(),
         ]
       );
@@ -83,7 +123,7 @@ trait Charger
     DB                   :: table('chargers') -> delete();
   }
 
-  public function makeChargerFree()
+  public function make_charger_free()
   {
     if( ! MishasCharger :: isChargerFree( 29 ))
     {

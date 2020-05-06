@@ -2,31 +2,30 @@
 
 namespace Tests\Unit\ChargingApi;
 
-use App\Charger;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+
+use Tests\Traits\Helper;
 use Tests\TestCase;
 
-use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Enums\ConnectorType as ConnectorTypeEnum;
+use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
 use App\ChargerConnectorType;
 use App\ConnectorType;
 use App\Kilowatt;
 use App\UserCard;
+use App\Charger;
 use App\Order;
 use App\User;
 
-use App\Traits\Testing\Charger as ChargerTrait;
-use App\Traits\Testing\User as UserTrait;
 use App\Traits\Message;
 
 class StartLvl2Charging extends TestCase {
   
   use RefreshDatabase,
-      UserTrait,
-      ChargerTrait,
+      Helper,
       Message;
 
   private $token;
@@ -38,7 +37,7 @@ class StartLvl2Charging extends TestCase {
   {
     parent::setUp();
 
-    $this -> token  = $this -> createUserAndReturnToken();
+    $this -> token  = $this -> create_user_and_return_token();
     $this -> user   = User :: first();
     $this -> uri    = config( 'app' )['uri'];
     $this -> url    = $this -> uri . 'charging/start';
@@ -99,7 +98,7 @@ class StartLvl2Charging extends TestCase {
   /** @test */
   public function lvl_2_charging_returns_valid_data()
   {
-    $this -> makeChargerFree();
+    $this -> make_charger_free();
 
     $charger              = factory( Charger :: class ) -> create([ 'charger_id' => 29 ]);
     $userCard             = factory( UserCard :: class) -> create();

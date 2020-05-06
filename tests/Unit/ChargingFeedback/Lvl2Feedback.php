@@ -4,6 +4,7 @@ namespace Tests\Unit\ChargingFeedback;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\Helper;
 use Tests\TestCase;
 
 use App\Enums\OrderStatus;
@@ -11,14 +12,10 @@ use App\Enums\OrderStatus;
 use App\Order;
 use App\User;
 
-use App\Traits\Testing\Charger as ChargerTrait;
-use App\Traits\Testing\User as UserTrait;
-
 class Lvl2Feedback extends TestCase
 {
   use RefreshDatabase,
-      ChargerTrait,
-      UserTrait;
+      Helper;
 
   private $token;
   private $update_url;
@@ -30,7 +27,7 @@ class Lvl2Feedback extends TestCase
 
     $this -> update_url = '/chargers/transactions/update/';
     $this -> stop_url   = '/chargers/transactions/finish/';
-    $this -> token      = $this -> createUserAndReturnToken();
+    $this -> token      = $this -> create_user_and_return_token();
     $this -> uri        = config( 'app' )[ 'uri' ];
   }
 
@@ -83,6 +80,7 @@ class Lvl2Feedback extends TestCase
 
   public function it_returns_updated_currency_fields_after_switched_into_charging_mode()
   {
+    dump("Long Test!");
     $user   = User :: first();
     $this -> create_order_with_charger_id_of_29( $user -> id );
 

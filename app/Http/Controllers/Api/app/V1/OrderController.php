@@ -5,19 +5,15 @@ namespace App\Http\Controllers\Api\app\V1;
 use App\Http\Controllers\Controller;
 
 
-use App\User;
 use Illuminate\Http\Resources\Json\Resource;
+
 use App\Http\Resources\Order as OrderResource;
+
 use App\Order;
+use App\User;
 
 class OrderController extends Controller
 {
-
-   public function __construct()
-   {
-     Resource :: withoutWrapping();
-   }
-
   /**
   * Return active orders.
   *
