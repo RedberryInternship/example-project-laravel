@@ -21,23 +21,4 @@ class BusinessController extends Controller
     {
         return redirect('/business/charger-groups');
     }
-
-    public function getLogin()
-    {
-        return view('business.login') -> with([
-            'tabTitle'            => 'ავტორიზაცია',
-            'activeMenuItem'      => 'login',
-            'backgroundClassName' => 'login'
-        ]);
-    }
-
-    public function getForgotPassword()
-    {
-         return view('business.forgot-password') -> with([
-            'tabTitle'            => 'პაროლის აღდგენა',
-            'activeMenuItem'      => 'forgot_password',
-            'backgroundClassName' => 'forgot'
-        ]);       
-    }
 }
-

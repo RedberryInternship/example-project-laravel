@@ -19,11 +19,8 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'business'], function() {
     Route::get('/', 'BusinessController@getIndex');
-    Route::get('/login', 'BusinessController@getLogin');
-    Route::get('/register', 'BusinessController@getRegister');
-    Route::get('/forgot-password', 'BusinessController@getForgotPassword');
-    Route::post('/register', 'UserController@postRegister');
-    Route::post('/login', 'UserController@postAuthenticate');
+    Route::get('/login', 'Business\AuthController@login');
+    Route::post('/auth', 'Business\AuthController@auth');
     Route::get('/logout', 'UserController@getLogout');
     Route::post('/charger-transfer', 'Business\ChargerTransferController');
 
@@ -38,8 +35,7 @@ Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers
     Route::get('update/{transaction_id}/{value}','TransactionController@update');
 });
 
-Route::group(['prefix' => 'chargers_back'], function(){
-
+Route::group(['prefix' => 'chargers_back'], function() {
     Route::get('start-charging/{charger_id}/{connector_id}', 'TestController@start');
     Route::get('stop-charging/{charger_id}/{transactionID}', 'TestController@stop');
     Route::get('transaction-info/{transaction_id}',          'TestController@transactionInfo');
