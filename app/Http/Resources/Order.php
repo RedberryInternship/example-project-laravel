@@ -42,7 +42,7 @@ class Order extends JsonResource
      * @return array
      */
     public function toArray($request)
-    {
+    {   
         $startChargingTime = $this -> charging_status_change_dates [ OrderStatusEnum :: CHARGING ];
 
         $mainResourceData = [
@@ -50,6 +50,7 @@ class Order extends JsonResource
             'consumed_money'                => $this -> countConsumedMoney(),
             'refund_money'                  => $this -> countMoneyToRefund(),
             'start_charging_time'           => $startChargingTime,
+            'charging_type'                 => $this -> charging_type,
             'charging_status'               => $this -> charging_status,
             'charger_connector_type_id'     => $this -> charger_connector_type -> id, 
             'charger_id'                    => $this -> charger_connector_type -> charger -> id,

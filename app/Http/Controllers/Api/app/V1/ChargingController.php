@@ -94,6 +94,7 @@ class ChargingController extends Controller
     $chargerConnectorTypeId   = request() -> get( 'charger_connector_type_id' );
     $userCardId               = request() -> get( 'user_card_id' );
     $chargerConnectorType     = ChargerConnectorType :: find( $chargerConnectorTypeId );
+    $chargingType             = request() -> get( 'charging_type' );
 
     $transactionID = Charger::start(
       $chargerConnectorType   -> charger -> charger_id, 
@@ -106,6 +107,7 @@ class ChargingController extends Controller
       'charging_status'           => OrderStatusEnum :: INITIATED,
       'user_card_id'              => $userCardId,
       'user_id'                   => auth() -> user() -> id,
+      'charging_type'             => $chargingType,
     ]);
 
     $transaction_info = Charger::transactionInfo( $transactionID );
