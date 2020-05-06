@@ -66,7 +66,6 @@ class Order extends Resource
             BelongsTo::make('User'),
             BelongsTo::make('Charger'),
             BelongsTo::make('Connector Type'),
-            BelongsTo::make('Charger Type'),
             BelongsTo::make('Charging Type'),
             Boolean::make('finished')
                 ->trueValue(1)
