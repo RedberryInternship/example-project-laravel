@@ -11,7 +11,8 @@ use App\Enums\PaymentType;
 use App\Traits\Message;
 
 use App\User;
- 
+use Illuminate\Http\Request;
+
 class TestController extends Controller 
  {
   use Message;
@@ -21,6 +22,21 @@ class TestController extends Controller
       
     }
 
+    public function disconnect( Request $request )
+    { 
+
+      if( request() -> has( 'chargerId' ) )
+      {
+        $chargerId = request() -> get( 'chargerId' );
+
+        return response() -> json(
+          Simulator :: plugOffCable( $chargerId ),
+        );
+      }
+ 
+      return view('simulator.disconnect');
+    }
+    
     private function memory()
     {
       return memory_get_usage() / 1024 / 1024;
