@@ -4,34 +4,22 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Entities\Kilowatt as KilowattEntity;
+
 class Kilowatt extends Model
 {
+    use KilowattEntity;
+
+    /**
+     * Laravel guarder attribute.
+     */
     protected $guarded = [];
     
+    /**
+     * Laravel casts attribute.
+     */
     protected $casts = [
-        'consumed' => 'object'
+        'consumed' => 'float'
     ];
-
-    /**
-     * Set charging power.
-     * 
-     * @param   float|string $chargingPower
-     * @return  void
-     */
-    public function setChargingPower($chargingPower)
-    {
-        $this -> charging_power = (float) $chargingPower;
-        $this -> save();
-    }
-
-    /**
-     * Get charging power.
-     * 
-     * @return float
-     */
-    public function getChargingPower()
-    {
-        return (float) $this -> charging_power;
-    }
 
 }

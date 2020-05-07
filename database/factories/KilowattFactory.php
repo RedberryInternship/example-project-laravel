@@ -7,11 +7,8 @@ use App\Kilowatt;
 
 $factory->define(Kilowatt::class, function (Faker $faker) {
     return [
-        'order_id'      => $faker -> randomNumber(),
-        'consumed'      => [
-            'date'  => now(),
-            'value' => $faker -> randomNumber(),
-        ],
-        'charging_power' => 0,
+        'order_id'          => $faker -> randomNumber(),
+        'consumed'          => 0, 
+        'charging_power'    => 0,
     ];
 });

@@ -45,7 +45,7 @@ class OrderController extends Controller
           'charger_connector_type.connector_type',
         ]
       ) -> find( $order_id );
-    
+
     return new OrderResource( $order );
   }
 

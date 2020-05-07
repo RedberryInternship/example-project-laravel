@@ -37,6 +37,19 @@ class Order extends JsonResource
                 ]
             );
         }
+        
+        if( $this -> isOnPenalty() )
+        {            
+            $penaltyStartTime = $this -> getChargingStatusTimestamp( OrderStatusEnum :: ON_FINE );
+            $penaltyFee       = $this -> countPenaltyFee();
+
+            $this -> setAdditionalData(
+                [
+                    'penalty_start_time' => $penaltyStartTime,
+                    'penalty_fee'        => $penaltyFee,
+                ]
+            );
+        }
 
         $mainResourceData = [
             'order_id'                      => $this -> id,

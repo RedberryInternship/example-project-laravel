@@ -4,11 +4,12 @@ namespace Tests\Unit\Kilowatts;
 
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
+
 use App\Kilowatt;
 
-class KilowattModel extends TestCase
+class KilowattEntity extends TestCase
 {
-
+ 
   protected $kilowatt;
 
   protected function setUp(): void
@@ -41,5 +42,5 @@ class KilowattModel extends TestCase
     $kilowatt -> refresh();
 
     $this -> assertEquals( 1000, $kilowatt -> getChargingPower() );
-  }
+  } 
 }

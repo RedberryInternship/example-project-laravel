@@ -13,6 +13,7 @@ use App\Library\Payments\Payment;
 use Carbon\Carbon;
 use App\Config;
 use App\Order;
+use App\UserCard;
 
 class TransactionController extends Controller
 {
@@ -48,8 +49,8 @@ class TransactionController extends Controller
       -> where( 'charger_transaction_id', $transaction_id ) 
       -> first();
 
-    $this -> order -> addKilowatt ( $value     );
-    $this -> order -> load        ( 'kilowatt' );
+    $this -> order -> kilowatt -> update([ 'consumed' => $value ]);
+    $this -> order -> load( 'kilowatt' );
 
     $chargerType = $this -> order -> charger_connector_type -> determineChargerType();
 
@@ -197,8 +198,7 @@ class TransactionController extends Controller
    */
   private function pay( $paymentType, $amount )
   {
-    $userDefaultCard = $this -> order -> user_card;
-
+    $userCard = $this -> order -> user_card ;
     Payment :: pay( $this -> order, 20, $paymentType );
 
     $this -> order -> payments() -> create(
@@ -209,7 +209,7 @@ class TransactionController extends Controller
           'price'         => $amount,
           'prrn'          => 'SOME_PRRN',
           'trx_id'        => 'SOME_TRIX_ID',
-          'user_card_id'  => $userDefaultCard -> id,
+          'user_card_id'  => $userCard -> id,
         ]
       );
   }
@@ -224,9 +224,58 @@ class TransactionController extends Controller
    */
   public function finish( $transaction_id )
   {
+    $this -> order = Order :: with( 'charger_connector_type' ) 
+      -> where( 'charger_transaction_id', $transaction_id ) 
+      -> first();
+
+    $chargerType = $this -> order -> charger_connector_type -> determineChargerType();
+
+    $chargerType == ChargerTypeEnum :: FAST
+      ? $this -> makeLastPaymentsForFastCharging()
+      : $this -> makeLastPaymentsForLvl2Charging();
+
+    $this -> order -> updateChargingStatus( OrderStatusEnum :: FINISHED );
+  }
+
+  /**
+   * Charge the user or refund
+   * accordingly, when fast charging.
+   * 
+   * @return void
+   */
+  private function makeLastPaymentsForFastCharging()
+  {
+    //
+  }
+
+  /**
+   * Charge the user or refund
+   * accordingly, when lvl 2 charging.
+   * 
+   * @return void
+   */
+  private function makeLastPaymentsForLvl2Charging()
+  {
+    $consumedMoney = $this -> order -> countConsumedMoney();
+    $alreadyPaid   = $this -> order -> countPaidMoney();
     
-    Order :: where( 'charger_transaction_id', $transaction_id ) 
-      -> update([ 'charging_status' => OrderStatusEnum :: FINISHED ]);
+    if( $consumedMoney > $alreadyPaid )
+    {
+      $shouldCutMoney = $consumedMoney - $alreadyPaid;
+      $this -> pay( PaymentTypeEnum :: CUT, $shouldCutMoney );
+    }
+    else if( $consumedMoney < $alreadyPaid )
+    {
+      $moneyToRefund = $this -> order -> countMoneyToRefund();
+      $this -> pay( PaymentTypeEnum :: REFUND, $moneyToRefund );
+    }
+
+    if( $this -> order -> isOnPenalty() )
+    {
+      $penaltyFee = $this -> order -> countPenaltyFee();
+
+      $this -> pay( PaymentTypeEnum :: FINE, $penaltyFee );
+    } 
   }
 }
 

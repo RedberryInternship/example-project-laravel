@@ -3,6 +3,7 @@
 namespace Tests\Traits;
 
 use App\User;
+use App\Order;
 use App\Charger;
 use App\UserCard;
 use App\ChargingPrice;
@@ -123,7 +124,7 @@ Trait Helper
     DB                   :: table('chargers') -> delete();
   }
 
-  public function make_charger_free()
+  private function make_charger_free()
   {
     if( ! MishasCharger :: isChargerFree( 29 ))
     {
@@ -131,5 +132,82 @@ Trait Helper
       Simulator :: plugOffCable( 29 );
       sleep( 3 );
     }
+  }
+
+  /**
+   * No difference in time of day.
+   * 
+   * 1. 0   => 5          --> 50
+   * 1. 6   => 20         --> 70
+   * 1. 21  => 100000000  --> 95
+   * 
+   * @return \App\Order
+   */
+  private function set_charging_prices()
+  {
+    User :: truncate();
+    $this -> create_user_and_return_token();
+
+    $user                 = User :: first();
+    $userCard             = factory( UserCard :: class ) -> create([ 'user_id' => $user -> id ]);
+    $connectorType        = ConnectorType :: whereName( ConnectorTypeEnum :: TYPE_2 ) -> first();
+    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
+      [
+        'connector_type_id' => $connectorType -> id,
+      ]
+    );
+    
+    
+    factory( ChargingPrice :: class ) -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'min_kwt'                   => 0,
+        'max_kwt'                   => 5,
+        'start_time'                => '00:00',
+        'end_time'                  => '24:00',
+        'price'                     => 50,
+      ]
+    );
+
+    factory( ChargingPrice :: class ) -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'min_kwt'                   => 6,
+        'max_kwt'                   => 20,
+        'start_time'                => '00:00',
+        'end_time'                  => '24:00',
+        'price'                     => 70,
+      ]
+    );
+    
+    factory( ChargingPrice :: class ) -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'min_kwt'                   => 21,
+        'max_kwt'                   => 10000000,
+        'start_time'                => '00:00',
+        'end_time'                  => '24:00',
+        'price'                     => 95,
+      ]
+    );
+
+
+    $order    = factory( Order :: class )   -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'user_id'                   => $user                 -> id, 
+        'user_card_id'              => $userCard             -> id,
+        'target_price'              => null,
+      ]
+    );
+
+    $order -> kilowatt() -> create(
+      [
+        'consumed'        => 0,
+        'charging_power'  => 0,
+      ]
+    );
+    
+    return $order;
   }
 }
