@@ -14,7 +14,7 @@
 
             <div class="charger-filter submit">
                 <button class="btn btn-default btn-primary" @click="filterChargers">
-                    Submit
+                    Filter
                 </button>
             </div>
         </div>
@@ -24,17 +24,17 @@
 
             <div class="chargers-header">
                 <div>
-                    <input type="checkbox" id="toggle-all-connector-types" @change="toggleAllConnectorTypes">
+                    <input type="checkbox" id="toggle-all-connector-types" @change="toggleAllConnectorTypes" :checked="this.activeCheckboxes['all'] ? true : false">
                     <label for="toggle-all-connector-types" class="toggle-checkboxes-text">Toggle Checkboxes</label>
                 </div>
 
                 <div>
-                    <input type="checkbox" id="toggle-lvl2-connector-types" @change="toggleLvl2ConnectorTypes">
+                    <input type="checkbox" id="toggle-lvl2-connector-types" @change="toggleLvl2ConnectorTypes" :checked="this.activeCheckboxes['type 2'] ? true : false">
                     <label for="toggle-lvl2-connector-types" class="toggle-checkboxes-text">Toggle Level2 Connectors</label>
                 </div>
 
                 <div>
-                    <input type="checkbox" id="toggle-fast-connector-types" @change="toggleFastConnectorTypes">
+                    <input type="checkbox" id="toggle-fast-connector-types" @change="toggleFastConnectorTypes" :checked="this.activeCheckboxes['combo 2'] ? true : false">
                     <label for="toggle-fast-connector-types" class="toggle-checkboxes-text">Toggle Fast Connectors</label>
                 </div>
 
@@ -92,7 +92,13 @@
 	        return {
 	            groups: {},
 	            chargers: {},
-	            activeGroup: 0
+                activeGroup: 0,
+                activeCheckboxes: {
+                    'all': false,
+                    'type 2': false,
+                    'combo 2': false,
+                    'chademo': false,
+                }
 	        };
 	    },
 	    mounted() {
@@ -121,24 +127,44 @@
 	            });
 	        },
 	        toggleAllConnectorTypes() {
-	            this.changeConnectorTypesActiveStatus(this.chargers);
+                this.activeCheckboxes['all']     = ! this.activeCheckboxes.all;
+                this.activeCheckboxes['type 2']  = this.activeCheckboxes.all;
+                this.activeCheckboxes['combo 2'] = this.activeCheckboxes.all;
+                this.activeCheckboxes['chademo'] = this.activeCheckboxes.all;
+
+	            this.changeConnectorTypesActiveStatus(this.chargers, this.activeCheckboxes['all']);
             },
             toggleLvl2ConnectorTypes() {
+                this.activeCheckboxes['all']     = false;
+                this.activeCheckboxes['combo 2'] = false;
+                this.activeCheckboxes['chademo'] = false;
+                this.activeCheckboxes['type 2']  = ! this.activeCheckboxes['type 2'];
+
 	            this.changeConnectorTypesActiveStatus(this.chargers, undefined, ['type 2']);
             },
             toggleFastConnectorTypes() {
+                this.activeCheckboxes['all']     = false;
+                this.activeCheckboxes['type 2']  = false;
+                this.activeCheckboxes['combo 2'] = ! this.activeCheckboxes['combo 2'];
+                this.activeCheckboxes['chademo'] = ! this.activeCheckboxes['chademo'];
+
 	            this.changeConnectorTypesActiveStatus(this.chargers, undefined, ['combo 2', 'chademo']);
             },
             clearConnectorTypes() {
+                this.activeCheckboxes['all']     = false;
+                this.activeCheckboxes['combo 2'] = false;
+                this.activeCheckboxes['chademo'] = false;
+                this.activeCheckboxes['type 2']  = false;
+
 	            this.changeConnectorTypesActiveStatus(this.chargers, false);
 	        },
 	        changeConnectorTypesActiveStatus(chargers, val = undefined, connectorTypes = []) {
 	            chargers.forEach(charger => {
 	                charger.connector_types.forEach(connectorType => {
-                        if (connectorTypes.length && ! connectorTypes.includes(connectorType.name.toLowerCase()))
-                            return;
+                        // if (connectorTypes.length && ! connectorTypes.includes(connectorType.name.toLowerCase()))
+                        //     return;
 
-	                    connectorType.activeInput = val != undefined ? val : ! connectorType.activeInput;
+	                    connectorType.activeInput = val != undefined ? val : this.activeCheckboxes[connectorType.name.toLowerCase()];
 	                });
 	            });
 	        },
