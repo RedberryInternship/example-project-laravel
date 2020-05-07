@@ -20,13 +20,13 @@
                 </a>
             </li>
 
-            <li class="bold">
+            {{-- <li class="bold">
                 <a class="waves-effect waves-cyan " href="user-profile-page.html">
                     <i class="material-icons">person_outline</i>
 
                     <span class="menu-title" data-i18n="User Profile">User Profile</span>
                 </a>
-            </li>
+            </li> --}}
 
             <li class="bold">
                 <a class="waves-effect waves-cyan " href="/business/logout">
