@@ -96,7 +96,8 @@
 	        };
 	    },
 	    mounted() {
-	        this.getGroups();
+            this.getGroups();
+            this.filterChargers();
 	    },
 	    methods: {
 	        getGroups() {
