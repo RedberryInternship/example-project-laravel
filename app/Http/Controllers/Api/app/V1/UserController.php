@@ -174,7 +174,7 @@ class UserController extends Controller
         return new OrdersCollection(
             $order
                 -> where('user_id', $user -> id)
-                -> with('charger')
+                -> with('charger_connector_type.charger')
                 -> confirmed()
                 -> confirmedPaymentsWithUserCards()
                 -> get()

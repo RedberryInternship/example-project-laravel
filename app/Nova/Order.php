@@ -51,7 +51,12 @@ class Order extends Resource
      *
      * @var string
      */
-    public static $with = ['user.role', 'charging_type', 'connector_type', 'charger'];
+    public static $with = [
+        'user.role',
+        'charging_type',
+        'charger_connector_type.charger',
+        'charger_connector_type.connector_type'
+    ];
 
     /**
      * Get the fields displayed by the resource.
@@ -62,33 +67,52 @@ class Order extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make()
+                ->sortable(),
+            
             BelongsTo::make('User'),
-            BelongsTo::make('Charger'),
-            BelongsTo::make('Connector Type'),
+
+            BelongsTo::make('Charger Connector Type')
+                -> displayUsing(function($chargerConnectorType) {
+                    return $chargerConnectorType -> charger -> name . ' - ' . $chargerConnectorType -> connector_type -> name;
+                }),
+
             BelongsTo::make('Charging Type'),
+
             Boolean::make('finished')
                 ->trueValue(1)
                 ->falseValue(0),
+
             Text::make('charge_fee'),
+
             Text::make('charge_time'),
+
             Text::make('charger_transaction_id'),
+
             Boolean::make('confirmed')
                 ->trueValue(1)
                 ->falseValue(0),
+
             Text::make('confirm_date'),
+
             Boolean::make('refunded')
                 ->trueValue(1)
                 ->falseValue(0),
+
             Text::make('price'),
+
             Text::make('target_price'),
+
             Boolean::make('requested_already')
                 ->trueValue(1)
                 ->falseValue(0),
+
             Boolean::make('status')
                 ->trueValue(1)
                 ->falseValue(0),
+
             Text::make('comment'),
+
             DateTime::make('created_at'),
         ];
     }
