@@ -49,6 +49,12 @@
 
             <div class="chargers-header">
                 <div class="w-1/3 text-left">
+                    <button class="btn btn-default btn-primary" @click="goToPage('min-max')">
+                        Min/Max Prices
+                    </button>
+                </div>
+
+                <div class="w-1/3 text-left">
                     <button class="btn btn-default btn-primary" @click="goToPage('level2')">
                         Level2 Connector Prices
                     </button>
@@ -57,12 +63,6 @@
                 <div class="w-1/3 text-left">
                     <button class="btn btn-default btn-primary" @click="goToPage('fast')">
                         Fast Connector Prices
-                    </button>
-                </div>
-
-                <div class="w-1/3 text-left">
-                    <button class="btn btn-default btn-primary" @click="goToPage('min-max')">
-                        Min/Max Prices
                     </button>
                 </div>
             </div>

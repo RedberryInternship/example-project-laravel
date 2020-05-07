@@ -63,9 +63,7 @@
 	                    maxPrice: this.maxPrice,
 	                    chargers: this.chargers
 	                }
-	            }).then(response => {
-	                this.goBack();
-	            });
+	            }).then(() => window.location.reload());
             },
             goBack() {
                 this.$emit('goBack');

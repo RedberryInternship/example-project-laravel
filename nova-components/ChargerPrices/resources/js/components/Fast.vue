@@ -76,8 +76,6 @@
                                     <tr v-for="fastChargingPrice in connectorType.fast_charging_prices" :class="{ 'removed': fastChargingPrice.removed }" :key="fastChargingPrice.id">
                                         <td>{{ charger.name.en }}</td>
                                         <td>{{ connectorType.name }}</td>
-                                        <td class="center">{{ fastChargingPrice.min_kwt }}</td>
-                                        <td class="center">{{ fastChargingPrice.max_kwt }}</td>
                                         <td class="center">{{ fastChargingPrice.start_time }}</td>
                                         <td class="center">{{ fastChargingPrice.end_time }}</td>
                                         <td class="center">{{ fastChargingPrice.price }}</td>
@@ -125,7 +123,7 @@
                         price: this.price,
                         chargers: this.chargers
 	                }
-	            }).then(() => this.goBack());
+	            }).then(() => /* window.location.reload() */{});
             },
             goBack() {
                 this.$emit('goBack');
