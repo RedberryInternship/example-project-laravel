@@ -1,13 +1,13 @@
 <template>
 	<div class="inner-page">
         <header>
-		    <heading class="mb-6">
-                Min Max Prices
-            </heading>
-
             <button class="go-back btn btn-default btn-primary" @click="goBack">
                 < Back
             </button>
+
+		    <heading class="mb-6">
+                Min Max Prices
+            </heading>
         </header>
 
         <div class="chargers-form">
