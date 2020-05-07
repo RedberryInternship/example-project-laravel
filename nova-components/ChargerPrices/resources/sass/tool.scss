@@ -1,1 +1,21 @@
-// Nova Tool CSS
+header {
+    width: 100%;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    justify-content: space-between;
+
+    h1 {
+        margin: 0;
+    }
+}
+
+.form-group {
+    display: flex;
+
+    > div {
+        display: flex;
+        align-items: center;
+    }
+}

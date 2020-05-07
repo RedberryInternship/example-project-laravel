@@ -1,9 +1,13 @@
 <template>
-	<div>
+	<div class="inner-page">
         <header>
-		    <heading class="mb-6">Level2 Connector Types</heading>
+		    <heading class="mb-6">
+                Level2 Connector Types
+            </heading>
 
-            <div class="go-back" @click="goBack">< Back</div>
+            <button class="go-back btn btn-default btn-primary" @click="goBack">
+                < Back
+            </button>
         </header>
 
         <div class="chargers-form card mb-4">
@@ -168,28 +172,6 @@
 </script>
 
 <style lang="scss">
-    header {
-        width: 100%;
-        display: flex;
-        text-align: center;
-        align-items: center;
-        justify-content: space-between;
-
-        .go-back {
-            cursor: pointer;
-            color: #4099de;
-        }
-    }
-
-    .form-group {
-        display: flex;
-
-        > div {
-            display: flex;
-            align-items: center;
-        }
-    }
-
     table tbody {
         tr.removed {
             background-color: #e53e3e !important;
