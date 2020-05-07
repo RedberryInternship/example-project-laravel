@@ -116,7 +116,7 @@ class ChargingController extends Controller
     ]);
 
     $transaction_info = Charger::transactionInfo( $transactionID );
-    $order -> createKilowatt( $transaction_info -> consumed );
+    $order -> kilowatt() -> create([ 'consumed' => $transaction_info -> consumed ]);
 
     $order -> load( 'charger_connector_type.charger'        );
     $order -> load( 'charger_connector_type.connector_type' );

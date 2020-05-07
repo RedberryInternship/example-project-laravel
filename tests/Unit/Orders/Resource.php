@@ -22,7 +22,7 @@ use App\Order;
 use App\User;
 
 
-class Orders extends TestCase
+class Resource extends TestCase
 {
   use RefreshDatabase,
       Helper;
@@ -247,8 +247,7 @@ class Orders extends TestCase
     );
 
     // Case 1
-    $order -> createKilowatt( 0, 7 );
-    $order -> addKilowatt( 150 );
+    $kilowatt = $order -> kilowatt() -> create([ 'consumed' => 150, 'charging_power' => 7 ]);
 
     $response = $this -> request -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson() [ 0 ];
@@ -262,7 +261,7 @@ class Orders extends TestCase
     $kilowatt ->  charging_power = 22;
     $kilowatt ->  save();
 
-    $order    -> addKilowatt( 44 );
+    $kilowatt -> update([ 'consumed' => 44]);
 
     $response = $this -> request -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson() [ 0 ];
