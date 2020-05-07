@@ -1,14 +1,24 @@
 <template>
-	<div>
+	<div class="inner-page">
         <header>
-		    <heading class="mb-6">Fast Connector Types</heading>
+		    <heading class="mb-6">
+                Fast Connector Types
+            </heading>
 
-            <div class="go-back" @click="goBack">< Back</div>
+            <button class="go-back btn btn-default btn-primary" @click="goBack">
+                < Back
+            </button>
         </header>
 
         <div class="chargers-form card mb-4">
             <div class="row">
                 <form class="form" action="#">
+                    <div class="form-group">
+                        <div class="w-1/5 px-8 py-6">
+                            <h4>Add New Price</h4>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <div class="w-1/5 px-8 py-6">
                             <label for="start-minutes">Start Minutes</label>
@@ -138,25 +148,5 @@
 </script>
 
 <style lang="scss">
-    header {
-        width: 100%;
-        display: flex;
-        text-align: center;
-        align-items: center;
-        justify-content: space-between;
-
-        .go-back {
-            cursor: pointer;
-            color: #4099de;
-        }
-    }
-
-    .form-group {
-        display: flex;
-
-        > div {
-            display: flex;
-            align-items: center;
-        }
-    }
+    //
 </style>
