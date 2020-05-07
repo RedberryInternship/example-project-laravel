@@ -149,7 +149,7 @@
                         price: this.price,
                         chargers: this.chargers
 	                }
-	            }).then(() => this.goBack());
+	            }).then(() => window.location.reload());
             },
             goBack() {
                 this.$emit('goBack');

@@ -13,7 +13,7 @@ class ChargerPrices
             {
                 if ($connectorType['activeInput'])
                 {
-                    $connectorTypes[] = $connectorType['id'];
+                    $connectorTypes[] = $connectorType['pivot']['id'];
                 }
             }
         }
