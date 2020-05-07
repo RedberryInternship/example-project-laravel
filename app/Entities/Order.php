@@ -13,9 +13,8 @@ use App\Facades\Charger as MishasCharger;
 
 use App\FastChargingPrice;
 use App\ChargingPrice;
-use App\Config;
-use App\Order as AppOrder;
 use Carbon\Carbon;
+use App\Config;
 
 trait Order
 {
