@@ -55,8 +55,7 @@ class RegistrationRequest extends FormRequest implements ValidatesWhenResolved
         $request = $this -> all();
 
         $user = User::create([
-            'role'         => 1,
-            'active'       => 0,
+            'active'       => 1,
             'verified'     => 1,
             'email'        => $request['email'] ?? null,
             'last_name'    => $request['last_name'],
