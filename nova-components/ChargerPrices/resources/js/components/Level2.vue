@@ -1,13 +1,13 @@
 <template>
 	<div class="inner-page">
         <header>
-		    <heading class="mb-6">
-                Level2 Connector Types
-            </heading>
-
             <button class="go-back btn btn-default btn-primary" @click="goBack">
                 < Back
             </button>
+
+		    <heading class="mb-6">
+                Level2 Connector Types
+            </heading>
         </header>
 
         <div class="chargers-form card mb-4">

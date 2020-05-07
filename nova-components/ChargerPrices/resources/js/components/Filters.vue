@@ -1,6 +1,6 @@
 <template>
     <div>
-    	<heading class="mb-6">Filter Chargers</heading>
+    	<heading class="mb-6">Filter Chargers By Groups</heading>
 
         <div class="charger-filters">
             <div class="charger-filter charger-filter-input groups">
@@ -20,45 +20,47 @@
         </div>
 
         <div class="chargers" v-if="chargers.length">
-            <heading class="mb-6">Chargers</heading>
+            <heading class="mb-6">Charger Types</heading>
 
             <div class="chargers-header">
-                <div>
+                <div class="w-1/3 text-left">
                     <input type="checkbox" id="toggle-all-connector-types" @change="toggleAllConnectorTypes" :checked="this.activeCheckboxes['all'] ? true : false">
                     <label for="toggle-all-connector-types" class="toggle-checkboxes-text">Toggle Checkboxes</label>
                 </div>
 
-                <div>
+                <div class="w-1/3 text-left">
                     <input type="checkbox" id="toggle-lvl2-connector-types" @change="toggleLvl2ConnectorTypes" :checked="this.activeCheckboxes['type 2'] ? true : false">
                     <label for="toggle-lvl2-connector-types" class="toggle-checkboxes-text">Toggle Level2 Connectors</label>
                 </div>
 
-                <div>
+                <div class="w-1/3 text-left">
                     <input type="checkbox" id="toggle-fast-connector-types" @change="toggleFastConnectorTypes" :checked="this.activeCheckboxes['combo 2'] ? true : false">
                     <label for="toggle-fast-connector-types" class="toggle-checkboxes-text">Toggle Fast Connectors</label>
                 </div>
 
-                <div>
+                <!-- <div class="w-1/4 text-left">
                     <button class="btn btn-default btn-primary" @click="clearConnectorTypes">
                         Clear
                     </button>
-                </div>
+                </div> -->
             </div>
 
+            <heading class="mb-6">Actions</heading>
+
             <div class="chargers-header">
-                <div>
+                <div class="w-1/3 text-left">
                     <button class="btn btn-default btn-primary" @click="goToPage('level2')">
                         Level2 Connector Prices
                     </button>
                 </div>
 
-                <div>
+                <div class="w-1/3 text-left">
                     <button class="btn btn-default btn-primary" @click="goToPage('fast')">
                         Fast Connector Prices
                     </button>
                 </div>
 
-                <div>
+                <div class="w-1/3 text-left">
                     <button class="btn btn-default btn-primary" @click="goToPage('min-max')">
                         Min/Max Prices
                     </button>
@@ -214,8 +216,8 @@
         display: flex;
         text-align: center;
         align-items: center;
-        margin-bottom: 2rem;
-        justify-content: space-between;
+        margin-bottom: 3rem;
+        justify-content: flex-start;
 
         .toggle-checkboxes-text {
             top: 1px;
