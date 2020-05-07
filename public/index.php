@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * Set Web Server Time.
+ */
+date_default_timezone_set('Asia/Tbilisi');
+
+/**
  * Laravel - A PHP Framework For Web Artisans
  *
  * @package  Laravel
