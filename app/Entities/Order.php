@@ -551,10 +551,12 @@ trait Order
      * @param \App\Order $order
      * @return void
      */
-    public static function setChargingStatusInitialDates( $order ) {
-
+    public static function setChargingStatusInitialDates( $order ) 
+    {
         $availableOrderStatuses = OrderStatusEnum :: getConstantsValues();
         $initialStatuses        = [];
+
+        $now = now() -> timestamp;
 
         foreach( $availableOrderStatuses as $status )
         {
@@ -563,11 +565,11 @@ trait Order
 
         if( $order -> charging_status == OrderStatusEnum :: INITIATED )
         {
-            $initialStatuses [ OrderStatusEnum :: INITIATED ] = now();
+            $initialStatuses [ OrderStatusEnum :: INITIATED ] = $now;
         }
         else
         {
-            $initialStatuses [ OrderStatusEnum :: CHARGING ]  = now();
+            $initialStatuses [ OrderStatusEnum :: CHARGING ]  = $now;
         }
 
         $order -> charging_status_change_dates = $initialStatuses;
@@ -579,12 +581,13 @@ trait Order
      */
     public static function updateChargingStatusChangeDates( $order )
     {
+        $now = now() -> timestamp;
         $chargingStatus = $order -> charging_status;
         $orderChargingStatusChargeDates = $order -> charging_status_change_dates; 
 
         if( ! $orderChargingStatusChargeDates [ $chargingStatus ] )
         {
-            $orderChargingStatusChargeDates [ $chargingStatus ] = now();
+            $orderChargingStatusChargeDates [ $chargingStatus ] = $now;
             $order -> charging_status_change_dates = $orderChargingStatusChargeDates;
         }
     }

@@ -57,7 +57,7 @@ class Order extends JsonResource
                     'penalty_start_time' => $penaltyStartTime,
                     'penalty_fee'        => $penaltyFee,
                 ]
-            );
+            ); 
         }
 
         $mainResourceData = [
