@@ -40,7 +40,7 @@ class TestUserWithUserCard extends Seeder
                 'phone_number'  => '+995598301266',
                 'first_name'    => 'Espace',
                 'last_name'     => 'Ltd',
-                'email'         => 'liparit@mail.ru',
+                'email'         => 'admin@espace.ge',
                 'password'      => bcrypt( 'espace' ),
                 'active'        => 1,
             ]
