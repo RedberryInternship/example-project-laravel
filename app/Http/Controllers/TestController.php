@@ -25,9 +25,17 @@ class TestController extends Controller
     public function disconnect( Request $request )
     { 
 
-      if( request() -> has( 'chargerId' ) )
+      if( request() -> has( 'chargerCode' ) )
       {
-        $chargerId = request() -> get( 'chargerId' );
+        $chargerId    = '0000';
+        $chargerCode  = request() -> get( 'chargerCode' );
+
+        $charger      = DB :: table( 'chargers' ) -> where( 'code', $chargerCode ) -> first();
+
+        if( $charger )
+        {
+          $chargerId = $charger -> charger_id;
+        }
 
         return response() -> json(
           Simulator :: plugOffCable( $chargerId ),
