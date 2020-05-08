@@ -34,7 +34,7 @@ class KilowattEntity extends TestCase
   }
 
   /** @test */
-  public function kilowatt_can_set_charging_power()
+  public function it_can_set_charging_power()
   {
     $kilowatt = $this -> kilowatt;
 
@@ -42,5 +42,17 @@ class KilowattEntity extends TestCase
     $kilowatt -> refresh();
 
     $this -> assertEquals( 1000, $kilowatt -> getChargingPower() );
-  } 
+  }
+  
+  /** @test */
+  public function it_can_update_consumed_kilowatts()
+  {
+    $kilowatt = $this -> kilowatt;
+
+    $kilowatt -> update([ 'consumed' => 124 ]);
+    $this     -> assertEquals( 124, $kilowatt -> consumed );
+    
+    $kilowatt -> updateConsumedKilowatts( 125 );
+    $this     -> assertEquals( 0.125, $kilowatt -> consumed );
+  }
 }

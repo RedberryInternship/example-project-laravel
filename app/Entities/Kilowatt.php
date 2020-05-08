@@ -4,7 +4,7 @@ namespace App\Entities;
 
 trait Kilowatt
 {
-  /**
+    /**
      * Set charging power.
      * 
      * @param   float|string $chargingPower
@@ -33,6 +33,7 @@ trait Kilowatt
      */
     public function updateConsumedKilowatts( $watts )
     {
-        $this -> update([ 'consumed' => $watts ]);
+        $kilowatts = $watts / 1000;
+        $this -> update([ 'consumed' => $kilowatts ]);
     }
 }

@@ -342,7 +342,7 @@ trait Order
      */
     private function updateFastChargerOrder()
     {
-
+        // TODO: Implement
     }
 
     /**
@@ -486,7 +486,7 @@ trait Order
      */
     private function makeLastPaymentsForFastCharging()
     {
-        //
+        // TODO: Implement
     }
 
     /**

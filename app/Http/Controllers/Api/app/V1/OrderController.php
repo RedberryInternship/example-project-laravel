@@ -4,9 +4,6 @@ namespace App\Http\Controllers\Api\app\V1;
 
 use App\Http\Controllers\Controller;
 
-
-use Illuminate\Http\Resources\Json\Resource;
-
 use App\Http\Resources\Order as OrderResource;
 
 use App\Order;

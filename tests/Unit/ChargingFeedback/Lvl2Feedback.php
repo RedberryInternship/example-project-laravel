@@ -58,7 +58,7 @@ class Lvl2Feedback extends TestCase
     $order = Order::first();
     
     $this -> get( $this -> update_url . $order -> charger_transaction_id . '/7' );
-    $this -> get( $this -> update_url . $order -> charger_transaction_id . '/14' );
+    $this -> get( $this -> update_url . $order -> charger_transaction_id . '/14000' );
 
     $kilowatts = $order -> kilowatt -> consumed;
     
