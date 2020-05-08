@@ -25,4 +25,14 @@ trait Kilowatt
     {
         return (float) $this -> charging_power;
     }
+
+    /**
+     * Update consumed kilowatts.
+     * 
+     * @param float|integer $watts
+     */
+    public function updateConsumedKilowatts( $watts )
+    {
+        $this -> update([ 'consumed' => $watts ]);
+    }
 }
