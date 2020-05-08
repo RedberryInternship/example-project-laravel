@@ -556,7 +556,7 @@ trait Order
         $availableOrderStatuses = OrderStatusEnum :: getConstantsValues();
         $initialStatuses        = [];
 
-        $now = now() -> timestamp;
+        $now = static :: getMicroTime();
 
         foreach( $availableOrderStatuses as $status )
         {
@@ -581,7 +581,8 @@ trait Order
      */
     public static function updateChargingStatusChangeDates( $order )
     {
-        $now = now() -> timestamp;
+        $now = static :: getMicroTime();
+
         $chargingStatus = $order -> charging_status;
         $orderChargingStatusChargeDates = $order -> charging_status_change_dates; 
 
@@ -590,5 +591,18 @@ trait Order
             $orderChargingStatusChargeDates [ $chargingStatus ] = $now;
             $order -> charging_status_change_dates = $orderChargingStatusChargeDates;
         }
+    }
+
+    /**
+     * Get microtime in milliseconds.
+     * 
+     * @return float
+     */
+    private static function getMicroTime()
+    {
+        $mt = microtime( true ) * 1000;
+        $mt = round( $mt );
+
+        return $mt;
     }
 }
