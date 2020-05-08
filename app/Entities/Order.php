@@ -10,6 +10,7 @@ use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
 use App\Facades\Charger as MishasCharger;
+use App\Library\Payments\Payment;
 
 use App\FastChargingPrice;
 use App\ChargingPrice;
@@ -18,7 +19,15 @@ use App\Config;
 
 trait Order
 {
-  /**
+
+    /**
+     * KiloWattHour line with which we're gonna
+     * determine if charging is officially started
+     * and if charging is officially ended.
+     */
+    private $kiloWattHourLine = 2;
+
+    /**
      * Update order charging status.
      * 
      * @param   string $chargingStatus
@@ -29,7 +38,6 @@ trait Order
         $this -> charging_status = $chargingStatus;
         $this -> save();
     }
-
 
     /**
      * Get charging power.
@@ -311,6 +319,230 @@ trait Order
         
         return Carbon :: create( $statusTimestamp );
     }
+
+    /**
+     * Update charging information and make 
+     * transactions.
+     * 
+     * @return void
+     */
+    public function chargingUpdate()
+    {
+        $chargerType = $this -> charger_connector_type -> determineChargerType();
+
+        $chargerType == ChargerTypeEnum :: FAST
+            ? $this -> updateFastChargerOrder()
+            : $this -> updateLvl2ChargerOrder(); 
+    }
+
+    /**
+     * Update fast charger order.
+     * 
+     * @return  void
+     */
+    private function updateFastChargerOrder()
+    {
+
+    }
+
+    /**
+     * Update Lvl 2 charger order.
+     * 
+     * @return  void
+     */
+    private function updateLvl2ChargerOrder()
+    {
+        $chargingStatus = $this -> charging_status;
+
+        switch( $chargingStatus )
+        {
+        case OrderStatusEnum :: INITIATED :
+
+            if( $this -> chargingHasStarted() )
+            {
+            $this -> updateChargingPower();
+            $this -> updateChargingStatus( OrderStatusEnum :: CHARGING );    
+            $this -> pay( PaymentTypeEnum :: CUT, 20 );
+            }       
+        break;
+        
+        case OrderStatusEnum :: CHARGING :
+
+            if( $this -> shouldPay() )
+            {
+                $this -> pay( PaymentTypeEnum :: CUT, 20 );
+            }
+
+            if( $this -> carHasAlreadyCharged() )
+            {
+            $this -> updateChargingStatus( OrderStatusEnum :: CHARGED );
+            } 
+        break;
+        
+        case OrderStatusEnum :: CHARGED :
+            if( $this -> isOnFine() ) 
+            {
+            $this -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 
+            }
+        break;
+        }
+    }
+
+    /**
+     * Determine if charging has officially started.
+     * 
+     * @param   float $kiloWattHour
+     * @return  bool
+     */
+    private function chargingHasStarted()
+    {
+        $chargingPower    = $this  -> getChargingPower();
+        $kiloWattHourLine = $this  -> kiloWattHourLine;
+
+        return $chargingPower > $kiloWattHourLine;
+    }
+
+    /**
+     * Update kilowatt charging power.
+     * 
+     * @return void
+     */
+    private function updateChargingPower()
+    {
+        $chargingPower  = $this -> getChargingPower();
+
+        $this -> kilowatt -> setChargingPower( $chargingPower );
+    }
+
+    /**
+     * Determine if car is charged.
+     * 
+     * @param \App\Order $order
+     * @return bool
+     */
+    public function carHasAlreadyCharged()
+    {
+        $chargingPower    = $this  -> getChargingPower();
+        $kiloWattHourLine = $this  -> kiloWattHourLine;
+
+        return $chargingPower < $kiloWattHourLine;
+    }
+
+    /**
+     * Determine if order is on fine.
+     * 
+     * @param \App\Order $order
+     * @return bool
+     */
+    public function isOnFine()
+    {
+        $config               = Config :: first();
+        $penaltyReliefMinutes = $config -> penalty_relief_minutes;
+
+        $chargedTime          = $this -> updated_at; // Dont find out like this 
+        $chargedTime          = Carbon :: create( $chargedTime );
+
+        $elapsedTime          = $chargedTime -> diffInMinutes( now() );
+
+        return $elapsedTime > $penaltyReliefMinutes;
+    }
+
+    /**
+     * Determine if consumed kilowatt money is above 
+     * the paid currency.
+     * 
+     * @return bool
+     */
+    private function shouldPay()
+    {
+        $paidMoney      = $this -> countPaidMoney();
+        $consumedMoney  = $this -> countConsumedMoney();
+        
+        return  $consumedMoney > $paidMoney;
+    }
+
+    /**
+     * Finish order by making last payments
+     * updating charging status to FINISHED.
+     * 
+     * @return void
+     */
+    public function finish()
+    {
+        $chargerType = $this -> charger_connector_type -> determineChargerType();
+
+        $chargerType == ChargerTypeEnum :: FAST
+        ? $this -> makeLastPaymentsForFastCharging()
+        : $this -> makeLastPaymentsForLvl2Charging();
+
+        $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
+    }
+
+    /**
+     * Charge the user or refund
+     * accordingly, when fast charging.
+     * 
+     * @return void
+     */
+    private function makeLastPaymentsForFastCharging()
+    {
+        //
+    }
+
+    /**
+     * Charge the user or refund
+     * accordingly, when lvl 2 charging.
+     * 
+     * @return void
+     */
+    private function makeLastPaymentsForLvl2Charging()
+    {
+        $consumedMoney = $this -> countConsumedMoney();
+        $alreadyPaid   = $this -> countPaidMoney();
+        
+        if( $consumedMoney > $alreadyPaid )
+        {
+        $shouldCutMoney = $consumedMoney - $alreadyPaid;
+        $this -> pay( PaymentTypeEnum :: CUT, $shouldCutMoney );
+        }
+        else if( $consumedMoney < $alreadyPaid )
+        {
+        $moneyToRefund = $this -> countMoneyToRefund();
+        $this -> pay( PaymentTypeEnum :: REFUND, $moneyToRefund );
+        }
+
+        if( $this -> isOnPenalty() )
+        {
+        $penaltyFee = $this -> countPenaltyFee();
+
+        $this -> pay( PaymentTypeEnum :: FINE, $penaltyFee );
+        } 
+    }
+
+    /**
+     * Make transaction.
+     * 
+     * @param string  $paymentType
+     * @param float   $amount
+     */
+    private function pay( $paymentType, $amount )
+    {
+        $userCard = $this -> user_card ;
+        Payment :: pay( $this, 20, $paymentType );
+
+        $this -> payments() -> create(
+            [
+            'type'          => $paymentType,
+            'confirmed'     => true,
+            'confirm_date'  => now(),
+            'price'         => $amount,
+            'prrn'          => 'SOME_PRRN',
+            'trx_id'        => 'SOME_TRIX_ID',
+            'user_card_id'  => $userCard -> id,
+            ]
+        );
+    }
+
 
     /** 
      * Set charging status change dates initial value 

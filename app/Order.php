@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 use App\Entities\Order as OrderEntity;
 use App\Scopes\Order as OrderScope;
