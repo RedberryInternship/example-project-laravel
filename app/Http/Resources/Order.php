@@ -7,6 +7,17 @@ use App\Enums\OrderStatus as OrderStatusEnum;
 
 class Order extends JsonResource
 {
+    /**
+     * Set without wrapping property
+     * onto resource.
+     * However, this won't work on collections.
+     */
+    public function __construct( $resource )
+    {
+        parent :: __construct( $resource );
+        static :: withoutWrapping();
+    }
+
     /** 
      * Additional data 
      * 
@@ -21,9 +32,7 @@ class Order extends JsonResource
      * @return array
      */
     public function toArray($request)
-    {
-        static :: withoutWrapping();
-        
+    {        
         $startChargingTime = $this -> charging_status_change_dates [ OrderStatusEnum :: CHARGING ];
 
         /**

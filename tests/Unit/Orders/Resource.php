@@ -61,7 +61,6 @@ class Resource extends TestCase
   public function active_orders_response_is_ok()
   {
     $response = $this -> request -> get( $this -> active_orders_url );
-
     $response -> assertOk();
   }
 
