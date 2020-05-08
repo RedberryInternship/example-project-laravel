@@ -53,5 +53,44 @@ class TestUserWithUserCard extends Seeder
                 'masked_pan'  => '411634xxxxxx9100',
             ]
         );
+        
+        
+        $mako = factory( User :: class ) -> create(
+            [
+                'phone_number'  => '+995598511266',
+                'first_name'    => 'Mako',
+                'last_name'     => 'Ko',
+                'email'         => 'mako@mako.ge',
+                'password'      => bcrypt( 'maaako' ),
+                'active'        => 1,
+            ]
+        );
+
+        factory( UserCard :: class ) -> create(
+            [
+                'user_id'     => $mako -> id,
+                'card_holder' => 'Mako Ko',
+                'masked_pan'  => '411620xxxxxx9100',
+            ]
+        );
+        
+        $mari = factory( User :: class ) -> create(
+            [
+                'phone_number'  => '+995598511111',
+                'first_name'    => 'Giga',
+                'last_name'     => 'Sha',
+                'email'         => 'mari@ami.ge',
+                'password'      => bcrypt( 'turboo' ),
+                'active'        => 1,
+            ]
+        );
+
+        factory( UserCard :: class ) -> create(
+            [
+                'user_id'     => $mari -> id,
+                'card_holder' => 'Giga Sha',
+                'masked_pan'  => '411620xxxxxx0100',
+            ]
+        );
     }
 }
