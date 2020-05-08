@@ -14,7 +14,7 @@ class TestUserWithUserCard extends Seeder
      */
     public function run()
     {
-        /*
+        
         $liparit = factory( User :: class ) -> create(
             [
                 'phone_number'  => '+995591935080',
@@ -33,7 +33,7 @@ class TestUserWithUserCard extends Seeder
                 'masked_pan'  => '411634xxxxxx9100',
             ]
         );
-        */
+        
 
         $espace = factory( User :: class ) -> create(
             [
