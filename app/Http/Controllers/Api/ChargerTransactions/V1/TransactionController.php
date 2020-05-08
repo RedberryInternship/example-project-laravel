@@ -13,7 +13,6 @@ use App\Library\Payments\Payment;
 use Carbon\Carbon;
 use App\Config;
 use App\Order;
-use App\UserCard;
 
 class TransactionController extends Controller
 {
@@ -49,7 +48,7 @@ class TransactionController extends Controller
       -> where( 'charger_transaction_id', $transaction_id ) 
       -> first();
 
-    $this -> order -> kilowatt -> update([ 'consumed' => $value ]);
+    $this -> order -> kilowatt -> updateConsumedKilowatts( $value );
     $this -> order -> load( 'kilowatt' );
 
     $chargerType = $this -> order -> charger_connector_type -> determineChargerType();

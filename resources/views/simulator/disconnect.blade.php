@@ -9,7 +9,7 @@
 
     <div class="form-wrapper">
       <img src="{{ asset('images/simulator/transistor.png') }}" />
-      <input type="number" placeholder="29" id="charger_id"/>
+      <input type="number" placeholder="0001" id="charger_code"/>
       <button id="btn">Disconnect</button>
       
       <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token" />
@@ -192,10 +192,10 @@
 
   document.getElementById( 'btn' ).addEventListener( 'click', disconnect );
 
-  function getChargerId()
+  function getChargerCode()
   {
-    const chargerId = document.getElementById('charger_id').value;
-    return chargerId;
+    const chargerCode = document.getElementById('charger_code').value;
+    return chargerCode;
   }
   
   function getToken()
@@ -206,7 +206,7 @@
 
   function disconnect()
   {
-    const chargerId = getChargerId();
+    const chargerCode = getChargerCode();
     const token     = getToken();
     
     fetch('/disconnect', 
@@ -216,7 +216,7 @@
         'Content-Type': 'applicatioin/json',
       },
       body: JSON.stringify({
-        chargerId,
+        chargerCode,
         _token: token,
         }),
     })
@@ -275,8 +275,6 @@
 
   function emptyInputValue()
   {
-    document.getElementById('charger_id').value = '';
+    document.getElementById('charger_code').value = '';
   }
-
-
 </script>
