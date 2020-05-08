@@ -94,7 +94,7 @@
                             <template v-for="connectorType in charger.connector_types">
                                 <template v-if="connectorType.activeInput">
                                     <tr v-for="chargingPrice in connectorType.charging_prices" :class="{ 'removed': chargingPrice.removed }" :key="chargingPrice.id">
-                                        <td>{{ charger.name.en }}</td>
+                                        <td>{{ charger.name ? charger.name.en : '-' }}</td>
                                         <td>{{ connectorType.name }}</td>
                                         <td class="center">{{ chargingPrice.min_kwt }}</td>
                                         <td class="center">{{ chargingPrice.max_kwt }}</td>

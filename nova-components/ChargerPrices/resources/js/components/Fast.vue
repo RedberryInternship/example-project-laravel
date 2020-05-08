@@ -74,7 +74,7 @@
                             <template v-for="connectorType in charger.connector_types">
                                 <template v-if="connectorType.activeInput">
                                     <tr v-for="fastChargingPrice in connectorType.fast_charging_prices" :class="{ 'removed': fastChargingPrice.removed }" :key="fastChargingPrice.id">
-                                        <td>{{ charger.name.en }}</td>
+                                        <td>{{ charger.name ? charger.name.en : '-' }}</td>
                                         <td>{{ connectorType.name }}</td>
                                         <td class="center">{{ fastChargingPrice.start_time }}</td>
                                         <td class="center">{{ fastChargingPrice.end_time }}</td>
@@ -123,7 +123,7 @@
                         price: this.price,
                         chargers: this.chargers
 	                }
-	            }).then(() => /* window.location.reload() */{});
+	            }).then(() => window.location.reload());
             },
             goBack() {
                 this.$emit('goBack');
