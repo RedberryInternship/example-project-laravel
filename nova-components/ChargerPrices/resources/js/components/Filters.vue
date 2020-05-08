@@ -69,7 +69,7 @@
 
             <div class="charger-items">
                 <div class="charger-item" v-for="(charger, index) in chargers" :key="index">
-                    <h3>{{ charger.name.en }}</h3>
+                    <h3>{{ charger.name ? charger.name.en : '-' }}</h3>
 
                     <div class="connector-types">
                         <div class="connector-type" v-for="(connectorType, connectorTypeIndex) in charger.connector_types" :key="connectorTypeIndex">
