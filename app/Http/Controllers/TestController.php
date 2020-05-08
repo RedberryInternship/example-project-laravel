@@ -29,7 +29,6 @@ class TestController extends Controller
       {
         $chargerId    = '0000';
         $chargerCode  = request() -> get( 'chargerCode' );
-
         $charger      = DB :: table( 'chargers' ) -> where( 'code', $chargerCode ) -> first();
 
         if( $charger )
