@@ -15,6 +15,15 @@ use App\User;
 class OrderController extends Controller
 {
   /**
+   * Set without wrapping mode onto
+   * Order resource.
+   */
+  public function __construct()
+  {
+    OrderResource :: withoutWrapping();
+  }
+
+  /**
   * Return active orders.
   *
   * @return Illuminate\Http\JsonResponse

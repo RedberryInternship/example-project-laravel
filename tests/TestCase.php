@@ -22,4 +22,5 @@ abstract class TestCase extends BaseTestCase
 
        return $this;
     }
+
 }
