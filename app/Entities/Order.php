@@ -439,7 +439,7 @@ trait Order
         $config               = Config :: first();
         $penaltyReliefMinutes = $config -> penalty_relief_minutes;
 
-        $chargedTime          = $this -> updated_at; // Dont find out like this 
+        $chargedTime          = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED ); // Dont find out like this 
         $chargedTime          = Carbon :: create( $chargedTime );
 
         $elapsedTime          = $chargedTime -> diffInMinutes( now() );
