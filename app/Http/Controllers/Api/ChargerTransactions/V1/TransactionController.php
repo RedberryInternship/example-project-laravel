@@ -13,7 +13,6 @@ use App\Library\Payments\Payment;
 use Carbon\Carbon;
 use App\Config;
 use App\Order;
-use App\UserCard;
 
 class TransactionController extends Controller
 {
