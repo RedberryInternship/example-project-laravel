@@ -175,7 +175,6 @@ class UserController extends Controller
             $order
                 -> where('user_id', $user -> id)
                 -> with('charger_connector_type.charger')
-                -> confirmed()
                 -> confirmedPaymentsWithUserCards()
                 -> get()
         );
