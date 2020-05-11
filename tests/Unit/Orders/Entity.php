@@ -31,23 +31,6 @@ class Entity extends TestCase
 
 
   /** @test */
-  public function order_can_get_only_confirmed_orders()
-  {
-    Order :: truncate();
-
-    factory( Order :: class ) -> create([ 'confirmed' => true ]);   
-    factory( Order :: class ) -> create([ 'confirmed' => true ]);   
-    factory( Order :: class ) -> create([ 'confirmed' => true ]);   
-    factory( Order :: class ) -> create([ 'confirmed' => false ]);  
-    factory( Order :: class ) -> create([ 'confirmed' => false ]);
-
-    $this -> assertCount(
-      3,
-      Order :: confirmed() -> get(),
-    );
-  }
-
-  /** @test */
   public function order_can_get_only_confirmed_payments()
   {
     factory( Payment :: class ) -> create([ 'order_id' => $this -> order -> id, 'confirmed' => true ]);

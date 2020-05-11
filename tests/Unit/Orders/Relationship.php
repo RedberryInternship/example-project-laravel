@@ -35,14 +35,6 @@ class Relationship extends TestCase
   }
 
   /** @test */
-  public function order_has_charging_type()
-  {
-    $order = $this -> order -> load( 'charging_type' );
-    
-    $this -> assertTrue( !! $order -> charging_type );
-  }
-
-  /** @test */
   public function order_has_payments()
   {
 

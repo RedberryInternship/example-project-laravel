@@ -5,17 +5,6 @@ namespace App\Scopes;
 use  Illuminate\Database\Eloquent\Builder;
 trait Order
 {
-   /**
-     * Get confirmed orders.
-     * 
-     * @param   Builder
-     * @return  Builder
-     */
-    public function scopeConfirmed( $query )
-    {
-        return $query -> where( 'confirmed', 1 );
-    }
-
     /**
      * Get orders with confirmed payments.
      * 

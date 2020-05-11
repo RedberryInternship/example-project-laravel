@@ -33,7 +33,7 @@ class Order extends JsonResource
      */
     public function toArray($request)
     {        
-        $startChargingTime = $this -> charging_status_change_dates [ OrderStatusEnum :: CHARGING ];
+        $startChargingTime = $this -> getChargingStatusTimestampInMilliseconds( OrderStatusEnum :: CHARGING );
 
         /**
          * Add target price if it charging type is BY_AMOUNT.
@@ -49,7 +49,7 @@ class Order extends JsonResource
         
         if( $this -> isOnPenalty() )
         {            
-            $penaltyStartTime = $this -> getChargingStatusTimestamp( OrderStatusEnum :: ON_FINE );
+            $penaltyStartTime = $this -> getChargingStatusTimestampInMilliseconds( OrderStatusEnum :: ON_FINE );
             $penaltyFee       = $this -> countPenaltyFee();
 
             $this -> setAdditionalData(

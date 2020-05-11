@@ -151,7 +151,7 @@ trait Order
         $statChargingTime           = $this -> payments -> first() -> confirm_date;
         $elapsedMinutes             = now() -> diffInMinutes( $statChargingTime );
         
-        $chargingPrice   = FastChargingPrice :: where(
+        $chargingPrice   = FastChargingPrice :: where( // TODO: make scope or method to get charging price.
             [
                 [ 'charger_connector_type_id', $this -> charger_connector_type -> id ],
                 [ 'start_minutes',  '<='     , $elapsedMinutes ],
@@ -177,7 +177,7 @@ trait Order
         $consumedKilowatts  = $this -> kilowatt -> consumed;
         $chargingPower      = $this -> kilowatt -> getChargingPower();
         
-        $startChargingTime  = $this -> payments -> first() -> confirm_date;
+        $startChargingTime  = $this -> payments -> first() -> confirm_date; // TODO: put this logic in ChargingPrices Scope
         $startChargingTime  = Carbon :: create( $startChargingTime );
         $startChargingTime  = $startChargingTime -> toTimeString();
 
@@ -255,7 +255,7 @@ trait Order
         
         $elapsedMinutes         = $penaltyTimestamp -> diffInMinutes( $finishedTimestamp );
         $penaltyPricePerMinute  = $this -> getPenaltyPricePerMinute();
-        
+                
         return $elapsedMinutes * $penaltyPricePerMinute;    
     }
 
@@ -279,13 +279,7 @@ trait Order
      */
     private function getPenaltyTimestamp()
     {
-        $chargingStatusChangeDates = $this -> charging_status_change_dates;
-        $penaltyTimestamp          = $chargingStatusChangeDates [ OrderStatusEnum :: ON_FINE ];
-        
-        if( $penaltyTimestamp )
-        {
-            $penaltyTimestamp      = Carbon::create( $penaltyTimestamp );
-        }
+        $penaltyTimestamp = $this -> getChargingStatusTimestamp( OrderStatusEnum :: ON_FINE );
         
         return $penaltyTimestamp;
     }
@@ -300,24 +294,6 @@ trait Order
         $isOnPenalty = !! $this -> getPenaltyTimestamp();
 
         return $isOnPenalty;
-    }
-
-    /**
-     * Get charging status timestamp.
-     * 
-     * @param   string $status
-     * @return  Carbon|null
-     */
-    public function getChargingStatusTimestamp( $status )
-    {
-        $statusTimestamp = $this -> charging_status_change_dates [ $status ];
-        
-        if( ! $statusTimestamp )
-        {
-            return null;
-        }
-        
-        return Carbon :: create( $statusTimestamp );
     }
 
     /**
@@ -439,7 +415,7 @@ trait Order
         $config               = Config :: first();
         $penaltyReliefMinutes = $config -> penalty_relief_minutes;
 
-        $chargedTime          = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED ); // Dont find out like this 
+        $chargedTime          = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED ); 
         $chargedTime          = Carbon :: create( $chargedTime );
 
         $elapsedTime          = $chargedTime -> diffInMinutes( now() );
@@ -495,7 +471,7 @@ trait Order
      * 
      * @return void
      */
-    private function makeLastPaymentsForLvl2Charging()
+    private function makeLastPaymentsForLvl2Charging() // TODO: Review
     {
         $consumedMoney = $this -> countConsumedMoney();
         $alreadyPaid   = $this -> countPaidMoney();
@@ -543,10 +519,10 @@ trait Order
         );
     }
 
-
     /** 
      * Set charging status change dates initial value 
      * when creating.
+     * USED IN MODEL HOOKS.
      * 
      * @param \App\Order $order
      * @return void
@@ -556,7 +532,7 @@ trait Order
         $availableOrderStatuses = OrderStatusEnum :: getConstantsValues();
         $initialStatuses        = [];
 
-        $now = static :: getMicroTime();
+        $now = app() -> runningUnitTests() ? now() -> timestamp : microtime( true );
 
         foreach( $availableOrderStatuses as $status )
         {
@@ -575,13 +551,15 @@ trait Order
         $order -> charging_status_change_dates = $initialStatuses;
     }
 
+
     /**
      * Set charging status change dates if not set,
      * when updating.
+     * USED IN MODEL HOOKS.
      */
     public static function updateChargingStatusChangeDates( $order )
     {
-        $now = static :: getMicroTime();
+        $now = app() -> runningUnitTests() ? now() -> timestamp : microtime( true );
 
         $chargingStatus = $order -> charging_status;
         $orderChargingStatusChargeDates = $order -> charging_status_change_dates; 
@@ -598,11 +576,31 @@ trait Order
      * 
      * @return float
      */
-    private static function getMicroTime()
+    public function getChargingStatusTimestampInMilliseconds( $status )
     {
-        $mt = microtime( true ) * 1000;
-        $mt = round( $mt );
+        $timestamp      = $this -> charging_status_change_dates [ $status ];
 
-        return $mt;
+        $milliseconds   = $timestamp * 1000;
+        $milliseconds   = round( $milliseconds );
+
+        return $milliseconds;
+    }
+
+    /**
+     * Get charging status timestamp.
+     * 
+     * @param   string $status
+     * @return  Carbon|null
+     */
+    public function getChargingStatusTimestamp( $status )
+    {
+        $statusTimestamp = $this -> charging_status_change_dates [ $status ];
+        
+        if( ! $statusTimestamp )
+        {
+            return null;
+        }
+        
+        return Carbon :: createFromTimestamp( $statusTimestamp );
     }
 }

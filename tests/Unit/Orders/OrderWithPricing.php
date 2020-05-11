@@ -237,12 +237,10 @@ class OrderWithPricing extends TestCase
     );
 
     Carbon :: setTestNow( $onPenalty );
-    $kilowatt -> update([ 'consumed' => 50, 'charging_power' => 1000, ]);
+    $kilowatt -> update([ 'consumed' => 50 , 'charging_power' => 1000, ]);
     // 95 GEL / (50 / 1000) = 4.75
 
-
     $order    -> load( 'kilowatt' );
-
     $order    -> updateChargingStatus( OrderStatusEnum :: ON_FINE ); 
 
     Carbon :: setTestNow( $onFinish );
