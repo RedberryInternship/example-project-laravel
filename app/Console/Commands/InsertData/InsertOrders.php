@@ -4,12 +4,13 @@ namespace App\Console\Commands\InsertData;
 
 use Illuminate\Console\Command;
 
-use App\Enums\OrderStatus;
+use App\Enums\OrderStatus as OrderStatusEnum;
+use App\Enums\ChargingType as ChargingTypeEnum;
 
 use App\User;
 use App\Charger;
-use App\ChargerConnectorType;
 use App\Order;
+use App\ChargerConnectorType;
 
 class InsertOrders extends Command
 {
@@ -25,7 +26,7 @@ class InsertOrders extends Command
      *
      * @var string
      */
-    protected $description = 'Parce Orders Json file and insert into espace database';
+    protected $description = 'Parse Orders Json file and insert into espace database';
 
     /**
      * Create a new command instance.
@@ -54,15 +55,12 @@ class InsertOrders extends Command
             {   
                 $old_id                 = $order_array['id'];
                 $charger_transaction_id = $order_array['charger_transaction_id'];
-                $confirm_date           = $order_array['confirm_date'];
-                $confirmed              = $order_array['confirmed'];
+                $state_change_dates     = [ 'INITIATED' => $order_array['confirm_date'], ];
                 $price                  = $order_array['price'];
                 $target_price           = $order_array['target_price'];
                 $charger_old_id         = $order_array['charger_id'];
                 $user_old_id            = $order_array['user_id'];
-                $requested_already      = $order_array['requested_already'];
-                
-                $charging_type_id       = 1;
+                $charging_type          = ChargingTypeEnum :: FULL_CHARGE;
 
                 $user                   = User::where('old_id', $user_old_id)->first();
 
@@ -73,8 +71,7 @@ class InsertOrders extends Command
                     $user_id            = $user -> id;
                 }
 
-                $charger  = Charger::where('old_id', $charger_old_id)->first();
-                
+                $charger    = Charger::where('old_id', $charger_old_id)->first();
                 $charger_id = '';
 
                 if($charger)
@@ -86,17 +83,13 @@ class InsertOrders extends Command
                     Order::create([
                         'old_id'                        => intval($old_id),
                         'user_id'                       => intval($user_id),
-                        'charging_type_id'              => $charging_type_id,
+                        'charging_type'                 => $charging_type,
                         'charger_connector_type_id'     => $charger_connector_type -> id,
                         'charger_transaction_id'        => intval($charger_transaction_id),
-                        'confirmed'                     => intval($confirmed),
-                        'confirm_date'                  => $confirm_date, 
                         'price'                         => $price,
                         'target_price'                  => $target_price,
-                        'requested_already'             => intval($requested_already),
-                        'charging_status'               => OrderStatus :: FINISHED,
-                        'charging_status_change_dates'  => null,
-                        'comment'                       => null,
+                        'charging_status'               => OrderStatusEnum :: FINISHED,
+                        'charging_status_change_dates'  => $state_change_dates,
                     ]);
                 }
             }

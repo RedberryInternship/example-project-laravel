@@ -92,5 +92,24 @@ class TestUserWithUserCard extends Seeder
                 'masked_pan'  => '411620xxxxxx0100',
             ]
         );
+        
+        $giuna = factory( User :: class ) -> create(
+            [
+                'phone_number'  => '+995591935080',
+                'first_name'    => 'Murvan',
+                'last_name'     => 'Yru',
+                'email'         => 'murvan@egchemis.yru',
+                'password'      => bcrypt( 'murvan' ),
+                'active'        => 1,
+            ]
+        );
+
+        factory( UserCard :: class ) -> create(
+            [
+                'user_id'     => $giuna -> id,
+                'card_holder' => 'Murvan Yru',
+                'masked_pan'  => '400620xxxxxx0100',
+            ]
+        );
     }
 }
