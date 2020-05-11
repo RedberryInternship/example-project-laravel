@@ -13,7 +13,6 @@ use App\Facades\Charger as MishasCharger;
 use App\Library\Payments\Payment;
 
 use App\FastChargingPrice;
-use App\ChargingPrice;
 use Carbon\Carbon;
 use App\Config;
 
@@ -177,21 +176,12 @@ trait Order
         $consumedKilowatts  = $this -> kilowatt -> consumed;
         $chargingPower      = $this -> kilowatt -> getChargingPower();
         
-        $startChargingTime  = $this -> payments -> first() -> confirm_date; // TODO: put this logic in ChargingPrices Scope
-        $startChargingTime  = Carbon :: create( $startChargingTime );
+        $startChargingTime  = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
         $startChargingTime  = $startChargingTime -> toTimeString();
 
-        $rawSql             = $this -> getTimeBetweenSqlQuery( $startChargingTime );
-
-        $chargingPriceInfo  = ChargingPrice :: where(
-                [
-                    [ 'charger_connector_type_id',  $this -> charger_connector_type -> id ],
-                    [ 'min_kwt', '<='            ,  $chargingPower ],
-                    [ 'max_kwt', '>='            ,  $chargingPower ],
-                ]
-            )
-            -> whereRaw( $rawSql )
-            -> first();
+        $chargingPriceInfo  = $this 
+            -> charger_connector_type 
+            -> getSpecificChargingPrice( $chargingPower, $startChargingTime );
         
         if( ! $chargingPriceInfo )
         {
@@ -203,22 +193,7 @@ trait Order
         
         return $consumedMoney;
     }
-
-    /**
-     * Get time between sql raw query.
-     * 
-     * @param   time $startChargingTime
-     * @return  string
-     */
-    private function getTimeBetweenSqlQuery( $startChargingTime )
-    {
-        $rawSql = 'CAST( start_time as time ) '
-        . '<=   CAST( "'. $startChargingTime .'" as time  )'
-        . 'AND  CAST( "'. $startChargingTime .'" as time  )'
-        . '<=   CAST( end_time as time )';
-
-        return $rawSql;
-    } 
+ 
 
     /**
      * Count money to refund the user.

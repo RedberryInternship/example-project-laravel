@@ -99,6 +99,7 @@ class Lvl2Feedback extends TestCase
     Carbon :: setTestNow( $startTime );
     
     $order      = $this -> set_charging_prices();
+    $order      -> updateChargingStatus( OrderStatusEnum :: CHARGING );
     $kilowatt   = $order -> kilowatt;
 
     // Paid 20 GEL

@@ -182,10 +182,11 @@ class OrderWithPricing extends TestCase
   {
     $order    = $this -> set_charging_prices();
     $kilowatt = $order -> kilowatt;
+    
 
     // 2019 year, 10 march 00:00:00
     $now1 = Carbon :: create(2019, 3, 10, 0, 0, 0);
-
+    $order -> updateChargingStatus( OrderStatusEnum :: CHARGING );
 
     Carbon :: setTestNow( $now1 );
     $payment  = factory( Payment :: class ) -> create(

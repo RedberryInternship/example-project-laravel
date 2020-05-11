@@ -17,9 +17,14 @@ class ChargingPrice extends Model
 
     public $timestamps = true;
 
-    public function chargerConnectorType()
+    /**
+     * belongsTo relationship with ChargerConnectorType.
+     * 
+     * @return \App\ChargerConnectorType
+     */
+    public function charger_connector_type()
     {
-    	return $this -> belongsTo('App\ChargerConnectorType');
+    	return $this -> belongsTo( ChargerConnectorType :: class );
     }
 }
 

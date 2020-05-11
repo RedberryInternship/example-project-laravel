@@ -32,6 +32,10 @@
             <directory suffix=".php">./tests/Unit/Kilowatts</directory>
         </testsuite>
         
+        <testsuite name="ChargingPrices">
+            <directory suffix=".php">./tests/Unit/ChargingPrices</directory>
+        </testsuite>
+        
         <testsuite name="ChargingProcess">
             <directory suffix=".php">./tests/Unit/ChargingFeedback</directory>
             <directory suffix=".php">./tests/Unit/ChargingApi</directory>
