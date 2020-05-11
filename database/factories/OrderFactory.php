@@ -5,21 +5,14 @@
 use Faker\Generator as Faker;
 
 use App\Order;
-use App\ChargingType;
 use App\ChargerConnectorType;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Enums\ChargingType as ChargingTypeEnum;
 
-if( ChargingType :: count() == 0 )
-{
-    factory( ChargingType :: class ) -> create([ 'name' => 'Full charge' ]);
-    factory( ChargingType :: class ) -> create([ 'name' => 'By Amount' ]);
-}
 
 $factory->define( Order :: class, function (Faker $faker) {
 return [
         'user_id'                       => $faker -> unique( true ) -> randomNumber(),
-        'charging_type_id'              => ChargingType :: inRandomOrder() -> first() -> id,
         'charger_connector_type_id'     =>  0,
         'charging_type'                 => ChargingTypeEnum :: FULL_CHARGE,
         'charge_fee'                    => $faker -> unique( true ) -> randomNumber(),

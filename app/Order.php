@@ -52,16 +52,6 @@ class Order extends Model
     }
 
     /**
-     * Order belongsTo relationship with ChargingType.
-     * 
-     * @return App\ChargingType
-     */
-    public function charging_type()
-    {
-    	return $this -> belongsTo( ChargingType :: class );
-    }
-
-    /**
      * Order hasMany relationship with Payment.
      * 
      * @return Illuminate\Support\Collection
