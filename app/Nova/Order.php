@@ -15,9 +15,12 @@ use App\Nova\Filters\OrderConfirmed;
 use App\Nova\Filters\OrderRefunded;
 use App\Nova\Filters\OrderRequestedAlready;
 use App\Nova\Filters\OrderStatus;
+use Titasgailius\SearchRelations\SearchesRelations;
 
 class Order extends Resource
 {
+    use SearchesRelations;
+
     /**
      * The model the resource corresponds to.
      *
@@ -42,6 +45,15 @@ class Order extends Resource
     ];
 
     /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'user' => ['first_name', 'last_name', 'email']
+    ];
+
+    /**
      * Grouping nova resource.
      */
     public static $group = 'User Resources';
@@ -53,7 +65,6 @@ class Order extends Resource
      */
     public static $with = [
         'user.role',
-        'charging_type',
         'charger_connector_type.charger',
         'charger_connector_type.connector_type'
     ];
