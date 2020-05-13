@@ -111,7 +111,11 @@ class Charger extends Resource
             BelongsToMany::make('Charger Tags','Tags', 'App\Nova\Tag'),
 
             Select::make('User','user_id')
-                ->options($users),
+                ->options($users)
+                ->onlyOnForms(),
+            
+            BelongsTo::make('User')
+                ->exceptOnForms(),
 
             BelongsTo::make('Charger Group')
                 -> nullable()
