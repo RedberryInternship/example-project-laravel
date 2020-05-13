@@ -77,8 +77,6 @@ class Order extends Resource
                     return $chargerConnectorType -> charger -> name . ' - ' . $chargerConnectorType -> connector_type -> name;
                 }),
 
-            BelongsTo::make('Charging Type'),
-
             Boolean::make('finished')
                 ->trueValue(1)
                 ->falseValue(0),
