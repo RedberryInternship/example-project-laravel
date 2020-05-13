@@ -10,6 +10,7 @@ use Tests\TestCase;
 use App\Enums\OrderStatus;
 
 use App\Order;
+use App\User;
 
 class Charging extends TestCase {
   
@@ -41,21 +42,36 @@ class Charging extends TestCase {
 
 
   /** @test */
-  public function stop_charging_sends_stop_charging_call_and_updates_db()
+  public function it_sends_stop_charging_call_and_updates_db()
   {
     $this -> create_order_with_charger_id_of_29();
 
     $order = Order :: first();
+    $user  = User  :: first();
 
-    $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
-      -> post($this -> uri . 'charging/stop', [
-        'order_id' => $order -> id,
-      ]);
+    $this -> actAs( $user )
+          -> post($this -> uri . 'charging/stop', 
+            [
+              'order_id' => $order -> id,
+            ]
+          );
     
     $order -> refresh();
     
     $this -> assertEquals( OrderStatus :: CHARGED, $order -> charging_status );
     
     $this -> tear_down_order_data_with_charger_id_of_29();
+  }
+
+  /** @test */
+  public function it_has_an_error_when_order_id_is_not_provided()
+  {
+    $user = factory( User :: class ) -> create();
+    
+    $response = $this 
+      -> actAs( $user )
+      -> post ($this -> uri . 'charging/stop');
+    
+    $response -> assertStatus(422);
   }
 }

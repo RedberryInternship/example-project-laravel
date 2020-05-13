@@ -131,14 +131,9 @@ class ChargingController extends Controller
    * @param App\Http\Requests\StopCharging $request
    * @return Illuminate\Http\JsonResponse
    */
-  public function stop()
+  public function stop(StopCharging $request)
   {
     $orderId        = request() -> get( 'order_id' );
-
-    if( ! $orderId )
-    {
-      throw new \Exception( 'Gimme order_id man!' );
-    }
 
     $order          = Order :: with(
       [
@@ -155,7 +150,6 @@ class ChargingController extends Controller
     
     $order -> charging_status = OrderStatusEnum :: CHARGED;
     $order -> save();
-
 
     $resource = new OrderResource( $order );
     $resource -> setAdditionalData(

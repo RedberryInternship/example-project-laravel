@@ -7,13 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Traits\ValidatorCustomJsonResponse as Response;
 use App\Traits\Message;
 
-use App\Rules\ModelHasRelation;
-
-use App\ChargerConnectorType;
-
 class StopCharging extends FormRequest
 {
-
     use Response,
         Message;
 
@@ -35,13 +30,11 @@ class StopCharging extends FormRequest
     public function rules()
     {
         return [
-            'charger_connector_type_id' => [
+            'order_id' => [
                 'bail',
                 'required',
                 'integer',
-                'exists:charger_connector_types,id',
-                new ModelHasRelation( ChargerConnectorType::class, 'charger' ),
-                new ModelHasRelation( ChargerConnectorType::class, 'connector_type' ),
+                'exists:orders,id',
             ],
         ];
     }
@@ -49,9 +42,9 @@ class StopCharging extends FormRequest
     public function messages()
     {
         return [
-            'charger_connector_type_id.required' => 'charger_connector_type_id is required',
-            'charger_connector_type_id.integer'  => 'charger_connector_type_id must be integer.',
-            'charger_connector_type_id.exists'   => 'Such charger connector type doesn\'t exists in db.',
+            'order_id.required' => 'order_id is required.',
+            'order_id.integer'  => 'order_id must be integer.',
+            'order_id.exists'   => 'Such order doesn\'t exists in db.',
         ];
     }
 

@@ -5,6 +5,7 @@ namespace App\Exceptions\Charger;
 use Exception;
 
 use App\Traits\Message;
+use App\Enums\GeneralError as GeneralErrorEnum;
 
 class StopChargingException extends Exception
 {
@@ -29,7 +30,7 @@ class StopChargingException extends Exception
     {
         return response() -> json([
             'message'     => $this -> messages [ 'cant_stop_charging' ],
-            'status'      => $this -> message ?: 'Stop charging request couldn\'t be confirmed.',
+            'status'      => $this -> message ?: GeneralErrorEnum :: CANT_CONFIRM_CHARGING_FINISH,
             'status_code' => $this -> code    ?: 400,
         ], $this -> code ?: 400 );
     }

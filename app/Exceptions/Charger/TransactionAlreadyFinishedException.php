@@ -4,6 +4,7 @@ namespace App\Exceptions\Charger;
 
 use Exception;
 use App\Traits\Message;
+use App\Enums\GeneralError as GeneralErrorEnum;
 
 class TransactionAlreadyFinishedException extends Exception
 {
@@ -29,7 +30,7 @@ class TransactionAlreadyFinishedException extends Exception
     {
         return response() -> json([
             'message'     => $this -> messages [ 'charger_transaction_already_stopped' ],
-            'status'      => 'Transaction is already finished!',
+            'status'      => GeneralErrorEnum :: CHARGING_ALREADY_FINISHED,
             'status_code' => 400,
         ], $this -> code ?: 400 );
     }
