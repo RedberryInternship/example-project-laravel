@@ -2,17 +2,16 @@
 
 namespace App\Entities;
 
-use App\Exceptions\NoSuchFastChargingPriceException;
 use App\Exceptions\NoSuchChargingPriceException;
 
 use App\Enums\PaymentType as PaymentTypeEnum;
 use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
+use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Facades\Charger as MishasCharger;
 use App\Library\Payments\Payment;
 
-use App\FastChargingPrice;
 use Carbon\Carbon;
 use App\Config;
 
@@ -361,24 +360,49 @@ trait Order
 
             if( $this -> chargingHasStarted() )
             {
-            $this -> updateChargingPower();
-            $this -> updateChargingStatus( OrderStatusEnum :: CHARGING );   
-            // TODO: if by amount pay all the money user typed 
-            $this -> pay( PaymentTypeEnum :: CUT, 20 );
+                $this -> updateChargingPower();
+                $this -> updateChargingStatus( OrderStatusEnum :: CHARGING );   
+                
+                if( $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT )
+                {
+                    $this -> pay( PaymentTypeEnum :: CUT, $this -> target_price );
+                }
+                else
+                {
+                    $this -> pay( PaymentTypeEnum :: CUT, 20 );
+                }
             }       
         break;
         
         case OrderStatusEnum :: CHARGING :
 
-            if( $this -> shouldPay() )
+            if( $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT )
             {
-                $this -> pay( PaymentTypeEnum :: CUT, 20 );
+                if( $this -> shouldPay() )
+                {
+                    $charger = $this -> charger_connector_type -> charger;
+
+                    MishasCharger :: stop( 
+                        $charger -> charger_id, 
+                        $this -> charger_transaction_id 
+                    );
+
+                    $this -> updateChargingStatus( OrderStatusEnum :: CHARGED );
+                }
+            }
+            else
+            {
+                if( $this -> shouldPay() )
+                {
+                    $this -> pay( PaymentTypeEnum :: CUT, 20 );
+                }
+    
+                if( $this -> carHasAlreadyCharged() )
+                {
+                    $this -> updateChargingStatus( OrderStatusEnum :: CHARGED );
+                } 
             }
 
-            if( $this -> carHasAlreadyCharged() )
-            {
-                $this -> updateChargingStatus( OrderStatusEnum :: CHARGED );
-            } 
         break;
         
         case OrderStatusEnum :: CHARGED :
