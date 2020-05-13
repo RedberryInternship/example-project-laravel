@@ -465,8 +465,20 @@ trait Order
         $config               = Config :: first();
         $penaltyReliefMinutes = $config -> penalty_relief_minutes;
 
-        $chargedTime          = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED ); 
-        $chargedTime          = Carbon :: create( $chargedTime );
+        if( $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT )
+        {
+            $chargedTime      = $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP ); 
+        }
+        else
+        {
+
+            $chargedTime      = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED ); 
+        }
+
+        if( ! $chargedTime )
+        {
+            return false;
+        }
 
         $elapsedTime          = $chargedTime -> diffInMinutes( now() );
 
