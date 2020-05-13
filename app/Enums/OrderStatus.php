@@ -29,6 +29,13 @@ class OrderStatus extends Enum
   const CHARGED   = 'CHARGED';
 
   /**
+   * When charging type is BY_AMOUNT
+   * and all the money is already
+   * used up.
+   */
+  const USED_UP   = 'USED_UP';
+
+  /**
    * Something happened, car is not being charged with the kilowatts
    * and transaction is not finished and it will be ON_HOLD until
    * we get the information that it has continued charging or else
