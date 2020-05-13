@@ -147,23 +147,60 @@ trait Order
      */
     private function countConsumedMoneyByTime()
     {
-        $statChargingTime           = $this -> payments -> first() -> confirm_date;
-        $elapsedMinutes             = now() -> diffInMinutes( $statChargingTime );
-        
-        $chargingPrice   = FastChargingPrice :: where( // TODO: make scope or method to get charging price.
-            [
-                [ 'charger_connector_type_id', $this -> charger_connector_type -> id ],
-                [ 'start_minutes',  '<='     , $elapsedMinutes ],
-                [ 'end_minutes',    '>='     , $elapsedMinutes ],
-            ]
-        ) -> first();
+        $startChargingTime   = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
+        $finishChargingTime  = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
 
-        if( ! $chargingPrice )
+        if( $finishChargingTime )
         {
-            throw new NoSuchFastChargingPriceException();
+            $elapsedMinutes      = $finishChargingTime -> diffInMinutes( $startChargingTime );
+        }
+        else
+        {
+            $elapsedMinutes      = now() -> diffInMinutes( $startChargingTime );
         }
 
-        return $chargingPrice -> price;
+        $chargingPriceRanges =  $this 
+            -> charger_connector_type
+            -> collectFastChargingPriceRanges( $elapsedMinutes );
+
+        $consumedMoney = $this -> accumulateFastChargerConsumedMoney( 
+            $chargingPriceRanges, 
+            $elapsedMinutes,
+         );
+       
+        return $consumedMoney;
+    }
+
+    /**
+     * Accumulate fast charger consumed money
+     * based on elapsed minutes.
+     * 
+     * @param Collection $chargingPriceRanges
+     * @param int        $elapsedMinutes
+     */
+    private function accumulateFastChargerConsumedMoney( $chargingPriceRanges, $elapsedMinutes )
+    {
+        $consumedMoney          = 0;
+
+        $chargingPriceRanges -> each( function ( $chargingPriceInstance ) 
+        use ( &$consumedMoney, $elapsedMinutes ) {
+            
+            $startMinutes       = $chargingPriceInstance -> start_minutes;
+            $endMinutes         = $chargingPriceInstance -> end_minutes;
+            $price              = $chargingPriceInstance -> price;
+            $minutesInterval    = $endMinutes - $startMinutes + 1;
+
+            if( $elapsedMinutes > $chargingPriceInstance -> end_minutes)
+            {
+                $consumedMoney += $price * $minutesInterval;
+            }
+            else
+            {
+                $consumedMoney += ($elapsedMinutes - $startMinutes + 1 ) * $price;
+            }
+        });
+
+        return $consumedMoney;
     }
 
     /**
@@ -194,7 +231,6 @@ trait Order
         return $consumedMoney;
     }
  
-
     /**
      * Count money to refund the user.
      * 
@@ -211,6 +247,20 @@ trait Order
         $moneyToRefund = round( $moneyToRefund, 2 );
     
         return $moneyToRefund;
+    }
+
+    /**
+     * Count money to cut.
+     * 
+     * @return float
+     */
+    public function countMoneyToCut()
+    {
+        $consumedMoney  = $this -> countConsumedMoney();
+        $alreadyPaid    = $this -> countPaidMoney();
+        $moneyToCut     = $consumedMoney - $alreadyPaid;
+        
+        return $moneyToCut;
     }
 
     /**
@@ -312,7 +362,8 @@ trait Order
             if( $this -> chargingHasStarted() )
             {
             $this -> updateChargingPower();
-            $this -> updateChargingStatus( OrderStatusEnum :: CHARGING );    
+            $this -> updateChargingStatus( OrderStatusEnum :: CHARGING );   
+            // TODO: if by amount pay all the money user typed 
             $this -> pay( PaymentTypeEnum :: CUT, 20 );
             }       
         break;
@@ -326,14 +377,14 @@ trait Order
 
             if( $this -> carHasAlreadyCharged() )
             {
-            $this -> updateChargingStatus( OrderStatusEnum :: CHARGED );
+                $this -> updateChargingStatus( OrderStatusEnum :: CHARGED );
             } 
         break;
         
         case OrderStatusEnum :: CHARGED :
             if( $this -> isOnFine() ) 
             {
-            $this -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 
+                $this -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 
             }
         break;
         }
@@ -399,7 +450,7 @@ trait Order
     }
 
     /**
-     * Determine if consumed kilowatt money is above 
+     * Determine if consumed money is above 
      * the paid currency.
      * 
      * @return bool
@@ -410,6 +461,20 @@ trait Order
         $consumedMoney  = $this -> countConsumedMoney();
         
         return  $consumedMoney > $paidMoney;
+    }
+
+    /**
+     * Determine if paid money is less 
+     * then consumed money.
+     * 
+     * @return bool
+     */
+    private function shouldRefund()
+    {
+        $paidMoney      = $this -> countPaidMoney();
+        $consumedMoney  = $this -> countConsumedMoney();
+        
+        return  $consumedMoney < $paidMoney;
     }
 
     /**
@@ -446,27 +511,23 @@ trait Order
      * 
      * @return void
      */
-    private function makeLastPaymentsForLvl2Charging() // TODO: Review
+    private function makeLastPaymentsForLvl2Charging()
     {
-        $consumedMoney = $this -> countConsumedMoney();
-        $alreadyPaid   = $this -> countPaidMoney();
-        
-        if( $consumedMoney > $alreadyPaid )
+        if( $this -> shouldPay() )
         {
-        $shouldCutMoney = $consumedMoney - $alreadyPaid;
-        $this -> pay( PaymentTypeEnum :: CUT, $shouldCutMoney );
+            $shouldCutMoney = $this -> countMoneyToCut();
+            $this           -> pay( PaymentTypeEnum :: CUT, $shouldCutMoney );
         }
-        else if( $consumedMoney < $alreadyPaid )
+        else if( $this -> shouldRefund() )
         {
-        $moneyToRefund = $this -> countMoneyToRefund();
-        $this -> pay( PaymentTypeEnum :: REFUND, $moneyToRefund );
+            $moneyToRefund  = $this -> countMoneyToRefund();
+            $this           -> pay( PaymentTypeEnum :: REFUND, $moneyToRefund );
         }
 
         if( $this -> isOnPenalty() )
         {
-        $penaltyFee = $this -> countPenaltyFee();
-
-        $this -> pay( PaymentTypeEnum :: FINE, $penaltyFee );
+            $penaltyFee     = $this -> countPenaltyFee();   
+            $this           -> pay( PaymentTypeEnum :: FINE, $penaltyFee );
         } 
     }
 

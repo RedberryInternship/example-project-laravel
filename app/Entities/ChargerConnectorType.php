@@ -5,7 +5,7 @@ namespace App\Entities;
 use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\ConnectorType as ConnectorTypeEnum;
 
-use App\ChargingPrice;
+use App\Exceptions\NoSuchFastChargingPriceException;
 
 trait ChargerConnectorType
 {
@@ -65,5 +65,33 @@ trait ChargerConnectorType
       .' TIME( end_time )';
 
     return $rawSql;
+  }
+
+  /**
+   * Get specific fast-charging price
+   * from charger's fast-charging prices.
+   * 
+   * @param   int         $elapsedMinutes
+   * @return  Collection
+   */
+  public function collectFastChargingPriceRanges( $elapsedMinutes )
+  {
+    $fastChargingPriceRanges  = $this 
+      -> fast_charging_prices()
+      -> where(
+        [
+          [ 'start_minutes' , '<=' , $elapsedMinutes ],
+          [ 'end_minutes'   , '>=' , $elapsedMinutes ],
+        ]
+      )
+      -> orWhere( 'end_minutes', '<', $elapsedMinutes )
+      -> get();
+
+    if( ! $fastChargingPriceRanges )
+    {
+        throw new NoSuchFastChargingPriceException();
+    }
+
+    return $fastChargingPriceRanges;
   }
 }

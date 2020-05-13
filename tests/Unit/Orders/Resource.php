@@ -20,7 +20,7 @@ use App\Payment;
 use App\Charger;
 use App\Order;
 use App\User;
-
+use Carbon\Carbon;
 
 class Resource extends TestCase
 {
@@ -107,32 +107,11 @@ class Resource extends TestCase
       ]
     );
 
-    factory( FastChargingPrice    :: class ) -> create(
-      [
-        'start_minutes'             => 0,
-        'end_minutes'               => 20,
-        'price'                     => 10.5,
-        'charger_connector_type_id' => $chargerConnectorType -> id
-      ]
-    );
-    
-    factory( FastChargingPrice    :: class ) -> create(
-      [
-        'start_minutes'             => 21,
-        'end_minutes'               => 50,
-        'price'                     => 25,
-        'charger_connector_type_id' => $chargerConnectorType -> id
-      ]
-    );
-    
-    factory( FastChargingPrice    :: class ) -> create(
-      [
-        'start_minutes'             => 51,
-        'end_minutes'               => 1000000,
-        'price'                     => 45,
-        'charger_connector_type_id' => $chargerConnectorType -> id
-      ]
-    );
+    $this -> make_fast_charging_prices( $chargerConnectorType -> id );
+
+    $startChargingTime = Carbon :: create(2020, 5, 7, 10, 12, 1);
+
+    Carbon :: setTestNow( $startChargingTime );
 
     $order = factory( Order :: class ) -> create(
       [ 
@@ -142,47 +121,43 @@ class Resource extends TestCase
       ]
     );
 
-    $startChargingTime1 = now() -> subMinutes( 10 );
-    $startChargingTime2 = now() -> subMinutes( 30 );
-    $startChargingTime3 = now() -> subMinutes( 90 );
-
 
     $firstPayment = factory( Payment :: class ) -> create(
       [
         'order_id'        => $order -> id,
         'type'            => PaymentTypeEnum :: CUT,
         'price'           => '20.0',
-        'confirm_date'    => $startChargingTime1,
       ]
     );
     
     // Case 1
-    $response = $this     -> request -> get( $this -> active_orders_url );
+    
+    $startChargingTime -> addMinutes( 5 );
+
+    $response = $this  -> actAs( $this -> user ) -> request -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson() [ 0 ];
     
-    $this -> assertEquals( $response[ 'already_paid' ]  , 20 );
-    $this -> assertEquals( $response[ 'consumed_money' ], 10.5 );
-    $this -> assertEquals( $response[ 'refund_money' ]  , 9.5 );
+    $this -> assertEquals( $response[ 'already_paid'   ]  , 20  );
+    $this -> assertEquals( $response[ 'consumed_money' ]  , 5   );
+    $this -> assertEquals( $response[ 'refund_money'   ]  , 15  );
     
     // Case 2
-    $firstPayment -> confirm_date = $startChargingTime2;
-    $firstPayment -> save();
+    $startChargingTime -> addMinutes( 16 );
 
     factory( Payment :: class ) -> create(
       [
         'order_id'        => $order -> id,
         'type'            => PaymentTypeEnum :: CUT,
         'price'           => '20.0',
-        'confirm_date'    => $startChargingTime1,
       ]
     );
     
     $response = $this     -> request -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson() [ 0 ];
 
-    $this -> assertEquals( $response[ 'already_paid' ]  , 40 );
-    $this -> assertEquals( $response[ 'consumed_money' ], 25 );
-    $this -> assertEquals( $response[ 'refund_money' ]  , 15 );
+    $this -> assertEquals( $response[ 'already_paid'    ], 40 );
+    $this -> assertEquals( $response[ 'consumed_money'  ], 35 );
+    $this -> assertEquals( $response[ 'refund_money'    ], 5  );
   }
 
 

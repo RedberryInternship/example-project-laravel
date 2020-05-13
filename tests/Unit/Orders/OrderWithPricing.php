@@ -26,6 +26,7 @@ class OrderWithPricing extends TestCase
   use RefreshDatabase,
       Helper;
 
+  private $uri;
   private $user;
   private $order;
 
@@ -33,6 +34,7 @@ class OrderWithPricing extends TestCase
   {
     parent::setUp();
 
+    $this -> uri    = config( 'app' )[ 'uri' ];
     $this -> user   = factory( User :: class ) -> create();
     $this -> order  = factory( Order :: class ) -> create([ 'user_id' => $this -> user -> id ]);
   }
@@ -114,67 +116,53 @@ class OrderWithPricing extends TestCase
       ]
     );
 
-    factory( FastChargingPrice :: class ) -> create(
-      [
-        'start_minutes' => 0,
-        'end_minutes'   => 20,
-        'price'         => 100,
-        'charger_connector_type_id' => $chargerConnectorType -> id, 
-      ]
-    );
+    $this -> make_fast_charging_prices( $chargerConnectorType -> id );
 
-    factory( FastChargingPrice :: class ) -> create(
-      [
-        'start_minutes' => 20,
-        'end_minutes'   => 50,
-        'price'         => 130,
-        'charger_connector_type_id' => $chargerConnectorType -> id, 
-      ]
-    );
-
-    factory( FastChargingPrice :: class ) -> create(
-      [
-        'start_minutes' => 50,
-        'end_minutes'   => 1000000,
-        'price'         => 200,
-        'charger_connector_type_id' => $chargerConnectorType -> id, 
-      ]
-    );
+    $startChargingTime = Carbon :: create( 2020, 2, 17, 21, 40, 7 );
+    Carbon :: setTestNow( $startChargingTime );
 
     $order = factory( Order :: class ) -> create(
       [ 
-        'charger_connector_type_id' => $chargerConnectorType -> id 
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'charging_status'           => OrderStatusEnum :: CHARGING,
       ]
     );
 
-    $startTime  = now() -> subMinutes( 15 ); 
-    $startTime2 = now() -> subMinutes( 25 );
-    $startTime3 = now() -> subMinutes( 160 );
 
-    // Case 1
-    $payment = factory( Payment :: class ) -> create(
+    factory( Payment :: class ) -> create(
       [
-        'order_id'     => $order -> id,
-        'confirm_date' => $startTime,
+        'order_id'      => $order -> id,
+        'type'          => PaymentTypeEnum :: CUT,
+        'confirm_date'  => now(),
+        'price'         => 20,
       ]
     );
 
+    // 10 minutes since charging started
+    Carbon :: setTestNow( now() -> addMinutes(10) );
     $consumedMoney = $order -> countConsumedMoney();
-    $this -> assertEquals( 100, $consumedMoney );
     
-    // Case 2
-    $payment -> confirm_date = $startTime2;
-    $payment -> save();
-
-    $consumedMoney = $order -> countConsumedMoney();
-    $this -> assertEquals( 130, $consumedMoney );
+    $this -> assertEquals( 10, $consumedMoney );
     
-    // Case 3
-    $payment -> confirm_date = $startTime3;
-    $payment -> save();
-
+    // 12 minutes since charging started
+    Carbon :: setTestNow( now() -> addMinutes(2) );
     $consumedMoney = $order -> countConsumedMoney();
-    $this -> assertEquals( 200, $consumedMoney );
+    
+    $this -> assertEquals( 14, $consumedMoney );
+    
+    // 20 minutes since charging started
+    Carbon :: setTestNow( now() -> addMinutes(8) );
+    $consumedMoney = $order -> countConsumedMoney();
+    
+    $this -> assertEquals( 30, $consumedMoney );
+    
+    // 25 minutes since charging started
+    Carbon :: setTestNow( now() -> addMinutes(5) );
+    $consumedMoney = $order -> countConsumedMoney();
+    
+    $this -> assertEquals( 55, $consumedMoney );
+    
+
   }
 
   /** @test */

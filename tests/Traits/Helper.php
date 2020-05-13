@@ -8,6 +8,7 @@ use App\Charger;
 use App\UserCard;
 use App\ChargingPrice;
 use App\ConnectorType;
+use App\FastChargingPrice;
 use App\ChargerConnectorType;
 
 use App\Facades\Simulator;
@@ -209,5 +210,50 @@ Trait Helper
     );
     
     return $order;
+  }
+
+  /**
+   * Make fast charging prices.
+   * 
+   * --------------------------------------
+   * start_minutes => end_minutes => price
+   * --------------------------------------
+   * 0             => 10          => 1
+   * --------------------------------------
+   * 11            => 20          => 2
+   * --------------------------------------
+   * 21            => 10000000    => 5
+   * --------------------------------------
+   * 
+   * @param int $chargerConnectorTypeId
+   */
+  public function make_fast_charging_prices( $chargerConnectorTypeId )
+  {
+    factory( FastChargingPrice :: class ) -> create(
+      [
+        'start_minutes'             => 1,
+        'end_minutes'               => 10,
+        'price'                     => 1,
+        'charger_connector_type_id' => $chargerConnectorTypeId,
+      ]
+    );
+
+    factory( FastChargingPrice :: class ) -> create(
+      [
+        'start_minutes'             => 11,
+        'end_minutes'               => 20,
+        'price'                     => 2,
+        'charger_connector_type_id' => $chargerConnectorTypeId,
+      ]
+    );
+
+    factory( FastChargingPrice :: class ) -> create(
+      [
+        'start_minutes'             => 21,
+        'end_minutes'               => 1000000,
+        'price'                     => 5,
+        'charger_connector_type_id' => $chargerConnectorTypeId,
+      ]
+    );
   }
 }
