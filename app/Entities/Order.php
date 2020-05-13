@@ -387,7 +387,7 @@ trait Order
                         $this -> charger_transaction_id 
                     );
 
-                    $this -> updateChargingStatus( OrderStatusEnum :: CHARGED );
+                    $this -> updateChargingStatus( OrderStatusEnum :: USED_UP );
                 }
             }
             else
@@ -537,15 +537,18 @@ trait Order
      */
     private function makeLastPaymentsForLvl2Charging()
     {
-        if( $this -> shouldPay() )
+        if( $this -> charging_type == ChargingTypeEnum :: FULL_CHARGE )
         {
-            $shouldCutMoney = $this -> countMoneyToCut();
-            $this           -> pay( PaymentTypeEnum :: CUT, $shouldCutMoney );
-        }
-        else if( $this -> shouldRefund() )
-        {
-            $moneyToRefund  = $this -> countMoneyToRefund();
-            $this           -> pay( PaymentTypeEnum :: REFUND, $moneyToRefund );
+            if( $this -> shouldPay() )
+            {
+                $shouldCutMoney = $this -> countMoneyToCut();
+                $this           -> pay( PaymentTypeEnum :: CUT, $shouldCutMoney );
+            }
+            else if( $this -> shouldRefund() )
+            {
+                $moneyToRefund  = $this -> countMoneyToRefund();
+                $this           -> pay( PaymentTypeEnum :: REFUND, $moneyToRefund );
+            }
         }
 
         if( $this -> isOnPenalty() )
@@ -564,7 +567,7 @@ trait Order
     private function pay( $paymentType, $amount )
     {
         $userCard = $this -> user_card ;
-        Payment :: pay( $this, 20, $paymentType );
+        Payment :: pay( $this, $amount, $paymentType );
 
         $this -> payments() -> create(
             [
