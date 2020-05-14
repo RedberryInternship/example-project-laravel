@@ -21,11 +21,12 @@
         "laravel/vapor-core": "^2.2",
         "pulkitjalan/geoip": "^4.0",
         "rackspace/php-opencloud": "dev-master",
+        "redberry/charger-prices": "*",
         "spatie/laravel-schemaless-attributes": "^1.6",
         "spatie/laravel-translatable": "^4.2",
         "spatie/nova-translatable": "^2.0",
-        "tymon/jwt-auth": "dev-develop",
-        "redberry/charger-prices": "*"
+        "titasgailius/search-relations": "^1.0",
+        "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

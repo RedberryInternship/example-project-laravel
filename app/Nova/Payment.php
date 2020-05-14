@@ -46,7 +46,7 @@ class Payment extends Resource
      *
      * @var string
      */
-    public static $with = ['order', 'user_card'];
+    public static $with = ['order', 'user_card.user'];
 
     /**
      * Get the fields displayed by the resource.
@@ -57,17 +57,34 @@ class Payment extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
-            BelongsTo::make('Order ID','order', 'App\Nova\Order'),
+            ID::make()
+                ->sortable(),
+
+            BelongsTo::make('Order'),
+
             Text::make('price'),
+
             Text::make('prrn'),
+
             Text::make('trx_id'),
+
             Boolean::make('status'),
+
             Boolean::make('active'),
+
             Boolean::make('confirmed'),
+
             Text::make('confirm_date'),
+
             Text::make('date'),
-            BelongsTo::make('User Card ID','user_card', 'App\Nova\UserCard'),
+
+            BelongsTo::make('User Card')
+                ->displayUsing(function($card) {
+                    return
+                        $card -> user -> first_name . ' ' .
+                        $card -> user -> last_name . ' - ' .
+                        $card -> masked_pan;
+                })
         ];
     }
 
