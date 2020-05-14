@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 use Tests\Traits\Helper;
 use Tests\TestCase;
+use Carbon\Carbon;
 
 use App\Enums\ConnectorType as ConnectorTypeEnum;
 use App\Enums\ChargingType as ChargingTypeEnum;
@@ -18,9 +19,9 @@ use App\ChargingPrice;
 use App\ConnectorType;
 use App\Payment;
 use App\Charger;
+use App\Config;
 use App\Order;
 use App\User;
-use Carbon\Carbon;
 
 class Resource extends TestCase
 {
@@ -278,10 +279,12 @@ class Resource extends TestCase
   }
 
   /** @test */
-  public function it_sets_penalty_relief_start_time_when_entered_penalty_relief_mode()
+  public function it_sets_penalty_start_time_accurately()
   {
+    $this -> artisan( 'db:seed --class=ConfigSeeder' );
+    Config :: first() -> update([ 'penalty_relief_minutes' => 7 ]);
     $user                 = $this -> user;
-
+    
     $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
       [
         'connector_type_id' => ConnectorType :: first() -> id,
@@ -291,20 +294,21 @@ class Resource extends TestCase
     $order                = factory( Order :: class ) -> create(
       [
         'charger_connector_type_id' => $chargerConnectorType -> id,
-        'user_id'                   => $user -> id,
         'charging_type'             => ChargingTypeEnum :: BY_AMOUNT,
+        'user_id'                   => $user -> id,
       ]
     );
 
     $now = Carbon :: create( 2020, 11, 3, 17, 25, 10 );
-    Carbon :: setTestNow( $now );
+    Carbon        :: setTestNow( $now );
 
+    $order    -> updateChargingStatus( OrderStatusEnum :: USED_UP );
 
-    $order -> updateChargingStatus( OrderStatusEnum :: USED_UP );
-
-    $response = $this -> actAs( $user ) -> get( $this -> active_orders_url );
+    $response = $this     -> actAs( $user ) -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson() [ 0 ];
 
-    $this -> assertTrue( !! $response [ 'penalty_relief_mode_start_time' ]);
+    $penaltyStartTime = Carbon :: createFromTimestamp( $response [ 'penalty_start_time' ] / 1000 );
+
+    $this     -> assertEquals( $penaltyStartTime -> subMinutes( 7 ), $now );
   }
 }
