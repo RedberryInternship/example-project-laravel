@@ -12,7 +12,6 @@ use App\Traits\Message;
 
 use App\ChargerConnectorType;
 use App\Order;
-use App\User;
 
 use App\Http\Requests\StartCharging;
 use App\Http\Requests\StopCharging;

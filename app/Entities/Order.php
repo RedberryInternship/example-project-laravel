@@ -51,6 +51,20 @@ trait Order
     }
 
     /**
+     * Determine if charging is stopped 
+     * due to that the car is charged or ether
+     * user has used up the money and is in penalty
+     * relief mode.
+     * 
+     * @return bool
+     */
+    public function enteredPenaltyReliefMode()
+    {
+        return      $this -> charging_status == OrderStatusEnum :: CHARGED 
+                ||  $this -> charging_status == OrderStatusEnum :: USED_UP;
+    }
+
+    /**
      * Count money the user has already paid.
      * 
      * @return  float

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
 class Order extends JsonResource
@@ -43,6 +44,19 @@ class Order extends JsonResource
             $this -> setAdditionalData(
                 [
                     'target_price' => $this -> target_price,
+                ]
+            );
+        }
+
+        if( $this -> enteredPenaltyReliefMode() )
+        {
+            $penaltyReliefModeStartTime = $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT
+                ? $this -> getChargingStatusTimestampInMilliseconds( OrderStatusEnum :: USED_UP )
+                : $this -> getChargingStatusTimestampInMilliseconds( OrderStatusEnum :: CHARGED );
+
+            $this -> setAdditionalData(
+                [
+                    'penalty_relief_mode_start_time' => $penaltyReliefModeStartTime,
                 ]
             );
         }

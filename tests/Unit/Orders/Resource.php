@@ -9,11 +9,11 @@ use Tests\Traits\Helper;
 use Tests\TestCase;
 
 use App\Enums\ConnectorType as ConnectorTypeEnum;
+use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Enums\PaymentType as PaymentTypeEnum;
 
 use App\ChargerConnectorType;
-use App\FastChargingPrice;
 use App\ChargingPrice;
 use App\ConnectorType;
 use App\Payment;
@@ -275,5 +275,36 @@ class Resource extends TestCase
         'user_card_id',
       ]
     );
+  }
+
+  /** @test */
+  public function it_sets_penalty_relief_start_time_when_entered_penalty_relief_mode()
+  {
+    $user                 = $this -> user;
+
+    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
+      [
+        'connector_type_id' => ConnectorType :: first() -> id,
+      ]
+    );
+
+    $order                = factory( Order :: class ) -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'user_id'                   => $user -> id,
+        'charging_type'             => ChargingTypeEnum :: BY_AMOUNT,
+      ]
+    );
+
+    $now = Carbon :: create( 2020, 11, 3, 17, 25, 10 );
+    Carbon :: setTestNow( $now );
+
+
+    $order -> updateChargingStatus( OrderStatusEnum :: USED_UP );
+
+    $response = $this -> actAs( $user ) -> get( $this -> active_orders_url );
+    $response = $response -> decodeResponseJson() [ 0 ];
+
+    $this -> assertTrue( !! $response [ 'penalty_relief_mode_start_time' ]);
   }
 }
