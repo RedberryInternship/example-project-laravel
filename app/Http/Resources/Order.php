@@ -36,6 +36,20 @@ class Order extends JsonResource
     public function toArray($request)
     {        
         $startChargingTime = $this -> getChargingStatusTimestampInMilliseconds( OrderStatusEnum :: CHARGING );
+	
+
+        /**
+         * If car is already charged or money is used up 
+         * check if it is also on fine.
+         */
+        if(     $this -> charging_status == OrderStatusEnum :: CHARGED 
+            ||  $this -> charging_status == OrderStatusEnum :: USED_UP )
+	        {
+                if( $this -> isOnFine() ) 
+                {
+                    $this -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 
+                }
+            }
 
         /**
          * Add target price if it charging type is BY_AMOUNT.
@@ -69,11 +83,9 @@ class Order extends JsonResource
         
         if( $this -> isOnPenalty() )
         {            
-            $penaltyFee       = $this -> countPenaltyFee();
-
             $this -> setAdditionalData(
                 [
-                    'penalty_fee'        => $penaltyFee,
+                    'penalty_fee'        => $this -> countPenaltyFee(),
                 ]
             ); 
         }
