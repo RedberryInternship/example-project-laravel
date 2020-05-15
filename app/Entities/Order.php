@@ -139,6 +139,10 @@ trait Order
         $this -> load( 'charger_connector_type' );
         $this -> load( 'payments' );
 
+        if( $this -> hasAlreadyUsedUpMoney() )
+        {
+            return null;
+        }
         
         if( count( $this -> payments ) == 0 )
         {
@@ -259,6 +263,11 @@ trait Order
             return 0.0;
         }
 
+        if( $this -> hasAlreadyUsedUpMoney() )
+        {
+            return null;
+        }
+
         $moneyToRefund = $this -> countPaidMoney() - $this -> countConsumedMoney();
         $moneyToRefund = round( $moneyToRefund, 2 );
     
@@ -298,6 +307,17 @@ trait Order
         $penaltyPricePerMinute  = $this -> getPenaltyPricePerMinute();
                 
         return $elapsedMinutes * $penaltyPricePerMinute;    
+    }
+
+    /**
+     * Determine if user already used up all the 
+     * money he/she typed when charging with BY_AMOUNT.
+     * 
+     * @return bool
+     */
+    public function hasAlreadyUsedUpMoney()
+    {
+        return !! $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP );
     }
 
     /**
