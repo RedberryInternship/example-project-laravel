@@ -16,9 +16,6 @@ class ChargerProvider extends ServiceProvider
      */
     public function register()
     {
-
-        
-
         $this -> app -> bind('charger', function() {
            
             $mishasBackIp = config('espace.mishas_back_ip');
