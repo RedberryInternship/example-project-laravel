@@ -356,7 +356,18 @@ trait Order
      */
     private function updateFastChargerOrder()
     {
-        // TODO: Implement
+        $chargingStatus = $this -> charging_status;
+
+        switch( $chargingStatus )
+        {
+            case OrderStatusEnum :: CHARGING:
+
+            break;
+            
+            case OrderStatusEnum :: USED_UP:
+
+            break;
+        }
     }
 
     /**
@@ -419,7 +430,7 @@ trait Order
 
         break;
         
-        case OrderStatusEnum :: CHARGED :
+        case OrderStatusEnum :: CHARGED : // TODO: I think this is not working because Misha is not sending requests when already charged 
             if( $this -> isOnFine() ) 
             {
                 $this -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 
@@ -485,7 +496,6 @@ trait Order
         }
         else
         {
-
             $chargedTime      = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED ); 
         }
 
@@ -590,7 +600,7 @@ trait Order
      * @param string  $paymentType
      * @param float   $amount
      */
-    private function pay( $paymentType, $amount )
+    public function pay( $paymentType, $amount )
     {
         $userCard = $this -> user_card ;
         Payment :: pay( $this, $amount, $paymentType );
