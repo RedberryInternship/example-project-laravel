@@ -93,8 +93,8 @@ class Order extends JsonResource
         $mainResourceData = [
             'order_id'                      => $this -> id,
             'already_paid'                  => $this -> countPaidMoney(),
-            'consumed_money'                => $this -> countConsumedMoney(),
-            'refund_money'                  => $this -> countMoneyToRefund(),
+            'consumed_money'                => $this -> charging_status == OrderStatusEnum :: USED_UP ? null : $this -> countConsumedMoney(),
+            'refund_money'                  => $this -> charging_status == OrderStatusEnum :: USED_UP ? null : $this -> countMoneyToRefund(),
             'charger_type'                  => $this -> charger_connector_type -> determineChargerType(),
             'start_charging_time'           => $startChargingTime,
             'charging_type'                 => $this -> charging_type,
