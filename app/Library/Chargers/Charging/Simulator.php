@@ -2,12 +2,11 @@
 
 namespace App\Library\Chargers\Charging;
 
-use App\Exceptions\SimulatorException;
+use App\Library\Contracts\Simulator as SimulatorInterface;
 use Exception;
 
-class Simulator extends Base 
+class Simulator extends Base implements SimulatorInterface
 {
-
     /**
      * Tell charger that it is Lvl 2 charger.
      * 

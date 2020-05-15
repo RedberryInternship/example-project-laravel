@@ -2,6 +2,7 @@
 
 namespace App\Library\Testing;
 
+use App\Enums\MishasChargerStatus as MishasChargerStatusEnum;
 use Faker\Generator as Faker;
 
 class MishasMockCharger
@@ -28,7 +29,7 @@ class MishasMockCharger
     $this -> id = random_int(1, 300);
     $this -> latitude = $faker -> randomFloat(5, 0, 180);
     $this -> longitude = $faker -> randomFloat(5, 0, 180);
-    $this -> status = random_int(0,1) ? '0-ON_LINE 1-CHARGING' : -1 ;
+    $this -> status = random_int(0,1) ? MishasChargerStatusEnum :: FREE : MishasChargerStatusEnum :: CHARGING ;
     $this -> type = random_int(0,1);
     $this -> category = random_int(0,1);
     $this -> description = $faker -> sentence(5);

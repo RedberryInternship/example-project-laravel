@@ -130,8 +130,6 @@ Trait Helper
     if( ! MishasCharger :: isChargerFree( 29 ))
     {
       Simulator :: upAndRunning( 29 );
-      Simulator :: plugOffCable( 29 );
-      sleep( 3 );
     }
   }
 

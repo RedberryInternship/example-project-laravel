@@ -350,7 +350,6 @@ class StartChargingRequest extends TestCase {
     $this -> make_charger_free();
 
     MishasCharger :: start        ( 29, 1 );
-    sleep( 2 );
 
     $charger = factory( Charger::class ) -> create([ 'charger_id' => 29 ]);
 
