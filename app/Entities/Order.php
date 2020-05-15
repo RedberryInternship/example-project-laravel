@@ -17,7 +17,6 @@ use App\Config;
 
 trait Order
 {
-
     /**
      * KiloWattHour line with which we're gonna
      * determine if charging is officially started
@@ -310,6 +309,25 @@ trait Order
     }
 
     /**
+     * Calculate penalty start time.
+     * 
+     * @return milliseconds
+     */
+    public function calculatePenaltyStartTime()
+    {
+        $penaltyReliefModeStartTime = $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT
+                ? $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP )
+                : $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED );
+
+        $config               = Config :: first();
+        $penaltyReliefMinutes = $config -> penalty_relief_minutes;
+        $penaltyStartTime     = $penaltyReliefModeStartTime -> addMinutes( $penaltyReliefMinutes );
+        $penaltyStartTime     = $penaltyStartTime -> timestamp * 1000;
+
+        return $penaltyStartTime;
+    }
+
+    /**
      * Determine if user already used up all the 
      * money he/she typed when charging with BY_AMOUNT.
      * 
@@ -500,6 +518,17 @@ trait Order
         $kiloWattHourLine = $this  -> kiloWattHourLine;
 
         return $chargingPower < $kiloWattHourLine;
+    }
+
+    /**
+     * Determine if car has already stopped charging.
+     * 
+     * @return bool
+     */
+    public function carHasAlreadyStoppedCharging()
+    {
+        return  $this -> charging_status == OrderStatusEnum :: CHARGED 
+            ||  $this -> charging_status == OrderStatusEnum :: USED_UP ;
     }
 
     /**

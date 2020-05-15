@@ -2,9 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Config;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
 class Order extends JsonResource
@@ -40,16 +38,12 @@ class Order extends JsonResource
 
         /**
          * If car is already charged or money is used up 
-         * check if it is also on fine.
+         * check if it is also on fine and if so update charging status.
          */
-        if(     $this -> charging_status == OrderStatusEnum :: CHARGED 
-            ||  $this -> charging_status == OrderStatusEnum :: USED_UP )
-	        {
-                if( $this -> isOnFine() ) 
-                {
-                    $this -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 
-                }
-            }
+        if( $this -> carHasAlreadyStoppedCharging() && $this -> isOnFine() )
+        {
+            $this -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 
+        }
 
         /**
          * Add target price if it charging type is BY_AMOUNT.
@@ -65,18 +59,9 @@ class Order extends JsonResource
 
         if( $this -> enteredPenaltyReliefMode() )
         {
-            $penaltyReliefModeStartTime = $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT
-                ? $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP )
-                : $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED );
-
-            $config               = Config :: first();
-            $penaltyReliefMinutes = $config -> penalty_relief_minutes;
-            $penaltyStartTime     = $penaltyReliefModeStartTime -> addMinutes( $penaltyReliefMinutes );
-            $penaltyStartTime     = $penaltyStartTime -> timestamp * 1000;
-
             $this -> setAdditionalData(
                 [
-                    'penalty_start_time' => $penaltyStartTime,
+                    'penalty_start_time' => $this -> calculatePenaltyStartTime(),
                 ]
             );
         }
