@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Enums\ChargerType as ChargerTypeEnum;
+use App\Enums\PaymentType as PaymentTypeEnum;
 
 use App\Traits\Message;
 
@@ -132,7 +133,7 @@ class ChargingController extends Controller
    */
   public function stop(StopCharging $request)
   {
-    $orderId        = request() -> get( 'order_id' );
+    $orderId        = $request -> get( 'order_id' );
 
     $order          = Order :: with(
       [
@@ -147,7 +148,15 @@ class ChargingController extends Controller
    
     $this -> sendStopChargingRequestToMisha( $charger -> charger_id, $transactionID );
     
-    $order -> charging_status = OrderStatusEnum :: CHARGED;
+    if( $order -> charging_type == ChargingTypeEnum :: BY_AMOUNT )
+    {
+      $order -> charging_status = OrderStatusEnum :: USED_UP;
+    }
+    else
+    {
+      $order -> charging_status = OrderStatusEnum :: CHARGED;
+    }
+
     $order -> save();
 
     $resource = new OrderResource( $order );
