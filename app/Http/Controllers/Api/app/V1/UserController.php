@@ -3,22 +3,16 @@
 namespace App\Http\Controllers\Api\app\V1;
 
 use Twilio;
-use JWTAuth;
 use App\User;
 use App\Order;
 use App\Charger;
 use App\CarModel;
-use App\TempSmsCode;
 use App\UserCarModel;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ChargerCollection;
 use App\Http\Resources\OrdersCollection;
-use App\Facades\Charger as MishasCharger;
 use Illuminate\Support\Facades\Schema;
 
 class UserController extends Controller

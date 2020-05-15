@@ -29,7 +29,7 @@ class Order extends Model
     ];
 
     /**
-     * override model boot to add hooks.
+     * override model boot in order to add hooks.
      * 
      * @return void
      */

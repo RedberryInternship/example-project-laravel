@@ -244,7 +244,7 @@ class Charger extends Model
     public static function addIsFreeAttributeToChargers(&$chargers, $inner = false)
     {
         /**
-         * get free_charger_ids from our db
+         * get free_charger_ids from our db.
          * 
          * $free_charger_ids = Charger::getFreeChargersIds();
          */
@@ -280,7 +280,7 @@ class Charger extends Model
     public static function addIsFreeAttributeToCharger(&$charger)
     {
         /**
-         * set is free attribute for charger from out db
+         * set is free attribute for charger from out db.
          * 
          * $charger -> is_free = Charger::isChargerFree( $charger -> charger_id );
          */

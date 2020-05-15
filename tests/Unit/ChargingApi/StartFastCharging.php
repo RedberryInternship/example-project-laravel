@@ -60,7 +60,6 @@ class StartFastCharging extends TestCase
   /** @test */
   public function it_pays_target_price_when_by_amount()
   {
-
     $payload  = [
       'charging_type'             => ChargingTypeEnum :: BY_AMOUNT,
       'price'                     => 5.0,
@@ -73,8 +72,6 @@ class StartFastCharging extends TestCase
 
     $this -> assertEquals( 5, $payment -> price );
   }
-
-  
 
   public function createOrderPrerequisites( $payload )
   {

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\app\V1\User;
 
 use App\User;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\SendCodeRequest;
 use App\Http\Requests\User\VerifyCodeRequest;
@@ -11,7 +10,7 @@ use App\Http\Requests\User\VerifyCodeRequest;
 class CodeController extends Controller
 {
     /**
-     * Send Tempolary Code to User.
+     * Send Temporary Code to User.
      * 
      * @param SendCodeRequest $request
      * 
@@ -31,7 +30,7 @@ class CodeController extends Controller
     }
 
     /**
-     * Verify Tempolary Code.
+     * Verify Temporary Code.
      * 
      * @param VerifyCodeRequest $request
      * 
@@ -50,7 +49,7 @@ class CodeController extends Controller
     }
 
     /**
-     * Verify Tempolary Code For Password Recovery.
+     * Verify Temporary Code For Password Recovery.
      * 
      * @param VerifyCodeRequest $request
      * 

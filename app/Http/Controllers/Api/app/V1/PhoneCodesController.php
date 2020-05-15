@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Api\app\V1;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Resources\PhoneCodeCollection;
+use App\Http\Controllers\Controller;
 use App\PhoneCode;
 
 class PhoneCodesController extends Controller

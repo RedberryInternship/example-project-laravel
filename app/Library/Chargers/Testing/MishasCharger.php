@@ -8,7 +8,6 @@ use App\Facades\MockSyncer;
 
 class MishasCharger implements ChargerInterface
 {
-
   /**
    * all chargers.
    * 
@@ -188,5 +187,4 @@ class MishasCharger implements ChargerInterface
 
     return ( object ) $transaction_info;
   }
-
 }
