@@ -60,8 +60,11 @@ trait Order
      */
     public function enteredPenaltyReliefMode()
     {
-        return      $this -> charging_status == OrderStatusEnum :: CHARGED 
-                ||  $this -> charging_status == OrderStatusEnum :: USED_UP;
+        $enteredPenaltyReliefModeTimestamp = $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT
+            ? $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP )
+            : $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED );
+
+        return !! $enteredPenaltyReliefModeTimestamp;     
     }
 
     /**
