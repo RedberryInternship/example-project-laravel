@@ -33,8 +33,10 @@ class Order extends JsonResource
      */
     public function toArray($request)
     {        
+        $this -> load( 'charger_connector_type.charger'        );
+        $this -> load( 'charger_connector_type.connector_type' );
+        
         $startChargingTime = $this -> getChargingStatusTimestampInMilliseconds( OrderStatusEnum :: CHARGING );
-	
 
         /**
          * If car is already charged or money is used up 
