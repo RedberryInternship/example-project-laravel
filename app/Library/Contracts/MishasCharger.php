@@ -9,7 +9,7 @@ interface MishasCharger
    * 
    * @return array
    */
-  public function all(): array;
+  public function all();
 
   /**
    * Get All the active chargers charger_id
