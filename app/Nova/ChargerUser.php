@@ -2,12 +2,12 @@
 
 namespace App\Nova;
 
+use App\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class ChargerUser extends Resource
 {
@@ -48,9 +48,17 @@ class ChargerUser extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
-            BelongsTo::make('User','user', 'App\Nova\User'),
-            BelongsTo::make('Charger','charger', 'App\Nova\Charger')
+            ID::make()
+                ->sortable(),
+
+            Select::make('User', 'user_id')
+                ->options(User::getAssignableChargerUsers())
+                ->onlyOnForms(),
+            
+            BelongsTo::make('User')
+                ->exceptOnForms(),
+
+            BelongsTo::make('Charger')
         ];
     }
 

@@ -138,4 +138,20 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this -> hasMany(BusinessService::class);
     }
+
+    public function scopeAssignableChargerUsers($query)
+    {
+        return $query -> whereIn('role_id', [2, 3]);
+    }
+
+    public static function getAssignableChargerUsers()
+    {
+        return self::assignableChargerUsers()
+            -> get()
+            -> keyBy('id')
+            -> map(function($user) {
+                return $user -> first_name . ' ' . $user -> last_name;
+            })
+            -> toArray();
+    }
 }

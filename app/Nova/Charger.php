@@ -65,9 +65,13 @@ class Charger extends Resource
      */
     public function fields(Request $request)
     {
-        $users = User::whereIn('role_id', [2, 3]) -> get() -> keyBy('id') -> map(function($u) {
-            return $u -> first_name . ' ' . $u -> last_name;
-        }) -> toArray();
+        $users = User::assignableChargerUsers()
+            -> get()
+            -> keyBy('id')
+            -> map(function($user) {
+                return $user -> first_name . ' ' . $user -> last_name;
+            })
+            -> toArray();
 
         $fieldsArr = [
             ID::make()->sortable(),
@@ -111,7 +115,7 @@ class Charger extends Resource
             BelongsToMany::make('Charger Tags','Tags', 'App\Nova\Tag'),
 
             Select::make('User','user_id')
-                ->options($users)
+                ->options(User::getAssignableChargerUsers())
                 ->onlyOnForms(),
             
             BelongsTo::make('User')
