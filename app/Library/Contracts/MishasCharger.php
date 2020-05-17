@@ -16,7 +16,7 @@ interface MishasCharger
    * 
    * @return array
    */
-  public function getFreeChargersIds(): array;
+  public function getFreeChargersIds();
 
   /**
    * Find one charger in Misha's DB.
