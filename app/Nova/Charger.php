@@ -122,6 +122,9 @@ class Charger extends Resource
                 ->exceptOnForms(),
 
             BelongsTo::make('Charger Group')
+                -> nullable(),
+
+            BelongsToMany::make('Business Services')
                 -> nullable()
         ];
 
