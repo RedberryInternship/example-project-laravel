@@ -32,7 +32,7 @@ interface MishasCharger
   * @param int $charger_id
   * @return bool 
   */
-  public function isChargerFree( $charger_id ): bool;
+  public function isChargerFree( $charger_id );
 
   /**
    * Start Charging request to Misha's Back.
@@ -41,7 +41,7 @@ interface MishasCharger
    * @param   int $connector_id
    * @return  string
    */
-  public function start( $charger_id, $connector_id ): string;
+  public function start( $charger_id, $connector_id );
 
   /**
    * Stop Charging request to Misha's Back.
@@ -58,5 +58,5 @@ interface MishasCharger
    * @param int $id
    * @return object
    */
-  public function transactionInfo( $id ): object;
+  public function transactionInfo( $id );
 }
