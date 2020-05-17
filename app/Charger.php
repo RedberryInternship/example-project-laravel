@@ -189,7 +189,6 @@ class Charger extends Model
 
     public static function addFilterAttributeToChargersRecursively(&$chargers, $favoriteChargers, $inner = false)
     {
-    return;
         foreach ($chargers as &$charger)
         {
             $isFavorite = false;
