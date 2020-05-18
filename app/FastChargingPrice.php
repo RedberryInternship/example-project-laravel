@@ -13,9 +13,14 @@ class FastChargingPrice extends Model
         'price'
     ];
 
-    public function chargerConnectorType()
+    /**
+     * BelongsTo relationship with ChargerConnectorType.
+     * 
+     * @return \App\ChargerConnectorType
+     */
+    public function charger_connector_type()
     {
-    	return $this -> belongsTo('App\ChargerConnectorType');
+    	return $this -> belongsTo( ChargerConnectorType :: class );
     }
 }
 

@@ -28,8 +28,8 @@ class PasswordResetRequest extends FormRequest implements ValidatesWhenResolved
     public function rules()
     {
         return [
-            'password',
-            'phone_number'
+            'password'     => 'required',
+            'phone_number' => 'required'
         ];
     }
 

@@ -4,17 +4,14 @@ namespace Tests\Unit\ChargerConnectorTypes;
 
 use Tests\TestCase;
 
-use App\Enums\ConnectorType as ConnectorTypeEnum;
-use App\Enums\ChargerType as ChargerTypeEnum;
 
 use App\ChargerConnectorType;
 use App\FastChargingPrice;
 use App\ChargingPrice;
-use App\ConnectorType;
 use App\Charger;
 use App\Order;
 
-class ChargerConnectorTypeModel extends TestCase
+class Relationships extends TestCase
 {
 
   private $chargerConnectorType;
@@ -27,14 +24,14 @@ class ChargerConnectorTypeModel extends TestCase
   }
 
   /** @test */
-  public function charger_connector_type_has_connector_type()
+  public function it_has_connector_type()
   {
     $this -> chargerConnectorType -> load( 'connector_type' );
     $this -> assertTrue( !! $this -> chargerConnectorType -> connector_type );
   }
 
   /** @test */
-  public function charger_connector_type_has_charger()
+  public function it_has_charger()
   {
     $charger = factory( Charger :: class ) -> create();
     
@@ -45,7 +42,7 @@ class ChargerConnectorTypeModel extends TestCase
   }
 
   /** @test */
-  public function charger_connector_type_has_charging_prices()
+  public function it_has_charging_prices()
   {
     $chargerConnectorType = $this -> chargerConnectorType;
 
@@ -59,7 +56,7 @@ class ChargerConnectorTypeModel extends TestCase
   }
 
   /** @test */
-  public function charger_connector_type_has_fast_charging_prices()
+  public function it_has_fast_charging_prices()
   {
     $chargerConnectorType = $this -> chargerConnectorType;
 
@@ -73,7 +70,7 @@ class ChargerConnectorTypeModel extends TestCase
   }
 
   /** @test */
-  public function charger_connector_type_has_order()
+  public function it_has_order()
   {
     $chargerConnectorType = $this -> chargerConnectorType;
 
@@ -83,21 +80,5 @@ class ChargerConnectorTypeModel extends TestCase
     $chargerConnectorType -> load( 'orders' );
     
     $this -> assertCount( 2, $chargerConnectorType -> orders );
-  }
-
-  /** @test */
-  public function charger_connector_type_determines_charger_type()
-  {
-    $connectorType = ConnectorType :: whereName( ConnectorTypeEnum :: CHADEMO ) -> first();
-
-    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
-      [
-        'connector_type_id' => $connectorType -> id,
-      ]
-    );
-
-    $chargerType = $chargerConnectorType -> determineChargerType();
-
-    $this -> assertEquals( ChargerTypeEnum :: FAST, $chargerType );
   }
 }

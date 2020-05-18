@@ -34,7 +34,7 @@ class ChargerGroup extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'name',
     ];
 
     /**
@@ -55,17 +55,18 @@ class ChargerGroup extends Resource
         }) -> toArray();
 
         return [
-            ID::make() -> sortable(),
+            ID::make()
+                ->sortable(),
 
             Text::make('name')
-                -> sortable()
-                -> rules('required'),
-
-            Select::make('User','user_id')
-                -> options($users)
+                ->sortable()
                 ->rules('required'),
 
-            HasMany::make('Chargers','chargers', 'App\Nova\Charger')
+            Select::make('User','user_id')
+                ->options($users)
+                ->rules('required'),
+
+            HasMany::make('Chargers')
         ];
     }
 

@@ -4,16 +4,22 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Entities\Kilowatt as KilowattEntity;
+
 class Kilowatt extends Model
 {
+    use KilowattEntity;
+
+    /**
+     * Laravel guarder attribute.
+     */
     protected $guarded = [];
     
+    /**
+     * Laravel casts attribute.
+     */
     protected $casts = [
-        'consumed' => 'object'
+        'consumed' => 'float'
     ];
 
-    public function chargerTransaction()
-    {
-        return $this -> belongsTo(ChargerTransaction::class, 'charger_transaction_id');
-    }
 }

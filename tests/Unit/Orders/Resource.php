@@ -3,29 +3,30 @@
 namespace Tests\Unit\Orders;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+
+use Tests\Traits\Helper;
+use Tests\TestCase;
+use Carbon\Carbon;
+
 use App\Enums\ConnectorType as ConnectorTypeEnum;
+use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Enums\PaymentType as PaymentTypeEnum;
-use Illuminate\Support\Facades\DB;
+
 use App\ChargerConnectorType;
 use App\ChargingPrice;
 use App\ConnectorType;
-use App\FastChargingPrice;
-use Tests\TestCase;
 use App\Payment;
 use App\Charger;
+use App\Config;
 use App\Order;
 use App\User;
 
-use App\Traits\Testing\User as UserTrait;
-use App\Traits\Testing\Charger as ChargerTrait;
-
-class Orders extends TestCase
+class Resource extends TestCase
 {
   use RefreshDatabase,
-      UserTrait,
-      ChargerTrait;
-
+      Helper;
   
   private $user;
   private $token;
@@ -37,7 +38,7 @@ class Orders extends TestCase
   {
     parent :: setUp();
 
-    $this -> token    = $this -> createUserAndReturnToken();
+    $this -> token    = $this -> create_user_and_return_token();
     $this -> user     = User :: first();
     $this -> uri      = config()[ 'app.uri' ];
     $this -> active_orders_url      = $this -> uri . 'active-orders';
@@ -61,7 +62,6 @@ class Orders extends TestCase
   public function active_orders_response_is_ok()
   {
     $response = $this -> request -> get( $this -> active_orders_url );
-
     $response -> assertOk();
   }
 
@@ -108,32 +108,11 @@ class Orders extends TestCase
       ]
     );
 
-    factory( FastChargingPrice    :: class ) -> create(
-      [
-        'start_minutes'             => 0,
-        'end_minutes'               => 20,
-        'price'                     => 10.5,
-        'charger_connector_type_id' => $chargerConnectorType -> id
-      ]
-    );
-    
-    factory( FastChargingPrice    :: class ) -> create(
-      [
-        'start_minutes'             => 21,
-        'end_minutes'               => 50,
-        'price'                     => 25,
-        'charger_connector_type_id' => $chargerConnectorType -> id
-      ]
-    );
-    
-    factory( FastChargingPrice    :: class ) -> create(
-      [
-        'start_minutes'             => 51,
-        'end_minutes'               => 1000000,
-        'price'                     => 45,
-        'charger_connector_type_id' => $chargerConnectorType -> id
-      ]
-    );
+    $this -> make_fast_charging_prices( $chargerConnectorType -> id );
+
+    $startChargingTime = Carbon :: create(2020, 5, 7, 10, 12, 1);
+
+    Carbon :: setTestNow( $startChargingTime );
 
     $order = factory( Order :: class ) -> create(
       [ 
@@ -143,47 +122,43 @@ class Orders extends TestCase
       ]
     );
 
-    $startChargingTime1 = now() -> subMinutes( 10 );
-    $startChargingTime2 = now() -> subMinutes( 30 );
-    $startChargingTime3 = now() -> subMinutes( 90 );
-
 
     $firstPayment = factory( Payment :: class ) -> create(
       [
         'order_id'        => $order -> id,
         'type'            => PaymentTypeEnum :: CUT,
         'price'           => '20.0',
-        'confirm_date'    => $startChargingTime1,
       ]
     );
     
     // Case 1
-    $response = $this     -> request -> get( $this -> active_orders_url );
+    
+    $startChargingTime -> addMinutes( 5 );
+
+    $response = $this  -> actAs( $this -> user ) -> request -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson() [ 0 ];
     
-    $this -> assertEquals( $response[ 'already_paid' ]  , 20 );
-    $this -> assertEquals( $response[ 'consumed_money' ], 10.5 );
-    $this -> assertEquals( $response[ 'refund_money' ]  , 9.5 );
+    $this -> assertEquals( $response[ 'already_paid'   ]  , 20  );
+    $this -> assertEquals( $response[ 'consumed_money' ]  , 5   );
+    $this -> assertEquals( $response[ 'refund_money'   ]  , 15  );
     
     // Case 2
-    $firstPayment -> confirm_date = $startChargingTime2;
-    $firstPayment -> save();
+    $startChargingTime -> addMinutes( 16 );
 
     factory( Payment :: class ) -> create(
       [
         'order_id'        => $order -> id,
         'type'            => PaymentTypeEnum :: CUT,
         'price'           => '20.0',
-        'confirm_date'    => $startChargingTime1,
       ]
     );
     
     $response = $this     -> request -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson() [ 0 ];
 
-    $this -> assertEquals( $response[ 'already_paid' ]  , 40 );
-    $this -> assertEquals( $response[ 'consumed_money' ], 25 );
-    $this -> assertEquals( $response[ 'refund_money' ]  , 15 );
+    $this -> assertEquals( $response[ 'already_paid'    ], 40 );
+    $this -> assertEquals( $response[ 'consumed_money'  ], 35 );
+    $this -> assertEquals( $response[ 'refund_money'    ], 5  );
   }
 
 
@@ -247,8 +222,7 @@ class Orders extends TestCase
     );
 
     // Case 1
-    $order -> createKilowatt( 0, 7 );
-    $order -> addKilowatt( 150 );
+    $kilowatt = $order -> kilowatt() -> create([ 'consumed' => 150, 'charging_power' => 7 ]);
 
     $response = $this -> request -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson() [ 0 ];
@@ -259,10 +233,10 @@ class Orders extends TestCase
 
     // Case 2
     $kilowatt =   $order -> kilowatt;
-    $kilowatt ->  kilowatt_hour = 22;
+    $kilowatt ->  charging_power = 22;
     $kilowatt ->  save();
 
-    $order    -> addKilowatt( 44 );
+    $kilowatt -> update([ 'consumed' => 44]);
 
     $response = $this -> request -> get( $this -> active_orders_url );
     $response = $response -> decodeResponseJson() [ 0 ];
@@ -289,11 +263,13 @@ class Orders extends TestCase
 
     $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
                       -> get( $this -> order_url . '/'. $order -> id );
+
     $response -> assertJsonStructure(
       [
         'consumed_money',
         'already_paid',
         'refund_money',
+        'charging_type',
         'charger_connector_type_id',
         'connector_type_id',
         'charger_id',
@@ -302,4 +278,37 @@ class Orders extends TestCase
     );
   }
 
+  /** @test */
+  public function it_sets_penalty_start_time_accurately()
+  {
+    $this -> artisan( 'db:seed --class=ConfigSeeder' );
+    Config :: first() -> update([ 'penalty_relief_minutes' => 7 ]);
+    $user                 = $this -> user;
+    
+    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
+      [
+        'connector_type_id' => ConnectorType :: first() -> id,
+      ]
+    );
+
+    $order                = factory( Order :: class ) -> create(
+      [
+        'charger_connector_type_id' => $chargerConnectorType -> id,
+        'charging_type'             => ChargingTypeEnum :: BY_AMOUNT,
+        'user_id'                   => $user -> id,
+      ]
+    );
+
+    $now = Carbon :: create( 2020, 11, 3, 17, 25, 10 );
+    Carbon        :: setTestNow( $now );
+
+    $order    -> updateChargingStatus( OrderStatusEnum :: USED_UP );
+
+    $response = $this     -> actAs( $user ) -> get( $this -> active_orders_url );
+    $response = $response -> decodeResponseJson() [ 0 ];
+
+    $penaltyStartTime = Carbon :: createFromTimestamp( $response [ 'penalty_start_time' ] / 1000 );
+
+    $this     -> assertEquals( $penaltyStartTime -> subMinutes( 7 ), $now );
+  }
 }

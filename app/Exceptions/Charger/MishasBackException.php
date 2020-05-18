@@ -4,6 +4,7 @@ namespace App\Exceptions\Charger;
 
 use Exception;
 use App\Traits\Message;
+use App\Enums\GeneralError as GeneralErrorEnum;
 
 class MishasBackException extends Exception
 {
@@ -29,7 +30,7 @@ class MishasBackException extends Exception
     {
         return response() -> json([
             'message' => $this -> messages [ 'something_went_wrong' ],
-            'status'  => 'Something went wrong in Misha\'s Side',
+            'status'  => GeneralErrorEnum :: SOMETHING_WENT_WRONG,
             'code'    => 400,
         ], 400);
     }

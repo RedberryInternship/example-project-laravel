@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api\app\V1\User;
 use JWTAuth;
 use App\TempSmsCode;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\User\RegistrationRequest;
 
 class RegistrationController extends Controller

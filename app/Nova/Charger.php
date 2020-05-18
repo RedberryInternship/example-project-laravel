@@ -65,9 +65,13 @@ class Charger extends Resource
      */
     public function fields(Request $request)
     {
-        $users = User::whereIn('role_id', [2, 3]) -> get() -> keyBy('id') -> map(function($u) {
-            return $u -> first_name . ' ' . $u -> last_name;
-        }) -> toArray();
+        $users = User::assignableChargerUsers()
+            -> get()
+            -> keyBy('id')
+            -> map(function($user) {
+                return $user -> first_name . ' ' . $user -> last_name;
+            })
+            -> toArray();
 
         $fieldsArr = [
             ID::make()->sortable(),
@@ -106,39 +110,21 @@ class Charger extends Resource
 
             Text::make('lng'),
 
-            // BelongsTo::make('User','user', 'App\Nova\User')
-            //     ->onlyOnForms()
-            //     ->nullable(),
-
-            BelongsToMany::make('Connector Types')
-                -> fields(function () {
-                    return [
-                        Text::make('charger_type_id') -> onlyOnIndex(),
-                        Select::make('charger_type_id') -> options(ChargerType::getChargerTypesKeyValueArray())
-                    ];
-                }),
-            // Text::make('Types') -> displayUsing(function ($types){
-            //     $result = "";
-            //     $i = 0;
-            //     $len = count($types);
-            //     foreach ($types as $type)
-            //     {
-            //         $result .= $type -> name;
-            //         if ($i == $len - 1)
-            //         {
-            //             $result .= ". ";
-            //         } else {
-            //             $result .= ", ";
-            //         }
-            //         $i++;
-            //     }
-            //     return $result;
-            // })-> onlyOnIndex(),
+            BelongsToMany::make('Connector Types'),
 
             BelongsToMany::make('Charger Tags','Tags', 'App\Nova\Tag'),
+
             Select::make('User','user_id')
-                ->options($users),
-            BelongsTo::make('charger_group')
+                ->options(User::getAssignableChargerUsers())
+                ->onlyOnForms(),
+            
+            BelongsTo::make('User')
+                ->exceptOnForms(),
+
+            BelongsTo::make('Charger Group')
+                -> nullable(),
+
+            BelongsToMany::make('Business Services')
                 -> nullable()
         ];
 
@@ -168,7 +154,6 @@ class Charger extends Resource
             new ChargerPublished,
             new ChargerActive,
             new ChargerTags,
-            //new ChargerTypes,
             new ChargerConnectorTypes
         ];
     }

@@ -29,9 +29,9 @@ class PasswordEditRequest extends FormRequest implements ValidatesWhenResolved
     public function rules()
     {
         return [
-            'new_password',
-            'old_password',
-            'phone_number'
+            'new_password' => 'required',
+            'old_password' => 'required',
+            'phone_number' => 'required'
         ];
     }
 

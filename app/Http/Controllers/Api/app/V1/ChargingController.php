@@ -3,176 +3,53 @@
 namespace App\Http\Controllers\Api\app\V1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Resources\Json\Resource;
-
-use App\Enums\ChargingType as ChargingTypeEnum;
-use App\Enums\OrderStatus as OrderStatusEnum;
-use App\Enums\ChargerType as ChargerTypeEnum;
 
 use App\Traits\Message;
 
-use App\Order;
-use App\ChargerConnectorType;
 use App\Http\Requests\StartCharging;
 use App\Http\Requests\StopCharging;
-use App\Http\Resources\Order as OrderResource;
 
-use App\Facades\Charger;
+use App\Http\Resources\Order as OrderResource;
 
 class ChargingController extends Controller
 {
   use Message;
 
   /**
-   * Status code for response.
-   * 
-   * @var int
-   */
-  private   $status_code;
-
-  /**
-   * Status message for concrete description.
-   */
-  private   $status;
-
-  /**
-   * Message for app notifications.
-   * 
-   * @var string
-   */
-  private   $message;
-
-  /**
-   * Constructor for initializing response parameters.
-   * 
-   * @return void
-   */
-  public function __construct()
-  {
-    $this -> status_code = 200;
-    $this -> status      = '';
-    $this -> message     = '';
-
-    Resource :: withoutWrapping();
-  }
-
-  /**
    * Route method for starting Charging
    * 
-   * @param App\Http\Requests\StartCharging $request
-   * @return Illuminate\Http\JsonResponse
+   * @param   StartCharging $request
+   * @return  JsonResponse
    */
-  public function start(StartCharging $request)
+  public function start( StartCharging $request )
   { 
-    $chargerConnectorTypeId   = $request -> get( 'charger_connector_type_id' );
-    $chargerConnectorType     = ChargerConnectorType::find( $chargerConnectorTypeId );
-    $chargerType              = $chargerConnectorType -> determineChargerType();
+    $request -> startChargingProcess();
+    $order   = $request -> createOrder();
 
-    return $chargerType == ChargerTypeEnum :: FAST
-      ? $this -> startFastCharging()
-      : $this -> startLvl2Charging();
-  }
+    if( $request -> isChargerFast() )
+    {
+      $request -> pay();
+    }
 
-  /**
-   * Start charging on fast charger.
-   * 
-   * @return  Illuminate\Http\JsonResponse
-   */
-  private function startFastCharging()
-  {
-    $chargerConnectorTypeId   = request() -> get( 'charger_connector_type_id' );
-    $chargingType             = request() -> get( 'charging_type' );
-    $chargerConnectorType     = ChargerConnectorType::find( $chargerConnectorTypeId );
-    
-  }
-
-  /**
-   * Start charging on Lvl 2 charger.
-   * 
-   * @return  Illuminate\Http\JsonResponse
-   */
-  private function startLvl2Charging()
-  {
-    $chargerConnectorTypeId   = request() -> get( 'charger_connector_type_id' );
-    $userCardId               = request() -> get( 'user_card_id' );
-    $chargerConnectorType     = ChargerConnectorType :: find( $chargerConnectorTypeId );
-
-    $transactionID = Charger::start(
-      $chargerConnectorType   -> charger -> charger_id, 
-      $chargerConnectorType   -> m_connector_type_id
-    );
-
-    $order = Order::create([
-      'charger_connector_type_id' => $chargerConnectorType -> id,
-      'charger_transaction_id'    => $transactionID,
-      'charging_status'           => OrderStatusEnum :: INITIATED,
-      'user_card_id'              => $userCardId,
-      'user_id'                   => auth() -> user() -> id,
-    ]);
-
-    $transaction_info = Charger::transactionInfo( $transactionID );
-    $order -> createKilowatt( $transaction_info -> consumed );
-
-    $order -> load( 'charger_connector_type.charger'        );
-    $order -> load( 'charger_connector_type.connector_type' );
+    $request -> createKilowattRecord();
 
     return new OrderResource( $order );
   }
 
-
   /**
-   * Route method for stop charging call to Misha's back.
+   * Route method for stop charging 
+   * call to Misha's back.
    * 
-   * @param App\Http\Requests\StopCharging $request
-   * @return Illuminate\Http\JsonResponse
+   * @param   StopCharging $request
+   * @return  JsonResponse
    */
-  public function stop( StopCharging $request )
+  public function stop(StopCharging $request)
   {
-    $charger_connector_type_id  = $request -> get( 'charger_connector_type_id' );
-    $charger_connector_type     = ChargerConnectorType :: with('orders') -> find( $charger_connector_type_id );
+    $request -> stopChargingProcess();
+    $request -> updateChargingStatus();
+
+    $resource = $request -> buildResource();
     
-    $charger                    = $charger_connector_type -> charger;
-    $order                      = $charger_connector_type -> orders -> first();
-    $transactionID              = $order -> charger_transaction_id;
-   
-    $this -> sendStopChargingRequestToMisha( $charger -> charger_id, $transactionID );
-    
-
-    $order -> charging_status = OrderStatusEnum :: CHARGED;
-    $order -> save();
-
-    $this -> message = $this -> messages [ 'charging_successfully_finished' ];
-    $this -> status  = 'Charging successfully finished!';
-   
-   return $this -> respond();
+    return $resource;
   }
-
-  /**
-   * Send stop charging request to Misha's back
-   * 
-   * @param int $charger_id
-   * @param string $transactionID
-   * @return bool
-   */
-  public function sendStopChargingRequestToMisha( $charger_id, $transactionID )
-  {
-    return Charger::stop( $charger_id, $transactionID );
-  }
-
-  /**
-   * Create appropriate response 
-   * from status code and message.
-   * 
-   * @return Illuminate\Http\JsonResponse
-   */
-  private function respond()
-  {
-    return response() 
-      -> json([
-        'status_code' => $this -> status_code,
-        'status'      => $this -> status,
-        'message'     => (object) $this -> message,
-      ], $this -> status_code);
-  }
-
 }

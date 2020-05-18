@@ -9,7 +9,9 @@ use App\Exceptions\Charger\StopChargingException;
 use App\Exceptions\Charger\ChargerTransactionInfoException;
 use App\Exceptions\Charger\TransactionAlreadyFinishedException;
 
-class Charger extends Base
+use App\Library\Contracts\MishasCharger;
+
+class Charger extends Base implements MishasCharger
 {
     /**
      * Response parameter.

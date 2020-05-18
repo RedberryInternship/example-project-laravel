@@ -17,20 +17,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix' => 'business'], function() {
-    Route::get('/', 'BusinessController@getIndex');
-    Route::get('/login', 'BusinessController@getLogin');
-    Route::get('/register', 'BusinessController@getRegister');
-    Route::get('/forgot-password', 'BusinessController@getForgotPassword');
-    Route::post('/register', 'UserController@postRegister');
-    Route::post('/login', 'UserController@postAuthenticate');
-    Route::get('/logout', 'UserController@getLogout');
-    Route::post('/charger-transfer', 'Business\ChargerTransferController');
+Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
+    Route::get('/', 'AuthController@login');
+    Route::get('/login', 'AuthController@login');
+    Route::post('/auth', 'AuthController@auth');
+    Route::get('/logout', 'AuthController@logout');
+    Route::post('/charger-transfer', 'ChargerTransferController');
 
-    Route::resource('/chargers', 'Business\ChargerController');
-    Route::resource('/charger-groups', 'Business\ChargerGroupController');
-    Route::resource('/charging-prices', 'Business\ChargingPricesController');
-    Route::resource('/fast-charging-prices', 'Business\FastChargingPricesController');
+    Route::resource('/chargers', 'ChargerController');
+    Route::resource('/charger-groups', 'ChargerGroupController');
+    Route::resource('/charging-prices', 'ChargingPricesController');
+    Route::resource('/fast-charging-prices', 'FastChargingPricesController');
 });
 
 Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers/transactions'], function(){
@@ -38,8 +35,7 @@ Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers
     Route::get('update/{transaction_id}/{value}','TransactionController@update');
 });
 
-Route::group(['prefix' => 'chargers_back'], function(){
-
+Route::group(['prefix' => 'chargers_back'], function() {
     Route::get('start-charging/{charger_id}/{connector_id}', 'TestController@start');
     Route::get('stop-charging/{charger_id}/{transactionID}', 'TestController@stop');
     Route::get('transaction-info/{transaction_id}',          'TestController@transactionInfo');
@@ -52,6 +48,9 @@ Route::group(['prefix' => 'chargers_back'], function(){
     Route::get('charger/{charger_id}/shutdown',              'TestController@shutdown');
 
 });
+
+Route::get('/disconnect', 'TestController@disconnect');
+Route::post('/disconnect', 'TestController@disconnect');
 
 Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
         

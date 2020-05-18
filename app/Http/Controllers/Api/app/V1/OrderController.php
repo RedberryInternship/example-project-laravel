@@ -4,19 +4,21 @@ namespace App\Http\Controllers\Api\app\V1;
 
 use App\Http\Controllers\Controller;
 
-
-use App\User;
-use Illuminate\Http\Resources\Json\Resource;
 use App\Http\Resources\Order as OrderResource;
+
 use App\Order;
+use App\User;
 
 class OrderController extends Controller
 {
-
-   public function __construct()
-   {
-     Resource :: withoutWrapping();
-   }
+  /**
+   * Set without wrapping mode onto
+   * Order resource.
+   */
+  public function __construct()
+  {
+    OrderResource :: withoutWrapping();
+  }
 
   /**
   * Return active orders.
@@ -49,7 +51,7 @@ class OrderController extends Controller
           'charger_connector_type.connector_type',
         ]
       ) -> find( $order_id );
-    
+
     return new OrderResource( $order );
   }
 

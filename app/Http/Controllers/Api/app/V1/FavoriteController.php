@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\api\app\V1;
 
 use App\Http\Controllers\Controller;
-use App\Facades\Charger as MishasCharger;
 use Illuminate\Http\Request;
-use App\Charger;
 use App\Favorite;
-use App\User;
+use App\Charger;
 
 class FavoriteController extends Controller
 {

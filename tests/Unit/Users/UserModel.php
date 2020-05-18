@@ -4,16 +4,19 @@ namespace Tests\Users;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use App\Traits\Testing\User;
-use App\Enums\OrderStatus;
-use App\User as AppUser;
+
+use Tests\Traits\Helper;
 use Tests\TestCase;
+
+use App\Enums\OrderStatus;
+
 use App\Order;
+use App\User;
 
 class UserModel extends TestCase
 {
   use RefreshDatabase,
-      User;
+      Helper;
 
   private $user;
 
@@ -21,8 +24,8 @@ class UserModel extends TestCase
   {
     parent :: setUp();
   
-    $this -> createUserAndReturnToken();
-    $this -> user = AppUser :: first();
+    $this -> create_user_and_return_token();
+    $this -> user = User :: first();
   }
 
   protected function tearDown(): void

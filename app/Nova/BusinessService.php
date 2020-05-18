@@ -24,7 +24,7 @@ class BusinessService extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'title';
 
     /**
      * The columns that should be searched.
@@ -44,7 +44,8 @@ class BusinessService extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make()
+                ->sortable(),
 
             Translatable::make([
                 Text::make('title')

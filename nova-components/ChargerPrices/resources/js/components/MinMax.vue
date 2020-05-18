@@ -1,9 +1,13 @@
 <template>
-	<div>
+	<div class="inner-page">
         <header>
-		    <heading class="mb-6">Min Max Prices</heading>
+            <button class="go-back btn btn-default btn-primary" @click="goBack">
+                < Back
+            </button>
 
-            <div class="go-back" @click="goBack">< Back</div>
+		    <heading class="mb-6">
+                Min Max Prices
+            </heading>
         </header>
 
         <div class="chargers-form">
@@ -59,9 +63,7 @@
 	                    maxPrice: this.maxPrice,
 	                    chargers: this.chargers
 	                }
-	            }).then(response => {
-	                this.goBack();
-	            });
+	            }).then(() => window.location.reload());
             },
             goBack() {
                 this.$emit('goBack');
@@ -71,25 +73,5 @@
 </script>
 
 <style lang="scss">
-    header {
-        width: 100%;
-        display: flex;
-        text-align: center;
-        align-items: center;
-        justify-content: space-between;
-
-        .go-back {
-            cursor: pointer;
-            color: #4099de;
-        }
-    }
-
-    .form-group {
-        display: flex;
-
-        > div {
-            display: flex;
-            align-items: center;
-        }
-    }
+    //
 </style>

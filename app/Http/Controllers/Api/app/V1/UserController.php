@@ -3,22 +3,16 @@
 namespace App\Http\Controllers\Api\app\V1;
 
 use Twilio;
-use JWTAuth;
 use App\User;
 use App\Order;
 use App\Charger;
 use App\CarModel;
-use App\TempSmsCode;
 use App\UserCarModel;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ChargerCollection;
 use App\Http\Resources\OrdersCollection;
-use App\Facades\Charger as MishasCharger;
 use Illuminate\Support\Facades\Schema;
 
 class UserController extends Controller
@@ -162,7 +156,18 @@ class UserController extends Controller
     public function getMe()
     {
         $user = auth('api') -> user();
-        $user -> load('user_cards','user_cars','car_models');
+
+        if ( ! $user -> active || ! $user -> verified)
+        {
+            return response() -> json(['error' => 'User Not Active'], 406);
+        }
+
+        if (strtolower($user -> role -> name) != 'regular')
+        {
+            return response() -> json(['error' => 'User Role mismatch'], 403);
+        }
+
+        $user -> load('user_cards', 'user_cars', 'car_models');
 
         return response() -> json($user);
     }
@@ -174,8 +179,7 @@ class UserController extends Controller
         return new OrdersCollection(
             $order
                 -> where('user_id', $user -> id)
-                -> with('charger')
-                -> confirmed()
+                -> with('charger_connector_type.charger')
                 -> confirmedPaymentsWithUserCards()
                 -> get()
         );
@@ -187,7 +191,7 @@ class UserController extends Controller
         $user = auth('api') -> user();
         $favoriteChargers = $user -> favorites -> pluck('id') -> toArray();
 
-        $chargers = $charger -> whereHas('orders', function($query) use ($user) {
+        $chargers = $charger -> whereHas('charger_connector_types.orders', function($query) use ($user) {
             return $query -> where('user_id', $user -> id);
         })
         -> withAllAttributes()

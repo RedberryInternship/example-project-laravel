@@ -3,9 +3,7 @@
 namespace App;
 
 use Twilio;
-use App\Favorite;
 use App\Enums\OrderStatus;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -139,5 +137,21 @@ class User extends Authenticatable implements JWTSubject
     public function business_services()
     {
         return $this -> hasMany(BusinessService::class);
+    }
+
+    public function scopeAssignableChargerUsers($query)
+    {
+        return $query -> whereIn('role_id', [2, 3]);
+    }
+
+    public static function getAssignableChargerUsers()
+    {
+        return self::assignableChargerUsers()
+            -> get()
+            -> keyBy('id')
+            -> map(function($user) {
+                return $user -> first_name . ' ' . $user -> last_name;
+            })
+            -> toArray();
     }
 }

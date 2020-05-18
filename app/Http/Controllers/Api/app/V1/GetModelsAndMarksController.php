@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Api\app\V1;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\CarModel;
-use App\Mark;
 use App\Http\Resources\CarCollection;
+use App\Http\Controllers\Controller;
+use App\Mark;
 
 class GetModelsAndMarksController extends Controller
 {
