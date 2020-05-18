@@ -156,6 +156,12 @@ class UserController extends Controller
     public function getMe()
     {
         $user = auth('api') -> user();
+
+        if ( ! $user -> active || ! $user -> verified)
+        {
+            return response() -> json(['error' => 'User Not Active'], 406);
+        }
+
         $user -> load('user_cards','user_cars','car_models');
 
         return response() -> json($user);
