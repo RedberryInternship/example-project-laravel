@@ -162,7 +162,12 @@ class UserController extends Controller
             return response() -> json(['error' => 'User Not Active'], 406);
         }
 
-        $user -> load('user_cards','user_cars','car_models');
+        if (strtolower($user -> role -> name) != 'regular')
+        {
+            return response() -> json(['error' => 'User Role mismatch'], 403);
+        }
+
+        $user -> load('user_cards', 'user_cars', 'car_models');
 
         return response() -> json($user);
     }

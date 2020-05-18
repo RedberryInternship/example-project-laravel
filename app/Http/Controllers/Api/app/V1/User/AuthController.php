@@ -31,6 +31,11 @@ class AuthController extends Controller
             return response() -> json(['error' => 'User Not Active'], 406);
         }
 
+        if (strtolower($user -> role -> name) != 'regular')
+        {
+            return response() -> json(['error' => 'User Role mismatch'], 403);
+        }
+
         return response() -> json(User::respondWithToken($token));
     }
 }
