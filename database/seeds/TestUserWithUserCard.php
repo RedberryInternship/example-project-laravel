@@ -111,5 +111,24 @@ class TestUserWithUserCard extends Seeder
                 'masked_pan'  => '400620xxxxxx0100',
             ]
         );
+
+        $inola = factory( User :: class ) -> create(
+            [
+                'phone_number'  => '+995598003780',
+                'first_name'    => 'Inola',
+                'last_name'     => 'Porchkhidze',
+                'email'         => 'inola@tester.mriskhane',
+                'password'      => bcrypt( 'barbarestan' ),
+                'active'        => 1,
+            ]
+        );
+
+        factory( UserCard :: class ) -> create(
+            [
+                'user_id'     => $inola -> id,
+                'card_holder' => 'Inolla Porchkhidze',
+                'masked_pan'  => '400000xxxxxx0100',
+            ]
+        );
     }
 }
