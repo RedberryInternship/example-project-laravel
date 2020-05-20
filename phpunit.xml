@@ -11,34 +11,19 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        
-        <testsuite name="Chargers">
-            <directory suffix=".php">./tests/Unit/Chargers</directory>
+        <testsuite name="old">
+            <directory suffix=".php">./tests/Unit/V1/Chargers</directory>
+            <directory suffix=".php">./tests/Unit/V1/Orders</directory>
+            <directory suffix=".php">./tests/Unit/V1/ChargerConnectorTypes</directory>
+            <directory suffix=".php">./tests/Unit/V1/Users</directory>
+            <directory suffix=".php">./tests/Unit/V1/Kilowatts</directory>
+            <directory suffix=".php">./tests/Unit/V1/ChargingPrices</directory>
+            <directory suffix=".php">./tests/Unit/V1/ChargingFeedback</directory>
+            <directory suffix=".php">./tests/Unit/V1/ChargingApi</directory>
         </testsuite>
 
-        <testsuite name="Orders">
-            <directory suffix=".php">./tests/Unit/Orders</directory>
-        </testsuite>
-        
-        <testsuite name="ChargerConnectorTypes">
-            <directory suffix=".php">./tests/Unit/ChargerConnectorTypes</directory>
-        </testsuite>
-        
-        <testsuite name="Users">
-            <directory suffix=".php">./tests/Unit/Users</directory>
-        </testsuite>
-        
-        <testsuite name="Kilowatts">
-            <directory suffix=".php">./tests/Unit/Kilowatts</directory>
-        </testsuite>
-        
-        <testsuite name="ChargingPrices">
-            <directory suffix=".php">./tests/Unit/ChargingPrices</directory>
-        </testsuite>
-        
-        <testsuite name="ChargingProcess">
-            <directory suffix=".php">./tests/Unit/ChargingFeedback</directory>
-            <directory suffix=".php">./tests/Unit/ChargingApi</directory>
+        <testsuite name="current">
+            <directory suffix=".php">./tests/Unit/V2/BillingCalculator</directory>
         </testsuite>
 
     </testsuites>

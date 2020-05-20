@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\Unit\ChargerConnectorTypes;
+namespace Tests\Unit\V2\ChargerConnectorTypes;
 
-use Tests\Traits\Helper;
+use Tests\Unit\V1\Traits\Helper;
 use Tests\TestCase;
-use Carbon\Carbon;
 
 use App\Enums\ConnectorType as ConnectorTypeEnum;
 use App\Enums\ChargerType as ChargerTypeEnum;

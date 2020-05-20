@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Traits;
+namespace Tests\Unit\V1\Traits;
 
 use App\User;
 use App\Order;

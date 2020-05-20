@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Unit\ChargingApi;
+namespace Tests\Unit\V2\ChargingApi;
 
 use Tests\TestCase;
-use Tests\Traits\Helper;
+use Tests\Unit\V1\Traits\Helper;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use App\Enums\ChargingType as ChargingTypeEnum;

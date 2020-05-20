@@ -5,7 +5,7 @@ namespace Tests\Unit\Orders;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Carbon\Carbon;
 
-use Tests\Traits\Helper;
+use Tests\Unit\V1\Traits\Helper;
 use Tests\TestCase;
 
 use App\Enums\ConnectorType as ConnectorTypeEnum;
@@ -14,7 +14,6 @@ use App\Enums\OrderStatus as OrderStatusEnum;
 
 
 use App\ChargerConnectorType;
-use App\FastChargingPrice;
 use App\ConnectorType;
 use App\Payment;
 use App\Config;

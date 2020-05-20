@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Unit\ChargingApi;
+namespace Tests\Unit\V2\ChargingApi;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 
 use Tests\TestCase;
-use Tests\Traits\Helper as HelperTrait;
+use Tests\Unit\V1\Traits\Helper as HelperTrait;
 
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Enums\ConnectorType as ConnectorTypeEnum;
@@ -415,9 +415,5 @@ class StartChargingRequest extends TestCase {
 
     $this -> assertEquals( $userCard -> id, $response -> user_card_id );
   }
-
-
-  /** Helpers */
- 
 }
 

@@ -4,7 +4,7 @@ namespace Tests\Unit\ChargingFeedback;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use Tests\Traits\Helper;
+use Tests\Unit\V1\Traits\Helper;
 use Tests\TestCase;
 use Carbon\Carbon;
 
