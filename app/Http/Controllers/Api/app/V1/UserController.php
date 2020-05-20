@@ -156,7 +156,18 @@ class UserController extends Controller
     public function getMe()
     {
         $user = auth('api') -> user();
-        $user -> load('user_cards','user_cars','car_models');
+
+        if ( ! $user -> active || ! $user -> verified)
+        {
+            return response() -> json(['error' => 'User Not Active'], 406);
+        }
+
+        if (strtolower($user -> role -> name) != 'regular')
+        {
+            return response() -> json(['error' => 'User Role mismatch'], 403);
+        }
+
+        $user -> load('user_cards', 'user_cars', 'car_models');
 
         return response() -> json($user);
     }
