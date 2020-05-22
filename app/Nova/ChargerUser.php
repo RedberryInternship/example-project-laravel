@@ -8,9 +8,12 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Titasgailius\SearchRelations\SearchesRelations;
 
 class ChargerUser extends Resource
 {
+    use SearchesRelations;
+
     /**
      * The model the resource corresponds to.
      *
@@ -32,6 +35,16 @@ class ChargerUser extends Resource
      */
     public static $search = [
         'id',
+    ];
+
+    /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'user'    => ['first_name', 'last_name', 'email'],
+        'charger' => ['code', 'name']
     ];
 
     /**
