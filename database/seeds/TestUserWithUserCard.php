@@ -23,6 +23,7 @@ class TestUserWithUserCard extends Seeder
                 'email'         => 'liparit@mail.ru',
                 'password'      => bcrypt( 'rati1021' ),
                 'active'        => 1,
+                'verified'      => 1,
             ]
         );
 
@@ -43,6 +44,7 @@ class TestUserWithUserCard extends Seeder
                 'email'         => 'admin@espace.ge',
                 'password'      => bcrypt( 'espace' ),
                 'active'        => 1,
+                'verified'      => 1,
             ]
         );
 
@@ -63,6 +65,7 @@ class TestUserWithUserCard extends Seeder
                 'email'         => 'mako@mako.ge',
                 'password'      => bcrypt( 'maaako' ),
                 'active'        => 1,
+                'verified'      => 1,
             ]
         );
 
@@ -70,7 +73,23 @@ class TestUserWithUserCard extends Seeder
             [
                 'user_id'     => $mako -> id,
                 'card_holder' => 'Mako Ko',
-                'masked_pan'  => '411620xxxxxx9100',
+                'masked_pan'  => '418220xxxxxx9100',
+            ]
+        );
+        
+        factory( UserCard :: class ) -> create(
+            [
+                'user_id'     => $mako -> id,
+                'card_holder' => 'Mako Ko',
+                'masked_pan'  => '418220xxxxxx9000',
+            ]
+        );
+        
+        factory( UserCard :: class ) -> create(
+            [
+                'user_id'     => $mako -> id,
+                'card_holder' => 'Mako Ko',
+                'masked_pan'  => '418220xxxxxx9100',
             ]
         );
         
@@ -82,6 +101,7 @@ class TestUserWithUserCard extends Seeder
                 'email'         => 'mari@ami.ge',
                 'password'      => bcrypt( 'turboo' ),
                 'active'        => 1,
+                'verified'      => 1,
             ]
         );
 
@@ -101,6 +121,7 @@ class TestUserWithUserCard extends Seeder
                 'email'         => 'murvan@egchemis.yru',
                 'password'      => bcrypt( 'murvan' ),
                 'active'        => 1,
+                'verified'      => 1,
             ]
         );
 
@@ -120,6 +141,7 @@ class TestUserWithUserCard extends Seeder
                 'email'         => 'inola@tester.mriskhane',
                 'password'      => bcrypt( 'barbarestan' ),
                 'active'        => 1,
+                'verified'      => 1,
             ]
         );
 
