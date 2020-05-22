@@ -3,15 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 use App\Facades\Charger;
 use App\Facades\Simulator;
 
-use App\Enums\PaymentType;
 use App\Traits\Message;
-
-use App\User;
-use Illuminate\Http\Request;
 
 class TestController extends Controller 
  {
@@ -20,6 +17,7 @@ class TestController extends Controller
     public function __invoke()
     {
       
+      return response( '') -> header( 'Content-Type', 'text/xml' );
     }
 
     public function disconnect( Request $request )

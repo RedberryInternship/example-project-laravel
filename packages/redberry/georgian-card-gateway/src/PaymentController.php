@@ -2,86 +2,116 @@
 
 namespace Redberry\GeorgianCardGateway;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Log;
+use Illuminate\Support\Facades\Log;
+use Giunashvili\XMLParser\Parser;
 
 class PaymentController extends Controller
 {
-    public function getPayment(Request $request, $param)
+    private $parser;
+    private $paymentAvailResponseWrapper;
+    private $registerPaymentResponseWrapper;
+
+    public function __construct( Parser $parser )
     {
-	    Log::info($request -> all());
-        if($param == 'avail-check'){
-            Log::info($request -> all());
-            $response  = 
-            '<payment-avail-response>
-                <result>
-                <code>1</code>
-                <desc>Successful</desc>
-                </result>
-                <merchant-trx>'.$request['trx_id'].'</merchant-trx>
-                <purchase>
-                <shortDesc>TID:3825180</shortDesc>
-                <longDesc>PIN:186611</longDesc>
-                <account-amount>
-                <id>'.config('georgian-card-gateway.account_id').'</id>
-                <amount>'.$request['o_amount'].'</amount>
-                <currency>981</currency>
-                <exponent>2</exponent>
-                </account-amount>
-                </purchase>
-            </payment-avail-response>';
-
-            return Response($response);
-        }elseif($param == 'register'){
-            $trx_id                     =  $request['trx_id'];
-            $order_id                   =  $request['o_order_id'];
-            $amount                     =  $request['o_amount'] * 100;
-            $p_rrn                      =  $request['p_rrn'];
-            $p_transmissionDateTime     =  $request['p_transmissionDateTime'];
-            $signature                  =  $request['signature'];
-            $p_authcode                 =  $request['p_authcode'];
-            $result_code                =  $request['result_code'];
-            $p_storage_card_ref         =  $request['p.storage.card.ref'];
-
-            LOG::info('auth_code = ' . $p_authcode . '  ' . $p_storage_card_ref);
-            LOG::info('result_code = '.$result_code);
-            if($result_code == 1){
-                $response = '<register-payment-response>
-                    <result>
-                    <code>1</code>
-                    <desc>OK</desc>
-                    </result>
-                    </register-payment-response>';
-                    Log::info($response);
-                    // CREATE DATABASE RECORD
-
-            }elseif($result_code == 2){
-                $response = '<register-payment-response>
-                    <result>
-                    <code>2</code>
-                    <desc>Temporary unavailable</desc>
-                    </result>
-                    </register-payment-response>';
-                    Log::info($response);
-            }
-             Log::info($response);
-            return Response($response);
-
+        if( app() -> bound ( 'debugbar' ) )
+        {
+            resolve( 'debugbar' ) -> disable();
         }
+
+        $this -> parser = $parser;
+        $this -> paymentAvailResponseWrapper    = 'payment-avail-response';
+        $this -> registerPaymentResponseWrapper = 'register-payment-response';
     }
 
-    public function getFailed(Request $request)
+
+    public function paymentAvailResponse()
+    {
+        $trxId       = request() -> get( 'trx_id' );
+        $orderAmount = request() -> get( 'o_amount' );
+
+        $response    = $this -> paymentAvailResponseStructure();
+
+        $response [ 'merchant-trx' ] = $trxId;
+        $response [ 'purchase' ][ 'account-amount' ][ 'amount' ] = $orderAmount;
+
+        return $this -> parser -> arrayToXml( $response, $this -> paymentAvailResponseWrapper );
+    }
+
+    public function registerPaymentResponse()
+    {
+        $trx_id                     =  request() -> get( 'trx_id'       );
+        $order_id                   =  request() -> get( 'o_order_id'   );
+        $amount                     =  request() -> get( 'o_amount'     ) * 100;
+        $p_rrn                      =  request() -> get( 'p_rrn'        );
+        $p_transmissionDateTime     =  request() -> get( 'p_transmissionDateTime' );
+        $signature                  =  request() -> get( 'signature'    );
+        $p_authcode                 =  request() -> get( 'p_authcode'   );
+        $result_code                =  request() -> get( 'result_code'  );
+        $p_storage_card_ref         =  request() -> get( 'p.storage.card.ref' );
+
+        $response = $this -> registerPaymentResponseStructure();
+        
+        if( $result_code == 1 )
+        {
+            $response [ 'result' ][ 'code' ] = 1;
+            $response [ 'result' ][ 'desc' ] = 'OK';
+        }
+        else 
+            if( $result_code == 2 )
+            {
+                $response [ 'result' ][ 'code' ] = 2;
+                $response [ 'result' ][ 'desc' ] = 'Temporary unavailable';
+            }
+
+        return response( $this -> parser -> arrayToXml( $response, $this -> registerPaymentResponseWrapper ) );
+    }
+
+    public function getFailed()
    	{
-   		Log::info($request -> all());
-   	}
-   	public function getSucceed(Request $request)
+        $params = request() -> all();
+   		Log::info([ 'payment_failed_params' => $params ]);
+    }
+       
+   	public function getSucceed()
    	{
-   		Log::info($request -> all());
+        $params = request() -> all();
+   		Log::info([ 'payment_succeed_params' => $params ]);
    	}
 
-    public function getTest()
+    public function initiate()
     {
         return view('payment::test');
+    }
+
+    private function paymentAvailResponseStructure()
+    {
+        return [
+            'result' => [
+                'code' => 1,
+                'desc' => 'Successful',
+            ],
+            'merchant-trx' => '',
+            'purchase' => [
+                'shortDesc' => 'TID:3825180',
+                'longDesc' => 'PIN:186611',
+                'account-amount' => [
+                    'id' => config('georgian-card-gateway.account_id'),
+                    'amount' => 0,
+                    'currency' => 981,
+                    'exponent' => 2,    
+                ],
+            ],
+        ];
+    }
+
+    private function registerPaymentResponseStructure()
+    {
+        return [
+            'result' => [
+                'code' => 0,
+                'desc' => '',
+            ]
+        ];
     }
 }
