@@ -4,22 +4,20 @@ namespace Redberry\GeorgianCardGateway;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
-use Giunashvili\XMLParser\Parser;
+use Giunashvili\XMLParser\Parse;
 
 class PaymentController extends Controller
 {
-    private $parser;
     private $paymentAvailResponseWrapper;
     private $registerPaymentResponseWrapper;
 
-    public function __construct( Parser $parser )
+    public function __construct()
     {
         if( app() -> bound ( 'debugbar' ) )
         {
             resolve( 'debugbar' ) -> disable();
         }
 
-        $this -> parser = $parser;
         $this -> paymentAvailResponseWrapper    = 'payment-avail-response';
         $this -> registerPaymentResponseWrapper = 'register-payment-response';
     }
@@ -35,7 +33,7 @@ class PaymentController extends Controller
         $response [ 'merchant-trx' ] = $trxId;
         $response [ 'purchase' ][ 'account-amount' ][ 'amount' ] = $orderAmount;
 
-        return $this -> parser -> arrayToXml( $response, $this -> paymentAvailResponseWrapper );
+        return Parse :: arrayAsXml( $response, $this -> paymentAvailResponseWrapper );
     }
 
     public function registerPaymentResponse()
@@ -64,7 +62,7 @@ class PaymentController extends Controller
                 $response [ 'result' ][ 'desc' ] = 'Temporary unavailable';
             }
 
-        return response( $this -> parser -> arrayToXml( $response, $this -> registerPaymentResponseWrapper ) );
+        return response( Parse :: arrayAsXml( $response, $this -> registerPaymentResponseWrapper ) );
     }
 
     public function getFailed()
