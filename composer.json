@@ -23,7 +23,6 @@
         "pulkitjalan/geoip": "^4.0",
         "rackspace/php-opencloud": "dev-master",
         "redberry/charger-prices": "*",
-        "spatie/array-to-xml": "^2.11",
         "spatie/laravel-schemaless-attributes": "^1.6",
         "spatie/laravel-translatable": "^4.2",
         "spatie/nova-translatable": "^2.0",
