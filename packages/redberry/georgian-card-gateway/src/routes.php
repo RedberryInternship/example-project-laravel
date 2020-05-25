@@ -7,9 +7,7 @@ $routeGroupParams = [
   'namespace' => 'Redberry\GeorgianCardGateway\Controllers' 
 ];
 
-Route :: group( $routeGroupParams, function() {
-  Route :: get( 'initiation'   ,   'InitiationController' );
-  
+Route :: group( $routeGroupParams, function() { 
   Route :: get( 'avail-check'  ,   'PaymentController@paymentAvailResponse' );
   Route :: get( 'register'     ,   'PaymentController@registerPaymentResponse' );
 

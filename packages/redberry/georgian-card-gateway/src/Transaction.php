@@ -1,14 +1,10 @@
 <?php
 
-namespace Redberry\GeorgianCardGateway\Controllers;
+namespace Redberry\GeorgianCardGateway;
 
-use App\Http\Controllers\Controller;
-
-class InitiationController extends Controller
+class Transaction
 {
-
   private $url;
-
   private $data;
 
   public function __construct()
@@ -27,26 +23,22 @@ class InitiationController extends Controller
     ];
   }
 
-  public function __invoke()
+  public function execute()
   {
-    $this -> setAmount( 2 );
-    $this -> setOrderId( 'bear' );
-
-    return $this -> buildUrl();
+    return redirect( $this -> buildUrl() );
   }
 
-
-  private function setAmount( float $amount )
+  public function setAmount( float $amount )
   {
     $this -> data [ 'o.amount' ] = $amount;
   }
 
-  private function setOrderId( string $orderId )
+  public function setOrderId( string $orderId )
   {
     $this -> data [ 'o_order_id' ] = $orderId;
   }
 
-  private function enablePreauth()
+  public function enablePreauth()
   {
     $this -> data [ 'preauth' ] = 'Y';
   }

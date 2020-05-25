@@ -10,14 +10,18 @@ use App\Facades\Simulator;
 
 use App\Traits\Message;
 
+use Redberry\GeorgianCardGateway\Transaction;
+
 class TestController extends Controller 
  {
   use Message;
      
     public function __invoke()
     {
-      
-      return response( '') -> header( 'Content-Type', 'text/xml' );
+      $transaction = new Transaction;
+      $transaction -> setAmount( 2 );
+      $transaction -> setOrderId( 'bear' );
+      return $transaction -> execute();
     }
 
     public function disconnect( Request $request )
