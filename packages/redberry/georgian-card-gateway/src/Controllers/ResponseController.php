@@ -6,7 +6,7 @@ use Redberry\GeorgianCardGateway\Responses\RegisterPayment;
 use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
 use App\Http\Controllers\Controller;
 
-class PaymentController extends Controller
+class Response extends Controller
 {
     public function paymentAvailResponse()
     {
@@ -14,7 +14,11 @@ class PaymentController extends Controller
         $orderAmount = request() -> get( 'o_amount' );
 
         $paymentAvail = new PaymentAvail;
+        $paymentAvail -> setResultCode( 1 );
+        $paymentAvail -> setResultDesc( 'Successful' );
         $paymentAvail -> setMerchantTRX( $trxId );
+        $paymentAvail -> setPurchaseShortDesc( 'order' );
+        $paymentAvail -> setPurchaseLongDesc( 'order description' );
         $paymentAvail -> setPurchaseAmount( $orderAmount );
 
         return $paymentAvail -> response();

@@ -43,6 +43,18 @@ class Transaction
     $this -> data [ 'preauth' ] = 'Y';
   }
 
+  public function passResultingData(array $data )
+  {
+    $this -> data [ 'back_url_f' ] .= '?';
+    $this -> data [ 'back_url_s' ] .= '?';
+
+    foreach( $data as $key => $value )
+    {
+      $this -> data [ 'back_url_f' ] .= $key . '=' . $value;;
+      $this -> data [ 'back_url_s' ] .= $key . '=' . $value;
+    }
+  }
+
   private function buildUrl()
   {
     $url = $this -> url;
