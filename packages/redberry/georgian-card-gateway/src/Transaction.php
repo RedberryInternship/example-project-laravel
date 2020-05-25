@@ -9,7 +9,7 @@ class Transaction
 
   public function __construct()
   {
-    $this -> url = 'https://3dacq.georgiancard.ge/payment/start.wsm';
+    $this -> url = 'https://3dacq.georgiancard.ge/payment/start.wsm?';
 
     $this -> data = [
       'lang'        => 'KA',
