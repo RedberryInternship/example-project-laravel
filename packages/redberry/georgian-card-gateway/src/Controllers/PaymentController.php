@@ -8,19 +8,6 @@ use App\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {
-    public function __construct()
-    {
-        if( app() -> bound ( 'debugbar' ) )
-        {
-            resolve( 'debugbar' ) -> disable();
-        }
-    }
-
-    public function initiate()
-    {
-        return view('payment::test');
-    }
-
     public function paymentAvailResponse()
     {
         $trxId       = request() -> get( 'trx_id' );
