@@ -17,7 +17,8 @@ class ContactMessageRequest extends FormRequest implements ValidatesWhenResolved
      * @var array
      */
     protected $mailAddresses = [
-        'imeda@redberry.ge'
+        'imeda@redberry.ge',
+        'mako@redberry.ge',
     ];
 
     /**

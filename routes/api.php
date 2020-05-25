@@ -68,5 +68,6 @@ Route::group(['prefix' => 'app/V1'], function () {
 		Route::get('/faq', 'FAQController');
 		Route::get('/partners', 'PartnerController');
 		Route::post('/contact-message', 'ContactMessageController');
+		Route::get('/contact', 'ContactController');
 	});
 });	

@@ -22,7 +22,7 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Custom actingAs implementation for jwt.
-     * 
+     *
      * @param   \App\User $user
      * @return  void
      */

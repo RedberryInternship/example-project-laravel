@@ -2,24 +2,19 @@
 
 namespace App\Nova;
 
-use App\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Titasgailius\SearchRelations\SearchesRelations;
 
-class ChargerUser extends Resource
+class Contact extends Resource
 {
-    use SearchesRelations;
-
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\ChargerUser';
+    public static $model = 'App\Contact';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -38,21 +33,6 @@ class ChargerUser extends Resource
     ];
 
     /**
-     * The relationship columns that should be searched.
-     *
-     * @var array
-     */
-    public static $searchRelations = [
-        'user'    => ['first_name', 'last_name', 'email'],
-        'charger' => ['code', 'name']
-    ];
-
-    /**
-     * Grouping nova resource.
-     */
-    public static $group = 'Charger Resources';
-
-    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -62,16 +42,21 @@ class ChargerUser extends Resource
     {
         return [
             ID::make()
-                ->sortable(),
+                -> sortable(),
 
-            Select::make('User', 'user_id')
-                ->options(User::getAssignableChargerUsers())
-                ->onlyOnForms(),
-            
-            BelongsTo::make('User')
-                ->exceptOnForms(),
+            Text::make('address'),
 
-            BelongsTo::make('Charger')
+            Text::make('phone'),
+
+            Text::make('email'),
+
+            Text::make('fb_page'),
+
+            Text::make('fb_page_url'),
+
+            Text::make('web_page'),
+
+            Text::make('web_page_url'),
         ];
     }
 
