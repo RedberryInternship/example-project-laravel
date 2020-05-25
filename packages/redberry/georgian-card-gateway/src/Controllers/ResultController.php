@@ -12,11 +12,13 @@ class ResultController extends Controller
   {
     $params = request() -> all();
     Log::info([ 'payment_succeed_params' => $params ]);
+    dump( $params );
   }
 
   public function failed()
   {
     $params = request() -> all();
     Log::info([ 'payment_failed_params' => $params ]);
+    dump( $params );
   }
 }

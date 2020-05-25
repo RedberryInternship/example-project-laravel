@@ -20,7 +20,7 @@ class TestController extends Controller
     {
       $transaction = new Transaction;
       $transaction -> setAmount( 2 );
-      $transaction -> setOrderId( 'bear' );
+      $transaction -> setOrderId( 'test123' );
       return $transaction -> execute();
     }
 
