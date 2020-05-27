@@ -12,6 +12,7 @@
         "aloha/twilio": "^4.0",
         "arku/nova-multiselect": "dev-master",
         "fideloper/proxy": "^4.0",
+        "giunashvili/xml-parser": "dev-master",
         "guzzlehttp/guzzle": "^6.5",
         "illuminate/support": "^6.8",
         "laravel/framework": "^6.2",

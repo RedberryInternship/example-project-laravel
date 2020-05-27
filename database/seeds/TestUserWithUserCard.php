@@ -14,7 +14,8 @@ class TestUserWithUserCard extends Seeder
      */
     public function run()
     {
-        
+        #0001
+        #0010
         $liparit = factory( User :: class ) -> create(
             [
                 'phone_number'  => '+995591935080',
@@ -23,6 +24,7 @@ class TestUserWithUserCard extends Seeder
                 'email'         => 'liparit@mail.ru',
                 'password'      => bcrypt( 'rati1021' ),
                 'active'        => 1,
+                'verified'      => 1,
             ]
         );
 
@@ -34,7 +36,7 @@ class TestUserWithUserCard extends Seeder
             ]
         );
         
-
+        #0009
         $espace = factory( User :: class ) -> create(
             [
                 'phone_number'  => '+995598301266',
@@ -43,6 +45,7 @@ class TestUserWithUserCard extends Seeder
                 'email'         => 'admin@espace.ge',
                 'password'      => bcrypt( 'espace' ),
                 'active'        => 1,
+                'verified'      => 1,
             ]
         );
 
@@ -54,7 +57,8 @@ class TestUserWithUserCard extends Seeder
             ]
         );
         
-        
+        #0064
+        #0021
         $mako = factory( User :: class ) -> create(
             [
                 'phone_number'  => '+995598511266',
@@ -63,17 +67,27 @@ class TestUserWithUserCard extends Seeder
                 'email'         => 'mako@mako.ge',
                 'password'      => bcrypt( 'maaako' ),
                 'active'        => 1,
+                'verified'      => 1,
             ]
         );
-
+        
         factory( UserCard :: class ) -> create(
             [
                 'user_id'     => $mako -> id,
                 'card_holder' => 'Mako Ko',
-                'masked_pan'  => '411620xxxxxx9100',
+                'masked_pan'  => '418220xxxxxx9000',
             ]
         );
         
+        factory( UserCard :: class ) -> create(
+            [
+                'user_id'     => $mako -> id,
+                'card_holder' => 'Mako Ko',
+                'masked_pan'  => '418220xxxxxx9100',
+            ]
+        );
+        
+        #0008
         $mari = factory( User :: class ) -> create(
             [
                 'phone_number'  => '+995598511111',
@@ -82,6 +96,7 @@ class TestUserWithUserCard extends Seeder
                 'email'         => 'mari@ami.ge',
                 'password'      => bcrypt( 'turboo' ),
                 'active'        => 1,
+                'verified'      => 1,
             ]
         );
 
@@ -93,14 +108,16 @@ class TestUserWithUserCard extends Seeder
             ]
         );
         
+        #0028
         $giuna = factory( User :: class ) -> create(
             [
-                'phone_number'  => '+995591935080',
+                'phone_number'  => '+995591935081',
                 'first_name'    => 'Murvan',
                 'last_name'     => 'Yru',
                 'email'         => 'murvan@egchemis.yru',
-                'password'      => bcrypt( 'murvan' ),
+                'password'      => bcrypt( 'rati1021' ),
                 'active'        => 1,
+                'verified'      => 1,
             ]
         );
 
@@ -109,6 +126,48 @@ class TestUserWithUserCard extends Seeder
                 'user_id'     => $giuna -> id,
                 'card_holder' => 'Murvan Yru',
                 'masked_pan'  => '400620xxxxxx0100',
+            ]
+        );
+
+        #0022
+        $inola = factory( User :: class ) -> create(
+            [
+                'phone_number'  => '+995598003780',
+                'first_name'    => 'Inola',
+                'last_name'     => 'Porchkhidze',
+                'email'         => 'inola@tester.mriskhane',
+                'password'      => bcrypt( 'barbarestan' ),
+                'active'        => 1,
+                'verified'      => 1,
+            ]
+        );
+
+        factory( UserCard :: class ) -> create(
+            [
+                'user_id'     => $inola -> id,
+                'card_holder' => 'Inolla Porchkhidze',
+                'masked_pan'  => '400000xxxxxx0100',
+            ]
+        );
+
+        #5004
+        $nankuka = factory( User :: class ) -> create(
+            [
+                'phone_number'  => '+995598003300',
+                'first_name'    => 'Nanuka',
+                'last_name'     => 'Zhorzholiani',
+                'email'         => 'nanukas@show.ge',
+                'password'      => bcrypt( 'nanu-kaa!' ),
+                'active'        => 1,
+                'verified'      => 1,
+            ]
+        );
+
+        factory( UserCard :: class ) -> create(
+            [
+                'user_id'     => $nankuka -> id,
+                'card_holder' => 'Nanuka Zhorzholiani',
+                'masked_pan'  => '400000xxxxxx9988',
             ]
         );
     }
