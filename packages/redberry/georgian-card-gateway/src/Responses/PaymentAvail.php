@@ -13,6 +13,7 @@ class PaymentAvail extends Response
             'desc' => null,
         ],
         'merchant-trx' => null,
+        'primaryTrxPcid' => null,
         'purchase' => [
             'shortDesc' => null,
             'longDesc' => null,
@@ -41,6 +42,11 @@ class PaymentAvail extends Response
   public function setMerchantTRX( string $merchant_trx_id )
   {
     $this -> response [ 'merchant-trx' ] = $merchant_trx_id; 
+  }
+
+  public function setPrimaryTrxPcid( string $primaryTrxPcid )
+  {
+    $this -> response [ 'primaryTrxPcid' ] = $primaryTrxPcid;
   }
 
   public function setPurchaseShortDesc( string $shortDesc )

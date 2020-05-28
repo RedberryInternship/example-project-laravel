@@ -18,6 +18,16 @@ class ResponseController extends Controller
     }
     public function paymentAvailResponse()
     {
+       /* > Request   |
+        * |-----------|--------------------------------------|
+        * | trx_id    |   > 758843E9FDCB2AEA868EB175D534F082 |
+        * | lang_code |   > KA                               |
+        * | merch_id  |   > C49D12253462A2469BBF31569F8C6B8A |
+        * | o_amount  |   > 2                                |
+        * | ts        |   > 20200528 14:39:23                |
+        * |-----------|--------------------------------------|
+        */
+
         Log :: channel( 'payment-responses' ) -> info(
             [
                 'payment_avail_response' => request() -> all(),
@@ -34,12 +44,32 @@ class ResponseController extends Controller
         $paymentAvail -> setPurchaseShortDesc( 'order' );
         $paymentAvail -> setPurchaseLongDesc( 'order description' );
         $paymentAvail -> setPurchaseAmount( $orderAmount );
+        $paymentAvail -> setPrimaryTrxPcid( $trxId );
 
         return $paymentAvail -> response();
     }
 
     public function registerPaymentResponse()
     {
+
+       /* > Request
+        * |------------------------|-------------------------------------|
+        * | trx_id                 |  > 758843E9FDCB2AEA868EB175D534F082 |
+        * | merch_id               |  > C49D12253462A2469BBF31569F8C6B8A |
+        * | merchant_trx           |  > 758843E9FDCB2AEA868EB175D534F082 |
+        * | result_code            |  > 1                                |
+        * | amount                 |  > 2                                |
+        * | account_id             |  > 6ED073BE2DCFDC1FF992115BAD7771EF |
+        * | o_amount               |  > 2                                |
+        * | p_expiryDate           |  > 2010                             | 
+        * | p_isFullyAuthenticated |  > Y                                |
+        * | p_maskedPan            |  > 900000xxxxxxxxx0001              | 
+        * | p_cardholder           |  > Test                             | 
+        * | ts                     |  > 20200528 14:39:36                | 
+        * | signature              |  > DIV6mFAcjJv4CBM9Mk2...longString | 
+        * |------------------------|-------------------------------------|
+        */
+
         Log :: channel( 'payment-responses' ) -> info(
             [
                 'register_payment_response' => request() -> all(),
