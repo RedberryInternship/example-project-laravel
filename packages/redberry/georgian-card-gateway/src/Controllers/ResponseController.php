@@ -91,6 +91,7 @@ class ResponseController extends Controller
         {
             factory( \App\Order :: class ) -> create(
                 [
+                    'id'      => 77777,
                     'comment' => request() -> get( 'trx_id' ),
                 ]
             );
