@@ -23,7 +23,7 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        return view('business.dashboard') -> with([
+        return view('business.dashboard.index') -> with([
             'user'           => $user,
             'tabTitle'       => 'მთავარი',
             'activeMenuItem' => 'dashboard'
