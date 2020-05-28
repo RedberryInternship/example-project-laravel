@@ -5,9 +5,21 @@ namespace Redberry\GeorgianCardGateway\Controllers;
 use Redberry\GeorgianCardGateway\Responses\RegisterPayment;
 use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
-class Response extends Controller
+class ResponseController extends Controller
 {
+    public function __construct()
+    {
+        if( app() -> bound( 'debugbar' ) )
+        {
+            resolve( 'debugbar' ) -> disable();
+        }
+        
+        Log :: channel( 'payment-responses' ) -> info(
+            request() -> all()
+        );
+    }
     public function paymentAvailResponse()
     {
         $trxId       = request() -> get( 'trx_id' );
