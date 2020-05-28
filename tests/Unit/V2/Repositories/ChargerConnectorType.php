@@ -1,28 +1,25 @@
 <?php
 
-namespace Tests\Unit\V2\ChargerConnectorTypes;
+namespace Tests\Unit\V2\Repositories;
 
-use Tests\Unit\V1\Traits\Helper;
 use Tests\TestCase;
-
 use App\Enums\ConnectorType as ConnectorTypeEnum;
 use App\Enums\ChargerType as ChargerTypeEnum;
 
-use App\ChargerConnectorType;
+use App\ChargerConnectorType as CCT;
 use App\ConnectorType;
 use App\ChargingPrice;
 
-class Entity extends TestCase
-{
-  use Helper;
 
+class ChargerConnectorType extends TestCase
+{
   private $chargerConnectorType;
 
   protected function setUp(): void
   {
     parent::setUp();
     $this -> artisan( 'migrate' );
-    $this -> chargerConnectorType = factory( ChargerConnectorType :: class ) -> create();
+    $this -> chargerConnectorType = factory( CCT :: class ) -> create();
   }
 
   /** @test */
@@ -30,7 +27,7 @@ class Entity extends TestCase
   {
     $connectorType = ConnectorType :: whereName( ConnectorTypeEnum :: CHADEMO ) -> first();
 
-    $chargerConnectorType = factory( ChargerConnectorType :: class ) -> create(
+    $chargerConnectorType = factory( CCT :: class ) -> create(
       [
         'connector_type_id' => $connectorType -> id,
       ]
@@ -99,28 +96,5 @@ class Entity extends TestCase
     $this -> assertEquals( $chargingPrice2 -> price, 60 );
     $this -> assertEquals( $chargingPrice3 -> price, 10 );
     $this -> assertEquals( $chargingPrice4 -> price, 557 );
-  }
-
-  /** @test */
-  public function it_can_count_fast_charging_price_based_on_current_time()
-  {
-    $chargerConnectorType = $this -> chargerConnectorType;
-
-    $this -> make_fast_charging_prices( $chargerConnectorType -> id );
-
-    // 10 minutes passed since start charging
-    $fastChargingPrices = $chargerConnectorType -> collectFastChargingPriceRanges( 10 );
-    $this -> assertCount( 1, $fastChargingPrices );
-    
-    
-    // 15 minutes passed since start charging
-    $fastChargingPrices = $chargerConnectorType -> collectFastChargingPriceRanges( 15 );
-    $this -> assertCount( 2, $fastChargingPrices );
-    
-
-    // 25 minutes passed since start charging
-    $fastChargingPrices = $chargerConnectorType -> collectFastChargingPriceRanges( 25 );
-
-    $this -> assertCount( 3, $fastChargingPrices );
   }
 }

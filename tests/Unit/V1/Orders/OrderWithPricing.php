@@ -73,39 +73,6 @@ class OrderWithPricing extends TestCase
   }
 
   /** @test */
-  public function order_can_count_paid_money_with_fine()
-  {
-    $order = $this -> order;
-    factory( Payment :: class ) -> create(
-      [ 
-        'order_id' => $order -> id,
-        'type'      => PaymentTypeEnum :: CUT,
-        'price'     => 3.7125,  
-      ]
-    );
-    
-    factory( Payment :: class ) -> create(
-      [ 
-        'order_id' => $order -> id,
-        'type'      => PaymentTypeEnum :: CUT,
-        'price'     => 5.8,  
-      ]
-    );
-    
-     factory( Payment :: class ) -> create(
-      [ 
-        'order_id' => $order -> id,
-        'type'      => PaymentTypeEnum :: FINE,
-        'price'     => 120.9,  
-      ]
-    );
-
-    $paidMoney = $order -> countPaidMoneyWithFine();
-
-    $this -> assertEquals( 130.41, $paidMoney );
-  }
-
-  /** @test */
   public function order_can_count_consumed_money_when_charging_with_fast_charger()
   {
     $connectorType = ConnectorType :: whereName( ConnectorTypeEnum :: CHADEMO ) -> first();

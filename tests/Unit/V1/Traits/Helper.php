@@ -31,6 +31,8 @@ Trait Helper
       [
         'phone_number'  => $phone_number,
         'password'      => bcrypt($password),
+        'active'        => 1,
+        'verified'      => 1,
       ]
     );
 

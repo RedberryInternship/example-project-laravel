@@ -23,7 +23,12 @@
         </testsuite>
 
         <testsuite name="current">
+            <directory suffix=".php">./tests/Feature/V2</directory>
             <directory suffix=".php">./tests/Unit/V2/BillingCalculator</directory>
+            <directory suffix=".php">./tests/Unit/V2/ChargingFeedback</directory>
+            <directory suffix=".php">./tests/Unit/V2/Repositories</directory>
+            <directory suffix=".php">./tests/Unit/V2/Validators</directory>
+
         </testsuite>
 
     </testsuites>

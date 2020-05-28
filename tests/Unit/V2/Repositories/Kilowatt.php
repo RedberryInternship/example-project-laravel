@@ -1,22 +1,20 @@
 <?php
 
-namespace Tests\Unit\V2\Kilowatts;
+namespace Tests\Unit\V2\Repositories;
 
 use Illuminate\Support\Facades\DB;
+
 use Tests\TestCase;
 
-use App\Kilowatt;
-
-class KilowattEntity extends TestCase
+class Kilowatt extends TestCase
 {
- 
   protected $kilowatt;
 
   protected function setUp(): void
   {
     parent :: setUp();
     $this -> artisan('migrate:fresh');
-    $this -> kilowatt = factory( Kilowatt :: class ) -> create();
+    $this -> kilowatt = factory( \App\Kilowatt :: class ) -> create();
   }
 
   protected function tearDown(): void
@@ -31,17 +29,6 @@ class KilowattEntity extends TestCase
     });
 
     parent :: setUp();
-  }
-
-  /** @test */
-  public function it_can_set_charging_power()
-  {
-    $kilowatt = $this -> kilowatt;
-
-    $kilowatt -> setChargingPower( 1000 );
-    $kilowatt -> refresh();
-
-    $this -> assertEquals( 1000, $kilowatt -> getChargingPower() );
   }
   
   /** @test */

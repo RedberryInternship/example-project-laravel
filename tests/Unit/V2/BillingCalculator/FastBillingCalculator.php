@@ -77,6 +77,52 @@ class FastBillingCalculator extends TestCase
     $this -> assertEquals( 55, $consumedMoney ); 
   }
 
+  /** @test */
+  public function it_returns_correct_data_when_fast_charging()
+  {
+    $startChargingTime = Carbon :: create(2020, 5, 7, 10, 12, 1);
+
+    Carbon :: setTestNow( $startChargingTime );
+    $order        = $this -> order;
+    $order        -> updateChargingStatus( OrderStatusEnum :: CHARGING );
+    $firstPayment = factory( Payment :: class ) -> create(
+      [
+        'order_id'        => $order -> id,
+        'type'            => PaymentTypeEnum :: CUT,
+        'price'           => '20.0',
+      ]
+    );
+    
+    // Case 1
+    
+    $startChargingTime -> addMinutes( 5 );
+
+    $response = $this  -> actAs( $this -> user ) -> get( $this -> active_orders_url );
+    $response = $response -> decodeResponseJson()[ 0 ];
+    
+    $this -> assertEquals( 20 , $response[ 'already_paid'   ]);
+    $this -> assertEquals( 5  , $response[ 'consumed_money' ]);
+    $this -> assertEquals( 15 , $response[ 'refund_money'   ]);
+    
+    // Case 2
+    $startChargingTime -> addMinutes( 16 );
+
+    factory( Payment :: class ) -> create(
+      [
+        'order_id'        => $order -> id,
+        'type'            => PaymentTypeEnum :: CUT,
+        'price'           => '20.0',
+      ]
+    );
+    
+    $response = $this     -> actAs( $this -> user ) -> get( $this -> active_orders_url );
+    $response = $response -> decodeResponseJson() [ 0 ];
+
+    $this -> assertEquals( $response[ 'already_paid'    ], 40 );
+    $this -> assertEquals( $response[ 'consumed_money'  ], 35 );
+    $this -> assertEquals( $response[ 'refund_money'    ], 5  );
+  }
+
   /** helpers */
   public function createOrderWithPrerequisites()
   {

@@ -19,8 +19,8 @@ class ChargerConnectorType
     $connectorType        = ConnectorType :: whereName( $connectorTypeName ) -> first();
     $chargerConnectorType = factory( ChargerConnectorTypeModel :: class ) -> create(
       [
-        'connector_type_id' => $connectorType -> id,
-        'charger_id'           => factory( Charger :: class ) -> create([ 'charger_id' => 29 ]) -> id,
+        'connector_type_id'   => $connectorType -> id,
+        'charger_id'          => factory( Charger :: class ) -> create([ 'charger_id' => 29 ]) -> id,
       ]
     );
 

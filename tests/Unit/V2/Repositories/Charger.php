@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Unit\V2\Chargers;
+namespace Tests\Unit\V2\Repositories;
+
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -9,10 +10,10 @@ use Tests\TestCase;
 use App\Enums\OrderStatus;
 
 use App\ChargerConnectorType;
-use App\Charger;
+use App\Charger as ChargerModel;
 use App\Order;
 
-class ChargerModel extends TestCase
+class Charger extends TestCase
 { 
   use RefreshDatabase;
   
@@ -22,7 +23,7 @@ class ChargerModel extends TestCase
   {
     parent::setUp();
 
-    $this -> charger = factory( Charger :: class ) -> create();
+    $this -> charger = factory( ChargerModel :: class ) -> create();
   }
 
   protected function tearDown(): void
@@ -42,7 +43,7 @@ class ChargerModel extends TestCase
   {
     DB :: table( 'chargers' ) -> delete();
 
-    $charger1               = factory( Charger :: class ) -> create(); // free
+    $charger1               = factory( ChargerModel :: class ) -> create(); // free
     $charger1ConnectorType1 = factory( ChargerConnectorType :: class )  
       -> create
       (
@@ -60,7 +61,7 @@ class ChargerModel extends TestCase
         ]
       );
     
-    $charger2               = factory( Charger :: class ) -> create(); // free
+    $charger2               = factory( ChargerModel :: class ) -> create(); // free
     $charger2ConnectorType  = factory( ChargerConnectorType :: class )  
       -> create
         (
@@ -69,7 +70,7 @@ class ChargerModel extends TestCase
           ]
         ); 
 
-    $charger3               = factory( Charger :: class ) -> create(); // not free
+    $charger3               = factory( ChargerModel :: class ) -> create(); // not free
     $charger3ConnectorType1 = factory( ChargerConnectorType :: class )  
       -> create
       (
@@ -103,8 +104,8 @@ class ChargerModel extends TestCase
         );
     
     
-    $this -> assertTrue(    Charger :: isChargerFree( $charger1 -> id ) );
-    $this -> assertTrue(    Charger :: isChargerFree( $charger2 -> id ) );
-    $this -> assertTrue( !  Charger :: isChargerFree( $charger3 -> id ) );
+    $this -> assertTrue(    ChargerModel :: isChargerFree( $charger1 -> id ) );
+    $this -> assertTrue(    ChargerModel :: isChargerFree( $charger2 -> id ) );
+    $this -> assertTrue( !  ChargerModel :: isChargerFree( $charger3 -> id ) );
   }
 }
