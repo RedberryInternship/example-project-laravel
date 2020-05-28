@@ -14,6 +14,11 @@ class PaymentAvail extends Response
         ],
         'merchant-trx' => null,
         'primaryTrxPcid' => null,
+        'card' => [
+          'ref' => null,
+          'present' => null,
+        ],
+        'transaction-type' => null,
         'purchase' => [
             'shortDesc' => null,
             'longDesc' => null,
@@ -62,6 +67,21 @@ class PaymentAvail extends Response
   public function setPurchaseAmount( float $amount )
   {
     $this -> response [ 'purchase' ][ 'account-amount' ][ 'amount' ] = $amount;
+  }
+
+  public function setTransactionTypeToCardRegister()
+  {
+    $this -> response [ 'transaction-type' ] = 'CardRegister';
+  }
+  
+  public function setTransactionTypeToPayment()
+  {
+    $this -> response [ 'transaction-type' ] = 'Payment';
+  }
+
+  public function setCardPresentMode( bool $mode )
+  {
+    $this -> response[ 'card' ][ 'present' ] = $mode ? 'Y' : 'N';
   }
 
 }

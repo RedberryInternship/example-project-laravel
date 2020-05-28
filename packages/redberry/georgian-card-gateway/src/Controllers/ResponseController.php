@@ -45,6 +45,8 @@ class ResponseController extends Controller
         $paymentAvail -> setPurchaseLongDesc( 'order description' );
         $paymentAvail -> setPurchaseAmount( $orderAmount );
         $paymentAvail -> setPrimaryTrxPcid( $trxId );
+        $paymentAvail -> setTransactionTypeToCardRegister();
+        $paymentAvail -> setCardPresentMode( true );
 
         return $paymentAvail -> response();
     }
