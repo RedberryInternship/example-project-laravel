@@ -15,13 +15,15 @@ class ResponseController extends Controller
         {
             resolve( 'debugbar' ) -> disable();
         }
-        
-        Log :: channel( 'payment-responses' ) -> info(
-            request() -> all()
-        );
     }
     public function paymentAvailResponse()
     {
+        Log :: channel( 'payment-responses' ) -> info(
+            [
+                'payment_avail_response' => request() -> all(),
+            ]
+        );
+
         $trxId       = request() -> get( 'trx_id' );
         $orderAmount = request() -> get( 'o_amount' );
 
@@ -38,6 +40,12 @@ class ResponseController extends Controller
 
     public function registerPaymentResponse()
     {
+        Log :: channel( 'payment-responses' ) -> info(
+            [
+                'register_payment_response' => request() -> all(),
+            ]
+        );
+
         $result_code        = request() -> get( 'result_code'  );
         $registerPayment    = new RegisterPayment;
         
