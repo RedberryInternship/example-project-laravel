@@ -13,12 +13,6 @@ class PaymentAvail extends Response
             'desc' => null,
         ],
         'merchant-trx' => null,
-        'primaryTrxPcid' => null,
-        'card' => [
-          'ref' => null,
-          'present' => null,
-        ],
-        'transaction-type' => null,
         'purchase' => [
             'shortDesc' => null,
             'longDesc' => null,
@@ -81,7 +75,22 @@ class PaymentAvail extends Response
 
   public function setCardPresentMode( bool $mode )
   {
-    $this -> response[ 'card' ][ 'present' ] = $mode ? 'Y' : 'N';
+    if( ! isset( $this -> response[ 'card' ]))
+    {
+      $this -> response[ 'card' ] = [];
+    }
+
+    $this -> response[ 'card' ][ 'present' ]  = $mode ? 'Y' : 'N';
+  }
+
+  public function setCardRef( string $ref )
+  {
+    if( ! isset( $this -> response[ 'card' ]))
+    {
+      $this -> response[ 'card' ] = [];
+    }
+    
+    $this -> response[ 'card' ][ 'ref' ]  = $ref;
   }
 
 }

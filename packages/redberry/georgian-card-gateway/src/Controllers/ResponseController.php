@@ -6,6 +6,7 @@ use Redberry\GeorgianCardGateway\Responses\RegisterPayment;
 use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class ResponseController extends Controller
 {
@@ -33,6 +34,8 @@ class ResponseController extends Controller
                 'payment_avail_response' => request() -> all(),
             ]
         );
+        $order = DB :: table( 'orders' ) -> where( 'id', 77777 ) -> first();
+
 
         $trxId       = request() -> get( 'trx_id' );
         $orderAmount = request() -> get( 'o_amount' );
@@ -44,9 +47,13 @@ class ResponseController extends Controller
         $paymentAvail -> setPurchaseShortDesc( 'order' );
         $paymentAvail -> setPurchaseLongDesc( 'order description' );
         $paymentAvail -> setPurchaseAmount( $orderAmount );
-        $paymentAvail -> setPrimaryTrxPcid( $trxId );
-        $paymentAvail -> setTransactionTypeToCardRegister();
-        $paymentAvail -> setCardPresentMode( true );
+        
+        if( $order )
+        {
+            $paymentAvail -> setPrimaryTrxPcid( $order -> comment );
+           #$paymentAvail -> setTransactionTypeToCardRegister();
+           #$paymentAvail -> setCardPresentMode( true );
+        }
 
         return $paymentAvail -> response();
     }
@@ -77,6 +84,17 @@ class ResponseController extends Controller
                 'register_payment_response' => request() -> all(),
             ]
         );
+
+        $order = DB :: table( 'orders' ) -> where( 'id', 77777 ) -> first();
+
+        if(! $order )
+        {
+            factory( \App\Order :: class ) -> create(
+                [
+                    'comment' => request() -> get( 'trx_id' ),
+                ]
+            );
+        }
 
         $result_code        = request() -> get( 'result_code'  );
         $registerPayment    = new RegisterPayment;
