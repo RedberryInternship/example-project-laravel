@@ -7,6 +7,7 @@ use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Order as OrderModel;
 use App\Facades\Simulator;
 use App\UserCard;
+use App\Kilowatt;
 
 class Order
 {
@@ -27,7 +28,7 @@ class Order
 
     Simulator :: upAndRunning( 29 );
 
-    return factory( OrderModel :: class ) -> create(
+    $order = factory( OrderModel :: class ) -> create(
       [
         'user_id'                   => $user_id,
         'charger_connector_type_id' => $chargerConnectorType -> id,
@@ -35,6 +36,14 @@ class Order
       ]
     );
 
+    factory( Kilowatt :: class ) -> create( 
+      [
+        'order_id'        => $order -> id,
+        'consumed'        => 0,
+        'charging_power'  => 0,
+      ]
+    );
 
+    return $order;
   }
 }

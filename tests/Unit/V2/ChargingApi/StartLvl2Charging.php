@@ -5,7 +5,8 @@ namespace Tests\Unit\V2\ChargingApi;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 
-use Tests\Unit\V1\Traits\Helper;
+use Tests\Unit\V2\Stubs\Order as OStub;
+use App\Facades\Simulator;
 use Tests\TestCase;
 
 use App\Enums\ConnectorType as ConnectorTypeEnum;
@@ -25,10 +26,8 @@ use App\Traits\Message;
 class StartLvl2Charging extends TestCase {
   
   use RefreshDatabase,
-      Helper,
       Message;
 
-  private $token;
   private $user;
   private $uri;
   private $url;
@@ -37,8 +36,7 @@ class StartLvl2Charging extends TestCase {
   {
     parent::setUp();
 
-    $this -> token  = $this -> create_user_and_return_token();
-    $this -> user   = User :: first();
+    $this -> user   = factory( User :: class ) -> create();
     $this -> uri    = config( 'app' )['uri'];
     $this -> url    = $this -> uri . 'charging/start';
   }
@@ -57,27 +55,25 @@ class StartLvl2Charging extends TestCase {
   /** @test */
   public function it_creates_new_order_record_with_kilowatt()
   {
-    $this -> create_order_with_charger_id_of_29();
+    OStub :: makeOrder( $this -> user -> id, false );
       
     $orders_count   = Order::count();
     $kilowatt_count = Kilowatt::count();
 
     $this -> assertTrue( $orders_count > 0 );
     $this -> assertTrue( $kilowatt_count > 0 );
-
-    $this -> tear_down_order_data_with_charger_id_of_29();
   }
 
   /** @test */
   public function when_order_is_created_status_is_INITIATED()
   {
-    $this -> withExceptionHandling();
+    OStub :: makeOrder( $this -> user -> id, false );
 
-    $this -> create_order_with_charger_id_of_29( $this -> user -> id );
     $chargerConnectorType = ChargerConnectorType::first();
 
-    $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
-                      -> get( $this -> uri .'active-orders' );
+    $response = $this 
+      -> actAs( $this -> user ) 
+      -> get(   $this -> uri .'active-orders' );
 
     $response = $response -> decodeResponseJson();
 
@@ -91,14 +87,12 @@ class StartLvl2Charging extends TestCase {
     }
     
     $this -> assertEquals( OrderStatusEnum :: INITIATED, $desiredOrder[ 'charging_status' ]);
-
-    $this -> tear_down_order_data_with_charger_id_of_29();
   }
 
   /** @test */
   public function lvl_2_charging_returns_valid_data()
   {
-    $this -> make_charger_free();
+    Simulator :: upAndRunning( 29 );
 
     $charger              = factory( Charger :: class ) -> create([ 'charger_id' => 29 ]);
     $userCard             = factory( UserCard :: class) -> create();
@@ -109,17 +103,19 @@ class StartLvl2Charging extends TestCase {
       ]
     );
     
-    $response = $this -> withHeader( 'Authorization', 'Bearer ' . $this -> token )
-      -> post( $this -> url, [
-            'charger_connector_type_id' => $chargerConnectorType -> id,
-            'charging_type'             => ChargingTypeEnum :: FULL_CHARGE,
-            'user_card_id'              => $userCard -> id,
-          ]
+    $response = $this 
+      -> actAs( $this -> user )
+      -> post(  $this -> url, 
+        [
+          'charger_connector_type_id' => $chargerConnectorType -> id,
+          'charging_type'             => ChargingTypeEnum :: FULL_CHARGE,
+          'user_card_id'              => $userCard -> id,
+        ]
       );
-
+      
     $response -> assertJsonStructure(
       [
-      'already_paid',
+      'already_paid', 
       'consumed_money',
       'refund_money',
       'charging_status',

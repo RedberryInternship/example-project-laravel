@@ -6,12 +6,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-use App\Charger as OurCharger;
+use App\Charger;
 use App\ConnectorType;
 
 use App\Facades\ChargerSyncer;
 use App\Facades\MockSyncer;
-use App\Facades\Charger;
+use App\Facades\Charger as RealCharger;
 
 class Sync extends TestCase
 {
@@ -32,7 +32,7 @@ class Sync extends TestCase
   /** @test */
   public function do_we_get_the_chargers()
   {
-    $chargers = Charger::all();
+    $chargers = RealCharger :: all();
 
     $this -> assertTrue(!!$chargers);
     $this -> assertTrue(count($chargers) > 0);
@@ -42,7 +42,7 @@ class Sync extends TestCase
   public function data_can_be_inserted()
   {
     ChargerSyncer::insertOrUpdate();
-    $this -> assertTrue(OurCharger::count() > 0);
+    $this -> assertTrue( Charger :: count() > 0);
   }
 
   /** @test */
@@ -54,7 +54,7 @@ class Sync extends TestCase
 
     $charger_id       = $this -> getRandomChargerIdFromDB();
     $notYetExistingId = $this -> getNonExistingId();
-    $count_chargers   = OurCharger::count();
+    $count_chargers   = Charger :: count();
 
     /**
      * Make first mock charger that is going to
@@ -75,10 +75,10 @@ class Sync extends TestCase
       $newCharger2,
     ]);
 
-    $updatedCharger = OurCharger::where('charger_id', $charger_id) -> first(); 
+    $updatedCharger = Charger::where('charger_id', $charger_id) -> first(); 
     
     $this -> assertEquals($updatedCharger -> description , $newCharger1 -> description);
-    $this -> assertEquals($count_chargers + 1, OurCharger::count());
+    $this -> assertEquals($count_chargers + 1, Charger::count());
   }
 
   /** @test */
@@ -114,7 +114,7 @@ class Sync extends TestCase
 
     $updated_charger_id = $this ->getRandomChargerIdFromDB();
     
-    $old_charger_connectors_count = OurCharger::with('connector_types')
+    $old_charger_connectors_count = Charger::with('connector_types')
       -> where('charger_id', $updated_charger_id) 
       -> first()
       -> connector_types
@@ -131,14 +131,14 @@ class Sync extends TestCase
       $updated_charger,
     ]);
 
-    $updated_charger_connectors = OurCharger::with('connector_types') 
+    $updated_charger_connectors = Charger::with('connector_types') 
       -> where('charger_id', $updated_charger_id) 
       -> first()
       -> connector_types
       -> pluck('name')
       -> all();
     
-    $updated_charger_all_connectors_count = OurCharger::with('connector_types_all') 
+    $updated_charger_all_connectors_count = Charger::with('connector_types_all') 
       -> where('charger_id', $updated_charger_id) 
       -> first()
       -> connector_types_all
@@ -156,7 +156,7 @@ class Sync extends TestCase
   {
     ChargerSyncer::insertOrUpdate();
 
-    $old_chargers_count = OurCharger::count(); 
+    $old_chargers_count = Charger::count(); 
     $notYetExistingId   = $this -> getNonExistingId();
 
     $newCharger       = MockSyncer::generateSingleMockCharger();
@@ -164,7 +164,7 @@ class Sync extends TestCase
 
     MockSyncer::insertOrUpdateOne($newCharger);
 
-    $this -> assertEquals($old_chargers_count + 1, OurCharger::count());
+    $this -> assertEquals($old_chargers_count + 1, Charger::count());
   }
 
   /** @test */
@@ -181,7 +181,7 @@ class Sync extends TestCase
 
     MockSyncer::insertOrUpdateOne($new_charger);
 
-    $m_connector_type_id = OurCharger::with('connector_types') 
+    $m_connector_type_id = Charger::with('connector_types') 
       -> where('charger_id', $new_charger_id) 
       -> first() 
       -> connector_types 
@@ -204,7 +204,7 @@ class Sync extends TestCase
    */
   private function getRandomChargerIdFromDB()
   {
-    return OurCharger::inRandomOrder() -> first() -> charger_id;
+    return Charger::inRandomOrder() -> first() -> charger_id;
   }
 
   /**
@@ -215,7 +215,7 @@ class Sync extends TestCase
   private function getNonExistingId()
   {
     $notYetExistingId = 0;
-    $existingIds      = OurCharger::pluck('charger_id')->all();
+    $existingIds      = Charger::pluck('charger_id')->all();
     
     while(in_array($notYetExistingId, $existingIds))
     {

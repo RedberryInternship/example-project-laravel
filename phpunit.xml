@@ -28,6 +28,8 @@
             <directory suffix=".php">./tests/Unit/V2/ChargingFeedback</directory>
             <directory suffix=".php">./tests/Unit/V2/Repositories</directory>
             <directory suffix=".php">./tests/Unit/V2/Validators</directory>
+            <directory suffix=".php">./tests/Unit/V2/ChargingApi</directory>
+            <directory suffix=".php">./tests/Unit/V2/RealChargers</directory>
 
         </testsuite>
 
