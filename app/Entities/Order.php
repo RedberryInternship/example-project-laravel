@@ -320,7 +320,7 @@ trait Order
     /**
      * Get penalty timestamp.
      * 
-     * @return null|string
+     * @return Carbon|string
      */
     private function getPenaltyTimestamp()
     {
@@ -356,7 +356,7 @@ trait Order
             : $this -> updateLvl2ChargerOrder(); 
     }
 
-    /**
+    /** // TODO: Update Fast Charger Order 
      * Update fast charger order.
      * 
      * @return  void
@@ -365,15 +365,29 @@ trait Order
     {
         $chargingStatus = $this -> charging_status;
 
-        switch( $chargingStatus )
+        if( $chargingStatus == OrderStatusEnum :: CHARGING )
         {
-            case OrderStatusEnum :: CHARGING:
+            if( $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT )
+            {
+                if( $this -> shouldPay() )
+                {
+                    $charger = $this -> charger_connector_type -> charger;
 
-            break;
-            
-            case OrderStatusEnum :: USED_UP:
+                    MishasCharger :: stop( 
+                        $charger -> charger_id, 
+                        $this -> charger_transaction_id 
+                    );
 
-            break;
+                    $this -> updateChargingStatus( OrderStatusEnum :: USED_UP );
+                }
+            }
+            else
+            {
+                if( $this -> shouldPay() )
+                {
+                    $this -> pay( PaymentTypeEnum :: CUT, 20 );
+                }
+            }
         }
     }
 
@@ -580,7 +594,7 @@ trait Order
      */
     private function makeLastPaymentsForFastCharging()
     {
-        // TODO: Implement
+        $this -> cutOrRefund();
     }
 
     /**
@@ -591,25 +605,33 @@ trait Order
      */
     private function makeLastPaymentsForLvl2Charging()
     {
-        if( $this -> charging_type == ChargingTypeEnum :: FULL_CHARGE )
-        {
-            if( $this -> shouldPay() )
-            {
-                $shouldCutMoney = $this -> countMoneyToCut();
-                $this           -> pay( PaymentTypeEnum :: CUT, $shouldCutMoney );
-            }
-            else if( $this -> shouldRefund() )
-            {
-                $moneyToRefund  = $this -> countMoneyToRefund();
-                $this           -> pay( PaymentTypeEnum :: REFUND, $moneyToRefund );
-            }
-        }
+        $this -> cutOrRefund();
 
         if( $this -> isOnPenalty() )
         {
             $penaltyFee     = $this -> countPenaltyFee();   
             $this           -> pay( PaymentTypeEnum :: FINE, $penaltyFee );
-        } 
+        }
+    }
+
+    /**
+     * Cut/refund or do 
+     * nothing according data.
+     * 
+     * @return void
+     */
+    private function cutOrRefund()
+    {
+        if( $this -> shouldPay() )
+        {
+            $shouldCutMoney = $this -> countMoneyToCut();
+            $this           -> pay( PaymentTypeEnum :: CUT, $shouldCutMoney );
+        }
+        else if( $this -> shouldRefund() )
+        {
+            $moneyToRefund  = $this -> countMoneyToRefund();
+            $this           -> pay( PaymentTypeEnum :: REFUND, $moneyToRefund );
+        }
     }
 
     /**
