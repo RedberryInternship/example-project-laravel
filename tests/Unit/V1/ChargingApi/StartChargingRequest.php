@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 
 use Tests\TestCase;
-use Tests\Traits\Helper as HelperTrait;
+use Tests\Unit\V1\Traits\Helper as HelperTrait;
 
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Enums\ConnectorType as ConnectorTypeEnum;

@@ -5,7 +5,7 @@ namespace Tests\Unit\ChargingApi;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 
-use Tests\Traits\Helper;
+use Tests\Unit\V1\Traits\Helper;
 use Tests\TestCase;
 
 use App\Enums\ConnectorType as ConnectorTypeEnum;

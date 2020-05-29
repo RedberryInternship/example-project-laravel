@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Unit\ChargingApi;
+namespace Tests\Unit\V2\ChargingApi;
 
-use Tests\TestCase;
-use Tests\Traits\Helper;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Facades\Simulator;
+use Tests\TestCase;
 
-use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Enums\ConnectorType as ConnectorTypeEnum;
+use App\Enums\ChargingType as ChargingTypeEnum;
 
 use App\User;
 use App\Order;
@@ -18,8 +18,7 @@ use App\ChargerConnectorType;
 
 class StartFastCharging extends TestCase
 {
-  use RefreshDatabase,
-      Helper;
+  use RefreshDatabase;
 
   private $start_charging_url;
   private $user;
@@ -75,7 +74,7 @@ class StartFastCharging extends TestCase
 
   public function createOrderPrerequisites( $payload )
   {
-    $this -> make_charger_free();
+    Simulator :: upAndRunning( 29 );
     $user = $this -> user;
     $user -> load( 'user_cars' );
     $userCard = $this -> user -> user_cards -> first();
@@ -91,6 +90,6 @@ class StartFastCharging extends TestCase
     $payload [ 'charger_connector_type_id'  ] = $chargerConnectorType -> id;
     $payload [ 'user_card_id'               ] = $userCard -> id;
 
-    $resp = $this -> actAs( $user ) -> post( $this -> start_charging_url, $payload );
+    $this -> actAs( $user ) -> post( $this -> start_charging_url, $payload );
   }
 }

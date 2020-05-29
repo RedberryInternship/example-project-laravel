@@ -1,10 +1,11 @@
 <?php
 
-namespace Tests\Unit\ChargingFeedback;
+namespace Tests\Unit\V2\ChargingFeedback;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use Tests\Traits\Helper;
+use Tests\Unit\V2\Stubs\ChargerConnectorType as CCTStub;
+use Tests\Unit\V2\Stubs\ChargingPrice as CPStub;
 use Tests\TestCase;
 use Carbon\Carbon;
 
@@ -18,11 +19,11 @@ use App\User;
 
 class Lvl2Feedback extends TestCase
 {
-  use RefreshDatabase,
-      Helper;
+  use RefreshDatabase;
 
   private $uri;
-  private $token;
+  private $user;
+  private $order;
   private $stop_url;
   private $update_url;
   private $order_url;
@@ -33,9 +34,23 @@ class Lvl2Feedback extends TestCase
 
     $this -> update_url = '/chargers/transactions/update/';
     $this -> stop_url   = '/chargers/transactions/finish/';
-    $this -> token      = $this -> create_user_and_return_token();
+    $this -> user       = factory( User :: class ) -> create();
     $this -> uri        = config( 'app' )[ 'uri' ];
     $this -> order_url  = $this -> uri . 'order/';
+
+    $this -> order      = factory( Order :: class ) -> create(
+      [
+        'user_id' => $this -> user,
+        'charger_connector_type_id' => CCTStub :: createChargerConnectorType() -> id,
+      ]
+    );
+
+    $this -> order -> kilowatt() -> create(
+      [
+        'consumed' => 0,
+        'charging_power' => 100,
+      ]
+    );
   }
 
   protected function tearDown(): void
@@ -53,35 +68,29 @@ class Lvl2Feedback extends TestCase
   /** @test */
   public function update_order_adds_kilowatt_record()
   {  
-    $this -> create_order_with_charger_id_of_29();
-    
-    $order = Order::first();
+    $order = $this -> order;
     
     $this -> get( $this -> update_url . $order -> charger_transaction_id . '/7' );
     $this -> get( $this -> update_url . $order -> charger_transaction_id . '/14000' );
 
-    $kilowatts = $order -> kilowatt -> consumed;
+    $response = $this -> actAs( $this -> user ) -> get( $this -> order_url . $order -> id );
+    $response = $response -> decodeResponseJson();
     
-    $this -> assertEquals( 14, $kilowatts );
-
-    
-    $this -> tear_down_order_data_with_charger_id_of_29();
+    $kilowatt  = $order -> kilowatt;
+    $this -> assertEquals( 14, $kilowatt -> consumed );
   }
 
   /** @test */
   public function order_status_becomes_FINISHED_when_finished()
   {
-    $this -> create_order_with_charger_id_of_29();
-    
-    $order = Order :: first();
+    $order = $this -> order;
 
     $this -> get( $this -> stop_url . $order -> charger_transaction_id );
 
-    $updatedChargingStatus = Order :: first() -> charging_status;
+    $response = $this -> actAs( $this -> user ) -> get( $this -> order_url . $order -> id );
+    $response = ( object ) $response -> decodeResponseJson();
     
-    $this -> assertEquals( OrderStatusEnum :: FINISHED, $updatedChargingStatus );
-    
-    $this -> tear_down_order_data_with_charger_id_of_29();
+    $this -> assertEquals( OrderStatusEnum :: FINISHED, $response -> charging_status );
   }
 
   /** @test */
@@ -97,8 +106,8 @@ class Lvl2Feedback extends TestCase
     $onFinish   = Carbon :: create(2020, 3, 10, 13, 10, 10); // 0.6 * 20 = 12
 
     Carbon :: setTestNow( $startTime );
-    
-    $order      = $this -> set_charging_prices();
+    $order      = $this -> order;
+    CPStub :: createChargingPricesWithOnePhaseOfDay(  $order -> charger_connector_type_id );    
     $order      -> updateChargingStatus( OrderStatusEnum :: CHARGING );
     $kilowatt   = $order -> kilowatt;
 
@@ -123,8 +132,10 @@ class Lvl2Feedback extends TestCase
 
     $this     -> get( $this -> stop_url . $order -> charger_transaction_id );
 
-    $user     = User :: first();
-    $response = $this -> actAs( $user ) -> get( $this -> order_url . $order -> id ) -> decodeResponseJson();
+    $response = $this 
+      -> actAs( $this -> user ) 
+      -> get( $this -> order_url . $order -> id ) 
+      -> decodeResponseJson();
     
     $this -> assertEquals( 4.75,  $response [ 'consumed_money']);
     $this -> assertEquals( 20,    $response [ 'already_paid'  ]);
