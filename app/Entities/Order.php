@@ -354,7 +354,7 @@ trait Order
     /**
      * Get penalty timestamp.
      * 
-     * @return null|string
+     * @return Carbon|string
      */
     private function getPenaltyTimestamp()
     {
@@ -390,7 +390,7 @@ trait Order
             : $this -> updateLvl2ChargerOrder(); 
     }
 
-    /**
+    /** // TODO: Update Fast Charger Order 
      * Update fast charger order.
      * 
      * @return  void
