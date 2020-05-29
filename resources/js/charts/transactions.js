@@ -1,7 +1,8 @@
-const initChart = () => {
+export default function() {
     const ctx = 'transactions-chart';
 
-    let chartOptions = {
+    // Chart Options
+    const chartOptions = {
         elements: {
             rectangle: {
                 borderWidth: 2,
@@ -61,6 +62,7 @@ const initChart = () => {
         ]
     };
 
+    // Chart Config
     let config = {
         type: "bar",
         options: chartOptions,
@@ -69,5 +71,3 @@ const initChart = () => {
 
     new Chart(ctx, config);
 };
-
-document.addEventListener('DOMContentLoaded', initChart, false);

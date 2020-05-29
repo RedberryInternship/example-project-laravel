@@ -1,4 +1,4 @@
-<div class="row">
+<div id="dashboard-navigation" class="row dashboard-navigation">
     <div class="col s12 m3">
         <div class="card gradient-shadow gradient-45deg-light-blue-cyan border-radius-3 active">
             <div class="card-content center">
