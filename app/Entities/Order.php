@@ -95,40 +95,6 @@ trait Order
     }
 
     /**
-     * Count money the user has already paid with fines.
-     * 
-     * @return  float
-     * @example 10.25
-     */
-    public function countPaidMoneyWithFine()
-    {
-        if( ! isset($this -> payments ))
-        {
-            $this -> load( 'payments' );
-        }
-
-        if( count( $this -> payments ) == 0 )
-        {
-            return 0.0;
-        }
-    
-        $paidCuts = $this 
-            -> payments 
-            -> where    ( 'type', PaymentTypeEnum :: CUT  )
-            -> sum( 'price' );
-
-        $paidFines = $this 
-            -> payments 
-            -> where    ( 'type', PaymentTypeEnum :: FINE )
-            -> sum( 'price' );
-
-        $paidMoney = $paidFines + $paidCuts;
-        $paidMoney = round        ( $paidMoney, 2 );
-
-        return $paidMoney;
-    }
-
-    /**
      * Count the money user has already consumed(Charged).
      * 
      * @return float
@@ -712,7 +678,7 @@ trait Order
     {
         $now = app() -> runningUnitTests() ? now() -> timestamp : microtime( true );
 
-        $chargingStatus = $order -> charging_status;
+        $chargingStatus                 = $order -> charging_status;
         $orderChargingStatusChargeDates = $order -> charging_status_change_dates; 
 
         if( ! $orderChargingStatusChargeDates [ $chargingStatus ] )

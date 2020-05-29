@@ -3,7 +3,6 @@
 namespace Tests\Unit\Orders;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Collection;
 
 use Tests\TestCase;
 

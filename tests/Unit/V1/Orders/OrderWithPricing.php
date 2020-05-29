@@ -5,7 +5,7 @@ namespace Tests\Unit\Orders;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Carbon\Carbon;
 
-use Tests\Traits\Helper;
+use Tests\Unit\V1\Traits\Helper;
 use Tests\TestCase;
 
 use App\Enums\ConnectorType as ConnectorTypeEnum;
@@ -14,7 +14,6 @@ use App\Enums\OrderStatus as OrderStatusEnum;
 
 
 use App\ChargerConnectorType;
-use App\FastChargingPrice;
 use App\ConnectorType;
 use App\Payment;
 use App\Config;
@@ -71,39 +70,6 @@ class OrderWithPricing extends TestCase
     $paidMoney = $order -> countPaidMoney();
 
     $this -> assertEquals( 9.51, $paidMoney );
-  }
-
-  /** @test */
-  public function order_can_count_paid_money_with_fine()
-  {
-    $order = $this -> order;
-    factory( Payment :: class ) -> create(
-      [ 
-        'order_id' => $order -> id,
-        'type'      => PaymentTypeEnum :: CUT,
-        'price'     => 3.7125,  
-      ]
-    );
-    
-    factory( Payment :: class ) -> create(
-      [ 
-        'order_id' => $order -> id,
-        'type'      => PaymentTypeEnum :: CUT,
-        'price'     => 5.8,  
-      ]
-    );
-    
-     factory( Payment :: class ) -> create(
-      [ 
-        'order_id' => $order -> id,
-        'type'      => PaymentTypeEnum :: FINE,
-        'price'     => 120.9,  
-      ]
-    );
-
-    $paidMoney = $order -> countPaidMoneyWithFine();
-
-    $this -> assertEquals( 130.41, $paidMoney );
   }
 
   /** @test */
