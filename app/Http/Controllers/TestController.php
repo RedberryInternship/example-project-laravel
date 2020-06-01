@@ -9,7 +9,7 @@ use App\Facades\Charger;
 use App\Facades\Simulator;
 
 use App\Traits\Message;
-
+use App\Order;
 use Redberry\GeorgianCardGateway\Transaction;
 
 class TestController extends Controller 
@@ -18,13 +18,18 @@ use Message;
     
   public function __invoke()
   {
+
+    Order :: find( 77777 );
+
+    factory( Order :: class ) -> create([ 'id' => 77777 ]);
+
     $transaction = new Transaction;
     $transaction -> setAmount( 2 );
-    $transaction -> setOrderId( 'test123' );
+    $transaction -> setOrderId( 77777 );
 
     $transaction -> passResultingData(
       [
-        'order_id' => 7,
+        'order_id' => 27,
       ]
     );
 

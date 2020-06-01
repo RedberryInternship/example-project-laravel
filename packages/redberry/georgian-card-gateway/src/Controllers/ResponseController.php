@@ -6,18 +6,21 @@ use Redberry\GeorgianCardGateway\Responses\RegisterPayment;
 use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 
 class ResponseController extends Controller
 {
+    private $handler;
+
     public function __construct()
     {
         if( app() -> bound( 'debugbar' ) )
         {
             resolve( 'debugbar' ) -> disable();
         }
+
+        $this -> handler = resolve( 'redberry.georgian-card.handler' );
     }
-    
+
     public function paymentAvailResponse()
     {
        /* > Request   |
@@ -26,6 +29,7 @@ class ResponseController extends Controller
         * | lang_code |   > KA                               |
         * | merch_id  |   > C49D12253462A2469BBF31569F8C6B8A |
         * | o_amount  |   > 2                                |
+        * | o_id      |   > 7                                |
         * | ts        |   > 20200528 14:39:23                |
         * |-----------|--------------------------------------|
         */
@@ -35,11 +39,10 @@ class ResponseController extends Controller
                 'payment_avail_response' => request() -> all(),
             ]
         );
-        $order = DB :: table( 'orders' ) -> where( 'id', 77777 ) -> first();
-
 
         $trxId       = request() -> get( 'trx_id' );
         $orderAmount = request() -> get( 'o_amount' );
+        $orderId     = request() -> get( 'o_id' );
 
         $paymentAvail = new PaymentAvail;
         $paymentAvail -> setResultCode( 1 );
@@ -49,9 +52,15 @@ class ResponseController extends Controller
         $paymentAvail -> setPurchaseLongDesc( 'order description' );
         $paymentAvail -> setPurchaseAmount( $orderAmount );
         
-        if( $order )
+
+        if( !! $this -> handler )
         {
-            $paymentAvail -> setPrimaryTrxPcid( $order -> comment );
+            $primaryTrxPcid = $this -> handler -> getPrimaryTransactionId( $orderId );
+
+            if( !! $primaryTrxPcid )
+            {
+                $paymentAvail -> setPrimaryTrxPcid( $primaryTrxPcid );
+            }
         }
 
         return $paymentAvail -> response();
@@ -84,33 +93,58 @@ class ResponseController extends Controller
             ]
         );
 
-        $order = DB :: table( 'orders' ) -> where( 'id', 77777 ) -> first();
-
-        if(! $order )
-        {
-            factory( \App\Order :: class ) -> create(
-                [
-                    'id'      => 77777,
-                    'comment' => request() -> get( 'trx_id' ),
-                ]
-            );
-        }
-
-        $result_code        = request() -> get( 'result_code'  );
-        $registerPayment    = new RegisterPayment;
+        $resultCode     = request() -> get( 'result_code'  );
         
-        if( $result_code == 1 )
+        $registerPayment    = new RegisterPayment;
+
+        if( $resultCode == 1 )
         {
             $registerPayment -> setResultCode( 1 );
             $registerPayment -> setResultDesc( 'OK' );
+
+            $this -> registerTrix();
         }
         else 
-            if( $result_code == 2 )
-            {
-                $registerPayment -> setResultCode( 2 );
-                $registerPayment -> setResultDesc( 'Temporary unavailable' );
-            }
+        {
+            $registerPayment -> setResultCode( 2 );
+            $registerPayment -> setResultDesc( 'Temporary unavailable' );
+        }
 
         return $registerPayment -> response();
+    }
+
+    private function registerTrix()
+    {
+        $orderInfo      = $this -> extractOrderInfo();
+        $userCardInfo   = $this -> extractUserCardInfo();
+
+        $this 
+            -> handler 
+            -> registerPrimaryTransactionId( 
+                $orderInfo, 
+                $userCardInfo,
+            );
+    }
+
+    private function extractUserCardInfo()
+    {
+        $userCard = [
+            'amount'        => request() -> get( 'amount' ),
+            'expiry_date'   => request() -> get( 'p_expiryDate' ),
+            'masked_pan'    => request() -> get( 'p_maskedPan' ),
+            'card_holder'   => request() -> get( 'p_cardholder' ),
+        ];
+
+        return ( object ) $userCard;
+    }
+
+    private function extractOrderInfo()
+    {
+        $order = [
+            'transaction_id' => request() -> get( 'trx_id' ),
+            'order_id'             => request() -> get( 'o_id' ),
+        ];
+
+        return ( object ) $order;
     }
 }
