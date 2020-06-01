@@ -1,7 +1,7 @@
-@extends('business.authenticate')
+@extends('business.auth.master')
 
 @section('css')
-    <link rel="stylesheet" type="text/css" href="../../../app-assets/css-rtl/pages/login.css">
+    <link rel="stylesheet" type="text/css" href="/app-assets/css-rtl/pages/login.css">
 @endsection
 
 @section('body')
@@ -19,7 +19,7 @@
                 <div class="row margin">
                     <div class="input-field col s12">
                         <i class="material-icons prefix pt-2">email</i>
-                        <input id="email" type="text" name="email" autocomplete="off">
+                        <input id="email" type="text" name="email" autocomplete="off" required>
                         <label for="email" class="center-align">ელ. ფოსტა</label>
                     </div>
                 </div>
@@ -27,14 +27,16 @@
                 <div class="row margin">
                     <div class="input-field col s12">
                         <i class="material-icons prefix pt-2">lock_outline</i>
-                        <input id="password" type="password" name="password">
+                        <input id="password" type="password" name="password" required>
                         <label for="password">პაროლი</label>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="input-field col s12">
-                        <input type="submit" value="ავტორიზაცია" name="submit" class="btn waves-effect waves-light border-round gradient-45deg-purple-deep-orange col s12">
+                        <button type="submit" class="btn waves-effect waves-light border-round gradient-45deg-purple-deep-orange col s12">
+                            ავტორიზაცია
+                        </button>
                     </div>
                 </div>
             </form>
