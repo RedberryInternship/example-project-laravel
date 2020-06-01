@@ -12,7 +12,7 @@
     <ul class="sidenav sidenav-collapsible leftside-navigation collapsible sidenav-fixed menu-shadow" id="slide-out" data-menu="menu-navigation" data-collapsible="accordion">
         <li class="bold" style="margin-top: 3rem;">
             <a class="waves-effect waves-cyan {{ isset($activeMenuItem) && $activeMenuItem == 'dashboard' ? 'active' : NULL }}" href="/business">
-                <i class="material-icons">group_work</i>
+                <i class="material-icons">dashboard</i>
 
                 <span class="menu-title" data-i18n="Chat">მთავარი</span>
             </a>

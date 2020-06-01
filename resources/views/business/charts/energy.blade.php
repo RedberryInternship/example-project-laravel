@@ -1,5 +1,5 @@
 <!--Line Chart-->
-<div class="card">
+<div>
     <div class="card-content">
         <h4 class="card-title">
             შემოსავალი
