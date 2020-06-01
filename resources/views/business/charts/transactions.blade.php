@@ -1,5 +1,5 @@
 <!--Line Chart-->
-<div id="chartjs-line-chart" class="card">
+<div class="card">
     <div class="card-content">
         <h4 class="card-title">
             ტრანზაქციები

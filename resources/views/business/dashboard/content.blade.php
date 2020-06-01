@@ -11,7 +11,7 @@
                 </div>
 
                 <div class="content-page">
-                    3
+                    @include('business.charts.energy')
                 </div>
 
                 <div class="content-page">
