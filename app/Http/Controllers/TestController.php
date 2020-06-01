@@ -19,7 +19,7 @@ use Message;
   public function __invoke()
   {
 
-    Order :: find( 77777 );
+    Order :: find( 77777 ) -> delete();
 
     factory( Order :: class ) -> create([ 'id' => 77777 ]);
 
