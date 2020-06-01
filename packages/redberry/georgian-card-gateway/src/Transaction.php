@@ -35,7 +35,7 @@ class Transaction
 
   public function setOrderId( string $orderId )
   {
-    $this -> data [ 'o_order_id' ] = $orderId;
+    $this -> data [ 'o.id' ] = $orderId;
   }
 
   public function enablePreauth()

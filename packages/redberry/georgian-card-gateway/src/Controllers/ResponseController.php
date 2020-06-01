@@ -17,6 +17,7 @@ class ResponseController extends Controller
             resolve( 'debugbar' ) -> disable();
         }
     }
+    
     public function paymentAvailResponse()
     {
        /* > Request   |
@@ -51,8 +52,6 @@ class ResponseController extends Controller
         if( $order )
         {
             $paymentAvail -> setPrimaryTrxPcid( $order -> comment );
-           #$paymentAvail -> setTransactionTypeToCardRegister();
-           #$paymentAvail -> setCardPresentMode( true );
         }
 
         return $paymentAvail -> response();
