@@ -1,5 +1,5 @@
-export default function() {
-    const ctx = 'transactions-chart';
+export default function () {
+    const ctx = 'income-chart';
 
     // Chart Options
     const chartOptions = {
@@ -53,9 +53,9 @@ export default function() {
         labels: ["იანვარი", "თებერვალი", "მარტი", "აპრილი", "მაისი", "ივნისი", "ივლისი"],
         datasets: [
             {
-                label: "ტრანზაქციების რაოდენობა",
-                data: [65, 59, 80, 81, 200, 159, 321],
-                backgroundColor: "#14afd7",
+                label: "შემოსავალი",
+                data: [1000, 1500, 1230, 3000, 5000, 4500, 2000],
+                backgroundColor: "#fa6e7f",
                 hoverBackgroundColor: "#00acc1",
                 borderColor: "transparent"
             }

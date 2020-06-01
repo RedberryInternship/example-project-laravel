@@ -7,7 +7,7 @@
                 </div>
 
                 <div class="content-page">
-                    2
+                    @include('business.charts.income')
                 </div>
 
                 <div class="content-page">
