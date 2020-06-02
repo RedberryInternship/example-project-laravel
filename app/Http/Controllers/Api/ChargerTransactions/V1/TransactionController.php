@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers\Api\ChargerTransactions\V1;
 
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Order;
 
@@ -17,8 +18,8 @@ class TransactionController extends Controller
    * Update charging info. what is the 
    * current kilowatt value.
    * 
-   * @param string $transaction_id
-   * @param int $value
+   * @param  string  $transaction_id
+   * @param  int     $value
    * @return void
    */
   public function update( $transaction_id, $value )
@@ -27,8 +28,17 @@ class TransactionController extends Controller
       -> where( 'charger_transaction_id', $transaction_id ) 
       -> first();
 
-    $this -> order -> kilowatt -> updateConsumedKilowatts( $value );
-    $this -> order -> chargingUpdate();
+    if( $this -> order )
+    {
+      $this -> order -> kilowatt -> updateConsumedKilowatts( $value );
+      $this -> order -> chargingUpdate();
+    }
+    else
+    {
+      Log :: channel( 'transaction_update' ) -> info(
+        'There is no such order with transaction id of '. $transaction_id,
+      );
+    }
   }
 
   /**
@@ -43,7 +53,16 @@ class TransactionController extends Controller
   {
     $this -> order = Order ::  where( 'charger_transaction_id', $transaction_id ) -> first();
 
-    $this -> order -> finish();
+    if( $this -> order )
+    {
+      $this -> order -> finish();
+    }
+    else
+    {
+      Log :: channel( 'transaction_stop' ) -> info(
+        'There is no such order with transaction id of '. $transaction_id,
+      );
+    }
   }
 }
 

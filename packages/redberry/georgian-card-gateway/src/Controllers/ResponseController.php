@@ -52,7 +52,6 @@ class ResponseController extends Controller
         $paymentAvail -> setPurchaseLongDesc( 'order description' );
         $paymentAvail -> setPurchaseAmount( $orderAmount );
         
-
         if( !! $this -> handler )
         {
             $primaryTrxPcid = $this -> handler -> getPrimaryTransactionId( $orderId );
