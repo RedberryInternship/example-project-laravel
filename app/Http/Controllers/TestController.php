@@ -9,7 +9,6 @@ use App\Facades\Charger;
 use App\Facades\Simulator;
 
 use App\Traits\Message;
-use App\Order;
 use Redberry\GeorgianCardGateway\Transaction;
 
 class TestController extends Controller 
@@ -19,7 +18,7 @@ use Message;
   public function __invoke()
   {
     $transaction = new Transaction;
-
+    $transaction -> setUserCardId( 614 );
     return $transaction -> execute();
   }
 

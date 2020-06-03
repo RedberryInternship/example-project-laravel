@@ -52,5 +52,5 @@ interface GeorgianCardHandler
    * 
    * @return mixed
    */
-  function failed();
+  function failure();
 }
