@@ -1,10 +1,10 @@
 <?php
 
-namespace Redberry\GeorgianCardGateway;
+namespace Redberry\GeorgianCardGateway\Support;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
-class GeorgianCardGatewayServiceProvider extends ServiceProvider
+class ServiceProvider extends LaravelServiceProvider
 {
     /**
      * Register services.

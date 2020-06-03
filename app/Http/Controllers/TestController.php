@@ -18,6 +18,7 @@ use Message;
   public function __invoke()
   {
     $transaction = new Transaction;
+    $transaction -> setAmount( 1 );
     $transaction -> setUserCardId( 614 );
     return $transaction -> execute();
   }
