@@ -18,20 +18,7 @@ use Message;
     
   public function __invoke()
   {
-
-    Order :: find( 77777 ) -> delete();
-
-    factory( Order :: class ) -> create([ 'id' => 77777 ]);
-
     $transaction = new Transaction;
-    $transaction -> setAmount( 2 );
-    $transaction -> setOrderId( 77777 );
-
-    $transaction -> passResultingData(
-      [
-        'order_id' => 27,
-      ]
-    );
 
     return $transaction -> execute();
   }

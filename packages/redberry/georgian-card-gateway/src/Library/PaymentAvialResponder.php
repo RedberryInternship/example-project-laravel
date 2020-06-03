@@ -17,7 +17,7 @@ class PaymentAvailResponder
   {
     $trxId       = request() -> get( 'trx_id' );
     $orderAmount = request() -> get( 'o_amount' );
-    $orderId     = request() -> get( 'o_id' );
+    $userCardId  = request() -> get( 'o_user_card_id' );
 
     $paymentAvail = new PaymentAvail;
     $paymentAvail -> setResultCode( 1 );
@@ -27,7 +27,7 @@ class PaymentAvailResponder
     $paymentAvail -> setPurchaseLongDesc( 'order description' );
     $paymentAvail -> setPurchaseAmount( $orderAmount );
     
-    $primaryTrxPcid = $this -> handler -> getPrimaryTransactionId( $orderId );
+    $primaryTrxPcid = $this -> handler -> getPrimaryTransactionId( $userCardId );
 
     if( !! $primaryTrxPcid )
     {

@@ -20,7 +20,7 @@ class ResultController extends Controller
    */
   public function succeed()
   {
-    return $this -> handler -> succeed();
+    return $this -> handler -> success();
   }
 
   /**
@@ -30,6 +30,6 @@ class ResultController extends Controller
    */
   public function failed()
   {
-    return $this -> handler -> failed();
+    return $this -> handler -> failure();
   }
 }

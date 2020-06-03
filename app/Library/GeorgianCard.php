@@ -36,7 +36,7 @@ class GeorgianCard implements GeorgianCardHandler
    * 
    * @return  void
    */
-  function saveCard( $primaryTrixId, $userId, $userCardInfo )
+  public function saveCard( $primaryTrixId, $userId, $userCardInfo )
   {
     $user     = User :: with( 'user_cards' ) -> find( $userId );
     $default  = $user -> user_cards -> count() == 0;
@@ -63,7 +63,7 @@ class GeorgianCard implements GeorgianCardHandler
    * @param   int     $userCardId
    * @param   string  $RRN
    */
-  function updateCardRRN( $userCardId, $RRN )
+  public function updateCardRRN( $userCardId, $RRN )
   {
     $userCard = UserCard :: find( $userCardId );
     $userCard -> update([ 'rrn' => $RRN ]);
@@ -86,7 +86,7 @@ class GeorgianCard implements GeorgianCardHandler
    * 
    * @return mixed
    */
-  function failed()
+  public function failure()
   {
     dump( 'Failure' );
   }
