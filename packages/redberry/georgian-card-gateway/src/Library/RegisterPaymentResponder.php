@@ -25,9 +25,8 @@ class RegisterPaymentResponder
   {
     $resultCode         = request() -> get( 'result_code'  );
     $registerPayment    = new RegisterPayment;
-
-    $resultDesc = $resultCode == 1 ? 'OK' : 'Temporary unavailable';
-
+    $resultDesc         = $this -> getResultDescription(); 
+    
     $registerPayment -> setResultCode( $resultCode );
     $registerPayment -> setResultDesc( $resultDesc );
 
@@ -54,6 +53,21 @@ class RegisterPaymentResponder
   private function isTransactionSuccessful()
   {
     return request() -> get( 'result_code'  ) == 1;
+  }
+
+  /**
+   * get Result Description.
+   * 
+   * @return  string
+   */
+  public function getResultDescription()
+  {
+    if( $this -> isTransactionSuccessful() )
+    {
+      return 'OK';
+    }
+   
+    return 'Temporary unavailable';
   }
 
   /**
