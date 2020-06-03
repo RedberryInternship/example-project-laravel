@@ -28,69 +28,87 @@ class PaymentAvail extends Response
     $this -> wrapper = 'payment-avail-response';
   }
 
-  public function setResultCode( int $code )
+  /**
+   * Set Result code.
+   * 
+   * @example 1 => good to go.
+   * @example 2 => stop.
+   * 
+   * @param   int $code
+   * @return  void
+   */
+  public function setResultCode( int $code ): void
   {
     $this -> response [ 'result' ][ 'code' ] = $code;
   }
   
-  public function setResultDesc( string $desc )
+  /**
+   * Describe result.
+   * 
+   * @example 1 => payment is available on order X
+   * @example 2 => payment is not available on order X
+   * 
+   * @param   string $desc 
+   * @return  void
+   */
+  public function setResultDesc( string $desc ): void
   {
     $this -> response [ 'result' ][ 'desc' ] = $desc;
   }
 
-  public function setMerchantTRX( string $merchant_trx_id )
+  /**
+   * Set merchant transaction id of this specific transaction.
+   * 
+   * @example 758843E9FDCB2AEA868EB175D534F082
+   * 
+   * @param   string $merchantTrxId
+   * @return void
+   */
+  public function setMerchantTRX( string $merchantTrxId ): void
   {
-    $this -> response [ 'merchant-trx' ] = $merchant_trx_id; 
+    $this -> response [ 'merchant-trx' ] = $merchantTrxId; 
   }
 
-  public function setPrimaryTrxPcid( string $primaryTrxPcid )
+  /**
+   * Set primary transaction id.
+   * 
+   * @param string $primaryTrixPcid
+   */
+  public function setPrimaryTrxPcid( string $primaryTrxPcid ): void
   {
     $this -> response [ 'primaryTrxPcid' ] = $primaryTrxPcid;
   }
 
-  public function setPurchaseShortDesc( string $shortDesc )
+  /**
+   * Describe purchase shortly.
+   * 
+   * @param   string $shortDesc
+   * @return  void
+   */
+  public function setPurchaseShortDesc( string $shortDesc ): void
   {
     $this -> response [ 'purchase' ][ 'shortDesc' ] = $shortDesc;
   }
 
-  public function setPurchaseLongDesc( string $longDesc )
+  /**
+   * Describe purchase more thoroughly.
+   * 
+   * @param   string $longDesc
+   * @return  void
+   */
+  public function setPurchaseLongDesc( string $longDesc ): void
   {
     $this -> response [ 'purchase' ][ 'longDesc' ] = $longDesc;
   }
 
-  public function setPurchaseAmount( float $amount )
+  /**
+   * Set purchase amount.
+   * 
+   * @param   int $amount
+   * @return  void
+   */
+  public function setPurchaseAmount( int $amount ): void
   {
     $this -> response [ 'purchase' ][ 'account-amount' ][ 'amount' ] = $amount;
   }
-
-  public function setTransactionTypeToCardRegister()
-  {
-    $this -> response [ 'transaction-type' ] = 'CardRegister';
-  }
-  
-  public function setTransactionTypeToPayment()
-  {
-    $this -> response [ 'transaction-type' ] = 'Payment';
-  }
-
-  public function setCardPresentMode( bool $mode )
-  {
-    if( ! isset( $this -> response[ 'card' ]))
-    {
-      $this -> response[ 'card' ] = [];
-    }
-
-    $this -> response[ 'card' ][ 'present' ]  = $mode ? 'Y' : 'N';
-  }
-
-  public function setCardRef( string $ref )
-  {
-    if( ! isset( $this -> response[ 'card' ]))
-    {
-      $this -> response[ 'card' ] = [];
-    }
-    
-    $this -> response[ 'card' ][ 'ref' ]  = $ref;
-  }
-
 }

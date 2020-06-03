@@ -3,22 +3,33 @@
 namespace Redberry\GeorgianCardGateway\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Log;
-
 
 class ResultController extends Controller
 {
-  public function succeed()
+  private $handler;
+
+  public function __construct()
   {
-    $params = request() -> all();
-    Log::info([ 'payment_succeed_params' => $params ]);
-    dump( $params );
+    $this -> handler = resolve( 'redberry.georgian-card.handler' );  
   }
 
+  /**
+   * Transaction ends with success.
+   * 
+   * @return mixed
+   */
+  public function succeed()
+  {
+    return $this -> handler -> succeed();
+  }
+
+  /**
+   * Transaction ends with failure.
+   * 
+   * @return mixed
+   */
   public function failed()
   {
-    $params = request() -> all();
-    Log::info([ 'payment_failed_params' => $params ]);
-    dump( $params );
+    return $this -> handler -> failed();
   }
 }
