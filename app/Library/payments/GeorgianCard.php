@@ -17,7 +17,7 @@ class GeorgianCard implements GeorgianCardHandler
    */
   public function getPrimaryTransactionId( Request $request )
   {
-    PrimaryTRXGetter :: get( $request );
+    return PrimaryTRXGetter :: get( $request );
   }
 
   /**
