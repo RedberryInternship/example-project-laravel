@@ -95,40 +95,6 @@ trait Order
     }
 
     /**
-     * Count money the user has already paid with fines.
-     * 
-     * @return  float
-     * @example 10.25
-     */
-    public function countPaidMoneyWithFine()
-    {
-        if( ! isset($this -> payments ))
-        {
-            $this -> load( 'payments' );
-        }
-
-        if( count( $this -> payments ) == 0 )
-        {
-            return 0.0;
-        }
-    
-        $paidCuts = $this 
-            -> payments 
-            -> where    ( 'type', PaymentTypeEnum :: CUT  )
-            -> sum( 'price' );
-
-        $paidFines = $this 
-            -> payments 
-            -> where    ( 'type', PaymentTypeEnum :: FINE )
-            -> sum( 'price' );
-
-        $paidMoney = $paidFines + $paidCuts;
-        $paidMoney = round        ( $paidMoney, 2 );
-
-        return $paidMoney;
-    }
-
-    /**
      * Count the money user has already consumed(Charged).
      * 
      * @return float
@@ -354,7 +320,7 @@ trait Order
     /**
      * Get penalty timestamp.
      * 
-     * @return null|string
+     * @return Carbon|string
      */
     private function getPenaltyTimestamp()
     {
@@ -390,7 +356,7 @@ trait Order
             : $this -> updateLvl2ChargerOrder(); 
     }
 
-    /**
+    /** // TODO: Update Fast Charger Order 
      * Update fast charger order.
      * 
      * @return  void
@@ -399,15 +365,29 @@ trait Order
     {
         $chargingStatus = $this -> charging_status;
 
-        switch( $chargingStatus )
+        if( $chargingStatus == OrderStatusEnum :: CHARGING )
         {
-            case OrderStatusEnum :: CHARGING:
+            if( $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT )
+            {
+                if( $this -> shouldPay() )
+                {
+                    $charger = $this -> charger_connector_type -> charger;
 
-            break;
-            
-            case OrderStatusEnum :: USED_UP:
+                    MishasCharger :: stop( 
+                        $charger -> charger_id, 
+                        $this -> charger_transaction_id 
+                    );
 
-            break;
+                    $this -> updateChargingStatus( OrderStatusEnum :: USED_UP );
+                }
+            }
+            else
+            {
+                if( $this -> shouldPay() )
+                {
+                    $this -> pay( PaymentTypeEnum :: CUT, 20 );
+                }
+            }
         }
     }
 
@@ -614,7 +594,7 @@ trait Order
      */
     private function makeLastPaymentsForFastCharging()
     {
-        // TODO: Implement
+        $this -> cutOrRefund();
     }
 
     /**
@@ -625,25 +605,33 @@ trait Order
      */
     private function makeLastPaymentsForLvl2Charging()
     {
-        if( $this -> charging_type == ChargingTypeEnum :: FULL_CHARGE )
-        {
-            if( $this -> shouldPay() )
-            {
-                $shouldCutMoney = $this -> countMoneyToCut();
-                $this           -> pay( PaymentTypeEnum :: CUT, $shouldCutMoney );
-            }
-            else if( $this -> shouldRefund() )
-            {
-                $moneyToRefund  = $this -> countMoneyToRefund();
-                $this           -> pay( PaymentTypeEnum :: REFUND, $moneyToRefund );
-            }
-        }
+        $this -> cutOrRefund();
 
         if( $this -> isOnPenalty() )
         {
             $penaltyFee     = $this -> countPenaltyFee();   
             $this           -> pay( PaymentTypeEnum :: FINE, $penaltyFee );
-        } 
+        }
+    }
+
+    /**
+     * Cut/refund or do 
+     * nothing according data.
+     * 
+     * @return void
+     */
+    private function cutOrRefund()
+    {
+        if( $this -> shouldPay() )
+        {
+            $shouldCutMoney = $this -> countMoneyToCut();
+            $this           -> pay( PaymentTypeEnum :: CUT, $shouldCutMoney );
+        }
+        else if( $this -> shouldRefund() )
+        {
+            $moneyToRefund  = $this -> countMoneyToRefund();
+            $this           -> pay( PaymentTypeEnum :: REFUND, $moneyToRefund );
+        }
     }
 
     /**
@@ -712,7 +700,7 @@ trait Order
     {
         $now = app() -> runningUnitTests() ? now() -> timestamp : microtime( true );
 
-        $chargingStatus = $order -> charging_status;
+        $chargingStatus                 = $order -> charging_status;
         $orderChargingStatusChargeDates = $order -> charging_status_change_dates; 
 
         if( ! $orderChargingStatusChargeDates [ $chargingStatus ] )
