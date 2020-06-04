@@ -25,8 +25,10 @@ class Refund
 
   public function execute()
   {
-    $url = $this -> buildUrl();
-    return redirect( $url );
+    $url  = $this -> buildUrl();
+    $curl = curl_init( $url );
+    
+    curl_exec( $curl );
   }
 
   public function setTrxId( string $trxId ): Refund
