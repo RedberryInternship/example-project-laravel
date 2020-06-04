@@ -3,14 +3,13 @@
 namespace Redberry\GeorgianCardGateway\Library;
 
 use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
-use Illuminate\Http\Request;
 
 class PaymentAvailResponder
 {
   private $request;
   private $handler;
 
-  public function __construct( Request $request )
+  public function __construct()
   {
     $this -> handler = resolve( 'redberry.georgian-card.handler' );
     $this -> request = request();

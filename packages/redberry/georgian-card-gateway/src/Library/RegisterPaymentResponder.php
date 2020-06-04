@@ -3,7 +3,6 @@
 namespace Redberry\GeorgianCardGateway\Library;
 
 use Redberry\GeorgianCardGateway\Responses\RegisterPayment;
-use Illuminate\Http\Request;
 
 class RegisterPaymentResponder
 {
