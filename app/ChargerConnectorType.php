@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\Entities\ChargerConnectorType as Entity;
+use App\Library\Entities\ChargerConnectorType as Entity;
 
 class ChargerConnectorType extends Model
 {
