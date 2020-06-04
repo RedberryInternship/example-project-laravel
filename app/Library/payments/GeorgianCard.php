@@ -3,11 +3,8 @@
 namespace App\Library\Payments;
 
 use Redberry\GeorgianCardGateway\Contracts\GeorgianCardHandler;
-use Redberry\GeorgianCardGateway\Refund;
 
 use Illuminate\Http\Request;
-use App\UserCard;
-use App\User;
 
 class GeorgianCard implements GeorgianCardHandler
 {
@@ -20,13 +17,7 @@ class GeorgianCard implements GeorgianCardHandler
    */
   public function getPrimaryTransactionId( Request $request )
   {
-    $userCardId = $request -> get('o_user_card_id');
-    $userCard   = UserCard :: find( $userCardId );
-
-    if( $userCard )
-    {
-      return $userCard -> transaction_id;
-    }
+    PrimaryTRXGetter :: get( $request );
   }
 
   /**
@@ -51,18 +42,7 @@ class GeorgianCard implements GeorgianCardHandler
    */
   public function success()
   {
-    if( request() -> get( 'type' ) == 'register' )
-    {
-      $userId   = request() -> get( 'user_id' );
-      $userCard = User :: find( $userId ) -> user_cards() -> latest() -> first();
-      
-      $refunder = new Refund;
-      $refunder -> setAmount( 20                          );
-      $refunder -> setRRN   ( $userCard -> prrn           );
-      $refunder -> setTrxId ( $userCard -> transaction_id );
-
-      $refunder -> execute();
-    }
+    SaveCardRefunder :: RefundIfCardSaved();
 
     dump( 'Success' );
   }
