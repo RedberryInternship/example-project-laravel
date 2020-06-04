@@ -13,7 +13,7 @@ class PaymentAvailResponder
   public function __construct( Request $request )
   {
     $this -> handler = resolve( 'redberry.georgian-card.handler' );
-    $this -> request = $request;
+    $this -> request = request();
   }
   
   public function respond()

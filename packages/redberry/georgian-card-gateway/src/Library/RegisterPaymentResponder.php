@@ -13,10 +13,10 @@ class RegisterPaymentResponder
   /**
    * Set Georgian Card handler.
    */
-  public function __construct(Request $request)
+  public function __construct()
   {
     $this -> handler = resolve( 'redberry.georgian-card.handler' );
-    $this -> request = $request;
+    $this -> request = request();
   }
 
   /**
