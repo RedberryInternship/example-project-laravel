@@ -10,6 +10,7 @@ use App\Facades\Simulator;
 
 use App\Traits\Message;
 use Redberry\GeorgianCardGateway\Transaction;
+use Redberry\GeorgianCardGateway\Refund;
 
 class TestController extends Controller 
 {
@@ -17,10 +18,18 @@ use Message;
     
   public function __invoke()
   {
-    $transaction = new Transaction;
-    $transaction -> setAmount( 1 );
-    $transaction -> setUserCardId( 614 );
-    return $transaction -> execute();
+    /**
+     $transaction = new Transaction;
+     $transaction -> setAmount( 1 );
+     $transaction -> setUserCardId( 614 );
+     return $transaction -> execute();
+     */
+
+     $refunder = new Refund;
+     $refunder -> setAmount( 2 );
+     $refunder -> setTrxId( 'JIzzaaZ' );
+     $refunder -> setRRN( 'OHMY' );
+     return $refunder -> execute();
   }
 
   public function disconnect( Request $request )
