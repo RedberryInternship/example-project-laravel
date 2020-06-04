@@ -2,41 +2,29 @@
 
 namespace Redberry\GeorgianCardGateway\Contracts;
 
+use Illuminate\Http\Request;
+
 interface GeorgianCardHandler
 {
   /**
    * Get primary transaction id
    * for recurrent transactions.
    * 
-   * @param   int $userCardId
+   * @param   Request $userCardId
    * @return  string|null
    */
-  function getPrimaryTransactionId( $userCardId );
+  function getPrimaryTransactionId( Request $request );
 
 
   /**
-   * Save card with user id and
-   * user card information.
+   * Make necessary operation.
+   * for example add user card, payments record, etc.
    * 
-   * @param   int     $primaryTrixId
-   * @param   int     $userId
-   * @param   object  $userCardInfo
+   * @param   Request  $primaryTrixId
    * 
    * @return  void
    */
-  function saveCard( $primaryTrixId, $userId, $userCardInfo );
-
-  /**
-   * Update user card RRN for
-   * refund operations.
-   * In order to refund you always need 
-   * last transaction/operation identifier 
-   * which is RRN.
-   * 
-   * @param   int     $userCardId
-   * @param   string  $RRN
-   */
-  function updateCardRRN( $userCardId, $RRN );
+  function update( Request $request );
 
   /**
    * Success method will be executed if

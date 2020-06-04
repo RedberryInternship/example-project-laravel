@@ -4,6 +4,7 @@ namespace App\Library;
 
 use Redberry\GeorgianCardGateway\Contracts\GeorgianCardHandler;
 
+use Illuminate\Http\Request;
 use App\UserCard;
 use App\User;
 
@@ -13,12 +14,14 @@ class GeorgianCard implements GeorgianCardHandler
    * Get primary transaction id
    * for recurrent transactions.
    * 
-   * @param   int $userCardId
+   * @param   Request $request
    * @return  string|null
    */
-  public function getPrimaryTransactionId( $userCardId )
+  public function getPrimaryTransactionId( Request $request )
   {
-    $userCard = UserCard :: find( $userCardId );
+
+    $userCardId = $request -> get('o_user_card_id');
+    $userCard   = UserCard :: find( $userCardId );
 
     if( $userCard )
     {
@@ -30,43 +33,46 @@ class GeorgianCard implements GeorgianCardHandler
    * Save card with user id and
    * user card information.
    * 
-   * @param   int     $primaryTrixId
-   * @param   int     $userId
-   * @param   object  $userCardInfo
+   * @param   Request  $request
    * 
    * @return  void
    */
-  public function saveCard( $primaryTrixId, $userId, $userCardInfo )
+  public function update( Request $request )
   {
-    $user     = User :: with( 'user_cards' ) -> find( $userId );
-    $default  = $user -> user_cards -> count() == 0;
-
-    $user -> user_cards() -> create(
-      [
-        'masked_pan'      => $userCardInfo -> masked_pan,
-        'transaction_id'  => $primaryTrixId,
-        'card_holder'     => $userCardInfo -> card_holder,
-        'rrn'             => $userCardInfo -> rrn,
-        'default'         => $default,
-        'active'          => true,
-      ]
-    );
+    if( $this -> shouldSaveUserCard() )
+    {
+      $userId         = $request -> get( 'o_user_id'    );
+      $primaryTrixId  = $request -> get( 'trx_id'       );
+      $maskedPan      = $request -> get( 'p_maskedPan'  );
+      $cardHolder     = $request -> get( 'p_cardholder' );
+  
+      $user           = User :: with( 'user_cards' ) -> find( $userId );
+      $default        = $user -> user_cards -> count() == 0;
+  
+      $user -> user_cards() -> create(
+        [
+          'masked_pan'      => $maskedPan,
+          'transaction_id'  => $primaryTrixId,
+          'card_holder'     => $cardHolder,
+          'default'         => $default,
+          'active'          => true,
+        ]
+      );
+    }
+    else
+    {
+      // make payment 
+    }
   }
 
   /**
-   * Update user card RRN for
-   * refund operations.
-   * In order to refund you always need 
-   * last transaction/operation identifier 
-   * which is RRN.
+   * Determine if it should save user card.
    * 
-   * @param   int     $userCardId
-   * @param   string  $RRN
+   * @return bool
    */
-  public function updateCardRRN( $userCardId, $RRN )
+  private function shouldSaveUserCard()
   {
-    $userCard = UserCard :: find( $userCardId );
-    $userCard -> update([ 'rrn' => $RRN ]);
+    return  ! request() -> has( 'o_user_card_id' );
   }
 
   /**

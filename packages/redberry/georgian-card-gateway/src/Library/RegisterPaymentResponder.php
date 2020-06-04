@@ -32,27 +32,10 @@ class RegisterPaymentResponder
 
     if( $this -> isTransactionSuccessful() )
     {
-      if( $this -> shouldSaveCard() )
-      {
-        $this -> saveCard();
-      }
-      else
-      {
-        $this -> updateCardRRN();
-      }
+      $this -> handler -> update();
     }
 
     return $registerPayment -> response();
-  }
-
-  /**
-   * Determine if transaction is successful.
-   * 
-   * @return bool
-   */
-  private function isTransactionSuccessful()
-  {
-    return request() -> get( 'result_code'  ) == 1;
   }
 
   /**
@@ -69,70 +52,15 @@ class RegisterPaymentResponder
    
     return 'Temporary unavailable';
   }
-
+  
   /**
-   * Determine if card should be saved.
+   * Determine if transaction is successful.
    * 
    * @return bool
    */
-  private function shouldSaveCard()
+  private function isTransactionSuccessful()
   {
-     return ! request() -> get( 'o_user_card_id' );
+    return request() -> get( 'result_code'  ) == 1;
   }
-
-  /**
-   * Save card.
-   * 
-   * @return void
-   */
-  private function saveCard()
-  {
-    $userId         = request() -> get( 'o_user_id' );
-    $primaryTrixId  = request() -> get( 'trx_id' );
-    $userCardInfo   = $this     -> userCardInfo();
-
-    $this 
-      -> handler
-      -> saveCard(
-        $primaryTrixId,
-        $userId,
-        $userCardInfo,
-      );
-  }
-
-  /**
-   * Update user card RRN.
-   * 
-   * @return void
-   */
-  private function updateCardRRN()
-  {
-    $userCardId = request() -> get( 'o_user_card_id' );
-    $RRN        = request() -> get( 'p_rrn' );
-
-    $this 
-      -> handler
-      -> updateCardRRN(
-        $userCardId,
-        $RRN,
-      );
-  }
-
-  /**
-   * Extract user card info from Georgian Card Request.
-   * 
-   * @return object
-   */
-  private function userCardInfo(): object
-  {
-    $userCard = [
-      'amount'        => request() -> get( 'amount'         ),
-      'expiry_date'   => request() -> get( 'p_expiryDate'   ),
-      'masked_pan'    => request() -> get( 'p_maskedPan'    ),
-      'card_holder'   => request() -> get( 'p_cardholder'   ),
-      'rrn'           => request() -> get( 'p_rrn'          ),
-    ];
-
-    return ( object ) $userCard;
-  }
+ 
 }
