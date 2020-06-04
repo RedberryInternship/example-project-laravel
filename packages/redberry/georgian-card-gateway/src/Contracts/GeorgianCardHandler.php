@@ -15,10 +15,10 @@ interface GeorgianCardHandler
    */
   function getPrimaryTransactionId( Request $request );
 
-
   /**
    * Make necessary operation.
-   * for example add user card, payments record, etc.
+   * for example add user card, 
+   * payments record, etc.
    * 
    * @param   Request  $primaryTrixId
    * 

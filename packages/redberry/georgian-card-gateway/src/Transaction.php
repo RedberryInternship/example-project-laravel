@@ -53,44 +53,75 @@ class Transaction
    * 100 = 1 GEL
    * 
    * @param   int $amount
-   * @return  void
+   * @return  Transaction
    */
-  public function setAmount( int $amount ): void
+  public function setAmount( int $amount ): Transaction
   {
     $this -> data [ 'o.amount' ] = $amount;
+    
+    return $this;
   }
 
   /**
    * Set order id.
    * 
    * @param   string $orderId
-   * @return  void
+   * @return  Transaction
    */
-  public function setOrderId( string $orderId ): void
+  public function setOrderId( string $orderId ): Transaction
   {
     $this -> data [ 'o.id' ] = $orderId;
+    return $this;
   }
 
   /**
    * Set user id.
    * 
    * @param  string $userId
-   * @return void
+   * @return Transaction
    */
-  public function setUserId( string $userId ): void
+  public function setUserId( string $userId ): Transaction
   {
     $this -> data [ 'o.user_id' ] = $userId;
+    return $this;
   }
 
   /**
    * Set user card id.
    * 
    * @param   string $userCardId
-   * @return  void
+   * @return  Transaction
    */
-  public function setUserCardId( string $userCardId ): void
+  public function setUserCardId( string $userCardId ): Transaction
   {
     $this -> data [ 'o.user_card_id' ] = $userCardId;
+    return $this;
+  }
+
+  /**
+   * Set transaction type to register.
+   * 
+   * @return Transaction
+   */
+  public function shouldSaveCard(): Transaction
+  {
+    $this -> data [ 'o.type' ] = 'register';
+    
+    return $this;
+  }
+
+  /**
+   * Set additional parameters.
+   * 
+   * @param   string $key
+   * @param   mixed  $value
+   * @return  Transaction
+   */
+  public function set( string $key, $value ): Transaction
+  {
+    $this -> data[ 'o.' . $key ] = $value;
+    
+    return $this;
   }
 
   /**
@@ -98,29 +129,33 @@ class Transaction
    * As of this moment I have no idea
    * what this means.
    * 
-   * @return  void
+   * @return  Transaction
    */
-  public function enablePreauth(): void
+  public function enablePreauth(): Transaction
   {
     $this -> data [ 'preauth' ] = 'Y';
+
+    return $this;
   }
 
   /**
    * Pass additional data which will be present
    * in the last step success or fail.
    * 
-   * @return void
+   * @return Transaction
    */
-  public function passResultingData(array $data ): void
+  public function passResultingData(array $data ): Transaction
   {
     $this -> data [ 'back_url_f' ] .= '?';
     $this -> data [ 'back_url_s' ] .= '?';
 
     foreach( $data as $key => $value )
     {
-      $this -> data [ 'back_url_f' ] .= $key . '=' . $value;;
-      $this -> data [ 'back_url_s' ] .= $key . '=' . $value;
+      $this -> data [ 'back_url_f' ] .= '&' . $key . '=' . $value;
+      $this -> data [ 'back_url_s' ] .= '&' . $key . '=' . $value;
     }
+
+    return $this;
   }
 
   /**
@@ -136,7 +171,7 @@ class Transaction
     {
       $url .= '&' . $key . '=' . $value;
     }
-
+    
     return $url;
   }
 }

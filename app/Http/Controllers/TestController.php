@@ -18,18 +18,21 @@ use Message;
     
   public function __invoke()
   {
-    /**
+    
      $transaction = new Transaction;
      $transaction -> setAmount( 1 );
      $transaction -> setUserCardId( 614 );
      return $transaction -> execute();
-     */
+     
 
-     $refunder = new Refund;
-     $refunder -> setAmount( 2 );
-     $refunder -> setTrxId( 'JIzzaaZ' );
-     $refunder -> setRRN( 'OHMY' );
-     return $refunder -> execute();
+     /** 
+      * $refunder = new Refund;
+      * $refunder -> setAmount( 2 );
+      * $refunder -> setTrxId( 'JIzzaaZ' );
+      * $refunder -> setRRN( 'OHMY' );
+      * return $refunder -> execute();
+     */
+    
   }
 
   public function disconnect( Request $request )

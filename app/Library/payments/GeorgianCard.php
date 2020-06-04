@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Library;
+namespace App\Library\Payments;
 
 use Redberry\GeorgianCardGateway\Contracts\GeorgianCardHandler;
+use Redberry\GeorgianCardGateway\Refund;
 
 use Illuminate\Http\Request;
 use App\UserCard;
@@ -19,7 +20,6 @@ class GeorgianCard implements GeorgianCardHandler
    */
   public function getPrimaryTransactionId( Request $request )
   {
-
     $userCardId = $request -> get('o_user_card_id');
     $userCard   = UserCard :: find( $userCardId );
 
@@ -39,40 +39,8 @@ class GeorgianCard implements GeorgianCardHandler
    */
   public function update( Request $request )
   {
-    if( $this -> shouldSaveUserCard() )
-    {
-      $userId         = $request -> get( 'o_user_id'    );
-      $primaryTrixId  = $request -> get( 'trx_id'       );
-      $maskedPan      = $request -> get( 'p_maskedPan'  );
-      $cardHolder     = $request -> get( 'p_cardholder' );
-  
-      $user           = User :: with( 'user_cards' ) -> find( $userId );
-      $default        = $user -> user_cards -> count() == 0;
-  
-      $user -> user_cards() -> create(
-        [
-          'masked_pan'      => $maskedPan,
-          'transaction_id'  => $primaryTrixId,
-          'card_holder'     => $cardHolder,
-          'default'         => $default,
-          'active'          => true,
-        ]
-      );
-    }
-    else
-    {
-      // make payment
-    }
-  }
-
-  /**
-   * Determine if it should save user card.
-   * 
-   * @return bool
-   */
-  private function shouldSaveUserCard()
-  {
-    return  ! request() -> has( 'o_user_card_id' );
+    $payment = new Payment;
+    $payment -> update();
   }
 
   /**
@@ -83,6 +51,19 @@ class GeorgianCard implements GeorgianCardHandler
    */
   public function success()
   {
+    if( request() -> get( 'type' ) == 'register' )
+    {
+      $userId   = request() -> get( 'user_id' );
+      $userCard = User :: find( $userId ) -> user_cards() -> last();
+      
+      $refunder = new Refund;
+      $refunder -> setAmount( 20                          );
+      $refunder -> setRRN   ( $userCard -> prrn           );
+      $refunder -> setTrxId ( $userCard -> transaction_id );
+
+      $refunder -> execute();
+    }
+
     dump( 'Success' );
   }
 

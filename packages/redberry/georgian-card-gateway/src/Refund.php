@@ -29,19 +29,25 @@ class Refund
     return redirect( $url );
   }
 
-  public function setTrxId( string $trxId )
+  public function setTrxId( string $trxId ): Refund
   {
     $this -> data [ 'trx_id' ] = $trxId;
+    
+    return $this;
   }
 
-  public function setRRN( string $RRN )
+  public function setRRN( string $RRN ): Refund
   {
     $this -> data [ 'p.rrn' ] = $RRN;
+
+    return $this;
   }
 
-  public function setAmount( int $amount )
+  public function setAmount( int $amount ): Refund
   {
     $this -> data [ 'amount' ] = $amount;
+
+    return $this;
   }
 
   public function buildUrl()
