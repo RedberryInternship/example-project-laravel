@@ -58,6 +58,13 @@ export default function() {
                 backgroundColor: "#14afd7",
                 hoverBackgroundColor: "#00acc1",
                 borderColor: "transparent"
+            },
+            {
+                label: "დახარჯული ელ. ენერგია",
+                data: [45, 50, 70, 31, 100, 129, 331],
+                backgroundColor: "#efc964",
+                hoverBackgroundColor: "#00acc1",
+                borderColor: "transparent"
             }
         ]
     };

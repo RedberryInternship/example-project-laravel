@@ -11,11 +11,11 @@
                 </div>
 
                 <div class="content-page">
-                    @include('business.charts.energy')
+                    @include('business.charts.most-used-chargers')
                 </div>
 
                 <div class="content-page">
-                    @include('business.charts.chargers')
+                    @include('business.charts.charger-statuses')
                 </div>
             </div>
         </div>

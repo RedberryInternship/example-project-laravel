@@ -1,5 +1,5 @@
-export default function() {
-    const ctx = $("#chargers-chart");
+export default function () {
+    const ctx = $("#charger-statuses-chart");
 
     const chartOptions = {
         responsive: true,

@@ -1,20 +1,14 @@
 export default function () {
-    const ctx = 'income-chart';
+    const ctx = $("#income-chart");
 
-    // Chart Options
     const chartOptions = {
-        elements: {
-            rectangle: {
-                borderWidth: 2,
-                borderColor: "rgb(0, 255, 0)",
-                borderSkipped: "left"
-            }
-        },
         responsive: true,
         maintainAspectRatio: false,
-        responsiveAnimationDuration: 500,
         legend: {
-            position: "top"
+            position: "bottom"
+        },
+        hover: {
+            mode: "label"
         },
         scales: {
             xAxes: [
@@ -25,7 +19,8 @@ export default function () {
                         drawTicks: false
                     },
                     scaleLabel: {
-                        display: true
+                        display: true,
+                        labelString: "Month"
                     }
                 }
             ],
@@ -37,34 +32,48 @@ export default function () {
                         drawTicks: false
                     },
                     scaleLabel: {
-                        display: true
+                        display: true,
+                        labelString: "Value"
                     }
                 }
             ]
         },
         title: {
-            display: false,
-            text: "Chart.js Horizontal Bar Chart"
+            display: true,
+            text: "შემოსავალი"
         }
     };
 
-    // Chart Data
     let chartData = {
         labels: ["იანვარი", "თებერვალი", "მარტი", "აპრილი", "მაისი", "ივნისი", "ივლისი"],
         datasets: [
             {
                 label: "შემოსავალი",
-                data: [1000, 1500, 1230, 3000, 5000, 4500, 2000],
-                backgroundColor: "#fa6e7f",
-                hoverBackgroundColor: "#00acc1",
-                borderColor: "transparent"
+                data: [65, 59, 80, 81, 56, 55, 40],
+                fill: false,
+                borderColor: "#ff5354",
+                pointBorderColor: "#ff5354",
+                pointBackgroundColor: "#ff5354",
+                pointBorderWidth: 2,
+                pointHoverBorderWidth: 2,
+                pointRadius: 4
+            },
+            {
+                label: "ხარჯი",
+                data: [28, 48, 40, 19, 86, 27, 90],
+                fill: false,
+                borderColor: "#f48eaf",
+                pointBorderColor: "#f48eaf",
+                pointBackgroundColor: "#f48eaf",
+                pointBorderWidth: 2,
+                pointHoverBorderWidth: 2,
+                pointRadius: 4
             }
         ]
     };
 
-    // Chart Config
     let config = {
-        type: "bar",
+        type: "line",
         options: chartOptions,
         data: chartData
     };
