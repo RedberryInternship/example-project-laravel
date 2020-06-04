@@ -155,6 +155,9 @@ class Transaction
       $this -> data [ 'back_url_s' ] .= '&' . $key . '=' . $value;
     }
 
+    $this -> data [ 'back_url_f' ] = urlencode( $this -> data [ 'back_url_f' ] );
+    $this -> data [ 'back_url_s' ] = urlencode( $this -> data [ 'back_url_s' ] );
+
     return $this;
   }
 

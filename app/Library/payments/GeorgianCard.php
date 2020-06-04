@@ -54,7 +54,7 @@ class GeorgianCard implements GeorgianCardHandler
     if( request() -> get( 'type' ) == 'register' )
     {
       $userId   = request() -> get( 'user_id' );
-      $userCard = User :: find( $userId ) -> user_cards() -> last();
+      $userCard = User :: find( $userId ) -> user_cards() -> latest() -> first();
       
       $refunder = new Refund;
       $refunder -> setAmount( 20                          );
