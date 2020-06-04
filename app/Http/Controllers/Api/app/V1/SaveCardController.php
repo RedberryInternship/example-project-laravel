@@ -4,30 +4,14 @@ namespace App\Http\Controllers\Api\app\V1;
 
 use App\Http\Controllers\Controller;
 
-use Redberry\GeorgianCardGateway\Transaction;
+use App\Library\Payments\SaveCardInitiator;
 
 class SaveCardController extends Controller
 {
   public function __invoke()
   {
-    $userId = auth() -> user() -> id;
-
-    $saveCardTransaction = new Transaction;
-
-    $url = $saveCardTransaction
-      -> setAmount( 20 )
-      -> setUserId( $userId )
-      -> shouldSaveCard()
-      -> passResultingData(
-        [ 
-          'type'    => 'register',
-          'user_id' => $userId, 
-        ]
-      )
-      -> buildUrl();
-
-    return $url;
-
+    $url = SaveCardInitiator :: getURL();
+    
     return response() -> json(
       [
         'save_card_url' => $url,
