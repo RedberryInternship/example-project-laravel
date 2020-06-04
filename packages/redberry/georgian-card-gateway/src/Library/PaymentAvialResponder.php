@@ -3,20 +3,23 @@
 namespace Redberry\GeorgianCardGateway\Library;
 
 use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
+use Illuminate\Http\Request;
 
 class PaymentAvailResponder
 {
+  private $request;
   private $handler;
 
-  public function __construct()
+  public function __construct( Request $request )
   {
     $this -> handler = resolve( 'redberry.georgian-card.handler' );
+    $this -> request = $request;
   }
   
   public function respond()
   {
-    $trxId       = request() -> get( 'trx_id' );
-    $orderAmount = request() -> get( 'o_amount' );
+    $trxId       = $this -> request -> get( 'trx_id' );
+    $orderAmount = $this -> request -> get( 'o_amount' );
 
     $paymentAvail = new PaymentAvail;
     $paymentAvail -> setResultCode( 1 );
@@ -26,7 +29,7 @@ class PaymentAvailResponder
     $paymentAvail -> setPurchaseLongDesc( 'order description' );
     $paymentAvail -> setPurchaseAmount( $orderAmount );
     
-    $primaryTrxPcid = $this -> handler -> getPrimaryTransactionId();
+    $primaryTrxPcid = $this -> handler -> getPrimaryTransactionId( $this -> request );
 
     if( !! $primaryTrxPcid )
     {

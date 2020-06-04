@@ -61,7 +61,7 @@ class GeorgianCard implements GeorgianCardHandler
     }
     else
     {
-      // make payment 
+      // make payment
     }
   }
 
