@@ -3,17 +3,20 @@
 namespace Redberry\GeorgianCardGateway\Library;
 
 use Redberry\GeorgianCardGateway\Responses\RegisterPayment;
+use Illuminate\Http\Request;
 
 class RegisterPaymentResponder
 {
   private $handler;
+  private $request;
 
   /**
    * Set Georgian Card handler.
    */
-  public function __construct()
+  public function __construct(Request $request)
   {
     $this -> handler = resolve( 'redberry.georgian-card.handler' );
+    $this -> request = $request;
   }
 
   /**
@@ -23,7 +26,7 @@ class RegisterPaymentResponder
    */
   public function respond()
   {
-    $resultCode         = request() -> get( 'result_code'  );
+    $resultCode         = $this -> request -> get( 'result_code'  );
     $registerPayment    = new RegisterPayment;
     $resultDesc         = $this -> getResultDescription(); 
     
@@ -32,7 +35,7 @@ class RegisterPaymentResponder
 
     if( $this -> isTransactionSuccessful() )
     {
-      $this -> handler -> update();
+      $this -> handler -> update( $this -> request );
     }
 
     return $registerPayment -> response();
@@ -60,7 +63,7 @@ class RegisterPaymentResponder
    */
   private function isTransactionSuccessful()
   {
-    return request() -> get( 'result_code'  ) == 1;
+    return $this -> request -> get( 'result_code'  ) == 1;
   }
  
 }
