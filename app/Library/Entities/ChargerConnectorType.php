@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities;
+namespace App\Library\Entities;
 
 use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\ConnectorType as ConnectorTypeEnum;

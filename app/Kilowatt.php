@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\Entities\Kilowatt as KilowattEntity;
+use App\Library\Entities\Kilowatt as KilowattEntity;
 
 class Kilowatt extends Model
 {
