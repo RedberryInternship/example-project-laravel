@@ -2,8 +2,6 @@
 
 namespace App\Library\Payments;
 
-use Redberry\GeorgianCardGateway\Refund;
-
 use App\User;
 
 class SaveCardRefunder
@@ -15,12 +13,11 @@ class SaveCardRefunder
       $userId   = request() -> get( 'user_id' );
       $userCard = User :: find( $userId ) -> user_cards() -> latest() -> first();
       
-      $refunder = new Refund;
-      $refunder -> setAmount( 20                          );
-      $refunder -> setRRN   ( $userCard -> prrn           );
-      $refunder -> setTrxId ( $userCard -> transaction_id );
+      $RRN    = $userCard -> transaction_id;
+      $trxId  = $userCard -> prrn;
+      $amount = 20;
 
-      $refunder -> execute();
+      Refunder :: refund( $trxId, $RRN, $amount );
     }
   }
 }

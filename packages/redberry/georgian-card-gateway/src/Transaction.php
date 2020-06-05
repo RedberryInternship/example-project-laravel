@@ -41,11 +41,15 @@ class Transaction
    * Build url and redirect to
    * georgian card page.
    * 
-   * @return mixed
+   * @return void
    */
-  public function execute()
+  public function execute(): void
   {
-    return redirect( $this -> buildUrl() );
+    $url  = $this -> buildUrl();
+    $ch   = curl_init( $url );
+    
+    curl_setopt(  $ch, CURLOPT_RETURNTRANSFER, true );
+    curl_exec  (  $ch                               );
   }
 
   /**

@@ -642,20 +642,18 @@ trait Order
      */
     public function pay( $paymentType, $amount )
     {
-        $userCard = $this -> user_card ;
-        Payment :: pay( $this, $amount, $paymentType );
+        $amount = intval( $amount );
 
-        $this -> payments() -> create(
-            [
-            'type'          => $paymentType,
-            'confirmed'     => true,
-            'confirm_date'  => now(),
-            'price'         => $amount,
-            'prrn'          => 'SOME_PRRN',
-            'trx_id'        => 'SOME_TRIX_ID',
-            'user_card_id'  => $userCard -> id,
-            ]
-        );
+        if( $paymentType == PaymentTypeEnum :: REFUND )
+        {
+            $payment = new Payment;
+            $payment -> refund( $this, $amount );
+        }
+        else
+        {
+            $payment = new Payment;
+            $payment -> cut( $this, $amount );
+        }
     }
 
     /** 
