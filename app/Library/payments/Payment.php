@@ -85,7 +85,6 @@ class Payment
       [
         'user_card_id' => $userCardId,
         'order_id'     => $orderId,
-        'user_id'      => $userId,
         'trx_id'       => $trxId,
         'price'        => $price,
         'prrn'         => $RRN,
