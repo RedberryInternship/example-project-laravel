@@ -134,7 +134,6 @@ class Payment
       [
         'user_card_id' => $order -> user_card_id,
         'order_id'     => $order -> id,
-        'user_id'      => $order -> user_id,
         'trx_id'       => null, # @ refund doesn't have trx_id
         'price'        => $amount,
         'prrn'         => null, # @ refund doesn't have rrn
