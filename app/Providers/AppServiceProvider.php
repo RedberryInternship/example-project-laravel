@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
+use App\Library\Payments\GeorgianCard;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         \Spatie\NovaTranslatable\Translatable::defaultLocales(['en', 'ru','ka']);
-        $this -> app -> make('Redberry\GeorgianCardGateway\PaymentController');
+        $this -> app -> bind( 'redberry.georgian-card.handler', GeorgianCard :: class );
     }
 
     /**
@@ -26,7 +26,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
-
-        
     }
 }
