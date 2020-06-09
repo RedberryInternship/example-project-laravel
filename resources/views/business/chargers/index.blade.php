@@ -1,12 +1,5 @@
 @extends('business.master')
 
-@section('css')
-	<link rel="stylesheet" type="text/css" href="../../../app-assets/css/custom.css">
-@endsection
-
-@section('js')
-@endsection
-
 @section('body')
 	<div class="row">
 		<div class="col s12">

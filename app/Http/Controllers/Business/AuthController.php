@@ -26,7 +26,7 @@ class AuthController extends Controller
      */
     public function login()
     {
-        return view('business.login') -> with([
+        return view('business.auth.login') -> with([
             'tabTitle'            => 'ავტორიზაცია',
             'activeMenuItem'      => 'login',
             'backgroundClassName' => 'login'
@@ -56,7 +56,7 @@ class AuthController extends Controller
         {
             Auth::login($user);
 
-            return redirect('/business/charger-groups');
+            return redirect('/business');
         }
 
         return redirect() -> back();

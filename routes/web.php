@@ -18,7 +18,7 @@ Route::get('/', function () {
 });
 
 Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
-    Route::get('/', 'AuthController@login');
+    Route::get('/', 'DashboardController');
     Route::get('/login', 'AuthController@login');
     Route::post('/auth', 'AuthController@auth');
     Route::get('/logout', 'AuthController@logout');

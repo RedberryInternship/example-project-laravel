@@ -1,9 +1,5 @@
 @extends('business.master')
 
-@section('css')
-	<link rel="stylesheet" type="text/css" href="../../../app-assets/css/custom.css">
-@endsection
-
 @section('body')
 	<div class="row">
 		<div class="col s12">
@@ -152,7 +148,7 @@
 		</div>
 	</div>
 
-	@include('business.connector-types.lvl2')
+	@include('business.chargers.connector-types.lvl2')
 
-	@include('business.connector-types.fast')
+	@include('business.chargers.connector-types.fast')
 @endsection

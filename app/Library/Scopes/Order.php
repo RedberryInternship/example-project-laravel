@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Scopes;
+namespace App\Library\Scopes;
 
 use  Illuminate\Database\Eloquent\Builder;
 trait Order
