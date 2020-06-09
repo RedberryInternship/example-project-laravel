@@ -55,16 +55,3 @@ Route::post('/disconnect', 'TestController@disconnect');
 Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
         
 Route::get('test','TestController');
-
-
-Route::get('/test/pay/ru', function(){
-    return view( 'payments.ru' );
-});
-
-Route::get('/test/pay/en', function(){
-    return view( 'payments.en' );
-});
-
-Route::get('/test/pay/ge', function(){
-    return view( 'payments.ge' );
-});
