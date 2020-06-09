@@ -73,12 +73,11 @@ class Payment
    */
   private function pay()
   {
-    $userCardId = request() -> get( 'o_user_card_id'  );
-    $orderId    = request() -> get( 'o_order_id'      );
-    $userId     = request() -> get( 'o_user_id'       );
-    $trxId      = request() -> get( 'trx_id'          );
-    $price      = request() -> get( 'o_amount'        );
-    $RRN        = request() -> get( 'p_rrn'           );
+    $userCardId = request() -> get( 'o_user_card_id' );
+    $orderId    = request() -> get( 'o_id'           );
+    $trxId      = request() -> get( 'trx_id'         );
+    $price      = request() -> get( 'o_amount'       );
+    $RRN        = request() -> get( 'p_rrn'          );
     $type       = PaymentTypeEnum :: CUT;
 
     PaymentModel :: create(
