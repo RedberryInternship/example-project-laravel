@@ -13,9 +13,9 @@ class SaveCardRefunder
       $userId   = request() -> get( 'user_id' );
       $userCard = User :: find( $userId ) -> user_cards() -> latest() -> first();
       
-      $RRN    = $userCard -> transaction_id;
-      $trxId  = $userCard -> prrn;
-      $amount = 20;
+      $trxId    = $userCard -> transaction_id;
+      $RRN      = $userCard -> prrn;
+      $amount   = 20;
 
       Refunder :: refund( $trxId, $RRN, $amount );
     }
