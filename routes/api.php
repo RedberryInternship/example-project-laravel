@@ -54,6 +54,9 @@ Route::group(['prefix' => 'app/V1'], function () {
 			/** Orders */
 			Route::get('/active-orders', 'OrderController@getActiveOrders');
 			Route::get('/order/{id}', 'OrderController@get');
+
+			/** Get save card webview url */
+			Route::get('/save-card-url', 'SaveCardController');
 		});
 	});
 

@@ -2,35 +2,141 @@
 
 namespace App\Library\Payments;
 
-use Illuminate\Support\Facades\Log;
+use App\Enums\PaymentType as PaymentTypeEnum;
+
+use App\Payment as PaymentModel;
+use App\Order;
+use App\User;
 
 class Payment
 {
   /**
-   * Make payment transaction.
+   * Determine if it should save card or pay
+   * and proceed accordingly.
    * 
-   * @param   \App\Order $order
-   * @param   float     $amount
-   * @param   string    $payment_type
-   * 
-   * @return  void
+   * @return void
    */
-  public static function pay( $order, $amount, $payment_type )
+  public function update()
   {
-    $order -> load('user');
+    if( $this -> shouldSaveUserCard() )
+    {
+      $this -> saveUserCard();
+    }
+    else
+    {
+      $this -> pay();
+    }
+  }
 
-    Log :: channel( 'pay' ) -> info(
+  /**
+   * Determine if it should save user card.
+   * 
+   * @return bool
+   */
+  private function shouldSaveUserCard()
+  {
+    return  request() -> get( 'o_type' ) == 'register';
+  }
+
+  /**
+   * Save user card.
+   * 
+   * @return void
+   */
+  private function saveUserCard()
+  {
+    $userId         = request() -> get( 'o_user_id'    );
+    $primaryTrixId  = request() -> get( 'trx_id'       );
+    $maskedPan      = request() -> get( 'p_maskedPan'  );
+    $cardHolder     = request() -> get( 'p_cardholder' );
+    $RRN            = request() -> get( 'p_rrn'        );
+
+    $user           = User :: with( 'user_cards' ) -> find( $userId );
+    $default        = $user -> user_cards -> count() == 0;
+
+    $user -> user_cards() -> create(
       [
-        'user'          => [
-          'id'    => $order -> user -> id,
-          'name'  => $order -> user -> first_name . $order -> user -> last_name,
-        ],
-        'user_card_id'  => $order -> user_card_id,
-        'order_id'      => $order -> id,
-        'amount'        => $amount,
-        'payment_type'  => $payment_type,
+        'masked_pan'      => $maskedPan,
+        'transaction_id'  => $primaryTrixId,
+        'card_holder'     => $cardHolder,
+        'prrn'            => $RRN,
+        'default'         => $default,
+        'active'          => true,
       ]
     );
   }
 
+  /**
+   * Make payment.
+   * 
+   * @return void
+   */
+  private function pay()
+  {
+    $userCardId = request() -> get( 'o_user_card_id' );
+    $orderId    = request() -> get( 'o_id'           );
+    $trxId      = request() -> get( 'trx_id'         );
+    $price      = request() -> get( 'o_amount'       );
+    $RRN        = request() -> get( 'p_rrn'          );
+    $type       = PaymentTypeEnum :: CUT;
+
+    PaymentModel :: create(
+      [
+        'user_card_id' => $userCardId,
+        'order_id'     => $orderId,
+        'trx_id'       => $trxId,
+        'price'        => $price,
+        'prrn'         => $RRN,
+        'type'         => $type,
+      ]
+    );
+  }
+
+  /**
+   * Make normal payment transaction.
+   * 
+   * @param   Order $order
+   * @param   int   $amount
+   * @return  void
+   */
+  public function cut( Order $order, int $amount )
+  {
+    $orderId    = $order -> id;
+    $userId     = $order -> user_id;
+    $userCardId = $order -> user_card_id;
+
+    Cutter :: cut( $orderId, $userId, $userCardId, $amount );
+  }
+
+  /**
+   * Refund.
+   * 
+   * @param   Order $order
+   * @param   int   $amount
+   * @return  void
+   */
+  public function refund( Order $order, int $amount ): void
+  {
+    $lastPayment = $order 
+      -> payments() 
+      -> whereType( PaymentTypeEnum :: CUT )
+      -> latest()
+      -> first();
+
+    $trxId  = $lastPayment -> trx_id;
+    $RRN    = $lastPayment -> prrn;
+    
+    Refunder     :: refund( $trxId, $RRN, $amount );
+    
+    PaymentModel :: create(
+      [
+        'user_card_id' => $order -> user_card_id,
+        'order_id'     => $order -> id,
+        'trx_id'       => null, # @ refund doesn't have trx_id
+        'price'        => $amount,
+        'prrn'         => null, # @ refund doesn't have rrn
+        'type'         => PaymentTypeEnum :: REFUND,
+      ]
+    );
+  }
 }

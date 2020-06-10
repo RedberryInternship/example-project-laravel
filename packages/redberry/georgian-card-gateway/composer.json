@@ -1,12 +1,12 @@
 {
-    "name": "vagrant/georgian-card-gateway",
+    "name": "redberry/georgian-card-gateway",
     "authors": [
         {
-            "name": "gulverd",
+            "name": "Gulverd",
             "email": "vakhtang.pataraia@gmail.com"
         },
         {
-        	"name": "imedacf",
+        	"name": "Imedacf",
         	"email": "imedacf@gmail.com"
         }
     ],
