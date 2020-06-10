@@ -17,7 +17,6 @@ use Message;
     
   public function __invoke()
   {
-    
      dd( "nothingness" );
   }
 

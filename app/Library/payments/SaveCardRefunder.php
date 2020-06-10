@@ -17,6 +17,8 @@ class SaveCardRefunder
       $RRN      = $userCard -> prrn;
       $amount   = 20;
 
+      sleep( 2 );
+
       Refunder :: refund( $trxId, $RRN, $amount );
     }
   }
