@@ -18,7 +18,7 @@ class Refund
     
     $this -> data = [
       'trx_id'  => null,
-      'p.rnn'   => null,
+      'p.rrn'   => null,
       'amount'  => null,
     ];
   }
@@ -56,7 +56,7 @@ class Refund
   public function buildUrl()
   {
     $url = $this -> url;
-
+    
     foreach( $this -> data as $key => $value )
     {
       $url .= '&' . $key . '=' . $value;
