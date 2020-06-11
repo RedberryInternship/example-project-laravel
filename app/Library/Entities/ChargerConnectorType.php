@@ -29,6 +29,16 @@ trait ChargerConnectorType
   }
 
   /**
+   * Determine if charger is Fast.
+   * 
+   * @return bool
+   */
+  public function isChargerFast()
+  {
+    return $this -> determineChargerType() == ChargerTypeEnum :: FAST;
+  }
+
+  /**
    * Get specific charging type
    * from charger's charging prices.
    * 

@@ -152,14 +152,22 @@ trait Order
     private function calculateChargingElapsedTimeInMinutes()
     {
         $startChargingTime   = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
-        $finishChargingTime  = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
         
-        if( $finishChargingTime )
+        if( $this -> charger_connector_type -> isChargerFast() )
         {
-            return $finishChargingTime -> diffInMinutes( $startChargingTime );
+            $finishChargingTime = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
         }
-        
-        return now() -> diffInMinutes( $startChargingTime );
+        else
+        {
+            $finishChargingTime = $this -> getStopChargingTimestamp();    
+        }
+
+        if( ! $finishChargingTime )
+        {
+            $finishChargingTime = now();
+        }
+                
+        return $finishChargingTime -> diffInMinutes( $startChargingTime );
     }
 
     /**
