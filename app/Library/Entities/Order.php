@@ -59,9 +59,7 @@ trait Order
      */
     public function enteredPenaltyReliefMode()
     {
-        $enteredPenaltyReliefModeTimestamp = $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT
-            ? $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP )
-            : $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED );
+        $enteredPenaltyReliefModeTimestamp = $this -> getStopChargingTimestamp();
 
         return !! $enteredPenaltyReliefModeTimestamp;     
     }
@@ -287,9 +285,7 @@ trait Order
      */
     public function calculatePenaltyStartTime()
     {
-        $penaltyReliefModeStartTime = $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT
-                ? $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP )
-                : $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED );
+        $penaltyReliefModeStartTime = $this -> getStopChargingTimestamp();
 
         $config               = Config :: first();
         $penaltyReliefMinutes = $config -> penalty_relief_minutes;
@@ -297,6 +293,21 @@ trait Order
         $penaltyStartTime     = $penaltyStartTime -> timestamp * 1000;
 
         return $penaltyStartTime;
+    }
+
+    /**
+     * Get stop charging timestamp.
+     * 
+     * @return Carbon|null
+     */
+    private function getStopChargingTimestamp()
+    {
+        if( $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP ) )
+        {
+            return $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP );
+        }
+
+        return $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED );
     }
 
     /**

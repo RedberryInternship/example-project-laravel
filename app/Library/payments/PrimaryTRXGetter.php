@@ -10,7 +10,7 @@ class PrimaryTRXGetter
 {
   public static function get( Request $request )
   {
-    $userCardId = $request -> get('o_user_card_id');
+    $userCardId = $request -> get( 'o_user_card_id' );
     $userCard   = UserCard :: find( $userCardId );
 
     if( $userCard )

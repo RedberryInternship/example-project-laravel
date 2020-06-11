@@ -101,16 +101,7 @@ class StopCharging extends FormRequest
     public function updateChargingStatus()
     {
         $order = $this -> order;
-        if( $this -> isChargingTypeByAmount() )
-        {
-            $order -> charging_status = OrderStatusEnum :: USED_UP;
-        }
-        else
-        {
-            $order -> charging_status = OrderStatusEnum :: CHARGED;
-        }
-
-        $order -> save();
+        $order -> updateChargingStatus( OrderStatusEnum :: CHARGED );
     }
 
     /**
