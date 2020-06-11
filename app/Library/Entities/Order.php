@@ -22,7 +22,7 @@ trait Order
      * determine if charging is officially started
      * and if charging is officially ended.
      */
-    private $kiloWattHourLine = 2;
+    private $kiloWattHourLine = 1;
 
     /**
      * Update order charging status.
@@ -44,7 +44,7 @@ trait Order
     public function getChargingPower()
     {
         $chargerInfo   = MishasCharger :: transactionInfo( $this -> charger_transaction_id );
-        $kiloWattHour  = $chargerInfo -> kiloWattHour;
+        $kiloWattHour  = $chargerInfo -> kiloWattHour / 1000;
 
         return $kiloWattHour;
     }
@@ -132,17 +132,7 @@ trait Order
      */
     private function countConsumedMoneyByTime()
     {
-        $startChargingTime   = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
-        $finishChargingTime  = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
-
-        if( $finishChargingTime )
-        {
-            $elapsedMinutes      = $finishChargingTime -> diffInMinutes( $startChargingTime );
-        }
-        else
-        {
-            $elapsedMinutes      = now() -> diffInMinutes( $startChargingTime );
-        }
+        $elapsedMinutes      = $this -> calculateChargingElapsedTimeInMinutes();
 
         $chargingPriceRanges =  $this 
             -> charger_connector_type
@@ -154,6 +144,24 @@ trait Order
          );
        
         return $consumedMoney;
+    }
+
+    /**
+     * Calculate charging time in minutes.
+     * 
+     * @return int
+     */
+    private function calculateChargingElapsedTimeInMinutes()
+    {
+        $startChargingTime   = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
+        $finishChargingTime  = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
+        
+        if( $finishChargingTime )
+        {
+            return $finishChargingTime -> diffInMinutes( $startChargingTime );
+        }
+        
+        return now() -> diffInMinutes( $startChargingTime );
     }
 
     /**
@@ -195,11 +203,10 @@ trait Order
      */
     private function countConsumedMoneyByKilowatt()
     {
-        $consumedKilowatts  = $this -> kilowatt -> consumed;
-        $chargingPower      = $this -> kilowatt -> getChargingPower();
-        
+        $chargingPower      = $this -> kilowatt -> getChargingPower();        
         $startChargingTime  = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
         $startChargingTime  = $startChargingTime -> toTimeString();
+        $elapsedMinutes     = $this -> calculateChargingElapsedTimeInMinutes();
 
         $chargingPriceInfo  = $this 
             -> charger_connector_type 
@@ -211,9 +218,8 @@ trait Order
         }
 
         $chargingPrice = $chargingPriceInfo -> price;
-        $consumedMoney = ( $consumedKilowatts / $chargingPower ) * $chargingPrice;
         
-        return $consumedMoney;
+        return $chargingPrice * $elapsedMinutes;
     }
  
     /**
