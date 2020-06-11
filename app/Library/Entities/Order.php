@@ -44,7 +44,7 @@ trait Order
     public function getChargingPower()
     {
         $chargerInfo   = MishasCharger :: transactionInfo( $this -> charger_transaction_id );
-        $kiloWattHour  = $chargerInfo -> kiloWattHour;
+        $kiloWattHour  = $chargerInfo -> kiloWattHour / 1000;
 
         return $kiloWattHour;
     }
