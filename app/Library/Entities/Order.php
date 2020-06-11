@@ -195,7 +195,7 @@ trait Order
             }
             else
             {
-                $consumedMoney += ($elapsedMinutes - $startMinutes + 1 ) * $price;
+                $consumedMoney += ( $elapsedMinutes - $startMinutes + 1 ) * $price;
             }
         });
 
@@ -473,15 +473,6 @@ trait Order
                     $this -> updateChargingStatus( OrderStatusEnum :: CHARGED );
                 } 
             }
-
-        break;
-        
-        case OrderStatusEnum :: CHARGED : // TODO: I think this is not working because Misha is not sending requests when already charged 
-            if( $this -> isOnFine() ) 
-            {
-                $this -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 
-            }
-        break;
         }
     }
 
@@ -547,14 +538,7 @@ trait Order
         $config               = Config :: first();
         $penaltyReliefMinutes = $config -> penalty_relief_minutes;
 
-        if( $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT )
-        {
-            $chargedTime      = $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP ); 
-        }
-        else
-        {
-            $chargedTime      = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED ); 
-        }
+        $chargedTime = $this -> getStopChargingTimestamp();
 
         if( ! $chargedTime )
         {
