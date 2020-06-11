@@ -1,4 +1,6 @@
-export default function() {
+import months from '../constants/Months';
+
+let initChart = chartData => {
     const ctx = 'transactions-chart';
 
     // Chart Options
@@ -48,27 +50,6 @@ export default function() {
         }
     };
 
-    // Chart Data
-    let chartData = {
-        labels: ["იანვარი", "თებერვალი", "მარტი", "აპრილი", "მაისი", "ივნისი", "ივლისი"],
-        datasets: [
-            {
-                label: "ტრანზაქციების რაოდენობა",
-                data: [65, 59, 80, 81, 200, 159, 321],
-                backgroundColor: "#14afd7",
-                hoverBackgroundColor: "#00acc1",
-                borderColor: "transparent"
-            },
-            {
-                label: "დახარჯული ელ. ენერგია",
-                data: [45, 50, 70, 31, 100, 129, 331],
-                backgroundColor: "#efc964",
-                hoverBackgroundColor: "#00acc1",
-                borderColor: "transparent"
-            }
-        ]
-    };
-
     // Chart Config
     let config = {
         type: "bar",
@@ -77,4 +58,51 @@ export default function() {
     };
 
     new Chart(ctx, config);
+};
+
+let getData = () => {
+    axios
+        .get('/business/analytics/transactions')
+        .then(res => {
+            console.log(res);
+
+            // Chart Data
+            let chartData = {
+                labels: monthLabelsFromData(res.data),
+                datasets: [
+                    {
+                        label: "ტრანზაქციების რაოდენობა",
+                        data: dataSetsFromData(res.data),
+                        backgroundColor: "#14afd7",
+                        hoverBackgroundColor: "#00acc1",
+                        borderColor: "transparent"
+                    },
+                    {
+                        label: "დახარჯული ელ. ენერგია",
+                        data: [45, 50, 70, 31, 100, 129, 331],
+                        backgroundColor: "#efc964",
+                        hoverBackgroundColor: "#00acc1",
+                        borderColor: "transparent"
+                    }
+                ]
+            };
+
+            initChart(chartData);
+        });
+};
+
+let monthLabelsFromData = data => {
+    return Object
+        .keys(data)
+        .map(index => months[parseInt(index.split('-')[1])]);
+};
+
+let dataSetsFromData = data => {
+    return Object
+        .keys(data)
+        .map(index => parseInt(data[index]));
+};
+
+export default function() {
+    getData();
 };

@@ -1,8 +1,12 @@
+import axios from './vendor/axios';
 import chartIncome from './charts/income';
 import chartChargerStatuses from './charts/charger-statuses';
 import chartMostUsedChargers from './charts/most-used-chargers';
 import chartTransactions from './charts/transactions';
 import dashboardNavigation from './dashboard-navigation';
+
+// Global variables
+window.axios = axios;
 
 
 // Charts

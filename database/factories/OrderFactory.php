@@ -12,12 +12,12 @@ use App\Enums\ChargingType as ChargingTypeEnum;
 
 $factory->define( Order :: class, function (Faker $faker) {
 return [
-        'user_id'                       => $faker -> unique( true ) -> randomNumber(),
+        'user_id'                       => $faker -> randomNumber(),
         'charger_connector_type_id'     =>  0,
         'charging_type'                 => ChargingTypeEnum :: FULL_CHARGE,
-        'charger_transaction_id'        => $faker -> unique( true ) -> randomNumber(5),
-        'price'                         => $faker -> unique( true ) -> randomFloat(),
-        'target_price'                  => $faker -> unique( true ) -> randomFloat(),
+        'charger_transaction_id'        => $faker -> randomNumber(5),
+        'price'                         => $faker -> randomFloat(),
+        'target_price'                  => $faker -> randomFloat(),
         'charging_status'               => OrderStatusEnum :: INITIATED,
         'charging_status_change_dates'  => [],
         'comment'                       => $faker -> sentence(),
