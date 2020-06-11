@@ -22,7 +22,7 @@ trait Order
      * determine if charging is officially started
      * and if charging is officially ended.
      */
-    private $kiloWattHourLine = 2;
+    private $kiloWattHourLine = 1;
 
     /**
      * Update order charging status.
