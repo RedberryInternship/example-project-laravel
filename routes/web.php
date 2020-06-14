@@ -55,3 +55,4 @@ Route::post('/disconnect', 'TestController@disconnect');
 Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
         
 Route::get('test','TestController');
+Route::get('firebase', 'TestController@firebase');

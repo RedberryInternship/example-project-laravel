@@ -9,7 +9,9 @@ use App\Facades\Charger;
 use App\Facades\Simulator;
 
 use App\Traits\Message;
-use Redberry\GeorgianCardGateway\Refund;
+
+use LaravelFCM\Facades\FCM;
+use LaravelFCM\Message\PayloadDataBuilder;
 
 class TestController extends Controller 
 {
@@ -17,7 +19,28 @@ use Message;
     
   public function __invoke()
   {
-     dd( "nothingness" );
+    
+    $payload = new PayloadDataBuilder();
+    $payload -> setData(
+      [
+        'givi' => 'chvena vart'
+      ]
+    );
+
+    $data       = $payload -> build();
+
+    $token      = '|||eMzMuF_x_l7nkGT0XADBRu:APA91bFDfKhG7GItFtZpassNxZPno4KvvxzvpZ6XZU2QBMLkwH_Ve49joRv5vzWPisicQfO7a5ECWEfSXvhHhBjM3Jw3f2JR8CH0Wk_8xvQzDZhbyrsJ2kAm9KlQIls6aZHP1Hns8Opg';
+    $response   = FCM :: sendTo( $token, null, null, $data );
+
+    dd(
+      $response,
+    );
+
+  }
+
+  public function firebase()
+  {
+    return view( 'firebase' );
   }
 
   public function disconnect( Request $request )

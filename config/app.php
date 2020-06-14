@@ -171,6 +171,7 @@ return [
         Redberry\GeorgianCardGateway\Support\ServiceProvider::class,
         PulkitJalan\GeoIP\GeoIPServiceProvider::class,
         Aloha\Twilio\Support\Laravel\ServiceProvider::class,
+        LaravelFCM\FCMServiceProvider::class,
 
         /*
          * Application Service Providers...
