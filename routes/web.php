@@ -31,6 +31,7 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
 
     Route::group(['prefix' => 'analytics', 'namespace' => 'Analytics'], function() {
         Route::get('/transactions', 'TransactionsController');
+        Route::get('/active-chargers', 'ActiveChargersController');
     });
 });
 

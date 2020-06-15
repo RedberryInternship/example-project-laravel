@@ -64,8 +64,6 @@ let getData = () => {
     axios
         .get('/business/analytics/transactions')
         .then(res => {
-            console.log(res);
-
             // Chart Data
             let chartData = {
                 labels: monthLabelsFromData(res.data.transactions),

@@ -1,6 +1,7 @@
-export default function() {
-    const ctx = $("#most-used-chargers-chart");
+let initChart = chartData => {
+    const ctx = "most-used-chargers-chart";
 
+    // Chart Options
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -23,17 +24,7 @@ export default function() {
         }
     };
 
-    let chartData = {
-        labels: ["others", "charger 1", "charger 2", "charger 3", "charger 4"],
-        datasets: [
-            {
-                data: [133, 100, 80, 75, 45],
-                backgroundColor: ["#03a9f4", "#00bcd4", "#ffc107", "#e91e63", "#4caf50"],
-                label: "აქტიური ჩარჯერები"
-            }
-        ]
-    };
-
+    // Chart Config
     let config = {
         type: "polarArea",
         options: chartOptions,
@@ -42,3 +33,41 @@ export default function() {
 
     new Chart(ctx, config);
 };
+
+let getData = () => {
+    axios
+        .get('/business/analytics/active-chargers')
+        .then(res => {
+            console.log(res);
+
+            let chartData = {
+                labels: chargerLabelsFromData(res.data),
+                datasets: [
+                    {
+                        data: dataSetsFromData(res.data),
+                        backgroundColor: ["#03a9f4", "#00bcd4", "#ffc107", "#e91e63", "#4caf50"],
+                        label: "აქტიური ჩარჯერები"
+                    }
+                ]
+            };
+
+            initChart(chartData);
+        });
+};
+
+let chargerLabelsFromData = data => {
+    return Object
+        .keys(data)
+        .map(index => data[index].location.en);
+};
+
+let dataSetsFromData = data => {
+    return Object
+        .keys(data)
+        .map(index => parseInt(data[index].charger_connector_type_orders_count));
+};
+
+export default function () {
+    getData();
+};
+

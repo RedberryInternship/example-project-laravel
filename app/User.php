@@ -158,4 +158,17 @@ class User extends Authenticatable implements JWTSubject
             })
             -> toArray();
     }
+
+    /**
+     * Get Business Active Chargers.
+     */
+    public function businessActiveChargers()
+    {
+        return Charger::where('user_id', $this -> id)
+                     -> withCount('chargerConnectorTypeOrders')
+                    //  -> with('charger_connector_types.orders')
+                     -> orderBy('charger_connector_type_orders_count', 'DESC')
+                     -> limit(5)
+                     -> get();
+    }
 }
