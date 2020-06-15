@@ -68,18 +68,18 @@ let getData = () => {
 
             // Chart Data
             let chartData = {
-                labels: monthLabelsFromData(res.data),
+                labels: monthLabelsFromData(res.data.transactions),
                 datasets: [
                     {
                         label: "ტრანზაქციების რაოდენობა",
-                        data: dataSetsFromData(res.data),
+                        data: dataSetsFromData(res.data.transactions),
                         backgroundColor: "#14afd7",
                         hoverBackgroundColor: "#00acc1",
                         borderColor: "transparent"
                     },
                     {
                         label: "დახარჯული ელ. ენერგია",
-                        data: [45, 50, 70, 31, 100, 129, 331],
+                        data: dataSetsFromData(res.data.energy),
                         backgroundColor: "#efc964",
                         hoverBackgroundColor: "#00acc1",
                         borderColor: "transparent"

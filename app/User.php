@@ -5,6 +5,7 @@ namespace App;
 use Twilio;
 use App\Enums\OrderStatus;
 use App\Entities\BusinessTransactions;
+use App\Entities\BusinessWastedEnergy;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -13,6 +14,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
     use BusinessTransactions;
+    use BusinessWastedEnergy;
 
     /**
      * The attributes that aren't mass assignable.

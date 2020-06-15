@@ -22,4 +22,11 @@ class Kilowatt extends Model
         'consumed' => 'float'
     ];
 
+    /**
+     * Get Order, Kilowat belongs to.
+     */
+    public function order()
+    {
+        return $this -> belongsTo(Order::class);
+    }
 }

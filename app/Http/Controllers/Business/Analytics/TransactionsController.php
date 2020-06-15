@@ -23,6 +23,9 @@ class TransactionsController extends Controller
     {
         $user  = Auth::user();
 
-        return response() -> json($user -> businessTransactionsCount());
+        return response() -> json([
+            'energy'       => $user -> businessWastedEnergyCount(),
+            'transactions' => $user -> businessTransactionsCount(),
+        ]);
     }
 }

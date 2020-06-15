@@ -3,22 +3,22 @@
 namespace App\Entities;
 
 use Cache;
-use App\Payment;
+use App\Kilowatt;
 use Carbon\Carbon;
 use App\Helpers\MonthsList;
 
-trait BusinessTransactions
+trait BusinessWastedEnergy
 {
     protected $carbonFormat = 'Y-m';
 
     /**
-     * Generate Business Transactions Query.
+     * Generate Business Wasted Energy Query.
      * 
-     * @param $monthDate
+     * @param $monthDate (Y-m)
      */
-    public function businessTransactionsQuery($monthDate = null)
+    public function businessWastedEnergyQuery($monthDate = null)
     {
-        $query = Payment::whereHas('order.charger_connector_type.charger.user', function($query) {
+        $query = Kilowatt::whereHas('order.charger_connector_type.charger.user', function($query) {
             $query -> where('users.id', $this -> id);
         });
 
@@ -33,22 +33,24 @@ trait BusinessTransactions
     }
 
     /**
-     * Get Business Transactions.
+     * Get Business Wasted Energy.
+     * 
+     * @param $monthDate (Y-m)
      */
-    public function businessTransactions()
+    public function businessWastedEnergy($monthDate)
     {
-        return $this -> businessTransactionsQuery() -> get();
+        return $this -> businessWastedEnergyQuery($monthDate) -> get();
     }
 
     /**
-     * Get Business Transactions count.
+     * Get Business Wasted Energy count.
      * 
      * @param $start - Starting Date (Y-m)
      * @param $end - Ending Date (Y-m)
      */
-    public function businessTransactionsCount($start = null, $end = null)
+    public function businessWastedEnergyCount($start = null, $end = null)
     {
-        $cacheKey = 'business.' . $this -> id . '.transactionsCount';
+        $cacheKey = 'business.' . $this -> id . '.wastedEnergyCount';
 
         if ( ! $start)
         {
@@ -64,7 +66,15 @@ trait BusinessTransactions
         foreach (MonthsList::get($start, $end) as $monthDate)
         {
             $monthsData[$monthDate] = Cache::remember($cacheKey . '.' . $monthDate, 20, function () use ($monthDate) {
-                return $this -> businessTransactionsQuery($monthDate) -> count();
+                $kwts = $this -> businessWastedEnergy($monthDate);
+
+                $kwtsCount = 0;
+                foreach ($kwts as $kwt)
+                {
+                    $kwtsCount += $kwt -> consumed;
+                }
+
+                return $kwtsCount;
             });
         }
 
