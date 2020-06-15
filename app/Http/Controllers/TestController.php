@@ -29,7 +29,7 @@ use Message;
 
     $data       = $payload -> build();
 
-    $token      = '|||eMzMuF_x_l7nkGT0XADBRu:APA91bFDfKhG7GItFtZpassNxZPno4KvvxzvpZ6XZU2QBMLkwH_Ve49joRv5vzWPisicQfO7a5ECWEfSXvhHhBjM3Jw3f2JR8CH0Wk_8xvQzDZhbyrsJ2kAm9KlQIls6aZHP1Hns8Opg';
+    $token      = 'eMzMuF_x_l7nkGT0XADBRu:APA91bFDfKhG7GItFtZpassNxZPno4KvvxzvpZ6XZU2QBMLkwH_Ve49joRv5vzWPisicQfO7a5ECWEfSXvhHhBjM3Jw3f2JR8CH0Wk_8xvQzDZhbyrsJ2kAm9KlQIls6aZHP1Hns8Opg';
     $response   = FCM :: sendTo( $token, null, null, $data );
 
     dd(

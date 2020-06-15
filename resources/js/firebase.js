@@ -16,14 +16,22 @@ firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 
+messaging.requestPermission()
+  .then( () => {
+    console.log( 'Permission Granted!' );
+  })
+  .catch(() => {
+    console.log( 'Permission Denied!' );
+  });
+
 messaging.getToken()
   .then( ( token ) => {
-    console.log( token );
+    console.log( [ token ] );
   })
   .catch( ( err ) => {
     console.log( err );
   });
 
-messaging.onMessage( message => {
+messaging.onMessage( function( message ) {
   console.log( message );
-})
+});
