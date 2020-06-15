@@ -10,9 +10,23 @@
         </p>
 
         <div class="row">
-            <div class="col s12">
+            <div class="col s6">
                 <div class="sample-chart-wrapper">
-                    <canvas id="charger-statuses-chart" width="400" height="400"></canvas>
+                    <p class="caption center">
+                        <strong>Level2 დამტენების სტატუსები</strong>
+                    </p>
+
+                    <canvas id="charger-statuses-chart-lvl2" width="100%" height="400"></canvas>
+                </div>
+            </div>
+
+            <div class="col s6">
+                <div class="sample-chart-wrapper">
+                    <p class="caption center">
+                        <strong>სწრაფი დამტენების სტატუსები</strong>
+                    </p>
+
+                    <canvas id="charger-statuses-chart-fast" width="100%" height="400"></canvas>
                 </div>
             </div>
         </div>

@@ -6,6 +6,7 @@ use Twilio;
 use App\Enums\OrderStatus;
 use App\Entities\BusinessTransactions;
 use App\Entities\BusinessWastedEnergy;
+use App\Entities\BusinessChargerStatuses;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -15,6 +16,7 @@ class User extends Authenticatable implements JWTSubject
     use Notifiable;
     use BusinessTransactions;
     use BusinessWastedEnergy;
+    use BusinessChargerStatuses;
 
     /**
      * The attributes that aren't mass assignable.
@@ -165,10 +167,10 @@ class User extends Authenticatable implements JWTSubject
     public function businessActiveChargers()
     {
         return Charger::where('user_id', $this -> id)
-                     -> withCount('chargerConnectorTypeOrders')
-                    //  -> with('charger_connector_types.orders')
-                     -> orderBy('charger_connector_type_orders_count', 'DESC')
-                     -> limit(5)
-                     -> get();
+            -> withCount('chargerConnectorTypeOrders')
+        //  -> with('charger_connector_types.orders')
+            -> orderBy('charger_connector_type_orders_count', 'DESC')
+            -> limit(5)
+            -> get();
     }
 }
