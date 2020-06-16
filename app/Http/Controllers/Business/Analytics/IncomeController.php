@@ -25,7 +25,7 @@ class IncomeController extends Controller
 
         return response() -> json([
             'income'  => $user -> businessIncomeCount(),
-            // 'expense' => $user -> businessExpenseCount(),
+            'expense' => $user -> businessExpenseCount(),
         ]);
     }
 }

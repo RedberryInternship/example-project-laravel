@@ -76,7 +76,7 @@ let getData = () => {
                     },
                     {
                         label: "ხარჯი",
-                        data: [28, 48, 40, 19, 86, 27, 90],
+                        data: dataSetsFromData(res.data.expense),
                         fill: false,
                         borderColor: "#f48eaf",
                         pointBorderColor: "#f48eaf",

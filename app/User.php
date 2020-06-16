@@ -5,6 +5,7 @@ namespace App;
 use Twilio;
 use App\Enums\OrderStatus;
 use App\Entities\BusinessIncome;
+use App\Entities\BusinessExpense;
 use App\Entities\BusinessTransactions;
 use App\Entities\BusinessWastedEnergy;
 use App\Entities\BusinessChargerStatuses;
@@ -16,6 +17,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
     use BusinessIncome;
+    use BusinessExpense;
     use BusinessTransactions;
     use BusinessWastedEnergy;
     use BusinessChargerStatuses;
