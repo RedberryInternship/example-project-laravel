@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities;
+namespace App\Library\Entities;
 
 use App\Exceptions\NoSuchChargingPriceException;
 
@@ -22,7 +22,7 @@ trait Order
      * determine if charging is officially started
      * and if charging is officially ended.
      */
-    private $kiloWattHourLine = 2;
+    private $kiloWattHourLine = 1;
 
     /**
      * Update order charging status.
@@ -44,7 +44,7 @@ trait Order
     public function getChargingPower()
     {
         $chargerInfo   = MishasCharger :: transactionInfo( $this -> charger_transaction_id );
-        $kiloWattHour  = $chargerInfo -> kiloWattHour;
+        $kiloWattHour  = $chargerInfo -> kiloWattHour / 1000;
 
         return $kiloWattHour;
     }
@@ -59,9 +59,7 @@ trait Order
      */
     public function enteredPenaltyReliefMode()
     {
-        $enteredPenaltyReliefModeTimestamp = $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT
-            ? $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP )
-            : $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED );
+        $enteredPenaltyReliefModeTimestamp = $this -> getStopChargingTimestamp();
 
         return !! $enteredPenaltyReliefModeTimestamp;     
     }
@@ -132,17 +130,7 @@ trait Order
      */
     private function countConsumedMoneyByTime()
     {
-        $startChargingTime   = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
-        $finishChargingTime  = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
-
-        if( $finishChargingTime )
-        {
-            $elapsedMinutes      = $finishChargingTime -> diffInMinutes( $startChargingTime );
-        }
-        else
-        {
-            $elapsedMinutes      = now() -> diffInMinutes( $startChargingTime );
-        }
+        $elapsedMinutes      = $this -> calculateChargingElapsedTimeInMinutes();
 
         $chargingPriceRanges =  $this 
             -> charger_connector_type
@@ -154,6 +142,32 @@ trait Order
          );
        
         return $consumedMoney;
+    }
+
+    /**
+     * Calculate charging time in minutes.
+     * 
+     * @return int
+     */
+    private function calculateChargingElapsedTimeInMinutes()
+    {
+        $startChargingTime   = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
+        
+        if( $this -> charger_connector_type -> isChargerFast() )
+        {
+            $finishChargingTime = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
+        }
+        else
+        {
+            $finishChargingTime = $this -> getStopChargingTimestamp();    
+        }
+
+        if( ! $finishChargingTime )
+        {
+            $finishChargingTime = now();
+        }
+                
+        return $finishChargingTime -> diffInMinutes( $startChargingTime );
     }
 
     /**
@@ -181,7 +195,7 @@ trait Order
             }
             else
             {
-                $consumedMoney += ($elapsedMinutes - $startMinutes + 1 ) * $price;
+                $consumedMoney += ( $elapsedMinutes - $startMinutes + 1 ) * $price;
             }
         });
 
@@ -195,11 +209,10 @@ trait Order
      */
     private function countConsumedMoneyByKilowatt()
     {
-        $consumedKilowatts  = $this -> kilowatt -> consumed;
-        $chargingPower      = $this -> kilowatt -> getChargingPower();
-        
+        $chargingPower      = $this -> kilowatt -> getChargingPower();        
         $startChargingTime  = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
         $startChargingTime  = $startChargingTime -> toTimeString();
+        $elapsedMinutes     = $this -> calculateChargingElapsedTimeInMinutes();
 
         $chargingPriceInfo  = $this 
             -> charger_connector_type 
@@ -211,9 +224,8 @@ trait Order
         }
 
         $chargingPrice = $chargingPriceInfo -> price;
-        $consumedMoney = ( $consumedKilowatts / $chargingPower ) * $chargingPrice;
         
-        return $consumedMoney;
+        return $chargingPrice * $elapsedMinutes;
     }
  
     /**
@@ -281,9 +293,7 @@ trait Order
      */
     public function calculatePenaltyStartTime()
     {
-        $penaltyReliefModeStartTime = $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT
-                ? $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP )
-                : $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED );
+        $penaltyReliefModeStartTime = $this -> getStopChargingTimestamp();
 
         $config               = Config :: first();
         $penaltyReliefMinutes = $config -> penalty_relief_minutes;
@@ -291,6 +301,21 @@ trait Order
         $penaltyStartTime     = $penaltyStartTime -> timestamp * 1000;
 
         return $penaltyStartTime;
+    }
+
+    /**
+     * Get stop charging timestamp.
+     * 
+     * @return Carbon|null
+     */
+    private function getStopChargingTimestamp()
+    {
+        if( $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP ) )
+        {
+            return $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP );
+        }
+
+        return $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED );
     }
 
     /**
@@ -448,15 +473,6 @@ trait Order
                     $this -> updateChargingStatus( OrderStatusEnum :: CHARGED );
                 } 
             }
-
-        break;
-        
-        case OrderStatusEnum :: CHARGED : // TODO: I think this is not working because Misha is not sending requests when already charged 
-            if( $this -> isOnFine() ) 
-            {
-                $this -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 
-            }
-        break;
         }
     }
 
@@ -522,14 +538,7 @@ trait Order
         $config               = Config :: first();
         $penaltyReliefMinutes = $config -> penalty_relief_minutes;
 
-        if( $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT )
-        {
-            $chargedTime      = $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP ); 
-        }
-        else
-        {
-            $chargedTime      = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED ); 
-        }
+        $chargedTime = $this -> getStopChargingTimestamp();
 
         if( ! $chargedTime )
         {
@@ -642,20 +651,18 @@ trait Order
      */
     public function pay( $paymentType, $amount )
     {
-        $userCard = $this -> user_card ;
-        Payment :: pay( $this, $amount, $paymentType );
+        $amount = intval( $amount );
 
-        $this -> payments() -> create(
-            [
-            'type'          => $paymentType,
-            'confirmed'     => true,
-            'confirm_date'  => now(),
-            'price'         => $amount,
-            'prrn'          => 'SOME_PRRN',
-            'trx_id'        => 'SOME_TRIX_ID',
-            'user_card_id'  => $userCard -> id,
-            ]
-        );
+        if( $paymentType == PaymentTypeEnum :: REFUND )
+        {
+            $payment = new Payment;
+            $payment -> refund( $this, $amount );
+        }
+        else
+        {
+            $payment = new Payment;
+            $payment -> cut( $this, $amount );
+        }
     }
 
     /** 

@@ -4,8 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\Entities\Order as OrderEntity;
-use App\Scopes\Order as OrderScope;
+use App\Library\Entities\Order as OrderEntity;
+use App\Library\Scopes\Order as OrderScope;
 
 class Order extends Model
 {

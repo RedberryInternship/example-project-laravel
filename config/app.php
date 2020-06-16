@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -168,7 +168,7 @@ return [
          * Package Service Providers...
          */
         Barryvdh\Debugbar\ServiceProvider::class,
-        Redberry\GeorgianCardGateway\GeorgianCardGatewayServiceProvider::class,
+        Redberry\GeorgianCardGateway\Support\ServiceProvider::class,
         PulkitJalan\GeoIP\GeoIPServiceProvider::class,
         Aloha\Twilio\Support\Laravel\ServiceProvider::class,
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities;
+namespace App\Library\Entities;
 
 use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\ConnectorType as ConnectorTypeEnum;
@@ -26,6 +26,16 @@ trait ChargerConnectorType
       $fast           = [ ConnectorTypeEnum :: CHADEMO, ConnectorTypeEnum :: COMBO_2 ];
       
       return in_array( $connector_type, $fast ) ? ( ChargerTypeEnum :: FAST ) : ( ChargerTypeEnum :: LVL2 );
+  }
+
+  /**
+   * Determine if charger is Fast.
+   * 
+   * @return bool
+   */
+  public function isChargerFast()
+  {
+    return $this -> determineChargerType() == ChargerTypeEnum :: FAST;
   }
 
   /**

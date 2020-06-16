@@ -58,6 +58,18 @@ return [
             'level' => 'debug',
         ],
 
+        'payment-result' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/payments/georgian-card-results.log'),
+            'level' => 'debug',
+        ],
+        
+        'payment-responses' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/payments/georgian-card-responses.log'),
+            'level' => 'debug',
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
