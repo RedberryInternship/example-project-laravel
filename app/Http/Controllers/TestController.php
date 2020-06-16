@@ -9,7 +9,9 @@ use App\Facades\Charger;
 use App\Facades\Simulator;
 
 use App\Traits\Message;
-use Redberry\GeorgianCardGateway\Refund;
+
+use App\Http\Resources\Order as OrderResource;
+use App\Order;
 
 class TestController extends Controller 
 {
@@ -17,12 +19,23 @@ use Message;
     
   public function __invoke()
   {
-     dd( "nothingness" );
+
+    $order = factory( Order :: class ) -> create();
+
+    dd((new OrderResource( $order )) -> resolve());
+    
+   dd(
+     "Nothingness!",
+   );
+  }
+
+  public function firebase()
+  {
+    return view( 'firebase' );
   }
 
   public function disconnect( Request $request )
   { 
-
     if( request() -> has( 'chargerCode' ) )
     {
       $chargerId    = '0000';

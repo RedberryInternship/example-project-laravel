@@ -1,7 +1,9 @@
 {
+    "/firebase-messaging-sw.js": "/firebase-messaging-sw.js",
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/css/dashboard.css": "/css/dashboard.css",
     "/css/custom-nova.css": "/css/custom-nova.css",
-    "/js/dashboard.js": "/js/dashboard.js"
+    "/js/dashboard.js": "/js/dashboard.js",
+    "/js/firebase.js": "/js/firebase.js"
 }
