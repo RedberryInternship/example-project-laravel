@@ -28,6 +28,13 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     Route::resource('/charger-groups', 'ChargerGroupController');
     Route::resource('/charging-prices', 'ChargingPricesController');
     Route::resource('/fast-charging-prices', 'FastChargingPricesController');
+
+    Route::group(['prefix' => 'analytics', 'namespace' => 'Analytics'], function() {
+        Route::get('/income', 'IncomeController');
+        Route::get('/transactions', 'TransactionsController');
+        Route::get('/active-chargers', 'ActiveChargersController');
+        Route::get('/charger-statuses', 'ChargerStatusesController');
+    });
 });
 
 Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers/transactions'], function(){

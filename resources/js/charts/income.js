@@ -1,20 +1,16 @@
-export default function () {
+import months from '../constants/Months';
+
+let initChart = chartData => {
     const ctx = 'income-chart';
 
-    // Chart Options
     const chartOptions = {
-        elements: {
-            rectangle: {
-                borderWidth: 2,
-                borderColor: "rgb(0, 255, 0)",
-                borderSkipped: "left"
-            }
-        },
         responsive: true,
         maintainAspectRatio: false,
-        responsiveAnimationDuration: 500,
         legend: {
-            position: "top"
+            position: "bottom"
+        },
+        hover: {
+            mode: "label"
         },
         scales: {
             xAxes: [
@@ -25,7 +21,8 @@ export default function () {
                         drawTicks: false
                     },
                     scaleLabel: {
-                        display: true
+                        display: true,
+                        labelString: "Month"
                     }
                 }
             ],
@@ -37,37 +34,76 @@ export default function () {
                         drawTicks: false
                     },
                     scaleLabel: {
-                        display: true
+                        display: true,
+                        labelString: "Value"
                     }
                 }
             ]
         },
         title: {
-            display: false,
-            text: "Chart.js Horizontal Bar Chart"
+            display: true,
+            text: "შემოსავალი"
         }
     };
 
-    // Chart Data
-    let chartData = {
-        labels: ["იანვარი", "თებერვალი", "მარტი", "აპრილი", "მაისი", "ივნისი", "ივლისი"],
-        datasets: [
-            {
-                label: "შემოსავალი",
-                data: [1000, 1500, 1230, 3000, 5000, 4500, 2000],
-                backgroundColor: "#fa6e7f",
-                hoverBackgroundColor: "#00acc1",
-                borderColor: "transparent"
-            }
-        ]
-    };
-
-    // Chart Config
     let config = {
-        type: "bar",
+        type: "line",
         options: chartOptions,
         data: chartData
     };
 
     new Chart(ctx, config);
+};
+
+let getData = () => {
+    axios
+        .get('/business/analytics/income')
+        .then(res => {
+            // Chart Data
+            let chartData = {
+                labels: monthLabelsFromData(res.data.income),
+                datasets: [
+                    {
+                        label: "შემოსავალი",
+                        data: dataSetsFromData(res.data.income),
+                        fill: false,
+                        borderColor: "#ff5354",
+                        pointBorderColor: "#ff5354",
+                        pointBackgroundColor: "#ff5354",
+                        pointBorderWidth: 2,
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 4
+                    },
+                    {
+                        label: "ხარჯი",
+                        data: dataSetsFromData(res.data.expense),
+                        fill: false,
+                        borderColor: "#f48eaf",
+                        pointBorderColor: "#f48eaf",
+                        pointBackgroundColor: "#f48eaf",
+                        pointBorderWidth: 2,
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 4
+                    }
+                ]
+            };
+
+            initChart(chartData);
+        });
+};
+
+let monthLabelsFromData = data => {
+    return Object
+        .keys(data)
+        .map(index => months[parseInt(index.split('-')[1])]);
+};
+
+let dataSetsFromData = data => {
+    return Object
+        .keys(data)
+        .map(index => parseInt(data[index]));
+};
+
+export default function () {
+    getData();
 };

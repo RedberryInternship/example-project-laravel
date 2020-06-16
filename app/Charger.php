@@ -340,5 +340,10 @@ class Charger extends Model
 
         return $hasChargingConnector;
     }
+
+    public function chargerConnectorTypeOrders()
+    {
+        return $this -> hasManyThrough(Order::class, ChargerConnectorType::class);
+    }
 }
 
