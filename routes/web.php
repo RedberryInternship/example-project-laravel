@@ -31,8 +31,8 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
 });
 
 Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers/transactions'], function(){
-    Route::get('finish/{transaction_id}','TransactionController@finish');
-    Route::get('update/{transaction_id}/{value}','TransactionController@update');
+    Route::get('finish/{transaction_id}',           'TransactionController@finish');
+    Route::get('update/{transaction_id}/{value}',   'TransactionController@update');
 });
 
 Route::group(['prefix' => 'chargers_back'], function() {

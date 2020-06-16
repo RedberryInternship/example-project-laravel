@@ -10,8 +10,8 @@ use App\Facades\Simulator;
 
 use App\Traits\Message;
 
-use LaravelFCM\Facades\FCM;
-use LaravelFCM\Message\PayloadDataBuilder;
+use App\Http\Resources\Order as OrderResource;
+use App\Order;
 
 class TestController extends Controller 
 {
@@ -19,18 +19,14 @@ use Message;
     
   public function __invoke()
   {
+
+    $order = factory( Order :: class ) -> create();
+
+    dd((new OrderResource( $order )) -> resolve());
     
-    $payload = new PayloadDataBuilder();
-    $payload -> setData(
-      [
-        'givi' => 'chvena vart'
-      ]
-    );
-
-    $data       = $payload -> build();
-
-    $token      = 'eMzMuF_x_l7nkGT0XADBRu:APA91bFDfKhG7GItFtZpassNxZPno4KvvxzvpZ6XZU2QBMLkwH_Ve49joRv5vzWPisicQfO7a5ECWEfSXvhHhBjM3Jw3f2JR8CH0Wk_8xvQzDZhbyrsJ2kAm9KlQIls6aZHP1Hns8Opg';
-    $response   = FCM :: sendTo( $token, null, null, $data );
+   dd(
+     "Nothingness!",
+   );
   }
 
   public function firebase()
@@ -40,7 +36,6 @@ use Message;
 
   public function disconnect( Request $request )
   { 
-
     if( request() -> has( 'chargerCode' ) )
     {
       $chargerId    = '0000';
