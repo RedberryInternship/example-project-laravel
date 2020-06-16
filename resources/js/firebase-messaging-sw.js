@@ -14,26 +14,8 @@ import '@firebase/messaging';
 
 firebase.initializeApp(firebaseConfig);
 
-
 const messaging = firebase.messaging();
 
-messaging.requestPermission()
-  .then( () => {
-    console.log( '%c Permission Granted!', 'font-weight: bold; color: green' );
-  })
-  .catch(() => {
-    console.log( '%c Permission Denied!', 'font-weight: bold; color: red' );
-  });
-
-messaging.getToken()
-  .then( ( token ) => {
-    console.log( [ token ] );
-  })
-  .catch( ( err ) => {
-    console.log( err );
-  });
-
-messaging.onMessage( function( text ) {
-  console.log( 'message comes' );
-  console.log( text );
+messaging.setBackgroundMessageHandler(function( payload ) {
+  
 });

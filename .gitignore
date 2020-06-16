@@ -5,6 +5,7 @@
 /public/css
 /public/storage
 /public/phpmyadmin
+/public/firebase-messaging-sw.js
 /storage/*.key
 /vendor
 /code/espace/database/database.sqlite
