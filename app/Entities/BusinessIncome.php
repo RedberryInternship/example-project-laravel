@@ -7,16 +7,16 @@ use App\Payment;
 use Carbon\Carbon;
 use App\Helpers\MonthsList;
 
-trait BusinessTransactions
+trait BusinessIncome
 {
     protected $carbonFormat = 'Y-m';
 
     /**
-     * Generate Business Transactions Query.
+     * Generate Business Income Query.
      * 
      * @param $monthDate
      */
-    public function businessTransactionsQuery($monthDate = null)
+    public function businessIncomeQuery($monthDate = null)
     {
         $query = Payment::where(function($q) {
             $q -> where('type', 'CUT')
@@ -37,22 +37,24 @@ trait BusinessTransactions
     }
 
     /**
-     * Get Business Transactions.
+     * Get Business Income.
+     * 
+     * @param $monthDate
      */
-    public function businessTransactions()
+    public function businessIncome($monthDate = null)
     {
-        return $this -> businessTransactionsQuery() -> get();
+        return $this -> businessIncomeQuery($monthDate) -> get();
     }
 
     /**
-     * Get Business Transactions count.
+     * Get Business Income count.
      * 
      * @param $start - Starting Date (Y-m)
      * @param $end - Ending Date (Y-m)
      */
-    public function businessTransactionsCount($start = null, $end = null)
+    public function businessIncomeCount($start = null, $end = null)
     {
-        $cacheKey = 'business.' . $this -> id . '.transactionsCount';
+        $cacheKey = 'business.' . $this -> id . '.income';
 
         if ( ! $start)
         {
@@ -68,7 +70,13 @@ trait BusinessTransactions
         foreach (MonthsList::get($start, $end) as $monthDate)
         {
             $monthsData[$monthDate] = Cache::remember($cacheKey . '.' . $monthDate, 20, function () use ($monthDate) {
-                return $this -> businessTransactionsQuery($monthDate) -> count();
+                $priceSum = 0;
+                foreach ($this -> businessIncome($monthDate) as $payment)
+                {
+                    $priceSum += $payment -> price;
+                }
+
+                return (int) $priceSum;
             });
         }
 

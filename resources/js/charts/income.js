@@ -1,5 +1,7 @@
-export default function () {
-    const ctx = $("#income-chart");
+import months from '../constants/Months';
+
+let initChart = chartData => {
+    const ctx = 'income-chart';
 
     const chartOptions = {
         responsive: true,
@@ -44,34 +46,6 @@ export default function () {
         }
     };
 
-    let chartData = {
-        labels: ["იანვარი", "თებერვალი", "მარტი", "აპრილი", "მაისი", "ივნისი", "ივლისი"],
-        datasets: [
-            {
-                label: "შემოსავალი",
-                data: [65, 59, 80, 81, 56, 55, 40],
-                fill: false,
-                borderColor: "#ff5354",
-                pointBorderColor: "#ff5354",
-                pointBackgroundColor: "#ff5354",
-                pointBorderWidth: 2,
-                pointHoverBorderWidth: 2,
-                pointRadius: 4
-            },
-            {
-                label: "ხარჯი",
-                data: [28, 48, 40, 19, 86, 27, 90],
-                fill: false,
-                borderColor: "#f48eaf",
-                pointBorderColor: "#f48eaf",
-                pointBackgroundColor: "#f48eaf",
-                pointBorderWidth: 2,
-                pointHoverBorderWidth: 2,
-                pointRadius: 4
-            }
-        ]
-    };
-
     let config = {
         type: "line",
         options: chartOptions,
@@ -79,4 +53,57 @@ export default function () {
     };
 
     new Chart(ctx, config);
+};
+
+let getData = () => {
+    axios
+        .get('/business/analytics/income')
+        .then(res => {
+            // Chart Data
+            let chartData = {
+                labels: monthLabelsFromData(res.data.income),
+                datasets: [
+                    {
+                        label: "შემოსავალი",
+                        data: dataSetsFromData(res.data.income),
+                        fill: false,
+                        borderColor: "#ff5354",
+                        pointBorderColor: "#ff5354",
+                        pointBackgroundColor: "#ff5354",
+                        pointBorderWidth: 2,
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 4
+                    },
+                    {
+                        label: "ხარჯი",
+                        data: [28, 48, 40, 19, 86, 27, 90],
+                        fill: false,
+                        borderColor: "#f48eaf",
+                        pointBorderColor: "#f48eaf",
+                        pointBackgroundColor: "#f48eaf",
+                        pointBorderWidth: 2,
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 4
+                    }
+                ]
+            };
+
+            initChart(chartData);
+        });
+};
+
+let monthLabelsFromData = data => {
+    return Object
+        .keys(data)
+        .map(index => months[parseInt(index.split('-')[1])]);
+};
+
+let dataSetsFromData = data => {
+    return Object
+        .keys(data)
+        .map(index => parseInt(data[index]));
+};
+
+export default function () {
+    getData();
 };
