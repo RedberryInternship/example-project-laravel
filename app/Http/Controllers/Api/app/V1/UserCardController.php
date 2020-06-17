@@ -34,6 +34,8 @@ class UserCardController extends Controller
 
   /**
    * Set default user card.
+   * 
+   * @return JSON
    */
   public function setDefaultUserCard( SetDefaultUserCardRequest $request )
   {

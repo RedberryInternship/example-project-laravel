@@ -393,8 +393,12 @@ trait Order
     public function sendFirebaseNotification()
     {
         $fireBaseToken = $this -> user -> firebase_token;
-        $orderData = (new OrderResource( $this )) -> resolve();
-        FCM :: send( $fireBaseToken, $orderData );
+
+        if( $fireBaseToken )
+        {
+            $orderData = (new OrderResource( $this )) -> resolve();
+            FCM :: send( $fireBaseToken, $orderData );
+        }
     }
 
     /**
