@@ -28,11 +28,18 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     Route::resource('/charger-groups', 'ChargerGroupController');
     Route::resource('/charging-prices', 'ChargingPricesController');
     Route::resource('/fast-charging-prices', 'FastChargingPricesController');
+
+    Route::group(['prefix' => 'analytics', 'namespace' => 'Analytics'], function() {
+        Route::get('/income', 'IncomeController');
+        Route::get('/transactions', 'TransactionsController');
+        Route::get('/active-chargers', 'ActiveChargersController');
+        Route::get('/charger-statuses', 'ChargerStatusesController');
+    });
 });
 
 Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers/transactions'], function(){
-    Route::get('finish/{transaction_id}','TransactionController@finish');
-    Route::get('update/{transaction_id}/{value}','TransactionController@update');
+    Route::get('finish/{transaction_id}',           'TransactionController@finish');
+    Route::get('update/{transaction_id}/{value}',   'TransactionController@update');
 });
 
 Route::group(['prefix' => 'chargers_back'], function() {
@@ -55,3 +62,4 @@ Route::post('/disconnect', 'TestController@disconnect');
 Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
         
 Route::get('test','TestController');
+Route::get('firebase', 'TestController@firebase');

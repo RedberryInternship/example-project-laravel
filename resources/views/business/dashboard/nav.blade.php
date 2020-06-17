@@ -20,21 +20,21 @@
     </div>
 
     <div class="col s12 m3">
-        <div class="card gradient-shadow gradient-45deg-amber-amber border-radius-3">
+        <div class="card gradient-shadow gradient-45deg-green-teal border-radius-3">
             <div class="card-content center">
-                <img src="/app-assets/images/icon/laptop.png" alt="images" class="width-40">
-                <h5 class="white-text lighten-4">500</h5>
-                <p class="white-text lighten-4">ელ. ენერგია</p>
+                <img src="/app-assets/images/icon/bowling.png" alt="images" class="width-40">
+                <h5 class="white-text lighten-4">&nbsp;</h5>
+                <p class="white-text lighten-4">აქტიური დამტენები</p>
             </div>
         </div>
     </div>
 
     <div class="col s12 m3">
-        <div class="card gradient-shadow gradient-45deg-green-teal border-radius-3">
+        <div class="card gradient-shadow gradient-45deg-amber-amber border-radius-3">
             <div class="card-content center">
-                <img src="/app-assets/images/icon/bowling.png" alt="images" class="width-40">
-                <h5 class="white-text lighten-4">100/121</h5>
-                <p class="white-text lighten-4">აქტიური დამტენები</p>
+                <img src="/app-assets/images/icon/laptop.png" alt="images" class="width-40">
+                <h5 class="white-text lighten-4">&nbsp;</h5>
+                <p class="white-text lighten-4">დამტენების სტატუსები</p>
             </div>
         </div>
     </div>

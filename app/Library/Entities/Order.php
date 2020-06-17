@@ -9,8 +9,10 @@ use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
 use App\Enums\ChargingType as ChargingTypeEnum;
+use App\Http\Resources\Order as OrderResource;
 use App\Facades\Charger as MishasCharger;
 use App\Library\Payments\Payment;
+use App\Library\Adapters\FCM;
 
 use Carbon\Carbon;
 use App\Config;
@@ -378,10 +380,24 @@ trait Order
 
         $chargerType == ChargerTypeEnum :: FAST
             ? $this -> updateFastChargerOrder()
-            : $this -> updateLvl2ChargerOrder(); 
+            : $this -> updateLvl2ChargerOrder();
+        
+        $this -> sendFirebaseNotification();
     }
 
-    /** // TODO: Update Fast Charger Order 
+    /**
+     * Send firebase notification to user about order update.
+     * 
+     * @return void
+     */
+    public function sendFirebaseNotification()
+    {
+        $fireBaseToken = $this -> user -> firebase_token;
+        $orderData = (new OrderResource( $this )) -> resolve();
+        FCM :: send( $fireBaseToken, $orderData );
+    }
+
+    /**
      * Update fast charger order.
      * 
      * @return  void
@@ -593,6 +609,7 @@ trait Order
         : $this -> makeLastPaymentsForLvl2Charging();
 
         $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
+        $this -> sendFirebaseNotification();
     }
 
     /**

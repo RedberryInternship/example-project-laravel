@@ -8,8 +8,8 @@ use App\Charger;
 $factory->define(Charger::class, function (Faker $faker) {
     return [
         'name' 		  => $faker->name,
-        'charger_id'  => $faker->unique()->randomDigit,
-        'code'	      => $faker->unique()->randomDigit,
+        'charger_id'  => $faker->randomDigit,
+        'code'	      => $faker->randomDigit,
         'description' => $faker->name,
         'location'    => $faker->name,
         'public'	  => $faker->boolean($chanceOfGettingTrue = 50),
