@@ -74,7 +74,7 @@ class Charger extends Resource
             -> toArray();
 
         $fieldsArr = [
-            ID::make()->sortable(),
+            ID::make()->sortable() -> hideFromIndex(),
 
             Translatable::make([
                 Text::make('name')
@@ -83,19 +83,18 @@ class Charger extends Resource
             ])->locales(['en', 'ru', 'ka']),
 
             ID::make('charger_id')
-                ->sortable(),
+                ->sortable()
+                ->hideFromIndex(),
 
             Text::make('code'),
 
             Translatable::make([
-                Text::make('description')
-                    ->sortable()
+                Text::make('description')->sortable() -> hideFromIndex()
             ])->locales(['en', 'ru', 'ka']),
 
             Translatable::make([
                 Text::make('location')
                     ->sortable()
-                    // ->rules('required', 'max:255')
             ])->locales(['en', 'ru', 'ka']),
 
             Boolean::make('public')
