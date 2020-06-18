@@ -285,7 +285,7 @@ trait Order
         $elapsedMinutes         = $penaltyTimestamp -> diffInMinutes( $finishedTimestamp );
         $penaltyPricePerMinute  = $this -> getPenaltyPricePerMinute();
                 
-        return $elapsedMinutes * $penaltyPricePerMinute;    
+        return ( $elapsedMinutes + 1 ) * $penaltyPricePerMinute;    
     }
 
     /**
