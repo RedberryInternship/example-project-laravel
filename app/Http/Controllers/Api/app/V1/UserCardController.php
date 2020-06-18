@@ -9,6 +9,7 @@ use App\Library\Payments\SaveCardInitiator;
 use App\User;
 
 use App\Http\Requests\SetDefaultUserCardRequest;
+use App\Http\Requests\DeleteUserCardRequest;
 
 class UserCardController extends Controller
 {
@@ -35,7 +36,8 @@ class UserCardController extends Controller
   /**
    * Set default user card.
    * 
-   * @return JSON
+   * @param   SetDefaultUserCardRequest
+   * @return  JSON
    */
   public function setDefaultUserCard( SetDefaultUserCardRequest $request )
   {
@@ -44,9 +46,35 @@ class UserCardController extends Controller
     $user             = User :: with( 'user_cards' ) -> find( $userId );
     $selectedUserCard = $user -> user_cards() -> find( $userCardId );
 
-    $user -> user_cards() -> update([ 'default' => false ]);
+    $selectedUserCard -> setDefault();
 
-    $selectedUserCard -> update([ 'default' => true ]);
+    return response() -> json([ 'success' => true ]);
+  }
+
+  /**
+   * Remove user card.
+   * 
+   * @param   DeleteUserCardRequest
+   * @return  JSON
+   */
+  public function removeUserCard( DeleteUserCardRequest $request )
+  {
+    $userCardId = $request -> get( 'user_card_id' );
+    $user       = User :: with( 'user_cards' ) -> find( auth() -> user() -> id );
+
+    $userCardToDelete = $user -> user_cards -> where( 'id', $userCardId ) -> first();
+
+    if( $userCardToDelete -> isDefault() )
+    {
+      $shouldBeDefault = $user -> user_cards -> where( 'id', '!=' , $userCardId ) -> last();
+
+      if( $shouldBeDefault )
+      {
+        $shouldBeDefault -> setDefault();
+      }
+    }
+    
+    $userCardToDelete -> deactivate();
 
     return response() -> json([ 'success' => true ]);
   }

@@ -59,6 +59,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 			/** UserCards */
 			Route::get('/save-card-url', 'UserCardController@getSaveCardUrl');
 			Route::post('/user-card/set-default', 'UserCardController@setDefaultUserCard');
+			Route::post('/user-card/remove-card', 'UserCardController@removeUserCard');
 		});
 	});
 
