@@ -47,13 +47,12 @@ Route::group(['prefix' => 'app/V1'], function () {
 			Route::get('/user-favorites'						, 'FavoriteController@getUserFavorites');
 			Route::get('/user-orders'								, 'UserController@getOrders');
 			Route::get('/user-chargers/{quantity?}'	, 'UserController@getUserChargers');
-			Route::post('/update-user-info'					,'UserController@postUpdateUserInfo');
-			Route::post('/update-user-info'					,'UserController@postUpdateUserInfo');
+			Route::post('/update-user-info'					, 'UserController@postUpdateUserInfo');
 			Route::post('/update-firebase-token'		, 'User\FirebaseTokenController@update');
 			Route::get('/me'												, 'UserController@getMe');
 
 			/** Charging */		
-			Route::post('/charging/start'						, 'ChargingController@st			art');
+			Route::post('/charging/start'						, 'ChargingController@start');
 			Route::post('/charging/stop'						, 'ChargingController@stop'			);
 
 			/** Orders */		

@@ -17,6 +17,7 @@ class AuthController extends Controller
      */
     public function __invoke(Request $request)
     {
+        return response() -> json( $request -> all() );
         $credentials = $request -> only('phone_number', 'password');
 
         if ( ! $token = auth('api') -> attempt($credentials))

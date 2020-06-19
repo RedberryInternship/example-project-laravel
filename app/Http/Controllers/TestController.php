@@ -5,28 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-use App\Facades\Charger;
 use App\Facades\Simulator;
+use App\Facades\Charger;
 
 use App\Traits\Message;
 
-use App\Http\Resources\Order as OrderResource;
-use App\Order;
-
 class TestController extends Controller 
 {
-use Message;
+  use Message;
     
   public function __invoke()
   {
-
-    $order = factory( Order :: class ) -> create();
-
-    dd((new OrderResource( $order )) -> resolve());
-    
-   dd(
-     "Nothingness!",
-   );
+    return response() -> json( request() -> all() );
   }
 
   public function firebase()
