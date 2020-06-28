@@ -16,7 +16,7 @@
                             @csrf
 
                             <div class="input-field col s8">
-                                <input type="text" for="name" name="name">
+                                <input type="text" for="name" name="name" required>
                                 <label for="name">დამტენების ახალი ჯგუფი</label>
                             </div>
 

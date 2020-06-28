@@ -24,6 +24,8 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     Route::get('/logout', 'AuthController@logout');
     Route::post('/charger-transfer', 'ChargerTransferController');
 
+    Route::resource('/orders', 'OrderController');
+    Route::resource('/profile', 'ProfileController');
     Route::resource('/chargers', 'ChargerController');
     Route::resource('/charger-groups', 'ChargerGroupController');
     Route::resource('/charging-prices', 'ChargingPricesController');
