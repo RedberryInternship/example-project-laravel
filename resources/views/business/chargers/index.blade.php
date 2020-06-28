@@ -5,7 +5,7 @@
 		<div class="col s12">
 			<div class="card card-tabs">
 				<div class="card-content">
-					<div class="row">
+					<div class="row mb-2">
 						<div class="col s12">
 	                        <h4 class="card-title">დამტენები</h4>
 	                    </div>
@@ -62,4 +62,3 @@
 		</div>
 	</div>
 @endsection
-

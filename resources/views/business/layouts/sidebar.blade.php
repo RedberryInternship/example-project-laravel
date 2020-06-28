@@ -19,6 +19,14 @@
         </li>
 
         <li class="bold">
+            <a class="waves-effect waves-cyan {{ isset($activeMenuItem) && $activeMenuItem == 'orders' ? 'active' : NULL }}" href="/business/orders">
+                <i class="material-icons">payment</i>
+
+                <span class="menu-title" data-i18n="Chat">დატენვები</span>
+            </a>
+        </li>
+
+        <li class="bold">
             <a class="waves-effect waves-cyan {{ isset($activeMenuItem) && $activeMenuItem == 'chargerGroups' ? 'active' : NULL }}" href="/business/charger-groups">
                 <i class="material-icons">group_work</i>
 
