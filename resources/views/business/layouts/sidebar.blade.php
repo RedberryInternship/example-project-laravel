@@ -42,13 +42,13 @@
             </a>
         </li>
 
-        {{-- <li class="bold">
-            <a class="waves-effect waves-cyan " href="user-profile-page.html">
-                <i class="material-icons">person_outline</i>
+        <li class="bold">
+            <a class="waves-effect waves-cyan {{ isset($activeMenuItem) && $activeMenuItem == 'profile' ? 'active' : NULL }}" href="/business/profile">
+                <i class="material-icons">person</i>
 
-                <span class="menu-title" data-i18n="User Profile">User Profile</span>
+                <span class="menu-title" data-i18n="Chat">პროფილი</span>
             </a>
-        </li> --}}
+        </li>
 
         <li class="bold">
             <a class="waves-effect waves-cyan " href="/business/logout">
