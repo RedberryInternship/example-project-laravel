@@ -63,7 +63,10 @@ class ChargerGroupController extends Controller
             'user_id' => $user -> id
         ]);
 
-        ChargerGroup::create($request -> all());
+        if ($request -> has('name') && $request -> get('name'))
+        {   
+            ChargerGroup::create($request -> all());
+        }
 
         return redirect() -> back();
     }
