@@ -21,6 +21,13 @@ class Charger extends Base implements MishasCharger
     private $response;
 
     /**
+     * For Testing Purposes.
+     * 
+     * @var string $realChargersBaseUrl
+     */
+    private $realChargersBaseUrl = 'https://chargers.e-space.ge:8443';
+
+    /**
      * Get all the chargers info from Misha's back
      * 
      * @return array
@@ -73,6 +80,12 @@ class Charger extends Base implements MishasCharger
      */
     public function find($charger_id)
     {
+        if( $charger_id == 27833 )
+        {
+            $this -> url = $this -> realChargersBaseUrl;
+        }
+
+
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/info/' 
                         . $charger_id;
@@ -110,6 +123,11 @@ class Charger extends Base implements MishasCharger
      */
      public function start($charger_id, $connector_id)
      {
+        if( $charger_id == 27833 )
+        {
+            $this -> url = $this -> realChargersBaseUrl;
+        }
+
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/start/'
                         . $charger_id .'/' 
@@ -152,6 +170,11 @@ class Charger extends Base implements MishasCharger
      */
     public function stop( $charger_id, $transaction_id )
     {
+        if( $charger_id == 27833 )
+        {
+            $this -> url = $this -> realChargersBaseUrl;
+        }
+
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/stop/'
                         . $charger_id .'/' 
@@ -178,6 +201,22 @@ class Charger extends Base implements MishasCharger
      */
     public function transactionInfo( $id )
     {
+
+        /** This Code Should be deleted later on. I am ashamed that Im coding it. */
+
+        $order = \App\Order :: with( 'charger_connector_type.charger' ) 
+            -> where( 'charger_transaction_id', $id ) 
+            -> first();
+
+        $charger_id = $order -> charger_connector_type -> charger -> charger_id;
+
+        if( $charger_id == 27833 )
+        {
+            $this -> url = $this -> realChargersBaseUrl;
+        }
+        
+        /** Ends here. */
+
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/transaction/info/'
                         . $id;
