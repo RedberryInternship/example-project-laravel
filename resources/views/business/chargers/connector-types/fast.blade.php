@@ -9,7 +9,7 @@
                                 <th>კონექტორის ტიპი</th>
                                 <th>წუთები (დან)</th>
                                 <th>წუთები (მდე)</th>
-                                <th>საფასური</th>
+                                <th>ღირებულება</th>
                                 <th>&nbsp;</th>
                             </tr>
                         </thead>
@@ -54,19 +54,19 @@
                                     </td>
                                     <td>
                                         <div class="input-field">
-                                            <label for="start_minutes">წუთები (დან)</label>
+                                            <label for="start_minutes">0</label>
                                             <input type="text" id="start_minutes" name="start_minutes">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-field">
-                                            <label for="end_minutes">წუთები (მდე)</label>
+                                            <label for="end_minutes">20</label>
                                             <input type="text" id="end_minutes" name="end_minutes">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-field">
-                                            <label for="price">ღირებულება</label>
+                                            <label for="price">1</label>
                                             <input type="text" id="price" name="price">
                                         </div>
                                     </td>
@@ -86,4 +86,3 @@
         </div>
     </div>
 @endif
-

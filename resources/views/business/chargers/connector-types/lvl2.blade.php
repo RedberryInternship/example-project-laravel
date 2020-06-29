@@ -7,11 +7,11 @@
                         <thead>
                             <tr>
                                 <th>კონექტორის ტიპი</th>
-                                <th>დრო (დან)</th>
-                                <th>დრო (მდე)</th>
-                                <th>kwt (დან)</th>
-                                <th>kwt (მდე)</th>
-                                <th>საფასური</th>
+                                <th>დაწყების დრო</th>
+                                <th>დამთავრების დრო</th>
+                                <th>მინიმალური კილოვატები</th>
+                                <th>მაქსიმალური კილოვატები</th>
+                                <th>ღირებულება</th>
                                 <th>&nbsp;</th>
                             </tr>
                         </thead>
@@ -58,31 +58,31 @@
                                     </td>
                                     <td>
                                         <div class="input-field">
-                                            <label for="start_time">დაწყების დრო</label>
-                                            <input type="text" id="start_time" name="start_time">
+                                            <label for="start_time">00:00</label>
+                                            <input type="text" id="start_time" name="start_time" required>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-field">
-                                            <label for="end_time">დამთავრების დრო</label>
-                                            <input type="text" id="end_time" name="end_time">
+                                            <label for="end_time">24:00</label>
+                                            <input type="text" id="end_time" name="end_time" required>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-field">
-                                            <label for="min_kwt">მინიმალური კილოვატი</label>
+                                            <label for="min_kwt">0</label>
                                             <input type="text" id="min_kwt" name="min_kwt">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-field">
-                                            <label for="max_kwt">დამთავრების დრო</label>
+                                            <label for="max_kwt">5</label>
                                             <input type="text" id="max_kwt" name="max_kwt">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-field">
-                                            <label for="price">ღირებულება</label>
+                                            <label for="price">1</label>
                                             <input type="text" id="price" name="price">
                                         </div>
                                     </td>
@@ -102,4 +102,3 @@
         </div>
     </div>
 @endif
-
