@@ -6,8 +6,12 @@
 			<div class="card card-tabs">
 				<div class="card-content">
 					<div class="row mb-2">
-						<div class="col s12">
-	                        <h4 class="card-title">დატენვები</h4>
+						<div class="col s12 flex justify-space-between">
+                            <h4 class="card-title">დატენვები</h4>
+                            
+                            <a href="{{ url('/business/exports/orders') }}" class="btn waves-effect waves-light green">
+                                რეპორტი
+                            </a>
 	                    </div>
                     </div>
 

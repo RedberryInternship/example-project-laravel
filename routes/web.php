@@ -37,6 +37,10 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
         Route::get('/active-chargers', 'ActiveChargersController');
         Route::get('/charger-statuses', 'ChargerStatusesController');
     });
+
+    Route::group(['prefix' => 'exports', 'namespace' => 'Exports'], function() {
+        Route::get('/orders', 'OrderController');
+    });
 });
 
 Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers/transactions'], function(){

@@ -172,6 +172,7 @@ return [
         PulkitJalan\GeoIP\GeoIPServiceProvider::class,
         Aloha\Twilio\Support\Laravel\ServiceProvider::class,
         LaravelFCM\FCMServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -240,6 +241,7 @@ return [
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'GeoIP' => PulkitJalan\GeoIP\Facades\GeoIP::class,
         'Twilio' => Aloha\Twilio\Support\Laravel\Facade::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];
