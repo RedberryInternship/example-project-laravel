@@ -100,7 +100,7 @@ class StartCharging extends FormRequest
 
     private function isChargerFree($validator)
     {
-        $data                   = $validator -> getData();
+        $data = $validator -> getData();
         
         if( isset( $data[ 'charger_connector_type_id' ]))
         {

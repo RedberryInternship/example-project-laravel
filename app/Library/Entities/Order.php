@@ -567,7 +567,7 @@ trait Order
 
         $elapsedTime          = $chargedTime -> diffInMinutes( now() );
 
-        return $elapsedTime > $penaltyReliefMinutes;
+        return $elapsedTime >= $penaltyReliefMinutes;
     }
 
     /**
