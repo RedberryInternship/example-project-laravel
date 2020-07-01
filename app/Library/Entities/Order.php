@@ -16,6 +16,7 @@ use App\Library\Adapters\FCM;
 
 use Carbon\Carbon;
 use App\Config;
+use App\User;
 
 trait Order
 {
@@ -396,7 +397,14 @@ trait Order
 
         if( $fireBaseToken )
         {
-            $orderData = (new OrderResource( $this )) -> resolve();
+            $userId = $this -> user_id;
+    
+            $user   = User :: with([
+              'active_orders.charger_connector_type.charger',
+              'active_orders.charger_connector_type.connector_type',
+            ]) -> find( $userId );
+
+            $orderData = OrderResource :: collection( $user -> active_orders ) -> resolve();
             FCM :: send( $fireBaseToken, $orderData );
         }
     }
