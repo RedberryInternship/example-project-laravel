@@ -12,7 +12,7 @@ use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Http\Resources\Order as OrderResource;
 use App\Facades\Charger as MishasCharger;
 use App\Library\Payments\Payment;
-use App\Library\Adapters\FCM;
+use App\Library\Firebase\ActiveOrders as FCMActiveOrders;
 
 use Carbon\Carbon;
 use App\Config;
@@ -394,19 +394,14 @@ trait Order
     public function sendFirebaseNotification()
     {
         $fireBaseToken = $this -> user -> firebase_token;
+        $userId        = $this -> user_id;
 
-        if( $fireBaseToken )
-        {
-            $userId = $this -> user_id;
-    
-            $user   = User :: with([
-              'active_orders.charger_connector_type.charger',
-              'active_orders.charger_connector_type.connector_type',
-            ]) -> find( $userId );
-
-            $orderData = OrderResource :: collection( $user -> active_orders ) -> resolve();
-            FCM :: send( $fireBaseToken, $orderData );
-        }
+        $user   = User :: with([
+            'active_orders.charger_connector_type.charger',
+            'active_orders.charger_connector_type.connector_type',
+        ]) -> find( $userId );
+        
+        FCMActiveOrders :: send( $fireBaseToken, $user -> active_orders );
     }
 
     /**

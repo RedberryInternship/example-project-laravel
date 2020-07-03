@@ -15,7 +15,7 @@ class FCM
    * 
    * @return void
    */
-  public static function send( string $token, array $data ): void
+  public static function send( string $token, $data ): void
   {
     $payload    = new PayloadDataBuilder();
     $payload    -> setData( $data );

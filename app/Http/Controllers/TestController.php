@@ -10,13 +10,20 @@ use App\Facades\Charger;
 
 use App\Traits\Message;
 
+use App\Order;
+use App\Library\Adapters\FCM;
+use App\Http\Resources\Order as OrderResource;
+
 class TestController extends Controller 
 {
   use Message;
     
   public function __invoke()
-  {
-    return response() -> json( request() -> all() );
+  { 
+    $orders   = Order         :: latest() -> take( 2 ) -> get();
+    $resource = OrderResource :: collection( $orders ) -> resolve();
+
+    FCM :: send( 'dly3r7JJg5LEiM-M106C4t:APA91bGaxoev9Dcjb8ErKR_2JHkOtOjsYLUhjcLNAh3MIAjFTKDWC_VsBzV1zBZRizx7dU-QdmqCym0JD1x0vWs2r-bfcVIwFipjTTZji6bVG3nmttQJyOaVpPknK70l5qOjQ9HKaMu0', [ 'data' => $resource ] );
   }
 
   public function firebase()
