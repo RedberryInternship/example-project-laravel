@@ -18,22 +18,27 @@ class FastChargerPayer
    * @param   bool  $isByAmount
    * @return  void
    */
-  public static function pay( Order $order, bool $isByAmount ): void
+  public static function pay( Order $order, bool $isByAmount, bool $isChargerFast ): void
   {
+    if( ! $isChargerFast )
+    {
+      return;
+    }
+
     if( ! $order -> charging_status == OrderStatusEnum :: CHARGING )
-      {
-          return;
-      }
+    {
+        return;
+    }
 
-      if( $isByAmount )
-      {
-          $targetPrice = $order -> target_price;
+    if( $isByAmount )
+    {
+        $targetPrice = $order -> target_price;
 
-          $order -> pay( PaymentTypeEnum :: CUT, $targetPrice );
-      }
-      else
-      {
-          $order -> pay( PaymentTypeEnum :: CUT, 20 );
-      }
+        $order -> pay( PaymentTypeEnum :: CUT, $targetPrice );
+    }
+    else
+    {
+        $order -> pay( PaymentTypeEnum :: CUT, 20 );
+    }
   }
 }

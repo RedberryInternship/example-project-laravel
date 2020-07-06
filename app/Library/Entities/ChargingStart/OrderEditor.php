@@ -4,9 +4,7 @@ namespace App\Library\Entities\ChargingStart;
 
 use App\Library\ResponseModels\StartTransaction as StartTransactionResponse;
 use App\Enums\OrderStatus as OrderStatusEnum;
-use App\Enums\ChargerType as ChargerTypeEnum;
 
-use App\ChargerConnectorType;
 use App\Order;
 
 class OrderEditor
@@ -22,7 +20,7 @@ class OrderEditor
   public static function update( 
     Order                     $order, 
     StartTransactionResponse  $result, 
-    ChargerConnectorType      $chargerConnectorType 
+    bool                      $isChargerFast
   ): void
   {
     $transactionID      = $result -> getTransactionID();
@@ -30,7 +28,7 @@ class OrderEditor
     
     $orderStatus        = self :: determineOrderStatus( 
       $transactionStatus,
-      $chargerConnectorType,
+      $isChargerFast,
     );
 
     $order -> update(
@@ -45,14 +43,17 @@ class OrderEditor
    * Determine order status.
    * 
    * @param  string $transactionStatus
+   * @param  bool   $isChargerFast
    * @return string
    */
-  private static function determineOrderStatus( string $transactionStatus, ChargerConnectorType $chargerConnectorType ): string
+  private static function determineOrderStatus( string $transactionStatus, bool $isChargerFast ): string
   {
     switch( $transactionStatus )
     {
       case StartTransactionResponse :: SUCCESS:
-        $orderStatus = self :: determineOrderStatusWhenSuccess( $chargerConnectorType );
+        $orderStatus = $isChargerFast 
+          ? OrderStatusEnum :: CHARGING 
+          : OrderStatusEnum :: INITIATED;
       break;
 
       case StartTransactionResponse :: FAILED:
@@ -64,35 +65,5 @@ class OrderEditor
     }
 
     return $orderStatus;
-  }
-
-  /**
-   * Determine if charger is fast.
-   * 
-   * @return bool
-   */
-  private static function isChargerFast( ChargerConnectorType $chargerConnectorType ): bool
-  {
-      $chargerConnectorType = $chargerConnectorType;
-      $chargerType          = $chargerConnectorType -> determineChargerType();
-
-      return ChargerTypeEnum :: FAST == $chargerType;
-  }
-
-  /**
-   * Determine order status when
-   * transaction is successfully started.
-   * 
-   * @param  ChargerConnectorType $chargerConnectorType
-   * @return string
-   */
-  private static function determineOrderStatusWhenSuccess( ChargerConnectorType $chargerConnectorType )
-  {
-    if( self :: isChargerFast( $chargerConnectorType ))
-    {
-      return OrderStatusEnum :: CHARGING;
-    }
-    
-    return OrderStatusEnum :: INITIATED;
   }
 }

@@ -10,6 +10,7 @@ use App\Library\Entities\ChargingStart\FastChargerPayer;
 use App\Library\Entities\ChargingStart\OrderCreator;
 use App\Library\Entities\ChargingStart\OrderEditor;
 
+use App\Enums\ChargerType as ChargerTypeEnum;
 use App\ChargerConnectorType;
 use App\Order;
 
@@ -62,12 +63,13 @@ class ChargingStarter
     OrderEditor :: update(
       $this -> order,
       $result,
-      $this -> chargerConnectorType,
+      $this -> isChargerFast()
     );
     
     FastChargerPayer :: pay( 
       $this -> order, 
-      $this -> requestModel -> isChargingTypeByAmount() 
+      $this -> requestModel -> isChargingTypeByAmount(),
+      $this -> isChargerFast(),
     );
 
     KilowattRecordCreator :: create( $this -> order );
@@ -92,6 +94,18 @@ class ChargingStarter
       $this -> chargerConnectorType -> charger -> charger_id,
       $this -> chargerConnectorType -> m_connector_type_id,
     );
+  }
+
+  /**
+   * Determine if charger is fast.
+   * 
+   * @return bool
+   */
+  private function isChargerFast(): bool
+  {
+      $chargerType          = $this -> chargerConnectorType -> determineChargerType();
+
+      return ChargerTypeEnum :: FAST == $chargerType;
   }
   
   /**
