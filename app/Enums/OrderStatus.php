@@ -11,14 +11,14 @@ class OrderStatus extends Enum
    * started, but we won't account it as charging time until
    * enough kilowatts are going to be flowing.
    */
-  const INITIATED = 'INITIATED';
+  const INITIATED     = 'INITIATED';
 
   /**
    * Car is charging so we are gonna account 
    * the charged kilowatts or the spent time 
    * according pricing and charging method and connector type.
    */
-  const CHARGING  = 'CHARGING';
+  const CHARGING      = 'CHARGING';
 
   /**
    * ONLY FOR LVL2 CHARGERS
@@ -26,14 +26,14 @@ class OrderStatus extends Enum
    * When car is charged but connector is not disconnected
    * and also user is not ON_FINE for the time being.
    */
-  const CHARGED   = 'CHARGED';
+  const CHARGED       = 'CHARGED';
 
   /**
    * When charging type is BY_AMOUNT
    * and all the money is already
    * used up.
    */
-  const USED_UP   = 'USED_UP';
+  const USED_UP       = 'USED_UP';
 
   /**
    * Something happened, car is not being charged with the kilowatts
@@ -41,7 +41,7 @@ class OrderStatus extends Enum
    * we get the information that it has continued charging or else
    * got finished.
    */
-  const ON_HOLD   = 'ON_HOLD';
+  const ON_HOLD       = 'ON_HOLD';
   
   /**
    * ONLY FOR LVL2 CHARGERS 
@@ -50,10 +50,23 @@ class OrderStatus extends Enum
    * off the charger.
    * and he/she is going to pay accordingly.
    */
-  const ON_FINE   = 'ON_FINE';
+  const ON_FINE       = 'ON_FINE';
 
   /**
    * Transaction is finished.
    */
-  const FINISHED  = 'FINISHED';
+  const FINISHED      = 'FINISHED';
+
+  /**
+   * Transaction is not confirmed. if on start-charging request
+   * we'll have success status becomes INITIATED or CHARGING
+   * or else it stays NOT_CONFIRMED.
+   */
+  const NOT_CONFIRMED = 'NOT_CONFIRMED';
+
+  /**
+   * Transaction is canceled due to not connection to the charger
+   * while sending charge request.
+   */
+  const CANCELED      = 'CANCELED';
 }

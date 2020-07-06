@@ -22,7 +22,7 @@ class TransactionController extends Controller
    * @param  int     $value
    * @return void
    */
-  public function update( $transaction_id, $value )
+   public function update( $transaction_id, $value )
   {
     $this -> order = Order :: with( 'kilowatt' ) 
       -> where( 'charger_transaction_id', $transaction_id ) 

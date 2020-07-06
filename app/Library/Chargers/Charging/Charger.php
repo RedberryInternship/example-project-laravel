@@ -153,7 +153,8 @@ class Charger extends Base implements MishasCharger
                     'Charger with charger_id of ' . $charger_id . ' is already charging or it is offline!',
                     400,
                 );
-
+            case -101:
+                return -101;
             case 0:
                 return $result -> data;
             default:

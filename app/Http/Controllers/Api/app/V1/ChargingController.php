@@ -9,6 +9,9 @@ use App\Traits\Message;
 use App\Http\Requests\StartCharging;
 use App\Http\Requests\StopCharging;
 
+use App\Library\Interactors\ChargingStarter;
+use App\Library\RequestModels\ChargingStarter as ChargingStarterRequest;
+
 use App\Http\Resources\Order as OrderResource;
 
 class ChargingController extends Controller
@@ -22,18 +25,17 @@ class ChargingController extends Controller
    * @return  JsonResponse
    */
   public function start( StartCharging $request )
-  { 
-    $request -> startChargingProcess();
-    $order   = $request -> createOrder();
+  {
+    $requestModel = new ChargingStarterRequest;
+    $requestModel -> setChargerConnectorTypeId( $request -> charger_connector_type_id );
+    $requestModel -> setChargingType          ( $request -> charging_type             );
+    $requestModel -> setPrice                 ( $request -> price                     );
+    $requestModel -> setUserCardId            ( $request -> user_card_id              );
 
-    if( $request -> isChargerFast() )
-    {
-      $request -> pay();
-    }
+    $chargingStarter = new ChargingStarter( $requestModel );
+    $chargingStarter -> start();
 
-    $request -> createKilowattRecord();
-
-    return new OrderResource( $order );
+    return new OrderResource( $chargingStarter -> getOrder() );
   }
 
   /**
@@ -43,7 +45,7 @@ class ChargingController extends Controller
    * @param   StopCharging $request
    * @return  JsonResponse
    */
-  public function stop(StopCharging $request)
+  public function stop( StopCharging $request )
   {
     $request -> stopChargingProcess();
     $request -> updateChargingStatus();
