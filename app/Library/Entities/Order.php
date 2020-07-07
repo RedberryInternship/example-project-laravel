@@ -9,7 +9,6 @@ use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
 use App\Enums\ChargingType as ChargingTypeEnum;
-use App\Http\Resources\Order as OrderResource;
 use App\Facades\Charger as MishasCharger;
 use App\Library\Payments\Payment;
 use App\Library\Firebase\ActiveOrders as FCMActiveOrders;
@@ -47,7 +46,19 @@ trait Order
     public function getChargingPower()
     {
         $chargerInfo   = MishasCharger :: transactionInfo( $this -> charger_transaction_id );
-        $kiloWattHour  = $chargerInfo -> kiloWattHour / 1000;
+
+        /**
+         * TODO: This should be changed when app is in production
+         */
+        if( $chargerInfo -> chargePointCode == "0110" )
+        {
+            $kiloWattHour  = $chargerInfo -> kiloWattHour;
+        }
+        else
+        {
+            $kiloWattHour  = $chargerInfo -> kiloWattHour / 1000;
+            
+        }
 
         return $kiloWattHour;
     }
