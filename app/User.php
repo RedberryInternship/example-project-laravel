@@ -96,7 +96,7 @@ class User extends Authenticatable implements JWTSubject
 
         $phoneNumber = $phoneNumber[0] == '+' ? $phoneNumber : '+' . $phoneNumber;
 
-        Twilio::message($phoneNumber, $message);
+        Twilio :: message($phoneNumber, $message);
     }
 
     public function chargers()
@@ -121,7 +121,15 @@ class User extends Authenticatable implements JWTSubject
 
     public function active_orders()
     {
-        return $this -> hasMany('App\Order') -> where( 'charging_status', '!=' , OrderStatus :: FINISHED );
+        return $this 
+            -> hasMany('App\Order') 
+            -> where(
+                [
+                    [ 'charging_status', '!=' , OrderStatus :: FINISHED     ],
+                    [ 'charging_status', '!=' , OrderStatus :: UNPLUGGED    ],
+                    [ 'charging_status', '!=' , OrderStatus :: CANCELED     ],
+                ]
+            );
     }
 
     public function user_cars()

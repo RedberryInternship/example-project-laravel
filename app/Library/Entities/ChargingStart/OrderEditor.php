@@ -57,7 +57,7 @@ class OrderEditor
       break;
 
       case StartTransactionResponse :: FAILED:
-        $orderStatus = OrderStatusEnum :: CANCELED;
+        $orderStatus = OrderStatusEnum :: UNPLUGGED;
       break;
 
       case StartTransactionResponse :: NOT_CONFIRMED:

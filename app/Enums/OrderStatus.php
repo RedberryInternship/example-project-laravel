@@ -65,8 +65,13 @@ class OrderStatus extends Enum
   const NOT_CONFIRMED = 'NOT_CONFIRMED';
 
   /**
-   * Transaction is canceled due to not connection to the charger
-   * while sending charge request.
+   * Transaction is canceled due to miscommunication.
    */
   const CANCELED      = 'CANCELED';
+
+  /**
+   * Transaction is rejected to to trying charging without
+   * plugging to connector.
+   */
+  const UNPLUGGED     = 'UNPLUGGED';
 }
