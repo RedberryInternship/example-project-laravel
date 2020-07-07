@@ -49,7 +49,6 @@ class Base
     $this -> faker = $faker;
   }
 
-
   /**
    * Insert or update existing charger records in database
    * 
@@ -103,8 +102,6 @@ class Base
       }
   }
 
-
-
   /**
    * Structure chargers for insertion(or update)
    * 
@@ -142,7 +139,6 @@ class Base
     ]; 
   }
 
-
   /**
    * Find chargers in retrieved chargers collection in our database
    * 
@@ -156,7 +152,6 @@ class Base
         ->first();
       return $db_charger;
   }
-
 
   /**
    * Find out if charger is updated or not
@@ -172,7 +167,6 @@ class Base
           || $db_charger -> active      != $m_charger['active'] // TODO: active should be checked differently
           || $db_charger -> lat         != $m_charger['lat'] 
           || $db_charger -> lng         != $m_charger['lng'];
-
   }
 
   /**

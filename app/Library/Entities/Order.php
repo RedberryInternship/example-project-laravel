@@ -709,15 +709,6 @@ trait Order
             $initialStatuses [ $status ] = null;
         }
 
-        if( $order -> charging_status == OrderStatusEnum :: INITIATED )
-        {
-            $initialStatuses [ OrderStatusEnum :: INITIATED ] = $now;
-        }
-        else
-        {
-            $initialStatuses [ OrderStatusEnum :: CHARGING ]  = $now;
-        }
-
         $order -> charging_status_change_dates = $initialStatuses;
     }
 
