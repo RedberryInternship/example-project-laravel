@@ -5,12 +5,10 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Library\Entities\Order as OrderEntity;
-use App\Library\Scopes\Order as OrderScope;
 
 class Order extends Model
 {
-    use OrderEntity,
-        OrderScope;
+    use OrderEntity;
 
     /**
      * Laravel guarded attribute.
