@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Library\Chargers\Charging;
+namespace App\Library\Adapters\RealChargers;
 
-use App\Library\Contracts\Simulator as SimulatorInterface;
 use Exception;
 
-class Simulator extends Base implements SimulatorInterface
+class Simulator extends Base
 {
     /**
      * Tell charger that it is Lvl 2 charger.

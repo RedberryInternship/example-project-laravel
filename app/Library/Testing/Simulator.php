@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Library\Chargers\Testing;
+namespace App\Library\Testing;
 
-use App\Library\Contracts\Simulator as SimulatorInterface;
 use App\Facades\Charger;
 
-class Simulator implements SimulatorInterface
+class Simulator
 {
   /**
    * Tell charger that it is Lvl 2 charger.

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Library\Chargers\Charging;
+namespace App\Library\Adapters\RealChargers;
 
 use App\Exceptions\Charger\FindChargerException;
 use App\Exceptions\Charger\MishasBackException;
@@ -9,9 +9,7 @@ use App\Exceptions\Charger\StopChargingException;
 use App\Exceptions\Charger\ChargerTransactionInfoException;
 use App\Exceptions\Charger\TransactionAlreadyFinishedException;
 
-use App\Library\Contracts\MishasCharger;
-
-class Charger extends Base implements MishasCharger
+class Charger extends Base
 {
     /**
      * Response parameter.
@@ -132,6 +130,7 @@ class Charger extends Base implements MishasCharger
                         . '/es-services/mobile/ws/charger/start/'
                         . $charger_id .'/' 
                         . $connector_id;
+        
         $result      = $this -> fetchData($service_url);
 
         switch($result -> status)

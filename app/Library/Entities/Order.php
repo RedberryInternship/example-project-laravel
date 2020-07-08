@@ -10,12 +10,11 @@ use App\Enums\OrderStatus as OrderStatusEnum;
 
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Facades\Charger as MishasCharger;
+use App\Library\Interactors\Firebase;
 use App\Library\Payments\Payment;
-use App\Library\Firebase\ActiveOrders as FCMActiveOrders;
 
 use Carbon\Carbon;
 use App\Config;
-use App\User;
 
 trait Order
 {
@@ -403,15 +402,7 @@ trait Order
      */
     public function sendFirebaseNotification()
     {
-        $fireBaseToken = $this -> user -> firebase_token;
-        $userId        = $this -> user_id;
-
-        $user   = User :: with([
-            'active_orders.charger_connector_type.charger',
-            'active_orders.charger_connector_type.connector_type',
-        ]) -> find( $userId );
-        
-        FCMActiveOrders :: send( $fireBaseToken, $user -> active_orders );
+        Firebase :: sendActiveOrders( $this -> user_id );
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Library\Chargers\Charging;
+namespace App\Library\Adapters\RealChargers;
 
 use App\Exceptions\Charger\MishasBackException;
 use Exception;
