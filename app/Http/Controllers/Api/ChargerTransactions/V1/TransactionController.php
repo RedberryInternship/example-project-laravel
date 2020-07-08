@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api\ChargerTransactions\V1;
 
 use App\Library\Interactors\NotConfirmedOrdersChecker;
+use App\Library\Interactors\Firebase;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use App\Order;
@@ -60,6 +61,7 @@ class TransactionController extends Controller
     if( $this -> order )
     {
       $this -> order -> finish();
+      Firebase :: sendFinishNotificationWithData( $transaction_id );
     }
     else
     {
@@ -67,7 +69,7 @@ class TransactionController extends Controller
         'There is no such order with transaction id of '. $transaction_id,
       );
     }
-    
+
   }
 }
 

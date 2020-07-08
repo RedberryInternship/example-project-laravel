@@ -25,7 +25,7 @@ class Firebase
    * @param  int $chargerTransactionId
    * @return void
    */
-  public static function sendNotificationWithData( $chargerTransactionId ): void
+  public static function sendFinishNotificationWithData( $chargerTransactionId ): void
   {
     FinishNotificationSender :: send( $chargerTransactionId );
   }

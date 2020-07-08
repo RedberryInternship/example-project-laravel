@@ -617,7 +617,6 @@ trait Order
         : $this -> makeLastPaymentsForLvl2Charging();
 
         $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
-        $this -> sendFirebaseNotification();
     }
 
     /**
