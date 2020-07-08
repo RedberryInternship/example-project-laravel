@@ -209,11 +209,14 @@ class Charger extends Base implements MishasCharger
             -> where( 'charger_transaction_id', $id ) 
             -> first();
 
-        $charger_id = $order -> charger_connector_type -> charger -> charger_id;
-
-        if( $charger_id == 27833 )
+        if( $order )
         {
-            $this -> url = $this -> realChargersBaseUrl;
+            $charger_id = $order -> charger_connector_type -> charger -> charger_id;
+    
+            if( $charger_id == 27833 )
+            {
+                $this -> url = $this -> realChargersBaseUrl;
+            }
         }
         
         /** Ends here. */
