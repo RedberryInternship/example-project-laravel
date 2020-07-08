@@ -3,9 +3,11 @@
 
 namespace App\Http\Controllers\Api\ChargerTransactions\V1;
 
-use Illuminate\Support\Facades\Log;
+use App\Library\Interactors\NotConfirmedOrdersChecker;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use App\Order;
+
 
 class TransactionController extends Controller
 {
@@ -24,6 +26,8 @@ class TransactionController extends Controller
    */
    public function update( $transaction_id, $value )
   {
+    NotConfirmedOrdersChecker :: check( $transaction_id );
+
     $this -> order = Order :: with( 'kilowatt' ) 
       -> where( 'charger_transaction_id', $transaction_id ) 
       -> first();

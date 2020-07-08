@@ -57,7 +57,6 @@ trait Order
         else
         {
             $kiloWattHour  = $chargerInfo -> kiloWattHour / 1000;
-            
         }
 
         return $kiloWattHour;
@@ -86,7 +85,7 @@ trait Order
      */
     public function countPaidMoney()
     {
-        if( ! isset($this -> payments ))
+        if( ! isset( $this -> payments ))
         {
             $this -> load( 'payments' );
         }

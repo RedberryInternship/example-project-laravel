@@ -10,7 +10,6 @@ use App\Library\Entities\ChargingStart\FastChargerPayer;
 use App\Library\Entities\ChargingStart\OrderCreator;
 use App\Library\Entities\ChargingStart\OrderEditor;
 
-use App\Enums\ChargerType as ChargerTypeEnum;
 use App\ChargerConnectorType;
 use App\Order;
 
@@ -56,58 +55,29 @@ class ChargingStarter
    */
   public function start(): void
   {
-    $this -> createOrder();
-
-    $result = $this -> startChargingProcess();
+    
+    $order  = OrderCreator :: create( $this -> requestModel );
+    
+    $result = ChargingProcessStarter :: start(
+      $this -> chargerConnectorType -> charger -> charger_id ,
+      $this -> chargerConnectorType -> m_connector_type_id   ,
+    );
     
     OrderEditor :: update(
-      $this -> order,
-      $result,
-      $this -> isChargerFast()
+      $order                                          ,
+      $result                                         ,
+      $this -> chargerConnectorType -> isChargerFast(),
     );
     
     FastChargerPayer :: pay( 
-      $this -> order, 
-      $this -> requestModel -> isChargingTypeByAmount(),
-      $this -> isChargerFast(),
+      $order                                                    , 
+      $this -> requestModel         -> isChargingTypeByAmount() ,
+      $this -> chargerConnectorType -> isChargerFast()          ,
     );
 
-    KilowattRecordCreator :: create( $this -> order );
+    KilowattRecordCreator :: create( $order );
   }
 
-  /**
-   * Create order for charging process.
-   * 
-   * @return void
-   */
-  private function createOrder(): void
-  {
-    $this -> order = OrderCreator :: create( $this -> requestModel );
-  }
-
-  /**
-   * Start charging process.
-   */
-  public function startChargingProcess()
-  {
-    return ChargingProcessStarter :: start(
-      $this -> chargerConnectorType -> charger -> charger_id,
-      $this -> chargerConnectorType -> m_connector_type_id,
-    );
-  }
-
-  /**
-   * Determine if charger is fast.
-   * 
-   * @return bool
-   */
-  private function isChargerFast(): bool
-  {
-      $chargerType          = $this -> chargerConnectorType -> determineChargerType();
-
-      return ChargerTypeEnum :: FAST == $chargerType;
-  }
-  
   /**
    * Get order.
    * 
