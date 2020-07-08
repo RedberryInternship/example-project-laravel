@@ -10,10 +10,10 @@ class OrderEditor
   /**
    * Update order if exists.
    * 
-   * @param  Order $order
+   * @param  Order|null $order
    * @return void
    */
-  public static function updateIfExists( Order $order ): void
+  public static function updateIfExists( $order ): void
   {
     if( ! $order )
     {
