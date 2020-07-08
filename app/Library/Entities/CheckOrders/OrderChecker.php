@@ -21,13 +21,13 @@ class OrderChecker
     $realChargerConnectorTypeId = $chargerInfo -> getChargerConnectorTypeId();
 
     return Order :: with( 'charger_connector_type.charger' )
-      -> where(
-        [ 
-          [ 'charging_status'                           , OrderStatusEnum :: NOT_CONFIRMED  ],
-          [ 'charger_connector_type.m_connector_type_id', $realChargerConnectorTypeId       ],
-          [ 'charger_connector_type.charger.charger_id' , $chargerId                        ],
-        ]
-      ) 
+      -> where( 'charging_status', OrderStatusEnum :: NOT_CONFIRMED )
+      -> whereHas( 'charger_connector_type', function( $query ) use( $realChargerConnectorTypeId, $chargerId ) {
+        $query -> where( 'm_connector_type_id', $realChargerConnectorTypeId );
+        $query -> whereHas( 'charger', function( $query ) use ( $chargerId ) {
+          $query -> where( 'charger_id', $chargerId );
+        });
+      })
       -> first();
   }
 }
