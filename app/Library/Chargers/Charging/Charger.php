@@ -202,7 +202,6 @@ class Charger extends Base implements MishasCharger
      */
     public function transactionInfo( $id )
     {
-
         /** This Code Should be deleted later on. I am ashamed that Im coding it. */
 
         $order = \App\Order :: with( 'charger_connector_type.charger' ) 

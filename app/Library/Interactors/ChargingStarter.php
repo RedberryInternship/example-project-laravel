@@ -55,7 +55,6 @@ class ChargingStarter
    */
   public function start(): void
   {
-    
     $order  = OrderCreator :: create( $this -> requestModel );
     
     $result = ChargingProcessStarter :: start(
@@ -76,6 +75,8 @@ class ChargingStarter
     );
 
     KilowattRecordCreator :: create( $order );
+
+    $this -> order = $order;
   }
 
   /**
