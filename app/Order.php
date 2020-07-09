@@ -6,9 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Library\Entities\Order as OrderEntity;
 
+use App\Library\Entities\ChargingProcess\Calculator;
+use App\Library\Entities\ChargingProcess\Timestamp;
+use App\Library\Entities\ChargingProcess\State;
+use App\Library\Entities\ChargingProcess\Hook;
+
 class Order extends Model
 {
-    use OrderEntity;
+    use OrderEntity,
+        Calculator,
+        State,
+        Timestamp;
 
     /**
      * Laravel guarded attribute.
@@ -35,8 +43,8 @@ class Order extends Model
     {
         parent :: boot();
 
-        static :: creating([ Order :: class, 'setChargingStatusInitialDates' ]);
-        static :: updating([ Order :: class, 'updateChargingStatusChangeDates' ]);
+        static :: creating([ Hook :: class, 'setChargingStatusInitialDates'     ]);
+        static :: updating([ Hook :: class, 'updateChargingStatusChangeDates'   ]);
     }
 
     /**

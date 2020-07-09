@@ -4,7 +4,7 @@ namespace App\Library\Entities\ChargingProcess;
 
 use App\Enums\OrderStatus as OrderStatusEnum;
 
-trait Hook
+class Hook
 {
   /** 
    * Set charging status change dates initial value 
