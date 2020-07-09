@@ -7,8 +7,11 @@ use Illuminate\Http\Request;
 
 use App\Facades\Simulator;
 use App\Facades\Charger;
-
 use App\Traits\Message;
+
+use App\Http\Resources\Order as OrderResource;
+use App\Library\Presenters\ChargingProcess;
+use App\Order;
 
 class TestController extends Controller 
 {
@@ -16,7 +19,10 @@ class TestController extends Controller
     
   public function __invoke()
   { 
-   return Charger :: transactionInfo( 75580 );
+    $order = Order :: latest() -> first();
+    dd(
+      new OrderResource( $order ),
+    );
   }
 
   public function firebase()

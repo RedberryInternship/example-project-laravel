@@ -28,7 +28,7 @@ class ChargingProcess
    * 
    * @param Order $order
    */
-  function __construct( $order )
+  function __construct( Order $order )
   {
     $startChargingTime = Timestamp :: build( $order ) -> getChargingStatusTimestampInMilliseconds( OrderStatusEnum :: CHARGING );
 
@@ -64,7 +64,7 @@ class ChargingProcess
    * @param  Order $order
    * @return self
    */
-  public static function build( $order )
+  public static function build( Order $order )
   {
     return new self( $order );
   }
@@ -76,7 +76,7 @@ class ChargingProcess
    */
   public function resolve()
   {
-    $this -> chargingProcessData;
+    return $this -> chargingProcessData;
   }
 
   /**
@@ -97,7 +97,7 @@ class ChargingProcess
    * @param  Order $order 
    * @return void
    */
-  private function updateChargingStatus( $order )
+  private function updateChargingStatus( Order $order )
   {
     if( $order -> carHasAlreadyStoppedCharging() && $order -> isOnFine() )
     {
@@ -111,13 +111,13 @@ class ChargingProcess
    * @param  Order $order
    * @return void
    */
-  private function addTargetPriceWhenByAmount( $order )
+  private function addTargetPriceWhenByAmount( Order $order )
   {
     if( $order -> target_price )
     {
         $this -> setAdditionalData(
             [
-                'target_price' => $this -> target_price,
+                'target_price' => $order -> target_price,
             ]
         );
     }
@@ -129,7 +129,7 @@ class ChargingProcess
    * @param  Order $order
    * @return void
    */
-  private function addTimestampIfEnteredPenaltyMode( $order )
+  private function addTimestampIfEnteredPenaltyMode( Order $order )
   {
     if( $order -> enteredPenaltyReliefMode() )
     {
@@ -147,7 +147,7 @@ class ChargingProcess
    * @param  Order $order
    * @return void
    */
-  private function addPenaltyFeeIfOnPenalty( $order )
+  private function addPenaltyFeeIfOnPenalty( Order $order )
   {
     if( $order -> isOnPenalty() )
     {            
