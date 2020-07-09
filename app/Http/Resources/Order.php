@@ -10,7 +10,7 @@ class Order extends JsonResource
     /**
      * Passed order instance.
      * 
-     * @var App\Order $order
+     * @var \App\Order $order
      */
     private $order;
 

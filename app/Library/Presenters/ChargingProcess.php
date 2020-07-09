@@ -4,11 +4,13 @@ namespace App\Library\Presenters;
 
 use App\Library\Entities\ChargingProcess\Timestamp;
 use App\Enums\OrderStatus as OrderStatusEnum;
+use App\Traits\Message;
 
 use App\Order;
 
 class ChargingProcess
 {
+  use Message;
   /**
    * Built data.
    * 
@@ -36,6 +38,7 @@ class ChargingProcess
     $this -> addTargetPriceWhenByAmount       ( $order );
     $this -> addTimestampIfEnteredPenaltyMode ( $order );
     $this -> addPenaltyFeeIfOnPenalty         ( $order );
+    $this -> setFinishedMessageWhenFinished   ( $order );
         
     $mainResourceData = [
       'order_id'                      => $order -> id,
@@ -156,6 +159,24 @@ class ChargingProcess
                 'penalty_fee' => $order -> countPenaltyFee(),
             ]
         ); 
+    }
+  }
+
+  /**
+   * Set finished message when order has finished indicator.
+   * 
+   * @param Order $order
+   * @return void
+   */
+  private function setFinishedMessageWhenFinished( Order $order )
+  {
+    if( $order -> finished )
+    {
+      $this -> setAdditionalData(
+        [
+          'message' => $this -> messages [ 'charging_successfully_finished' ],
+        ]
+      );
     }
   }
 }
