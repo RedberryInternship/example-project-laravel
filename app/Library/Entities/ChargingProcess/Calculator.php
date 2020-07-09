@@ -8,7 +8,7 @@ use App\Enums\PaymentType as PaymentTypeEnum;
 use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
-use App\Config;
+use App\Library\Entities\ChargingProcess\Timestamp;
 
 /**
  * Depends on:
@@ -99,32 +99,6 @@ trait Calculator
   }
 
   /**
-   * Calculate charging time in minutes.
-   * 
-   * @return int
-   */
-  private function calculateChargingElapsedTimeInMinutes()
-  {
-      $startChargingTime   = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
-      
-      if( $this -> charger_connector_type -> isChargerFast() )
-      {
-          $finishChargingTime = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
-      }
-      else
-      {
-          $finishChargingTime = $this -> getStopChargingTimestamp();    
-      }
-
-      if( ! $finishChargingTime )
-      {
-          $finishChargingTime = now();
-      }
-              
-      return $finishChargingTime -> diffInMinutes( $startChargingTime );
-  }
-
-  /**
    * Accumulate fast charger consumed money
    * based on elapsed minutes.
    * 
@@ -163,23 +137,24 @@ trait Calculator
    */
   private function countConsumedMoneyByKilowatt()
   {
-      $chargingPower      = $this -> kilowatt -> getChargingPower();        
-      $startChargingTime  = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
-      $startChargingTime  = $startChargingTime -> toTimeString();
-      $elapsedMinutes     = $this -> calculateChargingElapsedTimeInMinutes();
+    $timestamp          = Timestamp :: build( $this );
+    $chargingPower      = $this -> kilowatt -> getChargingPower();        
+    $startChargingTime  = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
+    $startChargingTime  = $startChargingTime -> toTimeString();
+    $elapsedMinutes     = $timestamp -> calculateChargingElapsedTimeInMinutes();
 
-      $chargingPriceInfo  = $this 
-          -> charger_connector_type 
-          -> getSpecificChargingPrice( $chargingPower, $startChargingTime );
-      
-      if( ! $chargingPriceInfo )
-      {
-          throw new NoSuchChargingPriceException();
-      }
+    $chargingPriceInfo  = $this 
+        -> charger_connector_type 
+        -> getSpecificChargingPrice( $chargingPower, $startChargingTime );
+    
+    if( ! $chargingPriceInfo )
+    {
+        throw new NoSuchChargingPriceException();
+    }
 
-      $chargingPrice = $chargingPriceInfo -> price;
-      
-      return $chargingPrice * $elapsedMinutes;
+    $chargingPrice = $chargingPriceInfo -> price;
+    
+    return $chargingPrice * $elapsedMinutes;
   }
 
    /**
@@ -226,34 +201,18 @@ trait Calculator
    */
   public function countPenaltyFee()
   {
-      $penaltyTimestamp       = $this -> getPenaltyTimestamp();
-      $finishedTimestamp      = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
+    $timestamp              = Timestamp :: build( $this );
+    $penaltyTimestamp       = $timestamp -> getPenaltyTimestamp();
+    $finishedTimestamp      = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
 
-      if( ! $finishedTimestamp )
-      {
-          $finishedTimestamp  = now();
-      }
-      
-      $elapsedMinutes         = $penaltyTimestamp -> diffInMinutes( $finishedTimestamp );
-      $penaltyPricePerMinute  = $this -> getPenaltyPricePerMinute();
-              
-      return ( $elapsedMinutes + 1 ) * $penaltyPricePerMinute;    
-  }
-
-  /**
-   * Calculate penalty start time.
-   * 
-   * @return milliseconds
-   */
-  public function calculatePenaltyStartTime()
-  {
-      $penaltyReliefModeStartTime = $this -> getStopChargingTimestamp();
-
-      $config               = Config :: first();
-      $penaltyReliefMinutes = $config -> penalty_relief_minutes;
-      $penaltyStartTime     = $penaltyReliefModeStartTime -> addMinutes( $penaltyReliefMinutes );
-      $penaltyStartTime     = $penaltyStartTime -> timestamp * 1000;
-
-      return $penaltyStartTime;
+    if( ! $finishedTimestamp )
+    {
+        $finishedTimestamp  = now();
+    }
+    
+    $elapsedMinutes         = $penaltyTimestamp -> diffInMinutes( $finishedTimestamp );
+    $penaltyPricePerMinute  = $this -> getPenaltyPricePerMinute();
+            
+    return ( $elapsedMinutes + 1 ) * $penaltyPricePerMinute;    
   }
 }

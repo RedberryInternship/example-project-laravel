@@ -2,7 +2,9 @@
 
 namespace App\Library\Entities\ChargingProcess;
 
+use App\Library\Entities\ChargingProcess\Timestamp;
 use App\Enums\OrderStatus as OrderStatusEnum;
+
 
 use App\Config;
 
@@ -16,6 +18,13 @@ use App\Config;
 trait State
 {
   /**
+   * KiloWattHour line with which we're gonna
+   * determine if charging is officially started
+   * and if charging is officially ended.
+   */
+  private $kiloWattHourLine = 1;
+  
+  /**
    * Determine if charging is stopped 
    * due to that the car is charged or ether
    * user has used up the money and is in penalty
@@ -25,9 +34,8 @@ trait State
    */
   public function enteredPenaltyReliefMode()
   {
-      $enteredPenaltyReliefModeTimestamp = $this -> getStopChargingTimestamp();
-
-      return !! $enteredPenaltyReliefModeTimestamp;     
+    $enteredPenaltyReliefModeTimestamp = Timestamp :: build( $this ) -> getStopChargingTimestamp();
+    return !! $enteredPenaltyReliefModeTimestamp;     
   }
 
   /**
@@ -38,7 +46,7 @@ trait State
    */
   public function hasAlreadyUsedUpMoney()
   {
-      return !! $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP );
+    return !! Timestamp :: build( $this ) -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP );
   }
 
   /**
@@ -48,9 +56,7 @@ trait State
    */
   public function isOnPenalty()
   {
-      $isOnPenalty = !! $this -> getPenaltyTimestamp();
-
-      return $isOnPenalty;
+      return !! Timestamp :: build( $this ) -> getPenaltyTimestamp();
   }
 
   /**
@@ -103,7 +109,7 @@ trait State
       $config               = Config :: first();
       $penaltyReliefMinutes = $config -> penalty_relief_minutes;
 
-      $chargedTime = $this -> getStopChargingTimestamp();
+      $chargedTime = Timestamp :: build( $this ) -> getStopChargingTimestamp();
 
       if( ! $chargedTime )
       {

@@ -15,8 +15,7 @@ class Order extends Model
 {
     use OrderEntity,
         Calculator,
-        State,
-        Timestamp;
+        State;
 
     /**
      * Laravel guarded attribute.

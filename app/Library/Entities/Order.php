@@ -16,13 +16,6 @@ use App\Config;
 trait Order
 {
     /**
-     * KiloWattHour line with which we're gonna
-     * determine if charging is officially started
-     * and if charging is officially ended.
-     */
-    private $kiloWattHourLine = 1;
-
-    /**
      * Update order charging status.
      * 
      * @param   string $chargingStatus
