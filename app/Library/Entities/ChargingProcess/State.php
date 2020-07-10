@@ -22,7 +22,7 @@ trait State
    * determine if charging is officially started
    * and if charging is officially ended.
    */
-  private $kiloWattHourLine = 1;
+  private $kiloWattHourLine = .1;
   
   /**
    * Determine if charging is stopped 

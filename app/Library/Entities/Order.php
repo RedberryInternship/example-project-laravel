@@ -7,7 +7,7 @@ use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
 use App\Enums\ChargingType as ChargingTypeEnum;
-use App\Facades\Charger as MishasCharger;
+use App\Facades\Charger as RealCharger;
 use App\Library\Interactors\Firebase;
 use App\Library\Payments\Payment;
 
@@ -34,7 +34,7 @@ trait Order
      */
     public function getChargingPower()
     {
-        $chargerInfo   = MishasCharger :: transactionInfo( $this -> charger_transaction_id );
+        $chargerInfo   = RealCharger :: transactionInfo( $this -> charger_transaction_id );
 
         /**
          * TODO: This should be changed when app is in production
@@ -108,7 +108,7 @@ trait Order
                 {
                     $charger = $this -> charger_connector_type -> charger;
 
-                    MishasCharger :: stop( 
+                    RealCharger :: stop( 
                         $charger -> charger_id, 
                         $this -> charger_transaction_id 
                     );
@@ -157,13 +157,13 @@ trait Order
         
         case OrderStatusEnum :: CHARGING :
 
+            $charger = $this -> charger_connector_type -> charger;
+
             if( $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT )
             {
                 if( $this -> shouldPay() )
                 {
-                    $charger = $this -> charger_connector_type -> charger;
-
-                    MishasCharger :: stop( 
+                    RealCharger :: stop( 
                         $charger -> charger_id, 
                         $this -> charger_transaction_id 
                     );
@@ -180,6 +180,11 @@ trait Order
     
                 if( $this -> carHasAlreadyCharged() )
                 {
+                    RealCharger :: stop( 
+                        $charger -> charger_id, 
+                        $this -> charger_transaction_id 
+                    );
+
                     $this -> updateChargingStatus( OrderStatusEnum :: CHARGED );
                 } 
             }
