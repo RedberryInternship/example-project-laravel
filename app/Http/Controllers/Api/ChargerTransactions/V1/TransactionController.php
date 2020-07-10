@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use App\Order;
 
-
 class TransactionController extends Controller
 {
   /**

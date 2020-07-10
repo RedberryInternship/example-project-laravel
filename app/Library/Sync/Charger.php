@@ -2,7 +2,7 @@
 
 namespace App\Library\Sync;
 
-use App\Facades\Charger as MishasCharger;
+use App\Facades\Charger as RealCharger;
 
 class Charger extends Base
 {
@@ -44,7 +44,7 @@ class Charger extends Base
    */
   private function getAllChargers()
   {   
-    return MishasCharger::all();
+    return RealCharger :: all();
   }
 
   /**
@@ -54,7 +54,7 @@ class Charger extends Base
    * @return object
    */
    private function getCharger($id){
-      return MishasCharger::find($id);; 
+      return RealCharger :: find($id);; 
    }
 
 }

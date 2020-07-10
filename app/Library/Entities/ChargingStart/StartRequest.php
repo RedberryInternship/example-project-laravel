@@ -54,22 +54,21 @@ class StartRequest
   {
     $transactionID = $this -> makeStartChargingRequest();
 
-    if( $transactionID == -1 )
+    if( $transactionID == -1 || $transactionID == -101 )
     {
-      $transactionID = $this -> makeStartChargingRequest();
+      $isFree = Charger :: isChargerFree( $this -> chargerId );
+
+      if( $isFree )
+      {
+        return $this -> transactionCanceled();
+      }
+      else
+      {
+        return $this -> transactionNotConfirmed();
+      }
     }
 
-    switch( $transactionID )
-    {
-      case -1:
-      return $this -> transactionCanceled();
-      
-      case -101:
-      return $this -> transactionNotConfirmed();
-
-      default:
-      return $this -> transactionStartedSuccessfully( $transactionID );
-    }
+    return $this -> transactionStartedSuccessfully( $transactionID );
   }
 
   /**
