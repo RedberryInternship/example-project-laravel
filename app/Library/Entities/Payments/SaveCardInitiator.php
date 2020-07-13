@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Library\Payments;
+namespace App\Library\Entities\Payments;
 
 use Redberry\GeorgianCardGateway\Transaction;
 

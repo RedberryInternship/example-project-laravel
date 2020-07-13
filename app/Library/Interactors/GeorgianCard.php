@@ -1,8 +1,13 @@
 <?php
 
-namespace App\Library\Payments;
+namespace App\Library\Interactors;
 
 use Redberry\GeorgianCardGateway\Contracts\GeorgianCardHandler;
+
+use App\Library\Entities\GeorgianCard\PrimaryTRXGetter;
+use App\Library\Entities\GeorgianCard\SaveCardRefunder;
+use App\Library\Entities\GeorgianCard\UserCardSaver;
+use App\Library\Entities\GeorgianCard\Payer;
 
 use Illuminate\Http\Request;
 
@@ -21,8 +26,8 @@ class GeorgianCard implements GeorgianCardHandler
   }
 
   /**
-   * Save card with user id and
-   * user card information.
+   * Determine if it should save card or pay
+   * and proceed accordingly.
    * 
    * @param   Request  $request
    * 
@@ -30,8 +35,14 @@ class GeorgianCard implements GeorgianCardHandler
    */
   public function update( Request $request )
   {
-    $payment = new Payment;
-    $payment -> update();
+    if( UserCardSaver :: shouldSaveUserCard() )
+    {
+      UserCardSaver :: save();
+    }
+    else
+    {
+      Payer :: pay();
+    }
   }
 
   /**
