@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Library\Payments\GeorgianCard;
+use App\Library\Interactors\GeorgianCard;
 
 class AppServiceProvider extends ServiceProvider
 {
