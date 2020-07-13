@@ -21,7 +21,7 @@ class InsertChargerConnectorTypePrices extends Command
      *
      * @var string
      */
-    protected $description = 'Parce PricingList Json file and insert into espace database';
+    protected $description = 'Parse PricingList Json file and insert into espace database';
 
     /**
      * Create a new command instance.

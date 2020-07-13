@@ -9,7 +9,7 @@ use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Facades\Charger as RealCharger;
 use App\Library\Interactors\Firebase;
-use App\Library\Payments\Payment;
+use App\Library\Interactors\Payment;
 
 use App\Config;
 
@@ -278,15 +278,8 @@ trait Order
     {
         $amount = intval( $amount );
 
-        if( $paymentType == PaymentTypeEnum :: REFUND )
-        {
-            $payment = new Payment;
-            $payment -> refund( $this, $amount );
-        }
-        else
-        {
-            $payment = new Payment;
-            $payment -> cut( $this, $amount );
-        }
+        $paymentType == PaymentTypeEnum :: REFUND
+            ? Payment :: refund ( $this, $amount )
+            : Payment :: cut    ( $this, $amount );
     }
 }

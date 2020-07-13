@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Library\Payments;
+namespace App\Library\Adapters\Payments;
 
 use Redberry\GeorgianCardGateway\Refund;
 

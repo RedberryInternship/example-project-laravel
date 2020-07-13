@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Library\Payments;
+namespace App\Library\Entities\GeorgianCard;
 
 use App\User;
+
+use App\Library\Adapters\Payments\Refunder;
 
 class SaveCardRefunder
 {

@@ -22,7 +22,7 @@ class InsertChargerConnectorTypes extends Command
      *
      * @var string
      */
-    protected $description = 'Parce ChargerConnectors Json file and insert into espace database';
+    protected $description = 'Parse ChargerConnectors Json file and insert into espace database';
 
     /**
      * Create a new command instance.

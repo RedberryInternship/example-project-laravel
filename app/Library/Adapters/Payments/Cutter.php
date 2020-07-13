@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Library\Payments;
+namespace App\Library\Adapters\Payments;
 
+use App\Enums\PaymentType as PaymentTypeEnum;
 use Redberry\GeorgianCardGateway\Transaction;
 
 class Cutter
@@ -13,6 +14,7 @@ class Cutter
       -> setUserId    ( $userId     )
       -> setUserCardId( $userCardId )
       -> setAmount    ( $amount     )
+      -> set( 'transaction_type', PaymentTypeEnum :: CUT )
       -> execute();
   }
 }
