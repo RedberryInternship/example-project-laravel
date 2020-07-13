@@ -4,6 +4,7 @@ namespace App\Library\Interactors;
 
 use App\Library\Entities\Payments\Refunder;
 use App\Library\Entities\Payments\Cutter;
+use App\Library\Entities\Payments\Finer;
 
 use App\Order;
 
@@ -31,5 +32,17 @@ class Payment
   public static function cut( Order $order, int $amount ): void
   {
     Cutter :: cut( $order, $amount );
+  }
+
+  /**
+   * Make fine/penalty transaction.
+   * 
+   * @param  Order $order
+   * @param  int   $amount
+   * @return void
+   */
+  public static function charge( Order $order, int $amount ): void
+  {
+    Finer :: charge( $order, $amount );
   }
 }
