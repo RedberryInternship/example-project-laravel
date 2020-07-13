@@ -5,12 +5,17 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Library\Entities\Order as OrderEntity;
-use App\Library\Scopes\Order as OrderScope;
+
+use App\Library\Entities\ChargingProcess\Calculator;
+use App\Library\Entities\ChargingProcess\Timestamp;
+use App\Library\Entities\ChargingProcess\State;
+use App\Library\Entities\ChargingProcess\Hook;
 
 class Order extends Model
 {
     use OrderEntity,
-        OrderScope;
+        Calculator,
+        State;
 
     /**
      * Laravel guarded attribute.
@@ -37,8 +42,8 @@ class Order extends Model
     {
         parent :: boot();
 
-        static :: creating([ Order :: class, 'setChargingStatusInitialDates' ]);
-        static :: updating([ Order :: class, 'updateChargingStatusChangeDates' ]);
+        static :: creating([ Hook :: class, 'setChargingStatusInitialDates'     ]);
+        static :: updating([ Hook :: class, 'updateChargingStatusChangeDates'   ]);
     }
 
     /**
@@ -89,5 +94,31 @@ class Order extends Model
     public function kilowatt()
     {
         return $this -> hasOne( Kilowatt :: class );
+    }
+
+    /**
+     * Get orders with confirmed payments.
+     * 
+     * @param   Builder
+     * @return  Builder
+     */
+    public function scopeConfirmedPayments( $query )
+    {
+        return $query -> with([ 'payments' => function ( $q ) {
+            return $q -> confirmed();
+        }]);
+    }
+
+    /**
+     * Get orders with confirmed payments(with user cards).
+     * 
+     * @param   Builder
+     * @return  Builder
+     */
+    public function scopeConfirmedPaymentsWithUserCards( $query )
+    {
+        return $query -> with([ 'payments' => function ( $q ) {
+            return $q -> confirmed() -> withUserCards();
+        }]);
     }
 }

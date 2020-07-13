@@ -122,13 +122,9 @@ class StopCharging extends FormRequest
      */
     public function buildResource()
     {
+        $this -> order -> finished = true;
         $resource = new OrderResource( $this -> order );
-        $resource -> setAdditionalData(
-          [
-            'message' => $this -> messages [ 'charging_successfully_finished' ],
-          ]
-        );
-
+    
         return $resource;
     }
 }

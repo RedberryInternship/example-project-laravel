@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Library\Chargers\Sync;
+namespace App\Library\Sync;
 
 use App\Library\Testing\MishasMockCharger;
 

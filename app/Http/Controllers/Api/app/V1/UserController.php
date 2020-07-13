@@ -157,7 +157,7 @@ class UserController extends Controller
     {
         $user = auth('api') -> user();
 
-        if ( ! $user -> active || ! $user -> verified)
+        if ( ! $user || ! $user -> active || ! $user -> verified)
         {
             return response() -> json(['error' => 'User Not Active'], 406);
         }

@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Library\Chargers\Testing;
+namespace App\Library\Testing;
 
 use App\Enums\MishasChargerStatus as MishasChargerStatusEnum;
-use App\Library\Contracts\MishasCharger as ChargerInterface;
 use App\Facades\MockSyncer;
 
-class MishasCharger implements ChargerInterface
+class MishasCharger
 {
   /**
    * all chargers.

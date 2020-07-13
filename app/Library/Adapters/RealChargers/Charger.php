@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Library\Chargers\Charging;
+namespace App\Library\Adapters\RealChargers;
 
 use App\Exceptions\Charger\FindChargerException;
 use App\Exceptions\Charger\MishasBackException;
@@ -9,9 +9,7 @@ use App\Exceptions\Charger\StopChargingException;
 use App\Exceptions\Charger\ChargerTransactionInfoException;
 use App\Exceptions\Charger\TransactionAlreadyFinishedException;
 
-use App\Library\Contracts\MishasCharger;
-
-class Charger extends Base implements MishasCharger
+class Charger extends Base
 {
     /**
      * Response parameter.
@@ -132,6 +130,7 @@ class Charger extends Base implements MishasCharger
                         . '/es-services/mobile/ws/charger/start/'
                         . $charger_id .'/' 
                         . $connector_id;
+        
         $result      = $this -> fetchData($service_url);
 
         switch($result -> status)
@@ -153,7 +152,8 @@ class Charger extends Base implements MishasCharger
                     'Charger with charger_id of ' . $charger_id . ' is already charging or it is offline!',
                     400,
                 );
-
+            case -101:
+                return -101;
             case 0:
                 return $result -> data;
             default:
@@ -201,18 +201,20 @@ class Charger extends Base implements MishasCharger
      */
     public function transactionInfo( $id )
     {
-
         /** This Code Should be deleted later on. I am ashamed that Im coding it. */
 
         $order = \App\Order :: with( 'charger_connector_type.charger' ) 
             -> where( 'charger_transaction_id', $id ) 
             -> first();
 
-        $charger_id = $order -> charger_connector_type -> charger -> charger_id;
-
-        if( $charger_id == 27833 )
+        if( $order )
         {
-            $this -> url = $this -> realChargersBaseUrl;
+            $charger_id = $order -> charger_connector_type -> charger -> charger_id;
+    
+            if( $charger_id == 27833 )
+            {
+                $this -> url = $this -> realChargersBaseUrl;
+            }
         }
         
         /** Ends here. */

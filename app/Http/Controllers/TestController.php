@@ -7,12 +7,11 @@ use Illuminate\Http\Request;
 
 use App\Facades\Simulator;
 use App\Facades\Charger;
-
 use App\Traits\Message;
 
-use App\Order;
-use App\Library\Adapters\FCM;
 use App\Http\Resources\Order as OrderResource;
+use App\Library\Presenters\ChargingProcess;
+use App\Order;
 
 class TestController extends Controller 
 {
@@ -20,10 +19,10 @@ class TestController extends Controller
     
   public function __invoke()
   { 
-    $orders   = Order         :: latest() -> take( 2 ) -> get();
-    $resource = OrderResource :: collection( $orders ) -> resolve();
-
-    FCM :: send( 'dly3r7JJg5LEiM-M106C4t:APA91bGaxoev9Dcjb8ErKR_2JHkOtOjsYLUhjcLNAh3MIAjFTKDWC_VsBzV1zBZRizx7dU-QdmqCym0JD1x0vWs2r-bfcVIwFipjTTZji6bVG3nmttQJyOaVpPknK70l5qOjQ9HKaMu0', [ 'data' => $resource ] );
+    $order = Order :: latest() -> first();
+    dd(
+      new OrderResource( $order ),
+    );
   }
 
   public function firebase()

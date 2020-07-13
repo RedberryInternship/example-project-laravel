@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Library\Chargers\Charging\Charger;
+use App\Library\Adapters\RealChargers\Charger;
 use \GuzzleHttp\Client;
 
 

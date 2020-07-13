@@ -15,8 +15,8 @@ class ChargerSync extends ServiceProvider
      */
     public function register()
     {
-        $this -> app -> bind('chargerSyncer', Charger::class);
-        $this -> app -> bind('mockSyncer', Mocker::class);
+        $this -> app -> bind( 'chargerSyncer', Charger :: class );
+        $this -> app -> bind( 'mockSyncer'   , Mocker  :: class );
     }
 
     /**

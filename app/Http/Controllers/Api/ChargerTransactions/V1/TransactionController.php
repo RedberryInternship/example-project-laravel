@@ -3,8 +3,10 @@
 
 namespace App\Http\Controllers\Api\ChargerTransactions\V1;
 
-use Illuminate\Support\Facades\Log;
+use App\Library\Interactors\NotConfirmedOrdersChecker;
+use App\Library\Interactors\Firebase;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use App\Order;
 
 class TransactionController extends Controller
@@ -22,8 +24,10 @@ class TransactionController extends Controller
    * @param  int     $value
    * @return void
    */
-  public function update( $transaction_id, $value )
+   public function update( $transaction_id, $value )
   {
+    NotConfirmedOrdersChecker :: check( $transaction_id );
+
     $this -> order = Order :: with( 'kilowatt' ) 
       -> where( 'charger_transaction_id', $transaction_id ) 
       -> first();
@@ -56,6 +60,7 @@ class TransactionController extends Controller
     if( $this -> order )
     {
       $this -> order -> finish();
+      Firebase :: sendFinishNotificationWithData( $transaction_id );
     }
     else
     {
@@ -63,6 +68,7 @@ class TransactionController extends Controller
         'There is no such order with transaction id of '. $transaction_id,
       );
     }
+
   }
 }
 
