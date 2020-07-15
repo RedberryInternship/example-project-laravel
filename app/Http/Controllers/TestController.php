@@ -19,10 +19,8 @@ class TestController extends Controller
     
   public function __invoke()
   { 
-    $order = Order :: latest() -> first();
-    dd(
-      new OrderResource( $order ),
-    );
+    
+    return "nothingness";
   }
 
   public function firebase()
