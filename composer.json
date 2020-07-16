@@ -29,7 +29,8 @@
         "spatie/laravel-translatable": "^4.2",
         "spatie/nova-translatable": "^2.0",
         "titasgailius/search-relations": "^1.0",
-        "tymon/jwt-auth": "dev-develop"
+        "tymon/jwt-auth": "dev-develop",
+        "redberry/charger-terminals": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
@@ -47,6 +48,10 @@
         {
             "type": "path",
             "url": "./nova-components/ChargerPrices"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/ChargerTerminals"
         }
     ],
     "config": {

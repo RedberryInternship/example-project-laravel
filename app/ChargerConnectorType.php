@@ -9,7 +9,6 @@ use App\Library\Entities\ChargerConnectorType as Entity;
 class ChargerConnectorType extends Model
 {
     use Entity;
-    
     /**
      * Guarded attributes parameter.
      * 
@@ -65,6 +64,16 @@ class ChargerConnectorType extends Model
     public function fast_charging_prices()
     {
         return $this -> hasMany( FastChargingPrice :: class );
+    }
+
+    /**
+     * belongsTo relationship with Terminal.
+     * 
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function terminal()
+    {
+        return $this -> belongsTo( Terminal :: class );
     }
     
 }

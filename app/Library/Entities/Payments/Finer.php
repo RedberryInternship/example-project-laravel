@@ -19,7 +19,9 @@ class Finer
     $orderId    = $order -> id;
     $userId     = $order -> user_id;
     $userCardId = $order -> user_card_id;
+    $report     = $order -> charger_connector_type -> report;
+    $accountId  = $order -> charger_connector_type -> terminal -> indicator;
 
-    GeorgianCardFiner :: charge( $orderId, $userId, $userCardId, $amount );
+    GeorgianCardFiner :: charge( $orderId, $userId, $userCardId, $amount, $accountId, $report );
   }
 }

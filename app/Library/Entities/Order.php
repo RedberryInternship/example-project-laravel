@@ -278,8 +278,11 @@ trait Order
     {
         $amount = intval( $amount );
 
-        $paymentType == PaymentTypeEnum :: REFUND
-            ? Payment :: refund ( $this, $amount )
-            : Payment :: cut    ( $this, $amount );
+        switch( $paymentType )
+        {
+            case PaymentTypeEnum :: REFUND  : return Payment :: refund ( $this, $amount );
+            case PaymentTypeEnum :: FINE    : return Payment :: charge ( $this, $amount );
+            case PaymentTypeEnum :: CUT     : return Payment :: cut    ( $this, $amount );
+        }
     }
 }

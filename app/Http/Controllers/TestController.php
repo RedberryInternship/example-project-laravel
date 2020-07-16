@@ -9,20 +9,13 @@ use App\Facades\Simulator;
 use App\Facades\Charger;
 use App\Traits\Message;
 
-use App\Http\Resources\Order as OrderResource;
-use App\Library\Presenters\ChargingProcess;
-use App\Order;
-
 class TestController extends Controller 
 {
   use Message;
     
   public function __invoke()
   { 
-    $order = Order :: latest() -> first();
-    dd(
-      new OrderResource( $order ),
-    );
+    return "nothingness";
   }
 
   public function firebase()

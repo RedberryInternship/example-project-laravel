@@ -167,6 +167,18 @@ class Transaction
   }
 
   /**
+   * Set account id when there are several pos terminals.
+   * 
+   * @param string $accountId
+   * @return Transaction
+   */
+  public function setAccountId( string $accountId ): Transaction
+  {
+    $this -> data [ 'account_id' ] = $accountId;
+    return $this;
+  }
+
+  /**
    * Build get request url.
    * 
    * @return string

@@ -15,12 +15,12 @@ class PaymentAvail extends Response
         'merchant-trx' => null,
         'purchase' => [
             'shortDesc' => null,
-            'longDesc' => null,
+            'longDesc'  => null,
             'account-amount' => [
-                'id' => config('georgian-card-gateway.account_id'),
-                'amount' => null,
-                'currency' => 981,
-                'exponent' => 2,    
+                'id'        => null,
+                'amount'    => null,
+                'currency'  => 981,
+                'exponent'  => 2,    
             ],
         ],
     ];
@@ -110,5 +110,17 @@ class PaymentAvail extends Response
   public function setPurchaseAmount( int $amount ): void
   {
     $this -> response [ 'purchase' ][ 'account-amount' ][ 'amount' ] = $amount;
+  }
+
+  /**
+   * Set account id.
+   * optional, necessary if there are many pos terminals.
+   * 
+   * @param  string $accountId
+   * @return void
+   */
+  public function setAccountId( string $accountId ): void
+  {
+    $this -> response [ 'purchase' ][ 'account-amount' ][ 'id' ] = $accountId;
   }
 }
