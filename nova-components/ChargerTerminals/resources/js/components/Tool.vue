@@ -8,8 +8,8 @@
 
 <script>
 
-import Header from './Header';
-import Search from './Search';
+import Header   from './Header';
+import Search   from './Search';
 import Chargers from './Chargers';
 
 export default {

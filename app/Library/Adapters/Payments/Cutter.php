@@ -7,7 +7,7 @@ use Redberry\GeorgianCardGateway\Transaction;
 
 class Cutter
 {
-  public static function cut( int $orderId, int $userId, int $userCardId, int $amount ): void
+  public static function cut( int $orderId, int $userId, int $userCardId, int $amount, $accountId, $report ): void
   {
     (new Transaction)    
       -> setOrderId   ( $orderId    )
@@ -15,6 +15,9 @@ class Cutter
       -> setUserCardId( $userCardId )
       -> setAmount    ( $amount     )
       -> set( 'transaction_type', PaymentTypeEnum :: CUT )
+      -> set( 'charger_report'  , $report                )
+      -> set( 'account_id'      , $accountId             )
+      -> setAccountId( $accountId )
       -> execute();
   }
 }

@@ -12,4 +12,14 @@ class Terminal extends Model
    * @var array $guarded
    */
   protected $guarded = [];
+
+  /**
+   * belongsTo relationship with ChargerConnectorType.
+   * 
+   * @return @return Illuminate\Database\Eloquent\Collection
+   */
+  public function charger_connector_type()
+  {
+    return $this -> hasOne( ChargerConnectorType :: class );
+  }
 }

@@ -17,16 +17,19 @@ class PaymentAvailResponder
   
   public function respond()
   {
-    $trxId       = $this -> request -> get( 'trx_id' );
-    $orderAmount = $this -> request -> get( 'o_amount' );
+    $trxId         = $this -> request -> get( 'trx_id'       );
+    $orderAmount   = $this -> request -> get( 'o_amount'     );
+    $accountId     = $this -> request -> get( 'o_account_id' );
+    $chargerReport = $this -> request -> get( 'o_charger_report' );
 
     $paymentAvail = new PaymentAvail;
     $paymentAvail -> setResultCode( 1 );
     $paymentAvail -> setResultDesc( 'Successful' );
     $paymentAvail -> setMerchantTRX( $trxId );
     $paymentAvail -> setPurchaseShortDesc( 'order' );
-    $paymentAvail -> setPurchaseLongDesc( 'order description' );
+    $paymentAvail -> setPurchaseLongDesc( $chargerReport );
     $paymentAvail -> setPurchaseAmount( $orderAmount );
+    $paymentAvail -> setAccountId( $accountId );
     
     $primaryTrxPcid = $this -> handler -> getPrimaryTransactionId( $this -> request );
 
