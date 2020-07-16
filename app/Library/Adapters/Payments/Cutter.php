@@ -9,6 +9,8 @@ class Cutter
 {
   public static function cut( int $orderId, int $userId, int $userCardId, int $amount, $accountId, $report ): void
   {
+    $report = urlencode( $report );
+
     (new Transaction)    
       -> setOrderId   ( $orderId    )
       -> setUserId    ( $userId     )
