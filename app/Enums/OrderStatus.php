@@ -74,4 +74,10 @@ class OrderStatus extends Enum
    * plugging to connector.
    */
   const UNPLUGGED     = 'UNPLUGGED';
+
+  /**
+   * Transaction can't continue because there is 
+   * not enough money on user card.
+   */
+  const BANKRUPT      = 'BANKRUPT';
 }
