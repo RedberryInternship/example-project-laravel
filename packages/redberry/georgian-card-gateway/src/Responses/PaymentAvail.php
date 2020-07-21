@@ -4,7 +4,6 @@ namespace Redberry\GeorgianCardGateway\Responses;
 
 class PaymentAvail extends Response
 {
-
   public function __construct()
   {
     $this -> response = [
@@ -17,7 +16,7 @@ class PaymentAvail extends Response
             'shortDesc' => null,
             'longDesc'  => null,
             'account-amount' => [
-                'id'        => null,
+                'id'        => config('georgian-card-gateway.account_id'),
                 'amount'    => null,
                 'currency'  => 981,
                 'exponent'  => 2,    

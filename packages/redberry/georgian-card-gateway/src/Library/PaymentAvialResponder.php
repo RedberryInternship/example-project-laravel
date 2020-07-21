@@ -20,7 +20,7 @@ class PaymentAvailResponder
     $trxId         = $this -> request -> get( 'trx_id'       );
     $orderAmount   = $this -> request -> get( 'o_amount'     );
     $accountId     = $this -> request -> get( 'o_account_id' );
-    $chargerReport = $this -> request -> get( 'o_charger_report' );
+    $chargerReport = $this -> request -> get( 'o_charger_report' ) ?? 'No report';
 
     $paymentAvail = new PaymentAvail;
     $paymentAvail -> setResultCode( 1 );
@@ -29,7 +29,7 @@ class PaymentAvailResponder
     $paymentAvail -> setPurchaseShortDesc( 'order' );
     $paymentAvail -> setPurchaseLongDesc( $chargerReport );
     $paymentAvail -> setPurchaseAmount( $orderAmount );
-    $paymentAvail -> setAccountId( $accountId );
+    $accountId && $paymentAvail -> setAccountId( $accountId );
     
     $primaryTrxPcid = $this -> handler -> getPrimaryTransactionId( $this -> request );
 
