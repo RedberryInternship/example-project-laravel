@@ -15,7 +15,7 @@ class TestController extends Controller
     
   public function __invoke()
   { 
-    return \App\Library\Entities\CronJobs\OrdersOnPenalty\OrdersGetter :: get();
+    
   }
 
   public function firebase()

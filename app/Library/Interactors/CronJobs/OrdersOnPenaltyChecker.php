@@ -17,6 +17,5 @@ class OrdersOnPenaltyChecker
   {
     $orders = OrdersGetter :: get();
     OrdersEditor :: update( $orders );
-    # scheduler every minute !
   }
 }
