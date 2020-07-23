@@ -273,6 +273,4 @@ class Charger extends Base
     {
         $this -> response = $data; 
     }
-
-
 }
