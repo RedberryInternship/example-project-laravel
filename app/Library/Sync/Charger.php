@@ -2,7 +2,8 @@
 
 namespace App\Library\Sync;
 
-use App\Facades\Charger as RealCharger;
+use App\Library\Entities\CronJobs\RealChargersSync\ChargersGetter;
+use App\Library\Entities\CronJobs\RealChargersSync\ChargersParser;
 
 class Charger extends Base
 {
@@ -15,46 +16,23 @@ class Charger extends Base
    */
   public function insertOrUpdate()
   {
-    $mishasChargers = $this -> getAllChargers();
+    $mishasChargers = ChargersGetter :: getAll();
     $this -> insertOrUpdateChargers($mishasChargers);
   }
 
   /**
    * Insert or update one.
    * 
-   * @param int $charger_id
+   * @param int $chargerId
    * 
    * @return void
    */
-  public function insertOrUpdateOne($charger_id)
+  public function insertOrUpdateOne($chargerId)
   {
-    $m_charger = $this -> getCharger($charger_id);
+    $realCharger   = ChargersGetter :: getOne( $chargerId );
+    $parsedCharger = ChargersParser :: parseOne( $realCharger);
 
-    $connectors = $m_charger -> connectors;
-    $only_charger_data = $this -> parseCharger($m_charger);
-
-    $this -> insertOrUpdateSingleCharger($only_charger_data, $connectors );
+    $this -> insertOrUpdateSingleCharger( $parsedCharger );
   }
-
-
-  /**
-   * Get All the chargers from Misha's Database.
-   * 
-   * @return array<object>
-   */
-  private function getAllChargers()
-  {   
-    return RealCharger :: all();
-  }
-
-  /**
-   * Get specific charger from Misha's Database.
-   * 
-   * @param int $id
-   * @return object
-   */
-   private function getCharger($id){
-      return RealCharger :: find($id);; 
-   }
 
 }
