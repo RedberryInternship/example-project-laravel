@@ -5,7 +5,6 @@ use Illuminate\Http\Request;
 use App\Charger;
 use App\Http\Resources\ChargerCollection;
 use App\Http\Resources\Charger as ChargerResource;
-use App\Facades\Charger as MishasCharger;
 
 class ChargerController extends Controller
 {
@@ -74,10 +73,10 @@ class ChargerController extends Controller
     {
         $charger = $charger
             -> withAllAttributes()
-            -> find($charger_id);
+            -> find( $charger_id );
 
-        Charger::addIsFreeAttributeToCharger($charger);
+        Charger :: addIsFreeAttributeToCharger( $charger );
 
-        return new ChargerResource($charger);
+        return new ChargerResource( $charger );
     }
 }

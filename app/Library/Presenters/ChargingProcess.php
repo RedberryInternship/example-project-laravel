@@ -102,7 +102,7 @@ class ChargingProcess
    */
   private function updateChargingStatus( Order $order )
   {
-    if( $order -> carHasAlreadyStoppedCharging() && $order -> isOnFine() )
+    if( $order -> shouldGoToPenalty() )
     {
         $order -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 
     }

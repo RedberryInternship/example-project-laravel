@@ -45,7 +45,6 @@ class InsertChargerConnectorTypes extends Command
         $path = public_path () . "/jsons/charger_connectors.json";
         $json = json_decode(file_get_contents($path), true);
 
-
         foreach($json as $connectors_arrays)
         {   
             foreach($connectors_arrays as $connector_array)
@@ -69,9 +68,6 @@ class InsertChargerConnectorTypes extends Command
                     $connector_type_id   = $connector_type -> id;
 
                     $m_connector_type_id = ConnectorTypeEnum :: CHADEMO == $connector_type -> name ? 2 : 1;
-
-
-                    
                 }
 
                 $charger_connector_types = ChargerConnectorType::where('charger_id', $charger_id) -> update([

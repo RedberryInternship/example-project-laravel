@@ -104,7 +104,7 @@ trait State
    * @param \App\Order $order
    * @return bool
    */
-  public function isOnFine()
+  public function shouldGoToPenalty()
   {
       $config               = Config :: first();
       $penaltyReliefMinutes = $config -> penalty_relief_minutes;
