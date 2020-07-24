@@ -1,5 +1,6 @@
 {
     "name": "redberry/georgian-card-gateway",
+    "description": "Simplify your payments with Georgian Card Gateway.",
     "authors": [
         {
             "name": "Gulverd",
@@ -11,6 +12,14 @@
         }
     ],
     "require": {
-    	
-    }
+    	"giunashvili/xml-parser": "dev-master"
+    },
+    "autoload": {
+        "psr-4": { "Redberry\\GeorgianCardGateway\\": "src/" }
+    },
+    "keywords": [ "Georgian Card", "BOG", "Bank of Georgia", "Payments" ],
+    "homepage": "https://github.com/RedberryProducts/georgian-card-gateway",
+    "readme": "https://github.com/RedberryProducts/georgian-card-gateway/blob/master/README.md",
+    "time": "2020-05-22",
+    "license": "MIT"
 }
