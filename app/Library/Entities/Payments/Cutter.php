@@ -20,7 +20,9 @@ class Cutter
     $userId     = $order -> user_id;
     $userCardId = $order -> user_card_id;
     $report     = $order -> charger_connector_type -> report;
-    $accountId  = $order -> charger_connector_type -> terminal -> indicator;
+    $accountId  = $order -> charger_connector_type -> terminal
+      ? $order -> charger_connector_type -> terminal -> indicator
+      : null;
 
     GeorgianCardCutter :: cut( $orderId, $userId, $userCardId, $amount, $accountId, $report );
   }
