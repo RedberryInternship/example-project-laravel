@@ -13,7 +13,7 @@ trait BusinessChargerStatuses
      */
     public function businessChargerStatuses($connectorTypes = null)
     {
-        $query = Charger::where('user_id', $this -> id);
+        $query = Charger::where('company_id', $this -> company_id);
 
         if ($connectorTypes && is_array($connectorTypes))
         {

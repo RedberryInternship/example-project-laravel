@@ -71,6 +71,8 @@ class User extends Resource
         return [
             ID::make()->sortable(),
 
+            BelongsTo::make('Company'),
+
             BelongsTo::make('Role'),
 
             Gravatar::make(),

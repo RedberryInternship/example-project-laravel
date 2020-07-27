@@ -74,7 +74,8 @@ class Charger extends Resource
             -> toArray();
 
         $fieldsArr = [
-            ID::make()->sortable() -> hideFromIndex(),
+            ID::make()
+                ->sortable(),
 
             Translatable::make([
                 Text::make('name')
@@ -112,13 +113,8 @@ class Charger extends Resource
             BelongsToMany::make('Connector Types'),
 
             BelongsToMany::make('Charger Tags','Tags', 'App\Nova\Tag'),
-
-            Select::make('User','user_id')
-                ->options(User::getAssignableChargerUsers())
-                ->onlyOnForms(),
             
-            BelongsTo::make('User')
-                ->exceptOnForms(),
+            BelongsTo::make('Company'),
 
             BelongsTo::make('Charger Group')
                 -> nullable(),

@@ -22,15 +22,16 @@
         "laravel/vapor-cli": "^1.4",
         "laravel/vapor-core": "^2.2",
         "maatwebsite/excel": "^3.1",
+        "predis/predis": "^1.1",
         "pulkitjalan/geoip": "^4.0",
         "rackspace/php-opencloud": "dev-master",
         "redberry/charger-prices": "*",
+        "redberry/charger-terminals": "*",
         "spatie/laravel-schemaless-attributes": "^1.6",
         "spatie/laravel-translatable": "^4.2",
         "spatie/nova-translatable": "^2.0",
         "titasgailius/search-relations": "^1.0",
-        "tymon/jwt-auth": "dev-develop",
-        "redberry/charger-terminals": "*"
+        "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

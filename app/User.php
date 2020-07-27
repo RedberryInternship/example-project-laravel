@@ -99,6 +99,11 @@ class User extends Authenticatable implements JWTSubject
         Twilio :: message($phoneNumber, $message);
     }
 
+    public function company()
+    {
+        return $this -> belongsTo(Company::class);
+    }
+
     public function chargers()
     {
         return $this -> hasMany(Charger::class);
@@ -178,7 +183,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function businessActiveChargers()
     {
-        return Charger::where('user_id', $this -> id)
+        return Charger::where('company_id', $this -> company_id)
             -> withCount('chargerConnectorTypeOrders')
         //  -> with('charger_connector_types.orders')
             -> orderBy('charger_connector_type_orders_count', 'DESC')

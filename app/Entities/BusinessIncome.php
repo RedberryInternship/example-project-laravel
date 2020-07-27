@@ -22,8 +22,8 @@ trait BusinessIncome
             $q -> where('type', 'CUT')
                -> orWhere('type', 'FINE');
         })
-        -> whereHas('order.charger_connector_type.charger.user', function($query) {
-            $query -> where('users.id', $this -> id);
+        -> whereHas('order.charger_connector_type.charger', function($query) {
+            $query -> where('chargers.company_id', $this -> company_id);
         });
 
         if ($monthDate)

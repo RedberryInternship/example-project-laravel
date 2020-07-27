@@ -24,9 +24,9 @@ class Charger extends Model
       'charger_id' => 'int',
     ];
 
-    public function user()
+    public function company()
    	{
-   		return $this -> belongsTo('App\User');
+   		return $this -> belongsTo(Company::class);
    	}
 
     public function tags()

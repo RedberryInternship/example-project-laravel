@@ -29,7 +29,7 @@ class ChargerController extends Controller
     public function index()
     {
         $user     = Auth::user();
-        $chargers = Charger::where('user_id', $user -> id)
+        $chargers = Charger::where('company_id', $user -> company_id)
                           -> with('charger_group')
                           -> orderBy('id', 'DESC')
                           -> get();
@@ -88,6 +88,11 @@ class ChargerController extends Controller
             'business_services',
         ]) -> first();
 
+        if ($user -> company_id != $charger -> company_id)
+        {
+            return redirect() -> back();
+        }
+
         $chargerConnectorTypes   = ChargerConnectorType::with(['connector_type', 'charging_prices', 'fast_charging_prices'])
                                                       -> where('charger_id', $id)
                                                       -> get();
@@ -118,6 +123,13 @@ class ChargerController extends Controller
      */
     public function update(Request $request, Charger $charger)
     {
+        $user = Auth::user();
+
+        if ($user -> company_id != $charger -> company_id)
+        {
+            return redirect() -> back();
+        }
+
         $charger -> setTranslations('name', $request -> get('names'))
                  -> setTranslations('description', $request -> get('descriptions'))
                  -> setTranslations('location', $request -> get('locations'))
