@@ -30,7 +30,7 @@ class ChargerController extends Controller
     {
         $user     = Auth::user();
         $chargers = Charger::where('company_id', $user -> company_id)
-                          -> with('charger_group')
+                          -> with('groups')
                           -> orderBy('id', 'DESC')
                           -> get();
 
@@ -84,7 +84,7 @@ class ChargerController extends Controller
     {
         $user    = Auth::user();
         $charger = Charger::where('id', $id) -> with([
-            'charger_group',
+            'groups',
             'business_services',
         ]) -> first();
 

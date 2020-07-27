@@ -20,7 +20,6 @@
                                             <th>ID</th>
                                             <th>სახელი</th>
                                             <th>კოდი</th>
-                                            <th>დამტენის ჯგუფი</th>
                                             <th class="center">საჯარო</th>
                                             <th class="center">აქტიური</th>
                                             <th class="center">რედაქტირება</th>
@@ -33,7 +32,6 @@
                                                 <td>{{ $charger -> id }}</td>
                                                 <td>{{ $charger -> name }}</td>
                                                 <td>{{ $charger -> code }}</td>
-                                                <td>{{ $charger -> charger_group ? $charger -> charger_group -> name : null }}</td>
                                                 <td class="center">
                                                     <i class="material-icons dp48" style="{{ $charger -> public ? 'color: green' : 'color: red' }}">{{ $charger -> public ? 'check' : 'close' }}</i>
                                                 </td>

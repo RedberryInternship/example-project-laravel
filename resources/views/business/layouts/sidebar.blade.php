@@ -27,7 +27,7 @@
         </li>
 
         <li class="bold">
-            <a class="waves-effect waves-cyan {{ isset($activeMenuItem) && $activeMenuItem == 'chargerGroups' ? 'active' : NULL }}" href="/business/charger-groups">
+            <a class="waves-effect waves-cyan {{ isset($activeMenuItem) && $activeMenuItem == 'groups' ? 'active' : NULL }}" href="/business/groups">
                 <i class="material-icons">group_work</i>
 
                 <span class="menu-title" data-i18n="Chat">დამტენების ჯგუფები</span>

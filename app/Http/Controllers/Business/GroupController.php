@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Business;
 
+use App\Group;
 use App\Charger;
-use App\ChargerGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
-class ChargerGroupController extends Controller
+class GroupController extends Controller
 {
     /**
      * ChargerController Constructor. 
@@ -25,16 +25,16 @@ class ChargerGroupController extends Controller
      */
     public function index()
     {
-        $user          = Auth::user();
-        $chargerGroups = ChargerGroup::where('user_id', $user -> id)
-                                    -> with('chargers')
-                                    -> orderBy('id', 'DESC')
-                                    -> get();
+        $user   = Auth::user();
+        $groups = Group::where('user_id', $user -> id)
+                      -> with('chargers')
+                      -> orderBy('id', 'DESC')
+                      -> get();
 
-        return view('business.charger-groups.index') -> with([
+        return view('business.groups.index') -> with([
             'tabTitle'       => 'დამტენების ჯგუფები',
-            'activeMenuItem' => 'chargerGroups',
-            'chargerGroups'  => $chargerGroups,
+            'activeMenuItem' => 'groups',
+            'groups'         => $groups,
             'user'           => $user
         ]);
     }
@@ -65,7 +65,7 @@ class ChargerGroupController extends Controller
 
         if ($request -> has('name') && $request -> get('name'))
         {   
-            ChargerGroup::create($request -> all());
+            Group::create($request -> all());
         }
 
         return redirect() -> back();
@@ -88,32 +88,39 @@ class ChargerGroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(ChargerGroup $chargerGroup)
+    public function edit(Group $group)
     {
         $user = Auth::user();
         
-        if ($chargerGroup -> user_id != $user -> id)
+        if ($group -> user_id != $user -> id)
         {
             return redirect() -> back();
         }
 
-        $chargerGroup -> load([
+        $group -> load([
             'chargers' => function($query) {
                 $query -> orderBy('id', 'DESC');
             }
         ]);
 
         $user -> load([
-            'chargers' => function($query) {
-                $query -> with('charger_group')
+            'company.chargers' => function($query) {
+                $query -> with('groups')
                        -> orderBy('id', 'DESC');
             }
         ]);
 
-        return view('business.charger-groups.edit') -> with([
-            'user'           => $user,
-            'chargerGroup'   => $chargerGroup,
-            'activeMenuItem' => 'chargerGroups'
+        $groupChargerIds = [];
+        foreach ($group -> chargers as $charger)
+        {
+            $groupChargerIds[] = $charger -> id;
+        }
+
+        return view('business.groups.edit') -> with([
+            'user'            => $user,
+            'group'           => $group,
+            'groupChargerIds' => $groupChargerIds,
+            'activeMenuItem'  => 'groups'
         ]); 
     }
 
@@ -135,7 +142,7 @@ class ChargerGroupController extends Controller
      * @param  ChargerGroup  $chargerGroup
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ChargerGroup $chargerGroup)
+    public function destroy(Group $group)
     {
         Charger::where(['charger_group_id' => $chargerGroup -> id]) -> update([
             'charger_group_id' => null
