@@ -20,7 +20,7 @@ class OrdersMiddleware
     $result     = ChargingProcessDataGetter :: get  ( $chargerTransactionId );
     $foundOrder = OrderFinder               :: instance( $result ) -> find();
 
-    OrderEditor :: instance()
+    $foundOrder && OrderEditor :: instance()
       -> setChargerTransactionId( $chargerTransactionId )
       -> setChargerAttributes   ( $result               )
       -> setOrder               ( $foundOrder           )

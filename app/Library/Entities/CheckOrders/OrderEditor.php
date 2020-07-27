@@ -91,7 +91,7 @@ class OrderEditor
    * find out if this is the order
    * that should be stopped.
    * 
-   * @param Order $order
+   * @param  Order $order
    * @return bool
    */
   private function shouldStop()

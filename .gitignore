@@ -27,6 +27,7 @@ storage/debugbar
 .vscode
 swagger.yaml
 composer.lock
+package-lock.json
 smthing
 .idea
 ipay
