@@ -12,14 +12,14 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\BelongsToMany;
 
-class ChargerGroup extends Resource
+class Group extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\ChargerGroup';
+    public static $model = 'App\Group';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -50,9 +50,14 @@ class ChargerGroup extends Resource
      */
     public function fields(Request $request)
     {
-        $users = User::where('role_id', 2) -> orWhere('role_id', 3) -> get() -> keyBy('id') -> map(function($u) {
-            return $u -> first_name . ' ' . $u -> last_name;
-        }) -> toArray();
+        $users = User::where('role_id', 2)
+                    -> orWhere('role_id', 3)
+                    -> get()
+                    -> keyBy('id')
+                    -> map(function($u) {
+                        return $u -> first_name . ' ' . $u -> last_name;
+                    })
+                    -> toArray();
 
         return [
             ID::make()
@@ -64,9 +69,13 @@ class ChargerGroup extends Resource
 
             Select::make('User','user_id')
                 ->options($users)
-                ->rules('required'),
+                ->rules('required')
+                ->onlyOnForms(),
 
-            HasMany::make('Chargers')
+            BelongsTo::make('User')
+                ->exceptOnForms(),
+
+            BelongsToMany::make('Chargers')
         ];
     }
 

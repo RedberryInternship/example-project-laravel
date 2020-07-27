@@ -144,7 +144,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function favorites()
     {
-        return $this->belongsToMany(Charger::class, 'favorites', 'user_id', 'charger_id')->withTimeStamps();
+        return $this -> belongsToMany(Charger::class, 'favorites', 'user_id', 'charger_id') -> withTimeStamps();
     }
 
     public function role()
@@ -160,6 +160,14 @@ class User extends Authenticatable implements JWTSubject
     public function business_services()
     {
         return $this -> hasMany(BusinessService::class);
+    }
+
+    public function chargerGroups()
+    {
+        return $this -> hasMany(ChargerGroup::class) -> withPivot([
+            'name',
+            'charger_id'
+        ]);
     }
 
     public function scopeAssignableChargerUsers($query)

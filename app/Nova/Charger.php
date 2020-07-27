@@ -65,65 +65,55 @@ class Charger extends Resource
      */
     public function fields(Request $request)
     {
-        $users = User::assignableChargerUsers()
-            -> get()
-            -> keyBy('id')
-            -> map(function($user) {
-                return $user -> first_name . ' ' . $user -> last_name;
-            })
-            -> toArray();
-
-        $fieldsArr = [
+        return [
             ID::make()
                 ->sortable(),
 
             Translatable::make([
-                Text::make('name')
+                Text::make('Name')
                     ->sortable()
                     ->rules('max:255')
             ])->locales(['en', 'ru', 'ka']),
 
-            ID::make('charger_id')
+            ID::make('Charger Id')
                 ->sortable()
                 ->hideFromIndex(),
 
-            Text::make('code'),
+            Text::make('Code'),
 
             Translatable::make([
-                Text::make('description')->sortable() -> hideFromIndex()
+                Text::make('Description')->sortable() -> hideFromIndex()
             ])->locales(['en', 'ru', 'ka']),
 
             Translatable::make([
-                Text::make('location')
+                Text::make('Location')
                     ->sortable()
             ])->locales(['en', 'ru', 'ka']),
 
-            Boolean::make('public')
+            Boolean::make('Public')
                 ->trueValue(1)
                 ->falseValue(0),
 
-            Boolean::make('active')
+            Boolean::make('Active')
                 ->trueValue(1)
                 ->falseValue(0),
 
-            Text::make('lat'),
+            Text::make('Lat'),
 
-            Text::make('lng'),
+            Text::make('Lng'),
 
             BelongsToMany::make('Connector Types'),
 
-            BelongsToMany::make('Charger Tags','Tags', 'App\Nova\Tag'),
+            BelongsToMany::make('Tags'),
             
             BelongsTo::make('Company'),
 
-            BelongsTo::make('Charger Group')
+            BelongsToMany::make('Groups')
                 -> nullable(),
 
             BelongsToMany::make('Business Services')
                 -> nullable()
         ];
-
-        return $fieldsArr;
     }
 
     /**

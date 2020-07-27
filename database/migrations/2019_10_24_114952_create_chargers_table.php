@@ -27,7 +27,7 @@ class CreateChargersTable extends Migration
             $table->string('lat');
             $table->string('lng');
             $table->string('iban')->nullable();
-            $table->integer('charger_group_id') -> nullable();
+            $table->integer('charger_group_id')->nullable();
             $table->dateTime('last_update')->nullable();
             $table->timestamps();
         });

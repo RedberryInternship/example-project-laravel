@@ -25,6 +25,13 @@ class Company extends Resource
     public static $title = 'name';
 
     /**
+     * Grouping nova resource.
+     * 
+     * @var string
+     */
+    public static $group = 'User Resources';
+
+    /**
      * The columns that should be searched.
      *
      * @var array
