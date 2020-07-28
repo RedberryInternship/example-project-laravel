@@ -4,7 +4,6 @@ namespace App\Library\Entities\CheckOrders;
 
 use App\Library\ResponseModels\RealChargerAttributes;
 use App\Enums\OrderStatus as OrderStatusEnum;
-
 use App\Order;
 
 class OrderFinder
@@ -69,6 +68,7 @@ class OrderFinder
       OrderStatusEnum :: NOT_CONFIRMED,
       OrderStatusEnum :: UNPLUGGED,
       OrderStatusEnum :: CANCELED,
+      OrderStatusEnum :: ON_HOLD,
     ];
   }
 }

@@ -93,7 +93,7 @@ class Timestamp
             
       if( ! $statusTimestamp )
       {
-                return null;
+        return null;
       }
             
       return Carbon :: createFromTimestamp( $statusTimestamp );

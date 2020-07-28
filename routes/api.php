@@ -35,7 +35,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 
 
 	/* User Authenticated use functionality */
-	Route::group(['middleware' => ['jwt.verify']], function() {
+	Route::group(['middleware' => ['jwt.verify', 'check.user.existence']], function() {
 
 		Route::group(['namespace' => 'Api\app\V1'], function() {	
 

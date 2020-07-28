@@ -15,7 +15,9 @@ class TestController extends Controller
     
   public function __invoke()
   { 
-    //
+    dd( 
+      'Nothingness',
+     );
   }
 
   public function firebase()
