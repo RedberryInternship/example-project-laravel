@@ -3,11 +3,33 @@
 namespace Redberry\GeorgianCardGateway\Library;
 
 use Redberry\GeorgianCardGateway\Responses\RegisterPayment;
+use Redberry\GeorgianCardGateway\Contracts\GeorgianCardHandler;
 
 class RegisterPaymentResponder
 {
-  private $handler;
+  /**
+   * Request.
+   * 
+   * @var \Illuminate\Http\Request $request
+   */
   private $request;
+
+  /**
+   * Georgian card handler.
+   * 
+   * @var GeorgianCardHandler $handler
+   */
+  private $handler;
+
+  /**
+   * Build new instance.
+   * 
+   * @return self
+   */
+  public static function build()
+  {
+    return new self;
+  }
 
   /**
    * Set Georgian Card handler.
@@ -64,5 +86,4 @@ class RegisterPaymentResponder
   {
     return $this -> request -> get( 'result_code'  ) == 1;
   }
- 
 }

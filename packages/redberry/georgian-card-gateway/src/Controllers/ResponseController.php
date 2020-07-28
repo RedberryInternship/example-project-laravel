@@ -26,9 +26,7 @@ class ResponseController extends Controller
      */
     public function paymentAvailResponse()
     {
-        $responder = new PaymentAvailResponder;
-
-        return $responder -> respond();
+        return PaymentAvailResponder :: build() -> respond();
     }
 
     /**
@@ -38,8 +36,6 @@ class ResponseController extends Controller
      */
     public function registerPaymentResponse()
     {
-        $responder = new RegisterPaymentResponder;
-
-        return $responder -> respond();
+        return RegisterPaymentResponder :: build() -> respond();
     }
 }
