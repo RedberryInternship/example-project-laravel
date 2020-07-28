@@ -88,17 +88,6 @@ trait State
   }
 
   /**
-   * Determine if car has already stopped charging.
-   * 
-   * @return bool
-   */
-  public function carHasAlreadyStoppedCharging()
-  {
-      return  $this -> charging_status == OrderStatusEnum :: CHARGED 
-          ||  $this -> charging_status == OrderStatusEnum :: USED_UP ;
-  }
-
-  /**
    * Determine if order is on fine.
    * 
    * @param \App\Order $order
@@ -106,20 +95,36 @@ trait State
    */
   public function shouldGoToPenalty()
   {
-      $config               = Config :: first();
-      $penaltyReliefMinutes = $config -> penalty_relief_minutes;
+    if(  ! $this -> carHasAlreadyStoppedCharging() )
+    {
+        return false;
+    }
 
-      $chargedTime = Timestamp :: build( $this ) -> getStopChargingTimestamp();
+    $config               = Config :: first();
+    $penaltyReliefMinutes = $config -> penalty_relief_minutes;
 
-      if( ! $chargedTime )
-      {
-          return false;
-      }
+    $chargedTime = Timestamp :: build( $this ) -> getStopChargingTimestamp();
 
-      $elapsedTime          = $chargedTime -> diffInMinutes( now() );
+    if( ! $chargedTime )
+    {
+        return false;
+    }
 
-      return $elapsedTime >= $penaltyReliefMinutes;
+    $elapsedTime          = $chargedTime -> diffInMinutes( now() );
+
+    return $elapsedTime >= $penaltyReliefMinutes;
   }
+
+    /**
+     * Determine if car has already stopped charging.
+     * 
+     * @return bool
+     */
+    private function carHasAlreadyStoppedCharging()
+    {
+        return  $this -> charging_status == OrderStatusEnum :: CHARGED 
+            ||  $this -> charging_status == OrderStatusEnum :: USED_UP ;
+    }
 
    /**
    * Determine if consumed money is above 
