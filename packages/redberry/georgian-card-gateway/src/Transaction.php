@@ -19,6 +19,16 @@ class Transaction
   private $data;
 
   /**
+   * Build transaction instance.
+   * 
+   * @return self
+   */
+  public static function build()
+  {
+    return new self;
+  }
+
+  /**
    * Set initial private parameters.
    */
   public function __construct()
@@ -30,7 +40,6 @@ class Transaction
       'preauth'     => 'N',
       'merch_id'    => config('georgian-card-gateway.merchant_id'),
       'page_id'     => config('georgian-card-gateway.page_id'),
-      'account_id'  => config('georgian-card-gateway.account_id'),
       'back_url_f'  => config('georgian-card-gateway.back_url_f'),
       'back_url_s'  => config('georgian-card-gateway.back_url_s'),
       'ccy'         => config('georgian-card-gateway.ccy'),
@@ -163,18 +172,6 @@ class Transaction
     $this -> data [ 'back_url_f' ] = urlencode( $this -> data [ 'back_url_f' ] );
     $this -> data [ 'back_url_s' ] = urlencode( $this -> data [ 'back_url_s' ] );
 
-    return $this;
-  }
-
-  /**
-   * Set account id when there are several pos terminals.
-   * 
-   * @param string $accountId
-   * @return Transaction
-   */
-  public function setAccountId( string $accountId ): Transaction
-  {
-    $this -> data [ 'account_id' ] = $accountId;
     return $this;
   }
 

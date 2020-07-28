@@ -4,9 +4,34 @@ namespace Redberry\GeorgianCardGateway;
 
 class Refund
 {
+  /**
+   * Base url.
+   * 
+   * @var string $url
+   */
   private $url;
+
+  /**
+   * Refund data.
+   * 
+   * @var array $data
+   */
   private $data;
 
+
+  /**
+   * Build refund instance.
+   * 
+   * @return self
+   */
+  public static function build()
+  {
+    return new self;
+  }
+
+  /**
+   * Construct url and data.
+   */
   public function __construct()
   {
     $merchantId   = config( 'georgian-card-gateway.merchant_id'     );
@@ -23,6 +48,11 @@ class Refund
     ];
   }
 
+  /**
+   * Make transaction refund.
+   * 
+   * @return void
+   */
   public function execute()
   {
     $url  = $this -> buildUrl();
@@ -32,6 +62,12 @@ class Refund
     curl_exec  (  $ch                               );
   }
 
+  /**
+   * Set transaction id of which the refund should be made.
+   * 
+   * @param  string $trxId
+   * @return self
+   */
   public function setTrxId( string $trxId ): Refund
   {
     $this -> data [ 'trx_id' ] = $trxId;
@@ -39,6 +75,9 @@ class Refund
     return $this;
   }
 
+  /**
+   * Set RRN of the transaction of which the refund should be made.
+   */
   public function setRRN( string $RRN ): Refund
   {
     $this -> data [ 'p.rrn' ] = $RRN;
@@ -46,6 +85,14 @@ class Refund
     return $this;
   }
 
+  /**
+   * Set refund amount.
+   * 
+   * @param  int $amount 
+   * @example 100 = 1 GEL
+   * 
+   * @return self
+   */
   public function setAmount( int $amount ): Refund
   {
     $this -> data [ 'amount' ] = $amount;
@@ -53,6 +100,11 @@ class Refund
     return $this;
   }
 
+  /**
+   * Build refund url.
+   * 
+   * @return string
+   */
   public function buildUrl()
   {
     $url = $this -> url;

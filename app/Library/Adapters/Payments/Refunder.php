@@ -8,7 +8,7 @@ class Refunder
 {
   public static function refund( $trxId, $RRN, $amount )
   {
-    ( new Refund )
+    Refund :: build()
       -> setTrxId ( $trxId  )
       -> setRRN   ( $RRN    )
       -> setAmount( $amount )

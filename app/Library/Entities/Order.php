@@ -214,8 +214,8 @@ trait Order
         $chargerType = $this -> charger_connector_type -> determineChargerType();
 
         $chargerType == ChargerTypeEnum :: FAST
-        ? $this -> makeLastPaymentsForFastCharging()
-        : $this -> makeLastPaymentsForLvl2Charging();
+            ? $this -> makeLastPaymentsForFastCharging()
+            : $this -> makeLastPaymentsForLvl2Charging();
 
         $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
     }

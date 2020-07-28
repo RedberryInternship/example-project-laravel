@@ -11,7 +11,7 @@ class Finer
   {
     $report = urlencode( $report );
     
-    (new Transaction)    
+    Transaction :: build()
       -> setOrderId   ( $orderId    )
       -> setUserId    ( $userId     )
       -> setUserCardId( $userCardId )
@@ -19,7 +19,6 @@ class Finer
       -> set( 'transaction_type', PaymentTypeEnum :: FINE )
       -> set( 'charger_report'  , $report                 )
       -> set( 'account_id'      , $accountId              )
-      -> setAccountId( $accountId )
       -> execute();
   }
 }

@@ -9,10 +9,8 @@ class SaveCardInitiator
   public static function getURL()
   {
     $userId = auth() -> user() -> id;
-
-    $saveCardTransaction = new Transaction;
-
-    $url = $saveCardTransaction
+    
+    return Transaction :: build()
       -> setAmount( 20 )
       -> setUserId( $userId )
       -> shouldSaveCard()
@@ -23,7 +21,5 @@ class SaveCardInitiator
         ]
       )
       -> buildUrl();
-  
-    return $url;
   }
 }
