@@ -89,7 +89,7 @@ class Timestamp
    */
   public function getChargingStatusTimestamp( $status )
   {
-      $statusTimestamp = $this -> order -> charging_status_change_dates [ $status ];
+      $statusTimestamp = @ $this -> order -> charging_status_change_dates [ $status ];
             
       if( ! $statusTimestamp )
       {
