@@ -59,7 +59,7 @@ class AuthController extends Controller
             return redirect('/business');
         }
 
-        return redirect() -> back();
+        return redirect() -> back() -> withInput();
     }
 
     /**

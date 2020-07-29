@@ -144,11 +144,8 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        Charger::where(['charger_group_id' => $chargerGroup -> id]) -> update([
-            'charger_group_id' => null
-        ]);
-
-        $chargerGroup -> delete();
+        $group -> chargers() -> detach();
+        $group -> delete();
 
         return redirect() -> back();
     }

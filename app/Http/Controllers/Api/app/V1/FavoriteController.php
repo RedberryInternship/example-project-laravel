@@ -18,9 +18,9 @@ class FavoriteController extends Controller
     	$status     = 400;
     	$favorite   = Favorite::where([['user_id', $user_id],['charger_id', $charger_id]]) -> first();
 
-    	if(is_null($favorite))
+    	if (is_null($favorite))
     	{
-    		$user->favorites()->attach($charger_id);
+    		$user -> favorites() -> attach($charger_id);
     		$status = 200;
     	}
 
@@ -35,9 +35,9 @@ class FavoriteController extends Controller
     	$favorite   = Favorite::where([['user_id', $user_id],['charger_id', $charger_id]]) -> first();
     	$status		= 400;
 
-    	if($favorite)
+    	if ($favorite)
     	{
-    		$user->favorites()->detach($charger_id);
+    		$user -> favorites() -> detach($charger_id);
     		$status = 200;
     	}
 
@@ -46,11 +46,12 @@ class FavoriteController extends Controller
 
     public function getUserFavorites()
     {
-			$user  	  				 = auth('api') -> user();
-			$favorite_chargers = $user -> favorites;
+		$user = auth('api') -> user();
 
-      Charger::addIsFreeAttributeToChargers($favorite_chargers);
-			
-			return response() -> json(['user_favorite_chargers' => $favorite_chargers]);
+		$favoriteChargers = $user -> favorites;
+
+		Charger::addIsFreeAttributeToChargers($favoriteChargers);
+		
+		return response() -> json(['user_favorite_chargers' => $favoriteChargers]);
     }
 }
