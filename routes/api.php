@@ -36,9 +36,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 
 	/* User Authenticated use functionality */
 	Route::group(['middleware' => ['jwt.verify', 'check.user.existence']], function() {
-
 		Route::group(['namespace' => 'Api\app\V1'], function() {	
-
 			Route::post('/add-user-car'							, 'UserController@postAddUserCar');
 			Route::get('/get-user-cars' 						, 'UserController@getUserCars');
 			Route::post('/delete-user-car'					, 'UserController@postDeleteUserCar');
@@ -46,7 +44,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 			Route::post('/remove-favorite'					, 'FavoriteController@postRemoveFavotite');
 			Route::get('/user-favorites'						, 'FavoriteController@getUserFavorites');
 			Route::get('/user-orders'								, 'UserController@getOrders');
-			Route::get('/user-chargers/{quantity?}'	, 'UserController@getUserChargers');
+			Route::get('/user-chargers/{quantity?}'	, 'User\ChargerController');
 			Route::post('/update-user-info'					, 'UserController@postUpdateUserInfo');
 			Route::post('/update-firebase-token'		, 'User\FirebaseTokenController@update');
 			Route::get('/me'												, 'UserController@getMe');
@@ -66,10 +64,8 @@ Route::group(['prefix' => 'app/V1'], function () {
 		});
 	});
 
-
 	/* Rest functionality */
 	Route::group(['namespace' => 'Api\app\V1'], function() {
-		
 		Route::get('/charger/{charger_id}'				, 'ChargerController@getSingleCharger');
 		Route::get('/chargers'										, 'ChargerController@getChargers');
 		Route::get('/get-models-and-marks'				, 'GetModelsAndMarksController@getModelsAndMarks');

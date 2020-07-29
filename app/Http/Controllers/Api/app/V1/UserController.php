@@ -11,7 +11,6 @@ use App\UserCarModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ChargerCollection;
 use App\Http\Resources\OrdersCollection;
 use Illuminate\Support\Facades\Schema;
 
@@ -183,27 +182,6 @@ class UserController extends Controller
                 -> confirmedPaymentsWithUserCards()
                 -> get()
         );
-    }
-
-    public function getUserChargers(Charger $charger, $quantity = 3)
-    {
-        $chargerModel = new Charger();
-        $user = auth('api') -> user();
-        $favoriteChargers = $user -> favorites -> pluck('id') -> toArray();
-
-        $chargers = $charger -> whereHas('charger_connector_types.orders', function($query) use ($user) {
-            return $query -> where('user_id', $user -> id);
-        })
-        -> withAllAttributes()
-        -> orderBy('id', 'DESC')
-        -> take($quantity)
-        -> get();
-
-        $chargerModel -> addFilterAttributeToChargers($chargers, $favoriteChargers);
-
-        Charger::addIsFreeAttributeToChargers($chargers);
-
-        return new ChargerCollection($chargers);
     }
 
     public function testTwilio()
