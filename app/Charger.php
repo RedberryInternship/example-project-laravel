@@ -141,9 +141,19 @@ class Charger extends Model
     {
         return $query -> where(function($q) use ($text) {
             return $q
-                -> where('location->en', 'like', '%' . $text . '%')
+                -> where('code', 'like', '%' . $text . '%')
+                -> orWhereHas('company', function($cq) use ($text) {
+                    return $cq
+                        -> where('name->en', 'like', '%' . $text . '%')
+                        -> orWhere('name->ka', 'like', '%' . $text . '%')
+                        -> orWhere('name->ru', 'like', '%' . $text . '%');
+                })
+                -> orWhere('location->en', 'like', '%' . $text . '%')
                 -> orWhere('location->ka', 'like', '%' . $text . '%')
-                -> orWhere('location->ru', 'like', '%' . $text . '%');
+                -> orWhere('location->ru', 'like', '%' . $text . '%')
+                -> orWhere('description->en', 'like', '%' . $text . '%')
+                -> orWhere('description->ka', 'like', '%' . $text . '%')
+                -> orWhere('description->ru', 'like', '%' . $text . '%');
         });
     }
 
@@ -173,6 +183,7 @@ class Charger extends Model
     {
         return $query -> with([
             'tags',
+            'company',
             'connector_types',
             'business_services'
         ]);
