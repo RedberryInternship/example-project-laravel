@@ -24,9 +24,9 @@ class Charger extends Model
       'charger_id' => 'int',
     ];
 
-    public function user()
+    public function company()
    	{
-   		return $this -> belongsTo('App\User');
+   		return $this -> belongsTo(Company::class);
    	}
 
     public function tags()
@@ -61,12 +61,12 @@ class Charger extends Model
      */
     public function charger_connector_types()
     {
-        return $this -> hasMany( ChargerConnectorType :: class );
+        return $this -> hasMany(ChargerConnectorType::class);
     }
 
-    public function charger_group()
+    public function groups()
     {
-        return $this -> belongsTo('App\ChargerGroup');
+        return $this -> belongsToMany(Group::class);
     }
 
     public function scopeFilterBy($query, $param, $value)
@@ -151,20 +151,20 @@ class Charger extends Model
     {
         return
             $query
-                -> has('charger_group')
-                -> with(['charger_group' => function($q) {
+                -> has('groups')
+                -> with(['groups' => function($q) {
                     return $q -> withChargers();
                 }]);
     }
 
     public function scopeFilterNotGroupedChargers($query)
     {
-        return $query -> doesntHave('charger_group');
+        return $query -> doesntHave('groups');
     }
 
     public function scopeGroupedChargersWithSiblingChargers($query)
     {
-        return $query -> with(['charger_group' => function($q) {
+        return $query -> with(['groups' => function($q) {
             return $q -> withChargers();
         }]);
     }
@@ -184,11 +184,6 @@ class Charger extends Model
 
         $favoriteChargers = $user -> favorites -> pluck('id') -> toArray();
 
-        self::addFilterAttributeToChargersRecursively($chargers, $favoriteChargers);
-    }
-
-    public static function addFilterAttributeToChargersRecursively(&$chargers, $favoriteChargers, $inner = false)
-    {
         foreach ($chargers as &$charger)
         {
             $isFavorite = false;
@@ -198,11 +193,6 @@ class Charger extends Model
             }
 
             $charger -> is_favorite = $isFavorite;
-
-            if ( ! $inner && isset($charger -> charger_group) && isset($charger -> charger_group -> chargers) && ! empty($charger -> charger_group -> chargers))
-            {
-                self::addFilterAttributeToChargersRecursively($charger -> charger_group -> chargers, $favoriteChargers, true);
-            }
         }
     }
 
@@ -211,11 +201,6 @@ class Charger extends Model
         $chargingPrices     = ChargingPrice::all() -> groupBy('charger_connector_type_id');
         $fastChargingPrices = FastChargingPrice::all() -> groupBy('charger_connector_type_id');
 
-        self::addChargingPricesRecursively($chargers, $chargingPrices, $fastChargingPrices);
-    }
-
-    public static function addChargingPricesRecursively(&$chargers, $chargingPrices, $fastChargingPrices, $inner = false)
-    {
         foreach ($chargers as &$charger)
         {
             foreach ($charger -> connector_types as &$connectorType)
@@ -232,15 +217,10 @@ class Charger extends Model
                     $connectorType -> fast_charging_prices = $fastChargingPrices[$connectorType -> pivot -> id] -> toArray();
                 }
             }
-
-            if ( ! $inner && isset($charger -> charger_group) && isset($charger -> charger_group -> chargers) && ! empty($charger -> charger_group -> chargers))
-            {
-                self::addChargingPricesRecursively($charger -> charger_group -> chargers, $chargingPrices, $fastChargingPrices, true);
-            }
         }
     }
 
-    public static function addIsFreeAttributeToChargers(&$chargers, $inner = false)
+    public static function addIsFreeAttributeToChargers(&$chargers)
     {
         /**
          * get free_charger_ids from our db.
@@ -259,20 +239,6 @@ class Charger extends Model
             }
 
             $charger -> is_free = $isFree;
-            
-            $is_it_parent_charger = ! $inner 
-                && isset($charger -> charger_group) 
-                && isset($charger -> charger_group -> chargers) 
-                && ! empty($charger -> charger_group -> chargers);
-            
-            if ($is_it_parent_charger)
-            {
-                static::addIsFreeAttributeToChargers(
-                    $charger -> charger_group -> chargers, 
-                    $free_charger_ids, 
-                    true,
-                );
-            }
         }
     }
 
@@ -318,7 +284,7 @@ class Charger extends Model
       */
       public static function isChargerFree($id)
       {
-          return in_array( $id, static::getFreeChargersIds());
+          return in_array($id, static::getFreeChargersIds());
       }
     
     public function hasChargingConnector($type, $chargerConnectorTypes)
@@ -346,4 +312,3 @@ class Charger extends Model
         return $this -> hasManyThrough(Order::class, ChargerConnectorType::class);
     }
 }
-

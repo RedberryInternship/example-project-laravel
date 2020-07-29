@@ -50,6 +50,8 @@ class User extends Resource
 
     /**
      * Grouping nova resource.
+     * 
+     * @var string
      */
     public static $group = 'User Resources';
 
@@ -69,7 +71,11 @@ class User extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make()
+                ->sortable(),
+
+            BelongsTo::make('Company')
+                ->nullable(),
 
             BelongsTo::make('Role'),
 

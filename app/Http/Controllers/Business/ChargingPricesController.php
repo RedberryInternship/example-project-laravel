@@ -50,7 +50,7 @@ class ChargingPricesController extends Controller
 
         $chargerConnectorType = ChargerConnectorType::with('charger') -> find($request -> get('charger_connector_type_id'));
 
-        if ($chargerConnectorType -> charger -> user -> id == $user -> id)
+        if ($chargerConnectorType -> charger -> company_id == $user -> company_id)
         {
             ChargingPrice::create($request -> all());
         }
@@ -104,7 +104,7 @@ class ChargingPricesController extends Controller
 
         $chargingPrice -> load(['chargerConnectorType.charger']);
 
-        if ($chargingPrice -> chargerConnectorType -> charger -> user_id == $user -> id)
+        if ($chargingPrice -> chargerConnectorType -> charger -> company_id == $user -> company_id)
         {
             $chargingPrice -> delete();
         }

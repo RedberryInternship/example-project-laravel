@@ -18,8 +18,8 @@ trait BusinessWastedEnergy
      */
     public function businessWastedEnergyQuery($monthDate = null)
     {
-        $query = Kilowatt::whereHas('order.charger_connector_type.charger.user', function($query) {
-            $query -> where('users.id', $this -> id);
+        $query = Kilowatt::whereHas('order.charger_connector_type.charger', function($query) {
+            $query -> where('chargers.company_id', $this -> company_id);
         });
 
         if ($monthDate)

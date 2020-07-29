@@ -15,8 +15,8 @@ class OrdersExport implements FromCollection
     {
         $user = Auth::user();
 
-        $orders = Order::whereHas('charger_connector_type.charger.user', function($query) use ($user) {
-            $query -> where('users.id', $user -> id);
+        $orders = Order::whereHas('charger_connector_type.charger', function($query) use ($user) {
+            $query -> where('chargers.company_id', $user -> company_id);
         }) -> with([
             'user',
             'payments',

@@ -19,7 +19,7 @@
                 <div class="row margin">
                     <div class="input-field col s12">
                         <i class="material-icons prefix pt-2">email</i>
-                        <input id="email" type="text" name="email" autocomplete="off" required>
+                        <input id="email" type="text" name="email" autocomplete="off" value="{{ old('email') }}" required>
                         <label for="email" class="center-align">ელ. ფოსტა</label>
                     </div>
                 </div>

@@ -18,23 +18,6 @@
 
 							<tr>
 								<td>
-									დამტენის ჯგუფი
-								</td>
-								<td class="users-view-username" style="width: 600px;">
-									@if ($charger -> charger_group)
-										{{ $charger -> charger_group -> name }}
-
-					      			    <a href="{{ url('/business/charger-groups/' . $charger -> charger_group -> id . '/edit') }}" class="btn waves-effect waves-light btn-small" style="margin-left: 4rem;">
-                                            რედაქტირება
-                                        </a> 
-									@else
-										<i class="material-icons dp48">remove</i>
-									@endif
-								</td>
-							</tr>
-
-							<tr>
-								<td>
 									განედი (lat)
 								</td>
 								<td class="users-view-username">
