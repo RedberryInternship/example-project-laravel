@@ -193,17 +193,20 @@ class Charger extends Model
     { 
         $user = auth('api') -> user();
 
-        $favoriteChargers = $user -> favorites -> pluck('id') -> toArray();
-
-        foreach ($chargers as &$charger)
+        if ($user)
         {
-            $isFavorite = false;
-            if (in_array($charger -> id, $favoriteChargers))
-            {
-                $isFavorite = true;
-            }
+            $favoriteChargers = $user -> favorites -> pluck('id') -> toArray();
 
-            $charger -> is_favorite = $isFavorite;
+            foreach ($chargers as &$charger)
+            {
+                $isFavorite = false;
+                if (in_array($charger -> id, $favoriteChargers))
+                {
+                    $isFavorite = true;
+                }
+
+                $charger -> is_favorite = $isFavorite;
+            }
         }
     }
 

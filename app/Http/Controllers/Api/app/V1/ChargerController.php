@@ -51,10 +51,7 @@ class ChargerController extends Controller
                 -> withAllAttributes()
                 -> get();
 
-        if ($user)
-        {
-            Charger::addFilterAttributeToChargers($chargers);
-        }
+        Charger::addFilterAttributeToChargers($chargers);
 
         Charger::addChargingPrices($chargers);
 

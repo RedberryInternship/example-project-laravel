@@ -30,7 +30,9 @@ class ChargerController extends Controller
             $chargers[] = $order -> charger_connector_type -> charger;
         }
 
-        $charger -> addFilterAttributeToChargers($chargers, $favoriteChargers);
+        Charger::addFilterAttributeToChargers($chargers);
+
+        Charger::addChargingPrices($chargers);
 
         Charger::addIsFreeAttributeToChargers($chargers);
 
