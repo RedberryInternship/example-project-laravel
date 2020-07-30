@@ -14,8 +14,8 @@ class ShouldUpdateChecker
   {
     return   $localCharger -> charger_id  != $realCharger[ 'charger_id' ]
           || $localCharger -> code        != $realCharger[ 'code'       ] 
-          || $localCharger -> description != $realCharger[ 'description'] 
-          || $localCharger -> active      != $realCharger[ 'active'     ] // TODO: active should be checked differently
+        # || $localCharger -> description != $realCharger[ 'description'] 
+          || $localCharger -> active      != $realCharger[ 'active'     ]
           || $localCharger -> lat         != $realCharger[ 'lat'        ] 
           || $localCharger -> lng         != $realCharger[ 'lng'        ];
   }
