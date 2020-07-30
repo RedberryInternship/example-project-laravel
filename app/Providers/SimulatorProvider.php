@@ -18,13 +18,15 @@ class SimulatorProvider extends ServiceProvider
     {   
         $this -> app -> bind('simulator', function(){
             
-            $mishasBackIp = config('espace.mishas_back_ip');
-            $mishasBackProtocol = config('espace.mishas_back_protocol');    
-            $guzzle = new Client();
+            $mishasBackIp       = config( 'espace.mishas_back_ip'       );
+            $mishasBackProtocol = config( 'espace.mishas_back_protocol' );
+            $mishasBackPort     = config( 'espace.mishas_back_port'     );
+            $guzzle             = new Client();
             
             return new Simulator(
                 $mishasBackProtocol,
                 $mishasBackIp,
+                $mishasBackPort,
                 $guzzle
             );
         });
