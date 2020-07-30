@@ -37,7 +37,7 @@ class Simulator extends Base
      */
     public function upAndRunning($charger_id)
     {
-        $service_url = $this -> url . ':12801/api/simulator/cp/add/'. $charger_id;
+        $service_url = $this -> url . '/api/simulator/cp/add/'. $charger_id;
        
         try
         {
@@ -63,7 +63,7 @@ class Simulator extends Base
      */
     public function plugOffCable($charger_id)
     {
-        $service_url = $this -> url . ':12801/api/simulator/cp/disconnect/'. $charger_id;
+        $service_url = $this -> url . '/api/simulator/cp/disconnect/'. $charger_id;
         
         try{
             $response = $this->sendRequest($service_url);
@@ -91,7 +91,7 @@ class Simulator extends Base
      */
     public function shutdown($charger_id)
     {
-        $service_url = $this -> url . ':12801/api/simulator/cp/remove/'. $charger_id;
+        $service_url = $this -> url . '/api/simulator/cp/remove/'. $charger_id;
         
         try
         {
