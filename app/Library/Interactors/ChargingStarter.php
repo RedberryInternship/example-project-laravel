@@ -2,7 +2,7 @@
 
 namespace App\Library\Interactors;
 
-use App\Library\RequestModels\ChargingStarter as ChargingStarterRequest;
+use App\Library\DataStructures\ChargingStarter as ChargingStarterRequest;
 
 use App\Library\Entities\ChargingStart\ChargingProcessStarter;
 use App\Library\Entities\ChargingStart\KilowattRecordCreator;

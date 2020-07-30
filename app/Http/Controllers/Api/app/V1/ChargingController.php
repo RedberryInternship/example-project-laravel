@@ -10,7 +10,7 @@ use App\Http\Requests\StartCharging;
 use App\Http\Requests\StopCharging;
 
 use App\Library\Interactors\ChargingStarter;
-use App\Library\RequestModels\ChargingStarter as ChargingStarterRequest;
+use App\Library\DataStructures\ChargingStarter as ChargingStarterRequest;
 
 use App\Http\Resources\Order as OrderResource;
 

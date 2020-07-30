@@ -2,7 +2,7 @@
 
 namespace App\Library\Entities\Nova\ChargerTerminals;
 
-use App\Library\RequestModels\ChargerTerminals as ChargerTerminalsRequest;
+use App\Library\DataStructures\ChargerTerminals as ChargerTerminalsRequest;
 
 use App\ChargerConnectorType;
 

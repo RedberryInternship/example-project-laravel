@@ -6,7 +6,7 @@ use App\Library\Entities\Nova\ChargerTerminals\ChargersGetter;
 use App\Library\Entities\Nova\ChargerTerminals\TerminalsGetter;
 use App\Library\Entities\Nova\ChargerTerminals\Saver;
 
-use App\Library\RequestModels\ChargerTerminals as ChargerTerminalRequest;
+use App\Library\DataStructures\ChargerTerminals as ChargerTerminalRequest;
 
 class ChargerTerminals
 {
