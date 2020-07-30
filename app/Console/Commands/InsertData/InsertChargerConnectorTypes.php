@@ -73,6 +73,7 @@ class InsertChargerConnectorTypes extends Command
                 $charger_connector_types = ChargerConnectorType::where('charger_id', $charger_id) -> update([
                     'connector_type_id'       => $connector_type_id,
                     'm_connector_type_id'     => 1,
+                    'terminal_id'             => null,
                 ]); 
             }   
         }
