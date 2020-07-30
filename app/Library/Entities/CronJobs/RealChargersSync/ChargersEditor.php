@@ -3,7 +3,7 @@
 namespace App\Library\Entities\CronJobs\RealChargersSync;
 
 use App\Library\Entities\CronJobs\RealChargersSync\ShouldUpdateChecker;
-use App\Library\DataStructures\RealChargersSync\Data;
+use App\Library\DataStructures\RealChargersSync as Data;
 
 use App\ConnectorType;
 use App\Charger;

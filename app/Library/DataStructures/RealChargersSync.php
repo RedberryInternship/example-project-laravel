@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Library\DataStructures\RealChargersSync;
+namespace App\Library\DataStructures;
 
 use App\ConnectorType;
 use App\Charger;
 
-class Data
+class RealChargersSync
 {
   /**
    * Build object with prerequisites.
