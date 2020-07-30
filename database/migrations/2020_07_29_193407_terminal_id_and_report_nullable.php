@@ -15,7 +15,7 @@ class TerminalIdAndReportNullable extends Migration
     {
         Schema :: table( 'charger_connector_types', function( Blueprint $table ) {
             $table -> bigInteger( 'terminal_id' ) -> nullable() -> change();
-            $table -> bigInteger( 'report'      ) -> nullable() -> change();
+            $table -> string    ( 'report'      ) -> nullable() -> change();
         });
     }
 
@@ -28,7 +28,7 @@ class TerminalIdAndReportNullable extends Migration
     {
         Schema :: table( 'charger_connector_types', function( Blueprint $table ) {
             $table -> bigInteger( 'terminal_id' ) -> change();
-            $table -> bigInteger( 'report'      ) -> change();
+            $table -> string    ( 'report'      ) -> change();
         });
     }
 }
