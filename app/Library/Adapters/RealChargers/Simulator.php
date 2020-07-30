@@ -13,7 +13,7 @@ class Simulator extends Base
      */
     public function activateSimulatorMode($charger_id)
     {
-        $service_url = $this -> url . ':12801/api/simulator/cp/type/'. $charger_id . '/SIMULATOR_KEBA';
+        $service_url = $this -> url . '/api/simulator/cp/type/'. $charger_id . '/SIMULATOR_KEBA';
         try
         {
             $response    = $this->sendRequest($service_url);
