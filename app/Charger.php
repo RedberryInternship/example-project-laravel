@@ -148,6 +148,9 @@ class Charger extends Model
                         -> orWhere('name->ka', 'like', '%' . $text . '%')
                         -> orWhere('name->ru', 'like', '%' . $text . '%');
                 })
+                -> orWhere('name->en', 'like', '%' . $text . '%')
+                -> orWhere('name->ka', 'like', '%' . $text . '%')
+                -> orWhere('name->ru', 'like', '%' . $text . '%')
                 -> orWhere('location->en', 'like', '%' . $text . '%')
                 -> orWhere('location->ka', 'like', '%' . $text . '%')
                 -> orWhere('location->ru', 'like', '%' . $text . '%')
