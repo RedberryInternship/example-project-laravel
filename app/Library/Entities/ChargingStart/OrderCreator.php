@@ -2,7 +2,7 @@
 
 namespace App\Library\Entities\ChargingStart;
 
-use App\Library\RequestModels\ChargingStarter as ChargingStarterRequest;
+use App\Library\DataStructures\ChargingStarter as ChargingStarterRequest;
 
 use App\Order;
 

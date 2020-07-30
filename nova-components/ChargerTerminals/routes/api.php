@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Library\Interactors\Nova\ChargerTerminals;
-use App\Library\RequestModels\ChargerTerminals as ChargerTerminalsRequest;
+use App\Library\DataStructures\ChargerTerminals as ChargerTerminalsRequest;
 
 /*
 |--------------------------------------------------------------------------
