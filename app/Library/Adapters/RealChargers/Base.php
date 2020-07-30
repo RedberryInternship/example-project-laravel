@@ -56,6 +56,8 @@ class Base
      */
     protected function sendRequest( $serviceUrl )
     {
+        $response = $this -> guzzleClient -> request( 'GET', $serviceUrl );
+
         try
         {
             $response = $this -> guzzleClient -> request( 'GET', $serviceUrl );

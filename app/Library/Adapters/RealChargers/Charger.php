@@ -33,8 +33,7 @@ class Charger extends Base
     public function all()
     {
         $service_url = $this -> url . '/es-services/mobile/ws/chargers';
-        
-        $result = $this -> fetchData( $service_url );
+        $result      = $this -> fetchData( $service_url );
         
         switch( $result -> status )
         {

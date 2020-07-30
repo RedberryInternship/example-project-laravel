@@ -2,7 +2,7 @@
 
 namespace App\Library\Entities\ChargingStart;
 
-use App\Library\ResponseModels\StartTransaction as StartTransactionResponse;
+use App\Library\DataStructures\StartTransaction as StartTransactionResponse;
 
 class ChargingProcessStarter
 {

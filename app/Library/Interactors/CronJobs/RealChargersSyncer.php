@@ -20,7 +20,7 @@ class RealChargersSyncer
     $realChargers   = ChargersGetter :: getAll();
     $parsedChargers = ChargersParser :: parseAll( $realChargers );
     $data           = Data :: build() -> setRealChargers( $parsedChargers );
-
+  
     ChargersEditor :: update( $data );
   }
 

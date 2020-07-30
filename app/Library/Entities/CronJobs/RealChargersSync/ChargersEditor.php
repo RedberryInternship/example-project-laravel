@@ -150,7 +150,7 @@ class ChargersEditor
   private function insertNewChargerWithConnectors( $parsedRealCharger )
   {
     $connectors = $parsedRealCharger[ 'connectors' ];
-    unset( $charger[ 'connectors' ] );
+    unset( $parsedRealCharger[ 'connectors' ] );
     $newCharger = Charger :: create( $parsedRealCharger );
     $this -> addConnectors( $newCharger, $connectors );
   }
