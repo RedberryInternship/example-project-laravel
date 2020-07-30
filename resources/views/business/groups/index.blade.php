@@ -12,7 +12,7 @@
                     </div>
 
                     <div class="row mb-2">
-                        <form action="{{ url('/business/charger-groups') }}" method="POST" class="flex align-center">
+                        <form action="{{ url('/business/groups') }}" method="POST" class="flex align-center">
                             @csrf
 
                             <div class="input-field col s8">
@@ -28,7 +28,7 @@
                         </form>
                     </div>
 
-                    @if ($chargerGroups -> count())
+                    @if ($groups -> count())
                         <div class="row">
                             <div class="col s12">
                                 <div id="view-borderless-table" class="active">
@@ -44,18 +44,18 @@
                                         </thead>
 
                                         <tbody>
-                                            @foreach($chargerGroups as $chargerGroup)
+                                            @foreach($groups as $group)
                                                 <tr>
-                                                    <td>{{ $chargerGroup -> id }}</td>
-                                                    <td>{{ $chargerGroup -> name }}</td>
-                                                    <td class="center">{{ $chargerGroup -> chargers -> count() }}</td>
+                                                    <td>{{ $group -> id }}</td>
+                                                    <td>{{ $group -> name }}</td>
+                                                    <td class="center">{{ $group -> chargers -> count() }}</td>
                                                     <td class="center">
-                                                        <a href="/business/charger-groups/{{ $chargerGroup -> id }}/edit" class="btn waves-effect waves-light btn-small">
+                                                        <a href="/business/groups/{{ $group -> id }}/edit" class="btn waves-effect waves-light btn-small">
                                                             <i class="material-icons">edit</i>
                                                         </a>
                                                     </td>
                                                     <td class="center">
-                                                        <form action="{{ url('/business/charger-groups/' . $chargerGroup -> id) }}" method="POST">
+                                                        <form action="{{ url('/business/groups/' . $group -> id) }}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="_method" value="delete">
 

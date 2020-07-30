@@ -4,15 +4,11 @@ namespace App\Http\Controllers\Api\app\V1;
 
 use Twilio;
 use App\User;
-use App\Order;
-use App\Charger;
 use App\CarModel;
 use App\UserCarModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ChargerCollection;
-use App\Http\Resources\OrdersCollection;
 use Illuminate\Support\Facades\Schema;
 
 class UserController extends Controller
@@ -170,40 +166,6 @@ class UserController extends Controller
         $user -> load('user_cards', 'user_cars', 'car_models');
 
         return response() -> json($user);
-    }
-
-    public function getOrders(Order $order)
-    {
-        $user = auth('api') -> user();
-
-        return new OrdersCollection(
-            $order
-                -> where('user_id', $user -> id)
-                -> with('charger_connector_type.charger')
-                -> confirmedPaymentsWithUserCards()
-                -> get()
-        );
-    }
-
-    public function getUserChargers(Charger $charger, $quantity = 3)
-    {
-        $chargerModel = new Charger();
-        $user = auth('api') -> user();
-        $favoriteChargers = $user -> favorites -> pluck('id') -> toArray();
-
-        $chargers = $charger -> whereHas('charger_connector_types.orders', function($query) use ($user) {
-            return $query -> where('user_id', $user -> id);
-        })
-        -> withAllAttributes()
-        -> orderBy('id', 'DESC')
-        -> take($quantity)
-        -> get();
-
-        $chargerModel -> addFilterAttributeToChargers($chargers, $favoriteChargers);
-
-        Charger::addIsFreeAttributeToChargers($chargers);
-
-        return new ChargerCollection($chargers);
     }
 
     public function testTwilio()

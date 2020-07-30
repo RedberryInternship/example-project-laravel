@@ -18,8 +18,8 @@ class ContactMessageController extends Controller
     {
         $request -> store();
 
-        $request -> sendMail();
+        $sent = $request -> sendMail();
 
-        return response() -> json([], 200);
+        return response() -> json([], $sent ? 200 : 400);
     }
 }

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ChargerGroup extends Model
+class Group extends Model
 {
     protected $fillable = [
         'name',
@@ -13,12 +13,12 @@ class ChargerGroup extends Model
 
     public function user()
     {
-        return $this -> belongsTo('App\User');
+        return $this -> belongsTo(User::class);
     }
 
     public function chargers()
     {
-    	return $this -> hasMany('App\Charger');
+    	return $this -> belongsToMany(Charger::class);
     }
 
     public function scopeWithChargers($query)

@@ -79,19 +79,25 @@ class ContactMessageRequest extends FormRequest implements ValidatesWhenResolved
         $user     = auth('api') -> user();
 
         $to       = $this -> mailAddresses;
-        $from     = $user ? $user -> email : 'unknown@example.com';
+        $from     = $user && $user -> email && filter_var($user -> email, FILTER_VALIDATE_EMAIL) ? $user -> email : 'unknown@example.com';
         $fromName = $user ? $user -> first_name . ' ' . $user -> last_name : 'unknown sender';
 
         $content  =
             "Contact Mail from: " . $fromName . "." . "<br>" .
             "Text: " . $this -> get('message');
 
-        Mail::send([], [], function ($message) use ($to, $from, $content) {
-            $message
-                -> to($to)
-                -> from($from, 'E-space App')
-                -> subject('Contact Form')
-                -> setBody($content, 'text/html; charset=utf-8');
-        });
+        try {
+            Mail::send([], [], function ($message) use ($to, $from, $content) {
+                $message
+                    -> to($to)
+                    -> from($from, 'E-space App')
+                    -> subject('Contact Form')
+                    -> setBody($content, 'text/html; charset=utf-8');
+            });
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 }

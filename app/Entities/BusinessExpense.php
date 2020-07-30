@@ -19,8 +19,8 @@ trait BusinessExpense
     public function businessExpenseQuery($monthDate = null)
     {
         $query = Order::where('charging_status', 'FINISHED')
-            -> whereHas('charger_connector_type.charger.user', function($query) {
-                $query -> where('users.id', $this -> id);
+            -> whereHas('charger_connector_type.charger', function($query) {
+                $query -> where('chargers.company_id', $this -> company_id);
             });
 
         if ($monthDate)
