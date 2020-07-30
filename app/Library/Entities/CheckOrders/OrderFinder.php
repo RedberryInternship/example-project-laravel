@@ -2,7 +2,7 @@
 
 namespace App\Library\Entities\CheckOrders;
 
-use App\Library\ResponseModels\RealChargerAttributes;
+use App\Library\DataStructures\RealChargerAttributes;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Order;
 

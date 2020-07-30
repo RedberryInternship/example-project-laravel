@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Library\ResponseModels;
+namespace App\Library\DataStructures;
 
 class StartTransaction
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Library\DataStructures\RealChargersSync;
+namespace App\Library\DataStructures;
 
 use App\ConnectorType;
 use App\Charger;
 
-class Data
+class RealChargersSync
 {
   /**
    * Build object with prerequisites.
@@ -14,7 +14,7 @@ class Data
    */
   public static function build(): self
   {
-    $localChargers        = Charger :: with( 'connector_types' ) -> all();
+    $localChargers        = Charger :: with( 'connector_types' ) -> get();
     $localConnectorTypes  = ConnectorType :: all();
     
     return (new self) 
@@ -139,6 +139,6 @@ class Data
    */
   function getLocalConnectorTypes()
   {
-    $this -> localConnectorTypes;
+    return $this -> localConnectorTypes;
   }
 }

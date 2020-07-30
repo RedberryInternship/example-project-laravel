@@ -6,7 +6,7 @@ use App\Library\Entities\CronJobs\RealChargersSync\ChargersGetter;
 use App\Library\Entities\CronJobs\RealChargersSync\ChargersParser;
 use App\Library\Entities\CronJobs\RealChargersSync\ChargersEditor;
 
-use App\Library\DataStructures\RealChargersSync\Data;
+use App\Library\DataStructures\RealChargersSync as Data;
 
 class RealChargersSyncer
 {
@@ -20,7 +20,7 @@ class RealChargersSyncer
     $realChargers   = ChargersGetter :: getAll();
     $parsedChargers = ChargersParser :: parseAll( $realChargers );
     $data           = Data :: build() -> setRealChargers( $parsedChargers );
-
+  
     ChargersEditor :: update( $data );
   }
 

@@ -3,7 +3,7 @@
 namespace App\Library\Entities\CronJobs\RealChargersSync;
 
 use App\Library\Entities\CronJobs\RealChargersSync\ShouldUpdateChecker;
-use App\Library\DataStructures\RealChargersSync\Data;
+use App\Library\DataStructures\RealChargersSync as Data;
 
 use App\ConnectorType;
 use App\Charger;
@@ -150,7 +150,7 @@ class ChargersEditor
   private function insertNewChargerWithConnectors( $parsedRealCharger )
   {
     $connectors = $parsedRealCharger[ 'connectors' ];
-    unset( $charger[ 'connectors' ] );
+    unset( $parsedRealCharger[ 'connectors' ] );
     $newCharger = Charger :: create( $parsedRealCharger );
     $this -> addConnectors( $newCharger, $connectors );
   }

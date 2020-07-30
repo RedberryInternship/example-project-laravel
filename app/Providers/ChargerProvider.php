@@ -18,14 +18,16 @@ class ChargerProvider extends ServiceProvider
     {
         $this -> app -> bind('charger', function() {
            
-            $mishasBackIp = config('espace.mishas_back_ip');
-            $mishasBackProtocol = config('espace.mishas_back_protocol');     
-            $guzzle = new Client();
+            $mishasBackIp       = config( 'espace.mishas_back_ip'       );
+            $mishasBackProtocol = config( 'espace.mishas_back_protocol' );
+            $mishasBackPort     = config( 'espace.mishas_back_port'     );
+            $guzzle             = new Client();
                 
             return new Charger(
                     $mishasBackProtocol, 
                     $mishasBackIp, 
-                    $guzzle
+                    $mishasBackPort,
+                    $guzzle,
                 );
         });
         

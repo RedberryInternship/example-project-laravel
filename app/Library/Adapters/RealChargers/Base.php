@@ -42,10 +42,10 @@ class Base
      * 
      * @return void
      */
-    public function __construct( $protocol, $ip, $guzzleClient )
+    public function __construct( $protocol, $ip, $port, $guzzleClient )
     {
         $this -> guzzleClient  = $guzzleClient;
-        $this -> url           = $protocol . '://' . $ip;
+        $this -> url           = $protocol . '://' . $ip . ':' . $port;
     }
 
     /**
@@ -56,6 +56,8 @@ class Base
      */
     protected function sendRequest( $serviceUrl )
     {
+        $response = $this -> guzzleClient -> request( 'GET', $serviceUrl );
+
         try
         {
             $response = $this -> guzzleClient -> request( 'GET', $serviceUrl );

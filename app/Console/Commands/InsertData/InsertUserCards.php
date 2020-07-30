@@ -67,7 +67,7 @@ class InsertUserCards extends Command
                 $user_card  = UserCard::create([
                     'old_id'         => $old_id,
                     'masked_pan'     => $masked_pan,
-                    'order_index'    => $order_index,
+                    // 'order_index'    => $order_index,
                     'transaction_id' => $transaction_id,
                     'card_holder'    => $card_holder,
                     'user_id'        => $user_id,

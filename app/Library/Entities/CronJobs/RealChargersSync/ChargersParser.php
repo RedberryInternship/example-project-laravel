@@ -57,7 +57,7 @@ class ChargersParser
     return [
       'charger_id'  => (int) $realCharger -> id,
       'code'        => $realCharger -> code,
-      'description' => $realCharger -> description,
+    # 'description' => $realCharger -> description,
       'active'      => $isChargerActive,
       'lat'         => $realCharger -> latitude,
       'lng'         => $realCharger -> longitude,

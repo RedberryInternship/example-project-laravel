@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Library\RequestModels;
+namespace App\Library\DataStructures;
 
 class ChargerTerminals
 {
