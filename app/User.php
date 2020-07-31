@@ -198,4 +198,15 @@ class User extends Authenticatable implements JWTSubject
             -> limit(5)
             -> get();
     }
+
+    /**
+     * Find User By Field Name.
+     * 
+     * @param $field
+     * @param $value
+     */
+    public static function findBy($field, $value)
+    {
+        return self::where($field, $value) -> first();
+    }
 }
