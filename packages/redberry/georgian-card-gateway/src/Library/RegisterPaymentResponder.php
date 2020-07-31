@@ -54,10 +54,7 @@ class RegisterPaymentResponder
     $data -> setResultCode( $resultCode );
     $data -> setResultDesc( $resultDesc );
 
-    if( $this -> isTransactionSuccessful() )
-    {
-      $data = $this -> handler -> registerPayment( $data );
-    }
+    $data = $this -> handler -> registerPayment( $data );
 
     return $data -> response();
   }

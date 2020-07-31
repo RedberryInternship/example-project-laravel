@@ -5,10 +5,12 @@ namespace App\Library\Interactors;
 use Redberry\GeorgianCardGateway\Contracts\GeorgianCardHandler;
 
 use App\Library\Entities\GeorgianCard\TerminalAndReportSetter;
+use App\Library\Entities\GeorgianCard\PaymentStatusChecker;
 use App\Library\Entities\GeorgianCard\PrimaryTRXSetter;
 use App\Library\Entities\GeorgianCard\SaveCardRefunder;
 use App\Library\Entities\GeorgianCard\UserCardSaver;
 use App\Library\Entities\GeorgianCard\Payer;
+
 
 use Redberry\GeorgianCardGateway\Responses\RegisterPayment;
 use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
@@ -38,9 +40,17 @@ class GeorgianCard implements GeorgianCardHandler
    */
   public function registerPayment(RegisterPayment $data): RegisterPayment
   {
-    UserCardSaver :: shouldSaveUserCard() 
+    if( PaymentStatusChecker :: succeeded() )
+    {
+      UserCardSaver :: shouldSaveUserCard() 
       ? UserCardSaver :: save()
       : Payer :: createPaymentRecord();
+    }
+    else
+    {
+      # edit order record accordingly
+      # send stop request to real charger
+    }
 
     return $data;
   }

@@ -15,6 +15,11 @@ class TestController extends Controller
     
   public function __invoke()
   { 
+
+    $ts = now() -> second();
+
+    return $ts;
+
     dd( 
       'Nothingness',
      );

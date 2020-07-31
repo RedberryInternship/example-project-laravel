@@ -2,6 +2,8 @@
 
 namespace App\Library\Entities\GeorgianCard;
 
+use App\Library\Entities\GeorgianCard\PaymentStatusChecker;
+
 use App\User;
 
 class UserCardSaver
