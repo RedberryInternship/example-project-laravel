@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use App\Library\Entities\Order as OrderEntity;
 
 use App\Library\Entities\ChargingProcess\Calculator;
-use App\Library\Entities\ChargingProcess\Timestamp;
 use App\Library\Entities\ChargingProcess\State;
 use App\Library\Entities\ChargingProcess\Hook;
 

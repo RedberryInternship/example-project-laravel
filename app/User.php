@@ -130,9 +130,11 @@ class User extends Authenticatable implements JWTSubject
             -> hasMany('App\Order') 
             -> where(
                 [
-                    [ 'charging_status', '!=' , OrderStatus :: FINISHED     ],
-                    [ 'charging_status', '!=' , OrderStatus :: UNPLUGGED    ],
-                    [ 'charging_status', '!=' , OrderStatus :: CANCELED     ],
+                    [ 'charging_status', '!=' , OrderStatus :: FINISHED       ],
+                    [ 'charging_status', '!=' , OrderStatus :: UNPLUGGED      ],
+                    [ 'charging_status', '!=' , OrderStatus :: CANCELED       ],
+                    [ 'charging_status', '!=' , OrderStatus :: BANKRUPT       ],
+                    [ 'charging_status', '!=' , OrderStatus :: PAYMENT_FAILED ],
                 ]
             );
     }
