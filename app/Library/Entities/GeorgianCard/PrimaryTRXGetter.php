@@ -8,9 +8,9 @@ use App\UserCard;
 
 class PrimaryTRXGetter
 {
-  public static function get( Request $request )
+  public static function get()
   {
-    $userCardId = $request -> get( 'o_user_card_id' );
+    $userCardId = request() -> get( 'o_user_card_id' );
     $userCard   = UserCard :: find( $userCardId );
 
     if( $userCard )

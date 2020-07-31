@@ -14,7 +14,6 @@ use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
 
 class GeorgianCard implements GeorgianCardHandler
 {
-
   public function paymentAvail(PaymentAvail $data): PaymentAvail
   {
     if( UserCardSaver :: shouldSaveUserCard() )
@@ -26,11 +25,11 @@ class GeorgianCard implements GeorgianCardHandler
       Payer :: pay();
     }
 
-    $primaryTRX = PrimaryTRXGetter :: get( request() );
+    $primaryTRX    = PrimaryTRXGetter :: get();
     $data -> setPrimaryTrxPcid( $primaryTRX );
 
-    $accountId     = $this -> request -> get( 'o_account_id' );
-    $chargerReport = $this -> request -> get( 'o_charger_report' ) ?? 'No report';
+    $accountId     = request() -> get( 'o_account_id' );
+    $chargerReport = request() -> get( 'o_charger_report' ) ?? 'No report';
     $data -> setPurchaseLongDesc( $chargerReport );
     $accountId && $data -> setAccountId( $accountId );
 
