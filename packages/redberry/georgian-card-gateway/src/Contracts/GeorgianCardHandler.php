@@ -2,29 +2,30 @@
 
 namespace Redberry\GeorgianCardGateway\Contracts;
 
-use Illuminate\Http\Request;
+use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
+use Redberry\GeorgianCardGateway\Responses\RegisterPayment;
 
 interface GeorgianCardHandler
 {
   /**
-   * Get primary transaction id
-   * for recurrent transactions.
+   * First phase of the payment.
+   * Check if you want to make transaction.
    * 
-   * @param   Request $userCardId
+   * @param   PaymentAvail $data
    * @return  string|null
    */
-  function getPrimaryTransactionId( Request $request );
+  function paymentAvail( PaymentAvail $data ): PaymentAvail;
 
   /**
-   * Make necessary operation.
+   * Register payment operation.
+   * Make necessary operations,
    * for example add user card, 
    * payments record, etc.
    * 
-   * @param   Request  $primaryTrixId
-   * 
+   * @param   RegisterPayment  $data
    * @return  void
    */
-  function update( Request $request );
+  function registerPayment( RegisterPayment $data ): RegisterPayment;
 
   /**
    * Success method will be executed if

@@ -48,24 +48,15 @@ class PaymentAvailResponder
   {
     $trxId         = $this -> request -> get( 'trx_id'       );
     $orderAmount   = $this -> request -> get( 'o_amount'     );
-    $accountId     = $this -> request -> get( 'o_account_id' );
-    $chargerReport = $this -> request -> get( 'o_charger_report' ) ?? 'No report';
 
-    $paymentAvail = new PaymentAvail;
-    $paymentAvail -> setResultCode( 1 );
-    $paymentAvail -> setResultDesc( 'Successful' );
-    $paymentAvail -> setMerchantTRX( $trxId );
-    $paymentAvail -> setPurchaseShortDesc( 'order' );
-    $paymentAvail -> setPurchaseLongDesc( $chargerReport );
-    $paymentAvail -> setPurchaseAmount( $orderAmount );
-    $accountId && $paymentAvail -> setAccountId( $accountId );
+    $data = new PaymentAvail;
+    $data -> setResultCode( 1 );
+    $data -> setResultDesc( 'Successful' );
+    $data -> setMerchantTRX( $trxId );
+    $data -> setPurchaseShortDesc( 'order' );
+    $data -> setPurchaseAmount( $orderAmount );
     
-    $primaryTrxPcid = $this -> handler -> getPrimaryTransactionId( $this -> request );
-
-    if( !! $primaryTrxPcid )
-    {
-        $paymentAvail -> setPrimaryTrxPcid( $primaryTrxPcid );
-    }
+    $paymentAvail = $this -> handler -> paymentAvail( $data );
 
     return $paymentAvail -> response();
   }

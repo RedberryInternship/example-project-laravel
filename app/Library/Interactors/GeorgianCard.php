@@ -9,31 +9,13 @@ use App\Library\Entities\GeorgianCard\SaveCardRefunder;
 use App\Library\Entities\GeorgianCard\UserCardSaver;
 use App\Library\Entities\GeorgianCard\Payer;
 
-use Illuminate\Http\Request;
+use Redberry\GeorgianCardGateway\Responses\RegisterPayment;
+use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
 
 class GeorgianCard implements GeorgianCardHandler
 {
-  /**
-   * Get primary transaction id
-   * for recurrent transactions.
-   * 
-   * @param   Request $request
-   * @return  string|null
-   */
-  public function getPrimaryTransactionId( Request $request )
-  {
-    return PrimaryTRXGetter :: get( $request );
-  }
 
-  /**
-   * Determine if it should save card or pay
-   * and proceed accordingly.
-   * 
-   * @param   Request  $request
-   * 
-   * @return  void
-   */
-  public function update( Request $request )
+  public function paymentAvail(PaymentAvail $data): PaymentAvail
   {
     if( UserCardSaver :: shouldSaveUserCard() )
     {
@@ -43,6 +25,21 @@ class GeorgianCard implements GeorgianCardHandler
     {
       Payer :: pay();
     }
+
+    $primaryTRX = PrimaryTRXGetter :: get( request() );
+    $data -> setPrimaryTrxPcid( $primaryTRX );
+
+    $accountId     = $this -> request -> get( 'o_account_id' );
+    $chargerReport = $this -> request -> get( 'o_charger_report' ) ?? 'No report';
+    $data -> setPurchaseLongDesc( $chargerReport );
+    $accountId && $data -> setAccountId( $accountId );
+
+    return $data;
+  }
+  
+  public function registerPayment(RegisterPayment $data): RegisterPayment
+  {
+    return $data;
   }
 
   /**

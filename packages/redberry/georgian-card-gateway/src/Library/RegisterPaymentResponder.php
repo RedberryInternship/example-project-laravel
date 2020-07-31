@@ -48,18 +48,18 @@ class RegisterPaymentResponder
   public function respond()
   {
     $resultCode         = $this -> request -> get( 'result_code'  );
-    $registerPayment    = new RegisterPayment;
     $resultDesc         = $this -> getResultDescription(); 
+    $data               = new RegisterPayment;
     
-    $registerPayment -> setResultCode( $resultCode );
-    $registerPayment -> setResultDesc( $resultDesc );
+    $data -> setResultCode( $resultCode );
+    $data -> setResultDesc( $resultDesc );
 
     if( $this -> isTransactionSuccessful() )
     {
-      $this -> handler -> update( $this -> request );
+      $data = $this -> handler -> registerPayment( $data );
     }
 
-    return $registerPayment -> response();
+    return $data -> response();
   }
 
   /**
