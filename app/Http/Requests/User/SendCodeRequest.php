@@ -39,6 +39,7 @@ class SendCodeRequest extends FormRequest implements ValidatesWhenResolved
 
             if (
                 ($this -> get('type') == 'auth' && ! $user) ||
+                ($this -> get('type') == 'password_reset' && ! $user) ||
                 ($this -> get('type') == 'register' && $user)
             )
             {
