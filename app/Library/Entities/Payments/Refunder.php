@@ -23,7 +23,7 @@ class Refunder
       -> whereType( PaymentTypeEnum :: CUT )
       -> latest()
       -> first();
-
+      
     $trxId  = $lastPayment -> trx_id;
     $RRN    = $lastPayment -> prrn;
     

@@ -16,36 +16,32 @@ use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
 class GeorgianCard implements GeorgianCardHandler
 {
   /**
-   * Check if payment is available, set primaryTrxId if needed
-   * and do all the necessary operations.
+   * Check if payment is available, 
+   * set primaryTrxId if needed.
    * 
    * @param  PaymentAvail
    * @return PaymentAvaL
    */
   public function paymentAvail(PaymentAvail $data): PaymentAvail
   {
-    if( UserCardSaver :: shouldSaveUserCard() )
-    {
-      UserCardSaver :: save();
-    }
-    else
-    {
-      TerminalAndReportSetter :: set( $data );
-      PrimaryTRXSetter        :: set( $data );
-      Payer                   :: pay();
-    }
-
+    TerminalAndReportSetter :: set( $data );
+    PrimaryTRXSetter        :: set( $data );
+    
     return $data;
   }
   
   /**
-   * Confirm the payment.
+   * Confirm the payment and do necessary operations.
    * 
    * @param  RegisterPayment $data
    * @return RegisterPayment
    */
   public function registerPayment(RegisterPayment $data): RegisterPayment
   {
+    UserCardSaver :: shouldSaveUserCard() 
+      ? UserCardSaver :: save()
+      : Payer :: createPaymentRecord();
+
     return $data;
   }
 
@@ -58,7 +54,6 @@ class GeorgianCard implements GeorgianCardHandler
   public function success()
   {
     SaveCardRefunder :: RefundIfCardSaved();
-
     dump( 'Success' );
   }
 

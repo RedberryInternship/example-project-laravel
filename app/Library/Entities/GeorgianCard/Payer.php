@@ -11,7 +11,7 @@ class Payer
    * 
    * @return void
    */
-  public static function pay()
+  public static function createPaymentRecord()
   {
     $userCardId = request() -> get( 'o_user_card_id'     );
     $orderId    = request() -> get( 'o_id'               );
