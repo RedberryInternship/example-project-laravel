@@ -4,7 +4,8 @@ namespace App\Library\Interactors;
 
 use Redberry\GeorgianCardGateway\Contracts\GeorgianCardHandler;
 
-use App\Library\Entities\GeorgianCard\PrimaryTRXGetter;
+use App\Library\Entities\GeorgianCard\TerminalAndReportSetter;
+use App\Library\Entities\GeorgianCard\PrimaryTRXSetter;
 use App\Library\Entities\GeorgianCard\SaveCardRefunder;
 use App\Library\Entities\GeorgianCard\UserCardSaver;
 use App\Library\Entities\GeorgianCard\Payer;
@@ -14,6 +15,13 @@ use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
 
 class GeorgianCard implements GeorgianCardHandler
 {
+  /**
+   * Check if payment is available, set primaryTrxId if needed
+   * and do all the necessary operations.
+   * 
+   * @param  PaymentAvail
+   * @return PaymentAvaL
+   */
   public function paymentAvail(PaymentAvail $data): PaymentAvail
   {
     if( UserCardSaver :: shouldSaveUserCard() )
@@ -22,20 +30,20 @@ class GeorgianCard implements GeorgianCardHandler
     }
     else
     {
-      Payer :: pay();
+      TerminalAndReportSetter :: set( $data );
+      PrimaryTRXSetter        :: set( $data );
+      Payer                   :: pay();
     }
-
-    $primaryTRX    = PrimaryTRXGetter :: get();
-    $data -> setPrimaryTrxPcid( $primaryTRX );
-
-    $accountId     = request() -> get( 'o_account_id' );
-    $chargerReport = request() -> get( 'o_charger_report' ) ?? 'No report';
-    $data -> setPurchaseLongDesc( $chargerReport );
-    $accountId && $data -> setAccountId( $accountId );
 
     return $data;
   }
   
+  /**
+   * Confirm the payment.
+   * 
+   * @param  RegisterPayment $data
+   * @return RegisterPayment
+   */
   public function registerPayment(RegisterPayment $data): RegisterPayment
   {
     return $data;

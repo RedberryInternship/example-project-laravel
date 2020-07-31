@@ -2,20 +2,20 @@
 
 namespace App\Library\Entities\GeorgianCard;
 
-use Illuminate\Http\Request;
-
 use App\UserCard;
 
-class PrimaryTRXGetter
+use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
+
+class PrimaryTRXSetter
 {
-  public static function get()
+  public static function set( PaymentAvail &$data )
   {
     $userCardId = request() -> get( 'o_user_card_id' );
     $userCard   = UserCard :: find( $userCardId );
 
     if( $userCard )
     {
-      return $userCard -> transaction_id;
+      $data -> setPrimaryTrxPcid( $userCard -> transaction_id );
     }
   }
 }
