@@ -29,7 +29,7 @@ class PaymentStatusChecker
       {
         case -2:
           return OrderStatusEnum :: BANKRUPT;
-          
+
         default:
           return OrderStatusEnum :: PAYMENT_FAILED;
       }
