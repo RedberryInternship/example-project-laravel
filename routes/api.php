@@ -14,10 +14,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-	return $request->user();
-});
-
 Route::group(['prefix' => 'app/V1'], function () {
 	/* User Auth/Register */
 	Route::group(['namespace' => 'Api\app\V1'], function () {
