@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use App\User;
 use App\TempSmsCode;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
@@ -27,9 +28,26 @@ class SendCodeRequest extends FormRequest implements ValidatesWhenResolved
      */
     public function rules()
     {
-        return [
-            'phone_number' => 'required'
-        ];
+        $rules['phone_number'] = 'required';
+
+        if ($this -> has('type'))
+        {
+            $user = User::findBy(
+                'phone_number',
+                $this -> get('phone_number')
+            );
+
+            if (
+                ($this -> get('type') == 'auth' && ! $user) ||
+                ($this -> get('type') == 'password_reset' && ! $user) ||
+                ($this -> get('type') == 'register' && $user)
+            )
+            {
+                $rules['user'] = 'required';
+            }
+        }
+
+        return $rules;
     }
 
     /**
