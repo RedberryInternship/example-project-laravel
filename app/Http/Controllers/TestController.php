@@ -9,20 +9,15 @@ use App\Facades\Simulator;
 use App\Facades\Charger;
 use App\Traits\Message;
 
+
+
 class TestController extends Controller 
 {
   use Message;
     
   public function __invoke()
-  { 
-
-    $ts = now() -> second();
-
-    return $ts;
-
-    dd( 
-      'Nothingness',
-     );
+  {
+    dd( "Nothingness!" );
   }
 
   public function firebase()

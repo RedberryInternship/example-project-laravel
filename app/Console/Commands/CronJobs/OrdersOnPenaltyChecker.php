@@ -19,7 +19,7 @@ class OrdersOnPenaltyChecker extends Command
      *
      * @var string
      */
-    protected $description = 'checks charged orders and if honor time is up they go into penalty mode.';
+    protected $description = 'checks charged orders and if honorary period is up they go into penalty mode.';
 
     /**
      * Create a new command instance.

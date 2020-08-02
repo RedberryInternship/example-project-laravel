@@ -9,7 +9,7 @@ class Tag extends Model
 {
 	use HasTranslations;
 
-	public $translatable = ['name'];
+	public $translatable = [ 'name' ];
 
     protected $fillable = [
         'name',
