@@ -144,6 +144,25 @@ class User extends Authenticatable implements JWTSubject
         return $this -> hasMany('App\UserCarModel');
     }
 
+    public function getFormatedUserCars()
+    {
+        $userCars = [];
+        foreach ($this -> car_models as $userCarModel)
+        {
+            $userCars[] = [
+                'user_id'  => $this -> id,
+                'user_car' => [
+                    'model_id'   => $userCarModel -> id,
+                    'model_name' => $userCarModel -> name,
+                    'mark_id'    => $userCarModel -> mark -> id,
+                    'mark_name'  => $userCarModel -> mark -> name,
+                ]
+            ];
+        }
+
+        return $userCars;
+    }
+
     public function favorites()
     {
         return $this -> belongsToMany(Charger::class, 'favorites', 'user_id', 'charger_id') -> withTimeStamps();
