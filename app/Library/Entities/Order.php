@@ -120,7 +120,8 @@ trait Order
             {
                 if( $this -> shouldPay() )
                 {
-                    $this -> pay( PaymentTypeEnum :: CUT, 20 );
+                    $moneyToCut = Config :: nextChargePrice();
+                    $this -> pay( PaymentTypeEnum :: CUT, $moneyToCut );
                 }
             }
         }
@@ -150,7 +151,8 @@ trait Order
                 }
                 else
                 {
-                    $this -> pay( PaymentTypeEnum :: CUT, 20 );
+                    $moneyToCut = Config :: initialChargePrice();
+                    $this -> pay( PaymentTypeEnum :: CUT, $moneyToCut );
                 }
             }       
         break;
@@ -175,7 +177,8 @@ trait Order
             {
                 if( $this -> shouldPay() )
                 {
-                    $this -> pay( PaymentTypeEnum :: CUT, 20 );
+                    $moneyToCut = Config :: nextChargePrice();
+                    $this -> pay( PaymentTypeEnum :: CUT, $moneyToCut );
                 }
     
                 if( $this -> carHasAlreadyCharged() )

@@ -5,6 +5,7 @@ namespace App\Library\Entities\ChargingStart;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Enums\PaymentType as PaymentTypeEnum;
 
+use App\Config;
 use App\Order;
 
 class FastChargerPayer
@@ -38,7 +39,8 @@ class FastChargerPayer
     }
     else
     {
-        $order -> pay( PaymentTypeEnum :: CUT, 20 );
+        $moneyToCut = Config :: initialChargePrice();
+        $order -> pay( PaymentTypeEnum :: CUT, $moneyToCut );
     }
   }
 }
