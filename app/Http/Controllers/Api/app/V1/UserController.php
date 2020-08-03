@@ -35,27 +35,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function postDeleteUserCar(Request $request)
-    {
-        $json_status = 'Not Deleted';
-        $status      = 404;
-        $user = auth('api') -> user();
-        if($user)
-        {
-            $user_car    = UserCarModel::where([
-                ['user_id', $user -> id],
-                ['model_id', $request -> get('car_model_id')],
-            ]) -> first();
-            if($user_car)
-            {
-                $user_car -> delete();
-                $json_status = 'Deleted';
-                $status      = 200;
-            } 
-        }
-        return response() -> json(['json_status' => $json_status,], $status); 
-    }
-
     public function postUpdateUserInfo(Request $request)
     {
         $user       = auth('api') -> user();
