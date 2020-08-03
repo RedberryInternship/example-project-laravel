@@ -64,44 +64,6 @@ class UserController extends Controller
         ], $status);
     }
 
-    public function getUserCars(Request $request)
-    {   
-        
-        $json_status = 'Success';
-        $status      = 200;
-        
-        $user_cars = [];
-        $user = auth('api') -> user();
-        if($user)
-        {
-            if($user -> car_models)
-            {
-                foreach($user -> car_models as $user_car_model)
-                {   
-                    $mark_id     = $user_car_model -> mark -> id;
-                    $mark_name   = $user_car_model -> mark -> name;
-                    $model_id    = $user_car_model -> id;
-                    $model_name  = $user_car_model -> name;
-
-                    $user_cars[] = array(
-                        'user_id' => $user -> id,
-                        'user_car' => array(
-                            'mark_id'    => $mark_id,
-                            'mark_name'  => $mark_name,
-                            'model_id'   => $model_id,
-                            'model_name' => $model_name
-                        ),
-                    );
-                    
-                }
-            }
-        }else{
-            $json_status = 'Car Model Not Found';
-            $status      = 401;
-        }
-        return response() -> json(['user_cars' => $user_cars, 'json_status' => $json_status], $status);
-    }
-
     public function postDeleteUserCar(Request $request)
     {
         $json_status = 'Not Deleted';
