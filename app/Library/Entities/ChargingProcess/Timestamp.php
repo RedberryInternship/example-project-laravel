@@ -40,6 +40,16 @@ class Timestamp
   }
 
   /**
+   * Get initiated timestamp.
+   * 
+   * @return Carbon
+   */
+  public function getInitiatedTimestamp()
+  {
+      return $this -> getChargingStatusTimestamp( OrderStatusEnum :: INITIATED );
+  }
+
+  /**
    * Get stop charging timestamp.
    * 
    * @return Carbon|null

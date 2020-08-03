@@ -9,7 +9,7 @@ use App\Facades\Simulator;
 use App\Facades\Charger;
 use App\Traits\Message;
 
-
+use App\Library\Entities\CronJobs\PreChargedOrders\OrdersGetter;
 
 class TestController extends Controller 
 {
@@ -17,6 +17,7 @@ class TestController extends Controller
     
   public function __invoke()
   {
+    $orders = OrdersGetter :: get();
     dd( "Nothingness!" );
   }
 

@@ -5,6 +5,7 @@ namespace App\Library\Entities\DataImports\BoxwoodDataImport;
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
+use Carbon\Carbon;
 use App\Charger;
 use App\Order;
 use App\User;
@@ -36,7 +37,8 @@ class ImportOrders
     $usersDataBridge                  = self :: usersDataBridge();
     
     $mappedOrders = array_map( function( $order ) use( $usersDataBridge, $chargerConnectorTypesDataBridge ) {
-      $chargingStatusChangeDates        = json_encode([  OrderStatusEnum :: INITIATED => $order -> confirm_date ]);
+      $initiatedDate                    = !! $order -> confirm_date ? Carbon :: createFromFormat( 'd/m/Y H:i:s',  $order -> confirm_date ) -> timestamp : null;
+      $chargingStatusChangeDates        = json_encode([  OrderStatusEnum :: INITIATED => $initiatedDate ]);
       
       return [
         'old_id'                        =>  $order -> id,

@@ -41,8 +41,9 @@ class Hook
 
       $chargingStatus                 = $order -> charging_status;
       $orderChargingStatusChargeDates = $order -> charging_status_change_dates; 
-
-      if( ! $orderChargingStatusChargeDates [ $chargingStatus ] )
+    
+      $isSet = @ $orderChargingStatusChargeDates [ $chargingStatus ];
+      if( ! $isSet )
       {
           $orderChargingStatusChargeDates [ $chargingStatus ] = $now;
           $order -> charging_status_change_dates = $orderChargingStatusChargeDates;
