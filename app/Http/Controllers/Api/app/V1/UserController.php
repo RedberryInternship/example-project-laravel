@@ -35,35 +35,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function postAddUserCar(Request $request)
-    {
-        $json_status = 'Not added!';
-        $status      = 404;
-        $user = auth('api') -> user();
-        if($user)
-        {
-            $user_id = $user -> id;
-            $car_model = CarModel::where('id', $request -> get('car_model_id')) -> first();
-            if($car_model){
-                $user_car_model = UserCarModel::create([
-                    'user_id'  => $user_id,
-                    'model_id' => $request -> get('car_model_id')
-                ]);
-                $json_status = 'User Car Added';
-                $status      = 200;
-            }else{
-                $json_status = 'Car Model Not Found';
-                $status      = 401;
-            }
-        }else{
-            $json_status = "User Not Found";
-            $status      = 401;
-        }
-        return response() -> json([
-            'json_status' => $json_status,
-        ], $status);
-    }
-
     public function postDeleteUserCar(Request $request)
     {
         $json_status = 'Not Deleted';

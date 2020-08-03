@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\app\V1\User;
 
+use App\CarModel;
+use App\UserCarModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -39,7 +41,14 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = auth('api') -> user();
+
+        UserCarModel::create([
+            'user_id'  => $user -> id,
+            'model_id' => $request -> get('car_model_id')
+        ]);
+
+        return response() -> json([], 200);
     }
 
     /**

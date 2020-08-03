@@ -32,7 +32,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 	Route::group(['middleware' => ['jwt.verify', 'check.user.existence']], function () {
 		Route::group(['namespace' => 'Api\app\V1'], function () {
 			Route::get('/get-user-cars', 'User\CarController@index');
-			Route::post('/add-user-car', 'UserController@postAddUserCar');
+			Route::post('/add-user-car', 'User\CarController@store');
 			Route::post('/delete-user-car', 'UserController@postDeleteUserCar');
 			Route::post('/add-favorite', 'FavoriteController@postAddFavorite');
 			Route::post('/remove-favorite', 'FavoriteController@postRemoveFavotite');
