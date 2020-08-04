@@ -18,19 +18,19 @@ class OrdersGetter
   /**
    * Get pre charged orders.
    * 
-   * @return Collection
+   * @return array|null
    */
   public static function get()
   {
-    $orders = Order :: with( 'charger_connector_type.charger' ) -> where( 'charging_status', OrderStatusEnum :: INITIATED ) -> get() 
+    return Order :: with( 'charger_connector_type.charger' ) -> where( 'charging_status', OrderStatusEnum :: INITIATED ) -> get()
     -> filter( function ( $order ) {
       $timestamp          = Timestamp :: build( $order );
       $initiatedTimestamp = $timestamp -> getInitiatedTimestamp();
       $diffMinutes        = $initiatedTimestamp -> diffInMinutes( now() );
 
       return $diffMinutes > self :: $allowedMinutes;
-    });
-
-    return $orders;
+    })
+    -> pluck( 'id' )
+    -> toArray();
   }
 }

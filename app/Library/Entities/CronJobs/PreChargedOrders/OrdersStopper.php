@@ -15,8 +15,10 @@ class OrdersStopper
    * @param  Order $order
    * @return void
    */
-  public static function stop( $orders ): void
+  public static function stop( $orderIds ): void
   {
+    $orders = Order :: whereIn( 'id', $orderIds ) -> get();
+
     if( $orders )
     {
       foreach( $orders as $order )

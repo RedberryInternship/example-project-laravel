@@ -15,7 +15,7 @@ class PreChargedOrdersChecker
    */
   public static function check(): void
   {
-    $orders = OrdersGetter :: get();
-    OrdersStopper :: stop( $orders );
+    $orderIds = OrdersGetter :: get();
+    OrdersStopper :: stop( $orderIds );
   }
 }
