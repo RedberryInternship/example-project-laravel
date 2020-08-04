@@ -22,7 +22,7 @@ class OrdersGetter
    */
   public static function get()
   {
-    return Order :: with( 'charger_connector_type.charger' ) -> where( 'charging_status', OrderStatusEnum :: INITIATED ) -> get()
+    return Order :: where( 'charging_status', OrderStatusEnum :: INITIATED ) -> get()
     -> filter( function ( $order ) {
       $timestamp          = Timestamp :: build( $order );
       $initiatedTimestamp = $timestamp -> getInitiatedTimestamp();

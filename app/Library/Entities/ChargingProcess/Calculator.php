@@ -26,11 +26,6 @@ trait Calculator
    */
   public function countPaidMoney()
   {
-      if( ! isset( $this -> payments ))
-      {
-          $this -> load( 'payments' );
-      }
-
       if( count( $this -> payments ) == 0 )
       {
           return 0.0;
@@ -53,9 +48,6 @@ trait Calculator
    */
   public function countConsumedMoney()
   {
-      $this -> load( 'charger_connector_type' );
-      $this -> load( 'payments' );
-
       if( $this -> hasAlreadyUsedUpMoney() )
       {
           return null;
@@ -84,7 +76,8 @@ trait Calculator
    */
   private function countConsumedMoneyByTime()
   {
-      $elapsedMinutes      = $this -> calculateChargingElapsedTimeInMinutes();
+      $timestamp           = Timestamp :: build( $this );
+      $elapsedMinutes      = $timestamp -> calculateChargingElapsedTimeInMinutes();
 
       $chargingPriceRanges =  $this 
           -> charger_connector_type

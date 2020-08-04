@@ -47,7 +47,7 @@ class ChargingStarter
     $this -> chargerConnectorType = ChargerConnectorType :: with( 'charger' ) 
           -> find( $this -> requestModel -> getChargerConnectorTypeId());
   }
-
+  
   /**
    * Start charging process.
    * 

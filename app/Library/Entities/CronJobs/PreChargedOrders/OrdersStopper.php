@@ -17,7 +17,7 @@ class OrdersStopper
    */
   public static function stop( $orderIds ): void
   {
-    $orders = Order :: whereIn( 'id', $orderIds ) -> get();
+    $orders = Order :: with( 'charger_connector_type.charger' ) -> whereIn( 'id', $orderIds ) -> get();
 
     if( $orders )
     {
