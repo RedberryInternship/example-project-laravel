@@ -82,6 +82,12 @@ return [
             'level' => 'debug',
         ],
 
+        'orders-check' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/firebase/finish.log'),
+            'level' => 'debug',
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

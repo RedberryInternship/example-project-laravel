@@ -97,7 +97,9 @@ class OrderEditor
    */
   private function shouldStop()
   {
-    return ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
+    $shouldStop = ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
+    Log :: channel( 'orders-check' ) -> info( $shouldStop ); 
+    return $shouldStop;
   }
 
   /**
@@ -107,9 +109,9 @@ class OrderEditor
    */
   private function stop()
   {
-    $this -> order -> update([ 'checked' => true ]);
+    $this -> order && $this -> order -> update([ 'checked' => true ]);
 
-    Charger :: stop( 
+    Charger :: stop(
       $this -> chargerAttributes -> getChargerId(),
       $this -> chargerTransactionId,
     );
