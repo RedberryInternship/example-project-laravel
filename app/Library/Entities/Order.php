@@ -11,6 +11,7 @@ use App\Facades\Charger as RealCharger;
 use App\Library\Interactors\Firebase;
 use App\Library\Interactors\Payment;
 
+
 use App\Config;
 
 trait Order
@@ -78,6 +79,7 @@ trait Order
             ? $this -> updateFastChargerOrder()
             : $this -> updateLvl2ChargerOrder();
         
+        Firebase :: sendFinishNotificationWithData( $this -> charger_transaction_id );
         $this -> sendFirebaseNotification();
     }
 
@@ -220,6 +222,7 @@ trait Order
             ? $this -> makeLastPaymentsForFastCharging()
             : $this -> makeLastPaymentsForLvl2Charging();
 
+        
         $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
     }
 

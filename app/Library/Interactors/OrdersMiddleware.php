@@ -25,7 +25,7 @@ class OrdersMiddleware
         ]
       ]
     );
-
+    
     $result     = ChargingProcessDataGetter :: get  ( $chargerTransactionId );
     Log :: channel( 'orders-check' ) -> info(
       [

@@ -64,7 +64,6 @@ class TransactionController extends Controller
     if( $order )
     {
       $order -> finish();
-      Firebase :: sendFinishNotificationWithData( $transaction_id );
     }
     else
     {
