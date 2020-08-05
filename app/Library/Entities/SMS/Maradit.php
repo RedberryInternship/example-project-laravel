@@ -6,14 +6,16 @@ class Maradit
 {
     /* Constants */
     const URL       = 'gw.maradit.net';
-    const USE_HTTPS = false;
     const DEBUG     = false;
 
     /* Username of the account */
-    private $username = 'espace';
+    private $https;
+
+    /* Username of the account */
+    private $username;
 
     /* The current password of the account */
-    private $password = '654555';
+    private $password;
 
     /*
 	 * The source/sender address that the message will appear to come from. Valid international format number between 1 and 16
@@ -41,6 +43,16 @@ class Maradit
 	 * UCS2   : Unicode encoding, http://en.wikipedia.org/wiki/UCS-2
 	 * */
     private $data_coding = 'Default';
+
+    /**
+     * Maradit Class Constructor.
+     */
+    public function __construct()
+    {
+        $this -> https    = config('maradit.https');
+        $this -> username = config('maradit.username');
+        $this -> password = config('maradit.password');
+    }
 
     /**
      * Send SMS.
@@ -559,7 +571,7 @@ class Maradit
         $payload .= "Connection: close\r\n\r\n";
         $payload .= "$content\r\n";
 
-        if (self::USE_HTTPS) {
+        if ($this -> https) {
             $port = 443;
             $host = 'ssl://' . self::URL;
         } else {
