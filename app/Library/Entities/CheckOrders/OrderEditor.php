@@ -100,7 +100,7 @@ class OrderEditor
     Log :: info(
       [
         'UPDATE -> CheckOrdersMiddleware -> ShouldStop method' => [
-          'order' => @ $this -> order -> toArray(),
+          'order' => $this -> order ? $this -> order -> toArray(): null,
           'isInArray' => in_array( $this -> order -> charging_status, $this -> ordersToStop()),
         ]
       ]

@@ -61,7 +61,7 @@ class OrderFinder
       Log :: info(
         [ 
           'UPDATE -> CheckOrdersMiddleware -> FindInOurDB' => [
-              'orders' => @ $orders -> toArray()
+              'orders' => $orders ? $orders -> toArray() : null,
           ]
         ]
       );
