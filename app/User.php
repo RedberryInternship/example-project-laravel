@@ -3,6 +3,7 @@
 namespace App;
 
 use Twilio;
+use App\Facades\SMS;
 use App\Enums\OrderStatus;
 use App\Entities\BusinessIncome;
 use App\Entities\BusinessExpense;
@@ -96,7 +97,10 @@ class User extends Authenticatable implements JWTSubject
 
         $phoneNumber = $phoneNumber[0] == '+' ? $phoneNumber : '+' . $phoneNumber;
 
-        Twilio :: message($phoneNumber, $message);
+        return SMS::sendSms([
+            'message'     => $message,
+            'phoneNumber' => $phoneNumber
+        ]);
     }
 
     public function company()
