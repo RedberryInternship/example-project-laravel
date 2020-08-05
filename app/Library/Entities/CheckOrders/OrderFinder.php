@@ -48,8 +48,9 @@ class OrderFinder
     $realChargerConnectorTypeId = $this -> chargerInfo -> getChargerConnectorTypeId();
 
     $orders = Order :: with( 'charger_connector_type.charger' )
-      -> whereIn( 'charging_status', $this -> orderStatuses())
-      -> whereHas( 'charger_connector_type', function( $query ) use( $realChargerConnectorTypeId, $chargerId ) {
+      -> whereIn  ( 'charging_status', $this -> orderStatuses())
+      -> where    ( 'checked', '!=', true )
+      -> whereHas ( 'charger_connector_type', function( $query ) use( $realChargerConnectorTypeId, $chargerId ) {
         $query -> where( 'm_connector_type_id', $realChargerConnectorTypeId );
         $query -> whereHas( 'charger', function( $query ) use ( $chargerId ) {
           $query -> where( 'charger_id', $chargerId );

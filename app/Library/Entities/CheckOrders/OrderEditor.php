@@ -115,6 +115,8 @@ class OrderEditor
    */
   private function stop()
   {
+    $this -> order -> update([ 'checked' => true ]);
+
     Charger :: stop( 
       $this -> chargerAttributes -> getChargerId(),
       $this -> chargerTransactionId,
