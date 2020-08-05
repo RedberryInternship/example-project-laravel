@@ -58,13 +58,7 @@ class OrderFinder
       })
       -> first();
 
-      Log :: info(
-        [ 
-          'UPDATE -> CheckOrdersMiddleware -> FindInOurDB' => [
-              'orders' => $orders ? $orders -> toArray() : null,
-          ]
-        ]
-      );
+      return $orders;
   }
 
   /**

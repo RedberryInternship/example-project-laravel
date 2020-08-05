@@ -3,6 +3,7 @@
 namespace App\Library\Entities\Firebase;
 
 use App\Http\Resources\Order as OrderResource;
+use Illuminate\Support\Facades\Log;
 use App\Library\Adapters\FCM;
 use App\User;
 
@@ -25,6 +26,13 @@ class ActiveOrdersSender
     if( $userFirebaseToken )
     {  
       $ordersData = OrderResource :: collection( $user -> active_orders ) -> resolve();
+
+      Log :: channel( 'firebase-update' ) -> info(
+        [
+          'data' => $ordersData,
+        ]
+      );
+      
       FCM :: send( $userFirebaseToken, [ 'data' => $ordersData ]);
     }
   }

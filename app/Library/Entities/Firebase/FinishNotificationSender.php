@@ -35,7 +35,11 @@ class FinishNotificationSender
     $ordersToSend = Order :: whereIn( 'id', $orderIds ) -> get();
     $data         = OrderResource :: collection( $ordersToSend ) -> resolve();
     
-    Log :: info([ 'data' => $data ]);
+    Log :: channel( 'firebase-finish' ) -> info(
+      [ 
+        'data' => $data,
+      ]
+    );
 
     FCM :: send( $user -> firebase_token, [ 'data' => $data ]);
   }

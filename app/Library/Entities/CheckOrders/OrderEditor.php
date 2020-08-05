@@ -97,14 +97,6 @@ class OrderEditor
    */
   private function shouldStop()
   {
-    Log :: info(
-      [
-        'UPDATE -> CheckOrdersMiddleware -> ShouldStop method' => [
-          'order' => $this -> order ? $this -> order -> toArray(): null,
-          'isInArray' => in_array( $this -> order -> charging_status, $this -> ordersToStop()),
-        ]
-      ]
-    );
     return ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
   }
 

@@ -70,6 +70,18 @@ return [
             'level' => 'debug',
         ],
 
+        'firebase-update' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/firebase/update.log'),
+            'level' => 'debug',
+        ],
+        
+        'firebase-finish' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/firebase/finish.log'),
+            'level' => 'debug',
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
