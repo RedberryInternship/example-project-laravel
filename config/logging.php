@@ -84,7 +84,7 @@ return [
 
         'orders-check' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/firebase/finish.log'),
+            'path' => storage_path('logs/orders-check/orders-check.log'),
             'level' => 'debug',
         ],
 
