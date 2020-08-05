@@ -21,6 +21,15 @@ class TransactionController extends Controller
    */
    public function update( $transaction_id, $value )
   {
+    Log :: info(
+      [ 
+        'UPDATE' => [ 
+          'transaction_id' => $transaction_id,
+          'value'          => $value,
+         ] 
+      ]
+    );
+
     OrdersMiddleware :: check( $transaction_id );
 
     $order = Order :: with( 'kilowatt' ) 

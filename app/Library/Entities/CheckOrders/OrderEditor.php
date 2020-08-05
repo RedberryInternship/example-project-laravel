@@ -4,6 +4,7 @@ namespace App\Library\Entities\CheckOrders;
 
 use App\Library\DataStructures\RealChargerAttributes;
 use App\Enums\OrderStatus as OrderStatusEnum;
+use Illuminate\Support\Facades\Log;
 use App\Facades\Charger;
 use App\Order;
 
@@ -96,6 +97,14 @@ class OrderEditor
    */
   private function shouldStop()
   {
+    Log :: info(
+      [
+        'UPDATE -> CheckOrdersMiddleware -> ShouldStop method' => [
+          'order' => $this -> order,
+          'isInArray' => in_array( $this -> order -> charging_status, $this -> ordersToStop()),
+        ]
+      ]
+    );
     return ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
   }
 

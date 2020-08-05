@@ -4,6 +4,7 @@ namespace App\Library\Entities\CheckOrders;
 
 use App\Library\DataStructures\RealChargerAttributes;
 use App\Enums\OrderStatus as OrderStatusEnum;
+use Illuminate\Support\Facades\Log;
 use App\Order;
 
 class OrderFinder
@@ -46,7 +47,7 @@ class OrderFinder
     $chargerId                  = $this -> chargerInfo -> getChargerId();
     $realChargerConnectorTypeId = $this -> chargerInfo -> getChargerConnectorTypeId();
 
-    return Order :: with( 'charger_connector_type.charger' )
+    $orders = Order :: with( 'charger_connector_type.charger' )
       -> whereIn( 'charging_status', $this -> orderStatuses())
       -> whereHas( 'charger_connector_type', function( $query ) use( $realChargerConnectorTypeId, $chargerId ) {
         $query -> where( 'm_connector_type_id', $realChargerConnectorTypeId );
@@ -55,6 +56,14 @@ class OrderFinder
         });
       })
       -> first();
+
+      Log :: info(
+        [ 
+          'UPDATE -> CheckOrdersMiddleware -> FindInOurDB' => [
+              'orders' => $orders
+          ]
+        ]
+      );
   }
 
   /**

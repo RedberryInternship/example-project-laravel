@@ -3,8 +3,8 @@
 namespace App\Library\Entities\CheckOrders;
 
 use App\Library\DataStructures\RealChargerAttributes;
-
 use App\Facades\Charger as RealCharger;
+use Illuminate\Support\Facades\Log;
 
 use App\Charger;
 
@@ -21,6 +21,15 @@ class ChargingProcessDataGetter
     $chargerCode     = $transactionInfo -> chargePointCode;
     $chargerId       = Charger :: whereCode( $chargerCode ) -> first() -> charger_id;
 
+    Log :: info(
+      [ 
+        'UPDATE -> CheckOrdersMiddleware -> getDataFromRealChargers' => [
+            'chargerId'   => $chargerId,
+            'connectorID' => $transactionInfo -> connectorId
+        ]
+      ]
+    );
+  
     return RealChargerAttributes :: instance()
       -> setChargerId              ( $chargerId                      )
       -> setChargerConnectorTypeId ( $transactionInfo -> connectorId );
