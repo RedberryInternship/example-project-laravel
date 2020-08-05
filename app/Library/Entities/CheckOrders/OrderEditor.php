@@ -98,7 +98,11 @@ class OrderEditor
   private function shouldStop()
   {
     $shouldStop = ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
-    Log :: channel( 'orders-check' ) -> info( $shouldStop ); 
+    Log :: channel( 'orders-check' ) -> info( 
+      [
+        'STEP 3 | '. $this -> chargerTransactionId,
+      ]
+    ); 
     return $shouldStop;
   }
 

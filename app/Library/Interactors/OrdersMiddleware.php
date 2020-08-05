@@ -20,7 +20,7 @@ class OrdersMiddleware
   {
     Log :: channel( 'orders-check' ) -> info(
       [
-        'STEP 0' => [
+        'STEP 0 | ' . $chargerTransactionId => [
           'transaction_id' => $chargerTransactionId,
         ]
       ]
@@ -29,7 +29,7 @@ class OrdersMiddleware
     $result     = ChargingProcessDataGetter :: get  ( $chargerTransactionId );
     Log :: channel( 'orders-check' ) -> info(
       [
-        'STEP 1 => results' => [
+        'STEP 1 => results | ' . $chargerTransactionId => [
           'chargerID'   => $result -> getChargerId(),
           'connectorID' => $result -> getChargerConnectorTypeId(),
         ]
@@ -39,7 +39,7 @@ class OrdersMiddleware
     $foundOrder = OrderFinder               :: instance( $result ) -> find();
     Log :: channel( 'orders-check' ) -> info(
       [
-        'STEP 2 => foundOrder' => [
+        'STEP 2 => foundOrder | '. $chargerTransactionId => [
           'foundOrder' => $foundOrder ? $foundOrder -> toArray() : null,
         ]
       ]
