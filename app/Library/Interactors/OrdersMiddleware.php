@@ -45,7 +45,7 @@ class OrdersMiddleware
       ]
     );
 
-    $foundOrder && OrderEditor :: instance()
+    OrderEditor :: instance()
       -> setChargerTransactionId( $chargerTransactionId )
       -> setChargerAttributes   ( $result               )
       -> setOrder               ( $foundOrder           )
