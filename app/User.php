@@ -95,11 +95,9 @@ class User extends Authenticatable implements JWTSubject
             return false;
         }
 
-        $phoneNumber = $phoneNumber[0] == '+' ? $phoneNumber : '+' . $phoneNumber;
-
         return SMS::sendSms([
             'message'     => $message,
-            'phoneNumber' => $phoneNumber
+            'phoneNumber' => self::modifyPhoneNumberFormat($phoneNumber)
         ]);
     }
 
@@ -233,5 +231,19 @@ class User extends Authenticatable implements JWTSubject
     public static function findBy($field, $value)
     {
         return self::where($field, $value) -> first();
+    }
+
+    public static function modifyPhoneNumberFormat($phoneNumber)
+    {
+        if (strlen($phoneNumber) == 9)
+        {
+            $phoneNumber = '+995' . $phoneNumber;
+        }
+        else if (strlen($phoneNumber) == '12' && $phoneNumber[0] != '+')
+        {
+            $phoneNumber = '+' . $phoneNumber;
+        }
+
+        return $phoneNumber;
     }
 }
