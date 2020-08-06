@@ -5,8 +5,8 @@ namespace App\Nova;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Image;
+use Laravel\Nova\Fields\Textarea;
 use Spatie\NovaTranslatable\Translatable;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -54,7 +54,7 @@ class BusinessService extends Resource
             ])->locales(['en', 'ru', 'ka']),
 
             Translatable::make([
-                Trix::make('description')
+                Textarea::make('description')
                     ->sortable()
                     ->rules('max:255')
             ])->locales(['en', 'ru', 'ka']),

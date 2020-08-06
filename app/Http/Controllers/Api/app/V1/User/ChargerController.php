@@ -12,9 +12,7 @@ class ChargerController extends Controller
 {
     public function __invoke(Order $order, Charger $charger, $quantity = 3)
     {
-        $user             = auth('api') -> user();
-
-        $favoriteChargers = $user -> favorites -> pluck('id') -> toArray();
+        $user   = auth('api') -> user();
 
         $orders = $order -> where('user_id', $user -> id)
                          -> with(['charger_connector_type.charger' => function($query) {
@@ -24,10 +22,16 @@ class ChargerController extends Controller
                          -> take($quantity)
                          -> get();
 
-        $chargers = [];
+        $chargers   = [];
+        $chargerIDs = [];
         foreach ($orders as $order)
         {
-            $chargers[] = $order -> charger_connector_type -> charger;
+            if ( ! in_array($order -> charger_connector_type -> charger -> id, $chargerIDs))
+            {
+                $chargers[]   = $order -> charger_connector_type -> charger;
+
+                $chargerIDs[] = $order -> charger_connector_type -> charger -> id;
+            }
         }
 
         Charger::addFilterAttributeToChargers($chargers);
