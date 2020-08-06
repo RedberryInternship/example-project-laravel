@@ -78,8 +78,7 @@ trait Order
         $chargerType == ChargerTypeEnum :: FAST
             ? $this -> updateFastChargerOrder()
             : $this -> updateLvl2ChargerOrder();
-        
-        Firebase :: sendFinishNotificationWithData( $this -> charger_transaction_id );
+
         $this -> sendFirebaseNotification();
     }
 
@@ -221,9 +220,9 @@ trait Order
         $chargerType == ChargerTypeEnum :: FAST
             ? $this -> makeLastPaymentsForFastCharging()
             : $this -> makeLastPaymentsForLvl2Charging();
-
         
         $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
+        Firebase :: sendFinishNotificationWithData( $this -> charger_transaction_id );
     }
 
     /**

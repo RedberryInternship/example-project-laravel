@@ -100,7 +100,7 @@ class OrderEditor
     $shouldStop = ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
     Log :: channel( 'orders-check' ) -> info( 
       [
-        'STEP 3 | '. $this -> chargerTransactionId,
+        'STEP 3 | '. $this -> chargerTransactionId => $shouldStop,
       ]
     ); 
     return $shouldStop;
