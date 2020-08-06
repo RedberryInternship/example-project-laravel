@@ -10,8 +10,7 @@ use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Facades\Charger as RealCharger;
 use App\Library\Interactors\Firebase;
 use App\Library\Interactors\Payment;
-
-
+ 
 use App\Config;
 
 trait Order

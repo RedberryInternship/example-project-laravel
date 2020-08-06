@@ -9,6 +9,7 @@ use App\Library\Entities\ChargingStart\KilowattRecordCreator;
 use App\Library\Entities\ChargingStart\FastChargerPayer;
 use App\Library\Entities\ChargingStart\OrderCreator;
 use App\Library\Entities\ChargingStart\OrderEditor;
+use App\Library\DataStructures\StartTransaction;
 
 use App\ChargerConnectorType;
 use App\Order;
@@ -68,11 +69,14 @@ class ChargingStarter
       $this -> chargerConnectorType -> isChargerFast(),
     );
     
-    FastChargerPayer :: pay( 
-      $order                                                    , 
-      $this -> requestModel         -> isChargingTypeByAmount() ,
-      $this -> chargerConnectorType -> isChargerFast()          ,
-    );
+    if( $result -> getTransactionStatus() == StartTransaction :: SUCCESS )
+    {
+      FastChargerPayer :: pay( 
+        $order                                                    , 
+        $this -> requestModel         -> isChargingTypeByAmount() ,
+        $this -> chargerConnectorType -> isChargerFast()          ,
+      );
+    }
 
     KilowattRecordCreator :: create( $order );
 
