@@ -17,7 +17,6 @@ class OrderEditor
    */
   public static function instance(): self
   {
-    Log :: channel( 'orders-check' ) -> info('instance');
     return new self;
   }
 
@@ -44,7 +43,6 @@ class OrderEditor
    */
   public function setChargerTransactionId( $chargerTransactionId ): self
   {
-    Log :: channel( 'orders-check' ) -> info('setChargerTransactionId');
     $this -> chargerTransactionId = $chargerTransactionId;
     return $this;
   }
@@ -57,7 +55,6 @@ class OrderEditor
    */
   public function setChargerAttributes( RealChargerAttributes $chargerAttributes ): self
   {
-    Log :: channel( 'orders-check' ) -> info('setChargerAttributes');
     $this -> chargerAttributes = $chargerAttributes;
     return $this;
   }
@@ -70,7 +67,6 @@ class OrderEditor
    */
   public function setOrder( $order ): self
   {
-    Log :: channel( 'orders-check' ) -> info('setOrder');
     $this -> order = $order;
     return $this;
   }
@@ -82,7 +78,6 @@ class OrderEditor
    */
   public function digest(): void
   {
-    Log :: channel( 'orders-check' ) -> info('digest');
     if( $this -> shouldStop() )
     {
       $this -> stop();
@@ -102,13 +97,7 @@ class OrderEditor
    */
   private function shouldStop()
   {
-    $shouldStop = ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
-    Log :: channel( 'orders-check' ) -> info( 
-      [
-        'STEP 3 | '. $this -> chargerTransactionId => $shouldStop,
-      ]
-    ); 
-    return $shouldStop;
+    return ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
   }
 
   /**
@@ -118,6 +107,8 @@ class OrderEditor
    */
   private function stop()
   {
+    Log :: channel( 'orders-check' ) -> info( 'Stopped Transaction - '. $this -> chargerTransactionId );  
+    
     $this -> order && $this -> order -> update([ 'checked' => true ]);
 
     Charger :: stop(

@@ -17,34 +17,10 @@ class OrdersMiddleware
    * @return void
    */
   public static function check( $chargerTransactionId ): void
-  {
-    Log :: channel( 'orders-check' ) -> info(
-      [
-        'STEP 0 | ' . $chargerTransactionId => [
-          'transaction_id' => $chargerTransactionId,
-        ]
-      ]
-    );
-    
+  {    
     $result     = ChargingProcessDataGetter :: get  ( $chargerTransactionId );
-    Log :: channel( 'orders-check' ) -> info(
-      [
-        'STEP 1 => results | ' . $chargerTransactionId => [
-          'chargerID'   => $result -> getChargerId(),
-          'connectorID' => $result -> getChargerConnectorTypeId(),
-        ]
-      ]
-    );
-
     $foundOrder = OrderFinder               :: instance( $result ) -> find();
-    Log :: channel( 'orders-check' ) -> info(
-      [
-        'STEP 2 => foundOrder | '. $chargerTransactionId => [
-          'foundOrder' => $foundOrder ? $foundOrder -> toArray() : null,
-        ]
-      ]
-    );
-
+    
     OrderEditor :: instance()
       -> setChargerTransactionId( $chargerTransactionId )
       -> setChargerAttributes   ( $result               )

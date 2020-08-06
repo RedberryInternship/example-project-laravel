@@ -29,7 +29,7 @@ class TransactionController extends Controller
       ]
     );
 
-    OrdersMiddleware :: check( $transaction_id );
+    # OrdersMiddleware :: check( $transaction_id );
 
     $order = Order :: with( 'kilowatt' ) 
       -> where( 'charger_transaction_id', $transaction_id ) 
