@@ -215,6 +215,10 @@ class Charger extends Base
                 $this -> url = $this -> realChargersBaseUrl;
             }
         }
+        else
+        {
+            $this -> url = $this -> realChargersBaseUrl;
+        }
         
         /** Ends here. */
 
