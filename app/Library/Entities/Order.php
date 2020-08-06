@@ -221,7 +221,11 @@ trait Order
             ? $this -> makeLastPaymentsForFastCharging()
             : $this -> makeLastPaymentsForLvl2Charging();
         
-        $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
+        if( $this -> canGoToFinishStatus( $this -> charging_status ) )
+        {
+            $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
+        }
+            
         Firebase :: sendFinishNotificationWithData( $this -> charger_transaction_id );
     }
 
