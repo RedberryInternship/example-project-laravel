@@ -81,6 +81,12 @@ return [
             'path' => storage_path('logs/firebase/finish.log'),
             'level' => 'debug',
         ],
+       
+        'firebase-payment-failed' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/firebase/payment-failed.log'),
+            'level' => 'debug',
+        ],
 
         'orders-check' => [
             'driver' => 'daily',

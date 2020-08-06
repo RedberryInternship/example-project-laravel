@@ -134,11 +134,11 @@ trait State
   public function canGoToFinishStatus( $chargingStatus )
   {
     $finishableStatuses = [
-      OrderStatusEnum :: INITIATED,
-      OrderStatusEnum :: CHARGING,
-      OrderStatusEnum :: CHARGED,
-      OrderStatusEnum :: USED_UP,
-      OrderStatusEnum :: ON_FINE,
+      OrderStatusEnum :: INITIATED ,
+      OrderStatusEnum :: CHARGING  ,
+      OrderStatusEnum :: CHARGED   ,
+      OrderStatusEnum :: USED_UP   ,
+      OrderStatusEnum :: ON_FINE   ,
     ];
 
     return in_array( $chargingStatus, $finishableStatuses );

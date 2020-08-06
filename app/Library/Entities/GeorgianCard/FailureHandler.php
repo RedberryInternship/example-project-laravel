@@ -3,6 +3,7 @@
 namespace App\Library\Entities\GeorgianCard;
 
 use App\Library\Entities\GeorgianCard\PaymentStatusChecker;
+use App\Library\Interactors\Firebase;
 use App\Facades\Charger;
 use App\Order;
 
@@ -19,8 +20,9 @@ class FailureHandler
 
     if( $order )
     {
-      self :: updateOrder ( $order );
-      self :: stopCharging( $order );
+      self :: updateOrder     ( $order );
+      self :: stopCharging    ( $order );
+      self :: sendNotification( $order );
     }
   }
 
@@ -46,5 +48,16 @@ class FailureHandler
     $transactionId = $order -> charger_transaction_id;
 
     Charger :: stop( $chargerId, $transactionId );
+  }
+
+  /**
+   * Send firebase notification.
+   * 
+   * @param  int $chargerTransactionId
+   * @return void
+   */
+  public static function sendNotification( $order )
+  {
+    Firebase :: sendPaymentFailedNotificationWithData( $order -> charger_transaction_id );
   }
 }
