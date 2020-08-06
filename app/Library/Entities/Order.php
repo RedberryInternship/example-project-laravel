@@ -224,9 +224,8 @@ trait Order
         if( $this -> canGoToFinishStatus( $this -> charging_status ) )
         {
             $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
+            Firebase :: sendFinishNotificationWithData( $this -> charger_transaction_id );
         }
-            
-        Firebase :: sendFinishNotificationWithData( $this -> charger_transaction_id );
     }
 
     /**
