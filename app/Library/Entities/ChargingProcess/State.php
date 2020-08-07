@@ -94,6 +94,11 @@ trait State
    */
   public function shouldGoToPenalty()
   {
+    if( $this -> charger_connector_type -> isChargerFast() )
+    {
+      return false;
+    }
+
     if(  ! $this -> carHasAlreadyStoppedCharging() )
     {
         return false;
