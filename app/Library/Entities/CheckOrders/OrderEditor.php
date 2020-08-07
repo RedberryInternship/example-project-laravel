@@ -82,7 +82,7 @@ class OrderEditor
     {
       $this -> stop();
     }
-    else
+    else if( $this -> shouldContinueCharging() )
     {
       $this -> updateOrder();
     }
@@ -98,6 +98,19 @@ class OrderEditor
   private function shouldStop()
   {
     return ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
+  }
+
+  /**
+   * if status is on hold or not confirmed,
+   * then charging should be continued...
+   * 
+   * @return bool
+   */
+  public function shouldContinueCharging()
+  {
+    $continuableStatuses = [ OrderStatusEnum :: ON_HOLD, OrderStatusEnum :: NOT_CONFIRMED ];
+
+    return in_array( $this -> order -> charging_status, $continuableStatuses );
   }
 
   /**

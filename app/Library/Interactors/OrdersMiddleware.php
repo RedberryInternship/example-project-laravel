@@ -19,9 +19,9 @@ class OrdersMiddleware
   {    
     $result     = ChargingProcessDataGetter :: get  ( $chargerTransactionId );
     $foundOrder = OrderFinder               :: instance( $result ) -> find();
-    
-    \Log :: info( 'Did we found one?', $foundOrder );
 
+    \Log :: info( [ 'did we found one ?', $foundOrder ? $foundOrder -> toArray() : null ] );
+    
     OrderEditor :: instance()
       -> setChargerTransactionId( $chargerTransactionId )
       -> setChargerAttributes   ( $result               )
