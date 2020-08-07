@@ -121,8 +121,7 @@ trait State
    */
   private function carHasAlreadyStoppedCharging()
   {
-      return  $this -> charging_status == OrderStatusEnum :: CHARGED 
-          ||  $this -> charging_status == OrderStatusEnum :: USED_UP ;
+      return in_array( $this -> charging_status, [ OrderStatusEnum :: CHARGED, OrderStatusEnum :: USED_UP ]);
   }
 
   /**
@@ -139,6 +138,7 @@ trait State
       OrderStatusEnum :: CHARGED   ,
       OrderStatusEnum :: USED_UP   ,
       OrderStatusEnum :: ON_FINE   ,
+      OrderStatusEnum :: ON_HOLD   ,
     ];
 
     return in_array( $chargingStatus, $finishableStatuses );

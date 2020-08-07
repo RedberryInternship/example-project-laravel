@@ -108,8 +108,10 @@ class StopCharging extends FormRequest
      */
     public function updateChargingStatus()
     {
-        $order = $this -> order;
-        $order -> updateChargingStatus( OrderStatusEnum :: CHARGED );
+        $this -> order -> charger_connector_type -> isChargerFast()
+            ? $this -> order -> updateChargingStatus( OrderStatusEnum :: FINISHED )
+            : $this -> order -> updateChargingStatus( OrderStatusEnum :: CHARGED  );
+        
     }
 
     /**
