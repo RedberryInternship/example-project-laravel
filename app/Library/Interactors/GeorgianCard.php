@@ -27,7 +27,7 @@ class GeorgianCard implements GeorgianCardHandler
    */
   public function paymentAvail(PaymentAvail $data): PaymentAvail
   { 
-    Log :: channel( 'payment-responses' ) -> info([ 'PaymentAvail', request() ]);
+    Log :: channel( 'payment-responses' ) -> info([ 'PaymentAvail', request() -> all() ]);
 
     TerminalAndReportSetter :: set( $data );
     PrimaryTRXSetter        :: set( $data );
@@ -43,7 +43,7 @@ class GeorgianCard implements GeorgianCardHandler
    */
   public function registerPayment(RegisterPayment $data): RegisterPayment
   {
-    Log :: channel( 'payment-responses' ) -> info([ 'RegisterPayment', request() ]);
+    Log :: channel( 'payment-responses' ) -> info([ 'RegisterPayment', request() -> all() ]);
 
     if( PaymentStatusChecker :: succeeded() )
     {
