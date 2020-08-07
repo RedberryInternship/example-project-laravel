@@ -115,9 +115,9 @@ trait Order
                     );
 
                     # TODO: this should be deleted in production
+                    $this -> updateChargingStatus( OrderStatusEnum :: USED_UP );
                     Simulator :: plugOffCable( $charger -> charger_id );
 
-                    $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
                 }
             }
             else

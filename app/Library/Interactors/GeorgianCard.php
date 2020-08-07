@@ -11,6 +11,7 @@ use App\Library\Entities\GeorgianCard\SaveCardRefunder;
 use App\Library\Entities\GeorgianCard\FailureHandler;
 use App\Library\Entities\GeorgianCard\UserCardSaver;
 use App\Library\Entities\GeorgianCard\Payer;
+use Illuminate\Support\Facades\Log;
 
 use Redberry\GeorgianCardGateway\Responses\RegisterPayment;
 use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
@@ -25,7 +26,9 @@ class GeorgianCard implements GeorgianCardHandler
    * @return PaymentAvaL
    */
   public function paymentAvail(PaymentAvail $data): PaymentAvail
-  {
+  { 
+    Log :: channel( 'payment-responses' ) -> info([ 'PaymentAvail', request() ]);
+
     TerminalAndReportSetter :: set( $data );
     PrimaryTRXSetter        :: set( $data );
     
@@ -40,6 +43,8 @@ class GeorgianCard implements GeorgianCardHandler
    */
   public function registerPayment(RegisterPayment $data): RegisterPayment
   {
+    Log :: channel( 'payment-responses' ) -> info([ 'RegisterPayment', request() ]);
+
     if( PaymentStatusChecker :: succeeded() )
     {
       UserCardSaver :: shouldSaveUserCard() 
