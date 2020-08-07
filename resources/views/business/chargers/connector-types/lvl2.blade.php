@@ -1,4 +1,4 @@
-@if ($charger -> hasChargingConnector('lvl2', $chargerConnectorTypes))
+@if ( ! isset($charger) || $charger -> hasChargingConnector('lvl2', $chargerConnectorTypes))
     <div class="row">
         <div class="col s12">
             <div class="card">
@@ -6,7 +6,9 @@
                     <table class="striped">
                         <thead>
                             <tr>
-                                <th>კონექტორის ტიპი</th>
+                                @if (isset($chargerConnectorTypes))
+                                    <th>კონექტორის ტიპი</th>
+                                @endif
                                 <th>დაწყების დრო</th>
                                 <th>დამთავრების დრო</th>
                                 <th>მინიმალური კილოვატები</th>
@@ -17,45 +19,54 @@
                         </thead>
 
                         <tbody>
-                            @foreach ($chargerConnectorTypes as $connectorType)
-                                @foreach ($connectorType -> charging_prices as $chargingPrice)
-                                    @if ($chargingPrice)
-                                        <tr>
-                                            <td>{{ $connectorType -> connector_type -> name }}</td>
-                                            <td>{{ $chargingPrice -> start_time }}</td>
-                                            <td>{{ $chargingPrice -> end_time }}</td>
-                                            <td>{{ $chargingPrice -> min_kwt }}</td>
-                                            <td>{{ $chargingPrice -> max_kwt }}</td>
-                                            <td>{{ $chargingPrice -> price }}</td>
-                                            <td class="right">
-                                                <form action="{{ url('/business/charging-prices/' . $chargingPrice -> id) }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="_method" value="delete">
+                            @if (isset($chargerConnectorTypes))
+                                @foreach ($chargerConnectorTypes as $connectorType)
+                                    @foreach ($connectorType -> charging_prices as $chargingPrice)
+                                        @if ($chargingPrice)
+                                            <tr>
+                                                <td>{{ $connectorType -> connector_type -> name }}</td>
+                                                <td>{{ $chargingPrice -> start_time }}</td>
+                                                <td>{{ $chargingPrice -> end_time }}</td>
+                                                <td>{{ $chargingPrice -> min_kwt }}</td>
+                                                <td>{{ $chargingPrice -> max_kwt }}</td>
+                                                <td>{{ $chargingPrice -> price }}</td>
+                                                <td class="right">
+                                                    <form action="{{ url('/business/charging-prices/' . $chargingPrice -> id) }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="_method" value="delete">
 
-                                                    <button type="submit" class="btn waves-effect waves-light btn-small red">
-                                                        <i class="material-icons">cancel</i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endif
+                                                        <button type="submit" class="btn waves-effect waves-light btn-small red">
+                                                            <i class="material-icons">cancel</i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
                                 @endforeach
-                            @endforeach
-
+                            @endif
 
                             <tr>
-                                <form action="{{ url('/business/charging-prices') }}" method="POST">
+                                <form
+                                        action="{{ url(isset($group) ? '/business/group-prices/' . $group -> id : '/business/charging-prices') }}"
+                                        method="POST">
                                     @csrf
 
-                                    <td>
-                                        <select name="charger_connector_type_id" class="select2 browser-default">
-                                            @foreach ($chargerConnectorTypes as $chargerConnectorType)
-                                                <option value="{{ $chargerConnectorType -> id }}">
-                                                    {{ $chargerConnectorType -> connector_type -> name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
+                                    @if (isset($group))
+                                        <input type="hidden" name="_method" value="PUT">
+                                    @endif
+
+                                    @if (isset($chargerConnectorTypes))
+                                        <td>
+                                            <select name="charger_connector_type_id" class="select2 browser-default">
+                                                @foreach ($chargerConnectorTypes as $chargerConnectorType)
+                                                    <option value="{{ $chargerConnectorType -> id }}">
+                                                        {{ $chargerConnectorType -> connector_type -> name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                    @endif
                                     <td>
                                         <div class="input-field">
                                             <label for="start_time">00:00</label>
