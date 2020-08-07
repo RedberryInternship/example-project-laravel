@@ -42,19 +42,20 @@ class OrderFinder
    */
   public function find()
   {
-    $chargerId                  = $this -> chargerInfo -> getChargerId();
-    $realChargerConnectorTypeId = $this -> chargerInfo -> getChargerConnectorTypeId();
+    $chargerId              = $this -> chargerInfo -> getChargerId();
+    $realChargerConnectorId = $this -> chargerInfo -> getChargerConnectorTypeId();
 
-    $orders = Order :: with( 'charger_connector_type.charger' )
-      -> where    ( 'checked', '!=', true )
-      -> whereHas ( 'charger_connector_type', function( $query ) use( $realChargerConnectorTypeId, $chargerId ) {
-        $query -> where( 'm_connector_type_id', $realChargerConnectorTypeId );
+    return Order :: with( 'charger_connector_type.charger' )
+      -> where( function( $query ) {
+        $query -> where  ( 'checked', false );
+        $query -> orWhere( 'checked', null  );
+      })
+      -> whereHas ( 'charger_connector_type', function( $query ) use( $realChargerConnectorId, $chargerId ) {
+        $query -> where( 'm_connector_type_id', $realChargerConnectorId );
         $query -> whereHas( 'charger', function( $query ) use ( $chargerId ) {
           $query -> where( 'charger_id', $chargerId );
         });
       })
       -> first();
-
-      return $orders;
   }
 }
