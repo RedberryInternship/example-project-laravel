@@ -113,7 +113,7 @@ trait Order
                         $this -> charger_transaction_id 
                     );
 
-                    $this -> updateChargingStatus( OrderStatusEnum :: USED_UP );
+                    $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
                 }
             }
             else
