@@ -3,6 +3,7 @@
 namespace App\Library\Entities\CheckOrders;
 
 use App\Library\DataStructures\RealChargerAttributes;
+use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Order;
 
 class OrderFinder
@@ -50,12 +51,28 @@ class OrderFinder
         $query -> where  ( 'checked', false );
         $query -> orWhere( 'checked', null  );
       })
-      -> whereHas ( 'charger_connector_type', function( $query ) use( $realChargerConnectorId, $chargerId ) {
+      -> whereNotIn( 'charging_status', $this -> finishedOrders() )
+      -> whereHas  ( 'charger_connector_type', function( $query ) use( $realChargerConnectorId, $chargerId ) {
         $query -> where( 'm_connector_type_id', $realChargerConnectorId );
         $query -> whereHas( 'charger', function( $query ) use ( $chargerId ) {
           $query -> where( 'charger_id', $chargerId );
         });
       })
       -> first();
+  }
+
+  /**
+   * Orders we don't care.
+   * 
+   * @return array
+   */
+  private function finishedOrders()
+  {
+    return [
+      OrderStatusEnum :: FINISHED,
+      OrderStatusEnum :: BANKRUPT,
+      OrderStatusEnum :: PAYMENT_FAILED,
+      OrderStatusEnum :: CANCELED,
+    ];
   }
 }
