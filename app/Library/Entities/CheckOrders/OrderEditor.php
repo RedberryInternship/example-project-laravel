@@ -95,7 +95,7 @@ class OrderEditor
    * @param  Order $order
    * @return bool
    */
-  private function shouldStop()
+  private function shouldStop(): bool
   {
     return ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
   }
@@ -106,8 +106,13 @@ class OrderEditor
    * 
    * @return bool
    */
-  public function shouldContinueCharging()
+  public function shouldContinueCharging(): bool
   {
+    if( ! $this -> order )
+    {
+      return false;
+    }
+
     $continuableStatuses = [ OrderStatusEnum :: ON_HOLD, OrderStatusEnum :: NOT_CONFIRMED ];
 
     return in_array( $this -> order -> charging_status, $continuableStatuses );
