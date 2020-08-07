@@ -60,7 +60,6 @@ class StopCharging extends FormRequest
         $this -> respond( $validator, 422, $this -> messages [ 'something_went_wrong' ] );
     }
 
-
     /**
      * Order instance.
      * 
@@ -111,7 +110,6 @@ class StopCharging extends FormRequest
         $this -> order -> charger_connector_type -> isChargerFast()
             ? $this -> order -> updateChargingStatus( OrderStatusEnum :: FINISHED )
             : $this -> order -> updateChargingStatus( OrderStatusEnum :: CHARGED  );
-        
     }
 
     /**

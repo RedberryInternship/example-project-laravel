@@ -10,6 +10,7 @@ use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Facades\Charger as RealCharger;
 use App\Library\Interactors\Firebase;
 use App\Library\Interactors\Payment;
+use App\Facades\Simulator;
  
 use App\Config;
 
@@ -112,6 +113,9 @@ trait Order
                         $charger -> charger_id, 
                         $this -> charger_transaction_id 
                     );
+
+                    # TODO: this should be deleted in production
+                    Simulator :: plugOffCable( $charger -> charger_id );
 
                     $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
                 }
