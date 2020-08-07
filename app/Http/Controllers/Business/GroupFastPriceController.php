@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Business;
 
 use Auth;
 use App\Group;
-use App\ChargingPrice;
+use App\FastChargingPrice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class GroupPriceController extends Controller
+class GroupFastPriceController extends Controller
 {
     /**
      * Display the specified resource.
@@ -19,10 +19,10 @@ class GroupPriceController extends Controller
     public function show($groupID)
     {
         $group = Group::with([
-            'chargers.charger_connector_types.charging_prices',
-        ]) -> find($groupID);
+            'chargers.charger_connector_types.fast_charging_prices'
+        ])->find($groupID);
 
-        return view('business.group-prices.edit') -> with([
+        return view('business.group-fast-prices.edit')->with([
             'group' => $group
         ]);
     }
@@ -31,7 +31,7 @@ class GroupPriceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $groupID
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $groupID)
@@ -39,11 +39,9 @@ class GroupPriceController extends Controller
         $user  = Auth::user();
         $group = Group::with('chargers.charger_connector_types.connector_type') -> find($groupID);
 
-        $minKwt    = $request -> get('min_kwt');
-        $maxKwt    = $request -> get('max_kwt');
-        $startTime = $request -> get('start_time');
-        $endTime   = $request -> get('end_time');
-        $price     = $request -> get('price');
+        $startMinutes = $request -> get('start_minutes');
+        $endMinutes   = $request -> get('end_minutes');
+        $price        = $request -> get('price');
 
         if ($user -> id != $group -> user_id)
         {
@@ -54,14 +52,12 @@ class GroupPriceController extends Controller
         {
             foreach ($charger -> charger_connector_types as $chargerConnectorType)
             {
-                if (in_array(strtolower($chargerConnectorType -> connector_type -> name), ['type 2']))
+                if (in_array(strtolower($chargerConnectorType -> connector_type -> name), ['combo 2', 'chademo']))
                 {
-                    ChargingPrice::create([
+                    FastChargingPrice::create([
                         'charger_connector_type_id' => $chargerConnectorType->id,
-                        'min_kwt'                   => $minKwt,
-                        'max_kwt'                   => $maxKwt,
-                        'start_time'                => $startTime,
-                        'end_time'                  => $endTime,
+                        'start_minutes'             => $startMinutes,
+                        'end_minutes'               => $endMinutes,
                         'price'                     => $price
                     ]);
                 }
