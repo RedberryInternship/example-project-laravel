@@ -3,8 +3,6 @@
 namespace App\Library\Entities\CheckOrders;
 
 use App\Library\DataStructures\RealChargerAttributes;
-use App\Enums\OrderStatus as OrderStatusEnum;
-use Illuminate\Support\Facades\Log;
 use App\Order;
 
 class OrderFinder
@@ -48,7 +46,6 @@ class OrderFinder
     $realChargerConnectorTypeId = $this -> chargerInfo -> getChargerConnectorTypeId();
 
     $orders = Order :: with( 'charger_connector_type.charger' )
-      -> whereIn  ( 'charging_status', $this -> orderStatuses())
       -> where    ( 'checked', '!=', true )
       -> whereHas ( 'charger_connector_type', function( $query ) use( $realChargerConnectorTypeId, $chargerId ) {
         $query -> where( 'm_connector_type_id', $realChargerConnectorTypeId );
@@ -59,20 +56,5 @@ class OrderFinder
       -> first();
 
       return $orders;
-  }
-
-  /**
-   * Kind of orders to find.
-   * 
-   * @return array
-   */
-  private function orderStatuses()
-  {
-    return [
-      OrderStatusEnum :: NOT_CONFIRMED,
-      OrderStatusEnum :: UNPLUGGED,
-      OrderStatusEnum :: CANCELED,
-      OrderStatusEnum :: ON_HOLD,
-    ];
   }
 }

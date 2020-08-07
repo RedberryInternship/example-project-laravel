@@ -5,7 +5,6 @@ namespace App\Library\Interactors;
 use App\Library\Entities\CheckOrders\ChargingProcessDataGetter;
 use App\Library\Entities\CheckOrders\OrderFinder;
 use App\Library\Entities\CheckOrders\OrderEditor;
-use Illuminate\Support\Facades\Log;
 
 class OrdersMiddleware
 {
@@ -21,6 +20,8 @@ class OrdersMiddleware
     $result     = ChargingProcessDataGetter :: get  ( $chargerTransactionId );
     $foundOrder = OrderFinder               :: instance( $result ) -> find();
     
+    \Log :: info( 'Did we found one?', $foundOrder );
+
     OrderEditor :: instance()
       -> setChargerTransactionId( $chargerTransactionId )
       -> setChargerAttributes   ( $result               )

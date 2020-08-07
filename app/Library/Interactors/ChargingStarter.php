@@ -62,7 +62,7 @@ class ChargingStarter
       $this -> chargerConnectorType -> charger -> charger_id ,
       $this -> chargerConnectorType -> m_connector_type_id   ,
     );
-    
+
     OrderEditor :: update(
       $order                                          ,
       $result                                         ,

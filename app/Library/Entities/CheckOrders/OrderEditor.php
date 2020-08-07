@@ -125,7 +125,6 @@ class OrderEditor
   private function ordersToStop()
   {
     return [
-      OrderStatusEnum :: UNPLUGGED,
       OrderStatusEnum :: CANCELED,
     ];
   }
@@ -137,8 +136,6 @@ class OrderEditor
    */
   public function updateOrder()
   {
-    $this -> order -> charger_connector_type -> isChargerFast() 
-      ? $this -> order -> updateChargingStatus( OrderStatusEnum :: CHARGING  )
-      : $this -> order -> updateChargingStatus( OrderStatusEnum :: INITIATED );
+    $this -> order -> updateChargingStatus( OrderStatusEnum :: CHARGING );
   }
 }
