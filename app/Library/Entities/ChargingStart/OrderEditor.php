@@ -10,6 +10,73 @@ use App\Order;
 class OrderEditor
 {
   /**
+   * Order instance.
+   * 
+   * @var Order $order
+   */
+  private $order;
+
+  /**
+   * Start charging result.
+   * 
+   * @var StartTransactionResponse $result
+   */
+  private $result;
+
+  /**
+   * Return new instance.
+   * 
+   * @return self
+   */
+  public static function instance(): self
+  {
+    return new self;
+  }
+
+  /**
+   * Is charger fast.
+   * 
+   * @var bool $isChargerFast
+   */
+  private $isChargerFast;
+
+  /**
+   * Set order.
+   * 
+   * @param  Order $order
+   * @return self
+   */
+  public function setOrder( Order $order ): self
+  {
+    $this -> order = $order;
+    return $this;
+  }
+
+  /**
+   * Set start charging result.
+   * 
+   * @param  StartTransactionResponse $result
+   * @return self
+   */
+  public function setStartChargingResult( StartTransactionResponse $result ): self
+  {
+    $this -> result = $result;
+    return $this;
+  }
+
+  /**
+   * Set is charger fast.
+   * 
+   * @param  bool $isChargerFast
+   * @return self
+   */
+  public function setIsChargerFast( bool $isChargerFast ): self
+  {
+    $this -> isChargerFast = $isChargerFast;
+    return $this;
+  }
+
+  /**
    * Update order according to 
    * start charging result.
    * 
@@ -17,21 +84,14 @@ class OrderEditor
    * @param  StartTransactionResponse $result
    * @return void
    */
-  public static function update( 
-    Order                     $order, 
-    StartTransactionResponse  $result, 
-    bool                      $isChargerFast
-  ): void
+  public function update(): void
   {
-    $transactionID      = $result -> getTransactionID();
-    $transactionStatus  = $result -> getTransactionStatus();
+    $transactionID      = $this -> result -> getTransactionID();
+    $transactionStatus  = $this -> result -> getTransactionStatus();
     
-    $orderStatus        = self :: determineOrderStatus( 
-      $transactionStatus,
-      $isChargerFast,
-    );
+    $orderStatus        = self :: determineOrderStatus( $transactionStatus, $this -> isChargerFast );
 
-    $order -> update(
+    $this -> order -> update(
       [
         'charging_status'         => $orderStatus,
         'charger_transaction_id'  => $transactionID,

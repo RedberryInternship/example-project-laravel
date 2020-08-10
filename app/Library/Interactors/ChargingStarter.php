@@ -9,7 +9,6 @@ use App\Library\Entities\ChargingStart\KilowattRecordCreator;
 use App\Library\Entities\ChargingStart\FastChargerPayer;
 use App\Library\Entities\ChargingStart\OrderCreator;
 use App\Library\Entities\ChargingStart\OrderEditor;
-use App\Library\DataStructures\StartTransaction;
 
 use App\ChargerConnectorType;
 use App\Order;
@@ -24,13 +23,6 @@ class ChargingStarter
   private $requestModel;
 
   /**
-   * Order for charging process.
-   * 
-   * @var 
-   */
-  private $order;
-
-  /**
    * Charger connector type.
    * 
    * @var ChargerConnectorType $chargerConnectorType
@@ -42,11 +34,15 @@ class ChargingStarter
    * 
    * @param ChargingStarterRequest $requestModel
    */
-  function __construct( ChargingStarterRequest $requestModel )
+  public static function prepare( ChargingStarterRequest $requestModel )
   {
-    $this -> requestModel         = $requestModel;
-    $this -> chargerConnectorType = ChargerConnectorType :: with( 'charger' ) 
-          -> find( $this -> requestModel -> getChargerConnectorTypeId());
+    $chargerConnectorTypeId = $requestModel -> getChargerConnectorTypeId();
+
+    $instance = new self;
+    $instance -> requestModel = $requestModel;
+    $instance -> chargerConnectorType = ChargerConnectorType :: with( 'charger' ) -> find( $chargerConnectorTypeId );
+    
+    return $instance;
   }
   
   /**
@@ -54,42 +50,36 @@ class ChargingStarter
    * 
    * @return void
    */
-  public function start(): void
+  public function start(): Order
   {
-    $order  = OrderCreator :: create( $this -> requestModel );
-    
-    $result = ChargingProcessStarter :: start(
-      $this -> chargerConnectorType -> charger -> charger_id ,
-      $this -> chargerConnectorType -> m_connector_type_id   ,
-    );
+    $realChargerConnectorId = $this -> chargerConnectorType -> m_connector_type_id;
+    $isChargingByAmount     = $this -> requestModel -> isChargingTypeByAmount();
+    $realChargerId          = $this -> chargerConnectorType -> charger -> charger_id;
+    $isChargerFast          = $this -> chargerConnectorType -> isChargerFast();
+    $order                  = OrderCreator :: create( $this -> requestModel );
 
-    OrderEditor :: update(
-      $order                                          ,
-      $result                                         ,
-      $this -> chargerConnectorType -> isChargerFast(),
-    );
+    $result = ChargingProcessStarter :: instance()
+      -> setChargerId       ( $realChargerId )
+      -> setConnectorTypeId ( $realChargerConnectorId  )
+      -> execute();
+
+    OrderEditor :: instance()
+      -> setStartChargingResult( $result        )
+      -> setIsChargerFast      ( $isChargerFast )
+      -> setOrder              ( $order         )
+      -> update();
     
-    if( $result -> getTransactionStatus() == StartTransaction :: SUCCESS )
+    if( $result -> didSucceeded() )
     {
-      FastChargerPayer :: pay( 
-        $order                                                    , 
-        $this -> requestModel         -> isChargingTypeByAmount() ,
-        $this -> chargerConnectorType -> isChargerFast()          ,
-      );
+      FastChargerPayer :: instance()
+        -> setIsChargerFast ( $isChargerFast      )
+        -> setIsByAmount    ( $isChargingByAmount )
+        -> setOrder         ( $order              )
+        -> pay();
     }
 
     KilowattRecordCreator :: create( $order );
 
-    $this -> order = $order;
-  }
-
-  /**
-   * Get order.
-   * 
-   * @return Order
-   */
-  public function getOrder()
-  {
-    return $this -> order;
+    return $order;
   }
 }

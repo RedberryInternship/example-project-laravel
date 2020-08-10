@@ -60,6 +60,16 @@ class StartTransaction
    */
   public function getTransactionID()
   {
-    return $this ->transactionID;
+    return $this -> transactionID;
+  }
+
+  /**
+   * Determine if transaction has succeeded.
+   * 
+   * @return bool
+   */
+  public function didSucceeded(): bool
+  {
+    return $this -> transactionStatus == self :: SUCCESS;
   }
 }

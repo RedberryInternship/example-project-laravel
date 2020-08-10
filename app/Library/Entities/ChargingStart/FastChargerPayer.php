@@ -11,36 +11,101 @@ use App\Order;
 class FastChargerPayer
 {
   /**
+   * Order.
+   * 
+   * @var Order $order
+   */
+  private $order;
+
+  /**
+   * Is charging by amount.
+   * 
+   * @var bool $isByAmount
+   */
+  private $isByAmount;
+
+  /**
+   * Is charger fast.
+   * 
+   * @var bool $isChargerFast
+   */
+  private $isChargerFast;
+
+  /**
+   * Return new instance.
+   * 
+   * @return self
+   */
+  public static function instance(): self
+  {
+    return new self;
+  }
+
+  /**
+   * Set order.
+   * 
+   * @param  Order $order
+   * @return self
+   */
+  public function setOrder( Order $order ): self
+  {
+    $this -> order = $order;
+    return $this;
+  }
+
+  /**
+   * Set is by amount.
+   * 
+   * @param  bool $isByAmount
+   * @return self
+   */
+  public function setIsByAmount( bool $isByAmount ): self
+  {
+    $this -> isByAmount = $isByAmount;
+    return $this;
+  }
+
+  /**
+   * Set is charger fast.
+   * 
+   * @param  bool $isChargerFast
+   * @return self
+   */
+  public function setIsChargerFast( bool $isChargerFast ): self
+  {
+    $this -> isChargerFast = $isChargerFast;
+    return $this;
+  }
+
+  /**
    * When starting charging process pay if it
    * successfully started charging and the charger type 
    * is FAST.
    * 
-   * @param   Order $order
-   * @param   bool  $isByAmount
    * @return  void
    */
-  public static function pay( Order $order, bool $isByAmount, bool $isChargerFast ): void
+  public function pay(): void
   {
-    if( ! $isChargerFast )
+    if( ! $this -> isChargerFast )
     {
       return;
     }
 
-    if( ! $order -> charging_status == OrderStatusEnum :: CHARGING )
+    if( ! $this -> order -> charging_status == OrderStatusEnum :: CHARGING )
     {
         return;
     }
 
-    if( $isByAmount )
+    if( $this -> isByAmount )
     {
-        $targetPrice = $order -> target_price;
+        $targetPrice = $this -> order -> target_price;
 
-        $order -> pay( PaymentTypeEnum :: CUT, $targetPrice );
+        $this -> order -> pay( PaymentTypeEnum :: CUT, $targetPrice );
     }
     else
     {
         $moneyToCut = Config :: initialChargePrice();
-        $order -> pay( PaymentTypeEnum :: CUT, $moneyToCut );
+        $this -> order -> pay( PaymentTypeEnum :: CUT, $moneyToCut );
     }
   }
 }
