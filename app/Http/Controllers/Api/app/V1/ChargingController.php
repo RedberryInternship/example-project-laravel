@@ -32,9 +32,9 @@ class ChargingController extends Controller
     $requestModel -> setPrice                 ( $request -> price                     );
     $requestModel -> setUserCardId            ( $request -> user_card_id              );
 
-    $chargingStarter = ChargingStarter :: prepare( $requestModel ) -> start();
+    $order = ChargingStarter :: prepare( $requestModel ) -> start();
 
-    return new OrderResource( $chargingStarter -> getOrder() );
+    return new OrderResource( $order );
   }
 
   /**
