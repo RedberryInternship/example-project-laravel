@@ -16,6 +16,7 @@ use App\Nova\Filters\OrderRefunded;
 use App\Nova\Filters\OrderRequestedAlready;
 use App\Nova\Filters\OrderStatus;
 use Titasgailius\SearchRelations\SearchesRelations;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Order extends Resource
 {
@@ -173,6 +174,8 @@ class Order extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new DownloadExcel) -> withHeadings(),
+        ];
     }
 }
