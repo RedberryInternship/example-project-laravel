@@ -90,11 +90,21 @@ class OrderEditor
     $transactionStatus  = $this -> result -> getTransactionStatus();
     
     $orderStatus        = self :: determineOrderStatus( $transactionStatus, $this -> isChargerFast );
+    
+    if( $this -> result -> didSucceeded() )
+    {
+      $startTimestamp = $this -> result -> fetchTransactionInfo() -> transStart;
+    }
+    else
+    {
+      $startTimestamp = null;
+    }
 
     $this -> order -> update(
       [
         'charging_status'         => $orderStatus,
         'charger_transaction_id'  => $transactionID,
+        'real_start_date'         => $startTimestamp,
       ]
     );
   }

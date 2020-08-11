@@ -58,7 +58,7 @@ class ChargingProcessStarter
   /**
    * Start charging process.
    * 
-   * @return
+   * @return StartTransactionResponse
    */
   public function execute(): StartTransactionResponse
   {
