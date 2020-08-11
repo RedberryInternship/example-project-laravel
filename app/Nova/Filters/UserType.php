@@ -3,17 +3,10 @@
 namespace App\Nova\Filters;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Filters\Filter;
+use Laravel\Nova\Filters\BooleanFilter;
 
-class ChargerTags extends Filter
+class UserType extends BooleanFilter
 {
-    /**
-     * The filter's component.
-     *
-     * @var string
-     */
-    public $component = 'select-filter';
-
     /**
      * Apply the filter to the given query.
      *
@@ -24,9 +17,17 @@ class ChargerTags extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->whereHas('tags', function($query) use ($value) {
-            $query->where('tag_id', $value);
-        });
+        if ($value['active'])
+        {
+            $query -> where('active', $value['active']);
+        }
+
+        if ($value['verified'])
+        {
+            $query -> where('verified', $value['verified']);
+        }
+
+        return $query;
     }
 
     /**
@@ -37,7 +38,9 @@ class ChargerTags extends Filter
      */
     public function options(Request $request)
     {
-        $tags = \App\Tag::all();
-        return $tags->pluck('id', 'name')->all();
+        return [
+            'Active'   => 'active',
+            'Verified' => 'verified',
+        ];
     }
 }
