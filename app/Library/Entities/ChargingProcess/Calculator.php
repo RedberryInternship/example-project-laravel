@@ -192,6 +192,11 @@ trait Calculator
    */
   public function countPenaltyFee()
   {
+    if( $this -> charger_connector_type -> isChargerFast() )
+    {
+        return null;
+    }
+
     $timestamp              = Timestamp :: build( $this );
     $penaltyTimestamp       = $timestamp -> getPenaltyTimestamp();
     $finishedTimestamp      = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
