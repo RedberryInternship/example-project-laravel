@@ -57,7 +57,9 @@ class ChargingStarter
     $realChargerId          = $this -> chargerConnectorType -> charger -> charger_id;
     $isChargerFast          = $this -> chargerConnectorType -> isChargerFast();
     $order                  = OrderCreator :: create( $this -> requestModel );
-
+    
+    KilowattRecordCreator :: create( $order );
+    
     $result = ChargingProcessStarter :: instance()
       -> setChargerId       ( $realChargerId )
       -> setConnectorTypeId ( $realChargerConnectorId  )
@@ -77,8 +79,6 @@ class ChargingStarter
         -> setOrder         ( $order              )
         -> pay();
     }
-
-    KilowattRecordCreator :: create( $order );
 
     return $order;
   }

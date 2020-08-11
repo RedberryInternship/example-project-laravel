@@ -117,7 +117,6 @@ trait Order
                     # TODO: this should be deleted in production
                     $this -> updateChargingStatus( OrderStatusEnum :: USED_UP );
                     Simulator :: plugOffCable( $charger -> charger_id );
-
                 }
             }
             else
@@ -219,7 +218,9 @@ trait Order
     public function finish()
     {
         $chargerType = $this -> charger_connector_type -> determineChargerType();
-
+        
+        $this -> updateFinishedTimestamp();
+        
         $chargerType == ChargerTypeEnum :: FAST
             ? $this -> makeLastPaymentsForFastCharging()
             : $this -> makeLastPaymentsForLvl2Charging();
@@ -295,5 +296,29 @@ trait Order
             case PaymentTypeEnum :: FINE    : return Payment :: charge ( $this, $amount );
             case PaymentTypeEnum :: CUT     : return Payment :: cut    ( $this, $amount );
         }
+    }
+
+    /**
+     * Set finished timestamp.
+     * 
+     * @return void
+     */
+    public function updateFinishedTimestamp(): void
+    {
+        $this -> update(
+            [
+                'real_end_date' => $this -> getRealFinishedTimestamp(),
+            ]
+        );
+    }
+
+    /**
+     * Get charging finished timestamp.
+     * 
+     * @return string|null
+     */
+    private function getRealFinishedTimestamp()
+    {
+        return RealCharger :: transactionInfo( $this -> charger_transaction_id ) -> transStop;
     }
 }
