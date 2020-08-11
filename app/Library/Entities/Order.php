@@ -6,6 +6,7 @@ use App\Enums\PaymentType as PaymentTypeEnum;
 use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
+use App\Library\Entities\FinishCharging\CacheOrderDetails;
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Facades\Charger as RealCharger;
 use App\Library\Interactors\Firebase;
@@ -230,6 +231,8 @@ trait Order
             $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
             Firebase :: sendFinishNotificationWithData( $this -> charger_transaction_id );
         }
+        
+        CacheOrderDetails :: execute( $this );
     }
 
     /**
