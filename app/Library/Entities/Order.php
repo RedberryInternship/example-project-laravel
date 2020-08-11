@@ -322,6 +322,6 @@ trait Order
      */
     private function getRealFinishedTimestamp()
     {
-        return RealCharger :: transactionInfo( $this -> charger_transaction_id ) -> transStop;
+        return RealCharger :: transactionInfo( $this -> charger_transaction_id ) -> transStop / 1000;
     }
 }

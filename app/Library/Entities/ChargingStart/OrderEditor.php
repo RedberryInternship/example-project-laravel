@@ -138,7 +138,7 @@ class OrderEditor
   {
     if( $this -> result -> didSucceeded() )
     {
-      return $this -> result -> fetchTransactionInfo() -> transStart;
+      return $this -> result -> fetchTransactionInfo() -> transStart / 1000;
     }
   }
 }
