@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\app\V1\User;
 
-use App\Http\Resources\TransactionsCollection;
+use App\Http\Resources\TransactionsHistory;
 use App\Http\Controllers\Controller;
 use App\User;
 
@@ -13,6 +13,6 @@ class TransactionController extends Controller
         $userId       = auth() -> user() -> id;
         $transactions = User :: with( 'orders_history' ) -> find( $userId ) -> orders_history;
 
-        return new TransactionsCollection( $transactions );
+        return TransactionsHistory :: collection( $transactions );
     }
 }
