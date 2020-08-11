@@ -55,17 +55,7 @@ class Timestamp
    */
   public function getStartTimestamp(): ?Carbon
   {
-    $isChargerFast = $this -> order -> charger_connector_type -> isChargerFast();
-    if( $isChargerFast )
-    {
-        $startTimestamp = Carbon :: createFromTimestamp( $this -> order -> real_start_date );
-    }
-    else
-    {
-        $startTimestamp = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
-    }
-
-    return $startTimestamp;
+   return $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
   }
 
   /**
@@ -75,29 +65,21 @@ class Timestamp
    */
   public function getEndTimestamp(): ?Carbon
   {
-      $realEndTimestamp = $this -> order -> real_end_date;
-      $isChargerFast    = $this -> order -> charger_connector_type -> isChargerFast();
+    $isChargerFast    = $this -> order -> charger_connector_type -> isChargerFast();
 
-      if( $isChargerFast )
-      {
-          if( ! $realEndTimestamp )
-          {
-              return null;
-          }
-
-          $endTimestamp = Carbon :: createFromTimestamp( $realEndTimestamp );
-      }
-      else
-      {
-        if( ! $realEndTimestamp )
-        {
-            $endTimestamp = $this -> getStopChargingTimestamp();
-        }
-        else
-        {
-            $endTimestamp = Carbon :: createFromTimestamp( $realEndTimestamp );
-        }
-      }
+    if( $isChargerFast )
+    {
+        $endTimestamp = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
+    }
+    else
+    {
+        $endTimestamp = $this -> getStopChargingTimestamp();
+    }
+    
+    if( ! $endTimestamp )
+    {
+        $endTimestamp = now();
+    }
     
     return $endTimestamp;
   }
