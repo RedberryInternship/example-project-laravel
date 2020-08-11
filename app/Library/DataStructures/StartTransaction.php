@@ -2,6 +2,8 @@
 
 namespace App\Library\DataStructures;
 
+use App\Facades\Charger;
+
 class StartTransaction
 {
   const SUCCESS       = 'SUCCESS';
@@ -71,5 +73,15 @@ class StartTransaction
   public function didSucceeded(): bool
   {
     return $this -> transactionStatus == self :: SUCCESS;
+  }
+
+  /**
+   * Fetch transaction info.
+   * 
+   * @return object
+   */
+  public function fetchTransactionInfo(): object
+  {
+    return Charger :: transactionInfo( $this -> transactionID );
   }
 }
