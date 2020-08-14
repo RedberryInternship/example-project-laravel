@@ -4,14 +4,15 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use App\Nova\Filters\UserType;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\Password;
-use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 
 class User extends Resource
@@ -141,7 +142,9 @@ class User extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new UserType,
+        ];
     }
 
     /**
@@ -163,6 +166,8 @@ class User extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new DownloadExcel) -> withHeadings(),
+        ];
     }
 }
