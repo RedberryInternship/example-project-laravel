@@ -12,6 +12,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 
+
 class Order extends Resource
 {
     use SearchesRelations;
@@ -97,21 +98,25 @@ class Order extends Resource
             Text::make('Charging Status')
                 ->readonly(),
 
-            Text::make('Charge Fee'),
-
-            Text::make('Charge Time'),
-
             Text::make('Charger Transaction Id'),
 
-            Text::make('Confirm Date'),
+            Text::make('Charger Name') -> onlyOnDetail(),
 
-            Text::make('Price'),
+            Text::make('Start Date'),
 
-            Text::make('Target Price'),
+            Text::make('Charge Price'),
 
-            Text::make('Comment'),
+            Text::make('Penalty Fee'),
 
-            DateTime::make('Created At'),
+            Text::make('Duration'),
+            
+            Text::make('Charge Power') -> onlyOnDetail(),
+
+            Text::make('Address'),
+
+            Text::make('Comment') -> onlyOnDetail(),
+
+            DateTime::make('Created At') -> onlyOnDetail(),
         ];
     }
 
