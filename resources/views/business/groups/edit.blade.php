@@ -1,11 +1,25 @@
 @extends('business.master')
 
 @section('body')
-    <div class="row">
-        <div class="col s12">
+    <div class="row flex align-center">
+        <div class="col s4">
             <h4 class="card-title">
                 {{ $group -> name }}
             </h4>
+        </div>
+
+        <div class="col s8 flex align-center justify-flex-end">
+            <a href="{{ url('/business/group-prices/' . $group -> id) }}">
+                <button type="submit" class="mr-2 btn waves-effect waves-light btn-small">
+                    level2 დამტენების ფასების დამატება
+                </button>
+            </a>
+
+            <a href="{{ url('/business/group-fast-prices/' . $group -> id) }}">
+                <button type="submit" class="btn waves-effect waves-light btn-small">
+                    სწრაფი დამტენების ფასების დამატება
+                </button>
+            </a>
         </div>
     </div>
 

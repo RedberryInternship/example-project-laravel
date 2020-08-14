@@ -28,6 +28,8 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     Route::resource('/profile', 'ProfileController');
     Route::resource('/chargers', 'ChargerController');
     Route::resource('/groups', 'GroupController');
+    Route::resource('/group-prices', 'GroupPriceController');
+    Route::resource('/group-fast-prices', 'GroupFastPriceController');
     Route::resource('/charging-prices', 'ChargingPricesController');
     Route::resource('/fast-charging-prices', 'FastChargingPricesController');
 
