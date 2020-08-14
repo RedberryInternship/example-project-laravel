@@ -34,7 +34,7 @@ class ChargingProcess
   {
     $startChargingTime = Timestamp :: build( $order ) -> getChargingStatusTimestampInMilliseconds( OrderStatusEnum :: CHARGING );
 
-    $this -> updateChargingStatus             ( $order );
+    $this -> triggerPenaltyChecker            ( $order );
     $this -> addTargetPriceWhenByAmount       ( $order );
     $this -> addTimestampIfEnteredPenaltyMode ( $order );
     $this -> addPenaltyFeeIfOnPenalty         ( $order );
@@ -100,8 +100,13 @@ class ChargingProcess
    * @param  Order $order 
    * @return void
    */
-  private function updateChargingStatus( Order $order )
+  private function triggerPenaltyChecker( Order $order )
   {
+    if( $order -> charger_connector_type -> isChargerFast() )
+    {
+      return;
+    }
+
     if( $order -> shouldGoToPenalty() )
     {
         $order -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 

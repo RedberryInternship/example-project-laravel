@@ -82,7 +82,7 @@ class OrderEditor
     {
       $this -> stop();
     }
-    else
+    else if( $this -> shouldContinueCharging() )
     {
       $this -> updateOrder();
     }
@@ -95,15 +95,27 @@ class OrderEditor
    * @param  Order $order
    * @return bool
    */
-  private function shouldStop()
+  private function shouldStop(): bool
   {
-    $shouldStop = ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
-    Log :: channel( 'orders-check' ) -> info( 
-      [
-        'STEP 3 | '. $this -> chargerTransactionId => $shouldStop,
-      ]
-    ); 
-    return $shouldStop;
+    return ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
+  }
+
+  /**
+   * if status is on hold or not confirmed,
+   * then charging should be continued...
+   * 
+   * @return bool
+   */
+  public function shouldContinueCharging(): bool
+  {
+    if( ! $this -> order )
+    {
+      return false;
+    }
+
+    $continuableStatuses = [ OrderStatusEnum :: ON_HOLD, OrderStatusEnum :: NOT_CONFIRMED ];
+
+    return in_array( $this -> order -> charging_status, $continuableStatuses );
   }
 
   /**
@@ -113,6 +125,8 @@ class OrderEditor
    */
   private function stop()
   {
+    Log :: channel( 'orders-check' ) -> info( 'Stopped Transaction - '. $this -> chargerTransactionId );  
+    
     $this -> order && $this -> order -> update([ 'checked' => true ]);
 
     Charger :: stop(
@@ -129,7 +143,6 @@ class OrderEditor
   private function ordersToStop()
   {
     return [
-      OrderStatusEnum :: UNPLUGGED,
       OrderStatusEnum :: CANCELED,
     ];
   }
@@ -141,8 +154,6 @@ class OrderEditor
    */
   public function updateOrder()
   {
-    $this -> order -> charger_connector_type -> isChargerFast() 
-      ? $this -> order -> updateChargingStatus( OrderStatusEnum :: CHARGING  )
-      : $this -> order -> updateChargingStatus( OrderStatusEnum :: INITIATED );
+    $this -> order -> updateChargingStatus( OrderStatusEnum :: CHARGING );
   }
 }

@@ -38,7 +38,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 			Route::post('/add-favorite', 'FavoriteController@postAddFavorite');
 			Route::post('/remove-favorite', 'FavoriteController@postRemoveFavotite');
 			Route::get('/user-favorites', 'FavoriteController@getUserFavorites');
-			Route::get('/user-orders', 'User\OrderController');
+			Route::get('/transactions-history', 'User\TransactionController');
 			Route::get('/user-chargers/{quantity?}', 'User\ChargerController');
 			Route::post('/update-user-info', 'UserController@postUpdateUserInfo');
 			Route::post('/update-firebase-token', 'User\FirebaseTokenController@update');

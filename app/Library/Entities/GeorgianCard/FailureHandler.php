@@ -4,6 +4,7 @@ namespace App\Library\Entities\GeorgianCard;
 
 use App\Library\Entities\GeorgianCard\PaymentStatusChecker;
 use App\Library\Interactors\Firebase;
+use App\Facades\Simulator;
 use App\Facades\Charger;
 use App\Order;
 
@@ -48,6 +49,12 @@ class FailureHandler
     $transactionId = $order -> charger_transaction_id;
 
     Charger :: stop( $chargerId, $transactionId );
+    
+    if( $order -> charger_connector_type -> isChargerFast() )
+    {
+      # TODO: this should be deleted in production
+      Simulator :: plugOffCable( $chargerId );
+    }
   }
 
   /**

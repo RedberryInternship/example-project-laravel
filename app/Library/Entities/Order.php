@@ -6,12 +6,13 @@ use App\Enums\PaymentType as PaymentTypeEnum;
 use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
+use App\Library\Entities\FinishCharging\CacheOrderDetails;
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Facades\Charger as RealCharger;
 use App\Library\Interactors\Firebase;
 use App\Library\Interactors\Payment;
-
-
+use App\Facades\Simulator;
+ 
 use App\Config;
 
 trait Order
@@ -114,7 +115,9 @@ trait Order
                         $this -> charger_transaction_id 
                     );
 
+                    # TODO: this should be deleted in production
                     $this -> updateChargingStatus( OrderStatusEnum :: USED_UP );
+                    Simulator :: plugOffCable( $charger -> charger_id );
                 }
             }
             else
@@ -216,7 +219,9 @@ trait Order
     public function finish()
     {
         $chargerType = $this -> charger_connector_type -> determineChargerType();
-
+        
+        $this -> updateFinishedTimestamp();
+        
         $chargerType == ChargerTypeEnum :: FAST
             ? $this -> makeLastPaymentsForFastCharging()
             : $this -> makeLastPaymentsForLvl2Charging();
@@ -226,6 +231,8 @@ trait Order
             $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
             Firebase :: sendFinishNotificationWithData( $this -> charger_transaction_id );
         }
+        
+        CacheOrderDetails :: execute( $this );
     }
 
     /**
@@ -292,5 +299,29 @@ trait Order
             case PaymentTypeEnum :: FINE    : return Payment :: charge ( $this, $amount );
             case PaymentTypeEnum :: CUT     : return Payment :: cut    ( $this, $amount );
         }
+    }
+
+    /**
+     * Set finished timestamp.
+     * 
+     * @return void
+     */
+    public function updateFinishedTimestamp(): void
+    {
+        $this -> update(
+            [
+                'real_end_date' => $this -> getRealFinishedTimestamp(),
+            ]
+        );
+    }
+
+    /**
+     * Get charging finished timestamp.
+     * 
+     * @return string|null
+     */
+    private function getRealFinishedTimestamp()
+    {
+        return RealCharger :: transactionInfo( $this -> charger_transaction_id ) -> transStop / 1000;
     }
 }

@@ -141,6 +141,14 @@ class User extends Authenticatable implements JWTSubject
             );
     }
 
+    public function orders_history()
+    {
+        return $this
+            -> hasMany( Order :: class )
+            -> where( 'charging_status', OrderStatus :: FINISHED )
+            -> orderBy( 'id', 'desc' );
+    }
+
     public function user_cars()
     {
         return $this -> hasMany('App\UserCarModel');

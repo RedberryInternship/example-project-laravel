@@ -36,7 +36,7 @@ trait Calculator
           -> where( 'type', PaymentTypeEnum :: CUT ) 
           -> sum( 'price' );
 
-      $paidMoney = round        ( $paidMoney, 2 );
+      $paidMoney = round( $paidMoney, 2 );
       
       return $paidMoney;
   }
@@ -102,9 +102,7 @@ trait Calculator
   {
       $consumedMoney          = 0;
 
-      $chargingPriceRanges -> each( function ( $chargingPriceInstance ) 
-      use ( &$consumedMoney, $elapsedMinutes ) {
-          
+      $chargingPriceRanges -> each( function ( $chargingPriceInstance ) use ( &$consumedMoney, $elapsedMinutes ) {     
           $startMinutes       = $chargingPriceInstance -> start_minutes;
           $endMinutes         = $chargingPriceInstance -> end_minutes;
           $price              = $chargingPriceInstance -> price;
@@ -194,6 +192,11 @@ trait Calculator
    */
   public function countPenaltyFee()
   {
+    if( $this -> charger_connector_type -> isChargerFast() )
+    {
+        return null;
+    }
+
     $timestamp              = Timestamp :: build( $this );
     $penaltyTimestamp       = $timestamp -> getPenaltyTimestamp();
     $finishedTimestamp      = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );

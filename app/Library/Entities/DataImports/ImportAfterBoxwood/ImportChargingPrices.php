@@ -29,7 +29,7 @@ class ImportChargingPrices
       {
         $chargerConnectorType -> charging_prices() -> createMany(
           [
-            [ 'min_kwt' => 0,  'max_kwt' => 5,       'price' => 0,  'start_time' => '00:00', 'end_time' => '24:00' ],
+            [ 'min_kwt' => 0,  'max_kwt' => 5,       'price' => 1,  'start_time' => '00:00', 'end_time' => '24:00' ],
             [ 'min_kwt' => 6,  'max_kwt' => 10,      'price' => 10, 'start_time' => '00:00', 'end_time' => '24:00' ],
             [ 'min_kwt' => 11, 'max_kwt' => 1000000, 'price' => 20, 'start_time' => '00:00', 'end_time' => '24:00' ],
           ]

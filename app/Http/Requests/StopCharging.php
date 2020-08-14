@@ -8,9 +8,11 @@ use App\Traits\ValidatorCustomJsonResponse as Response;
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Http\Resources\Order as OrderResource;
 use App\Enums\OrderStatus as OrderStatusEnum;
+use App\Facades\Simulator;
 use App\Facades\Charger;
 use App\Traits\Message;
 use App\Order;
+
 
 class StopCharging extends FormRequest
 {
@@ -58,7 +60,6 @@ class StopCharging extends FormRequest
         $this -> respond( $validator, 422, $this -> messages [ 'something_went_wrong' ] );
     }
 
-
     /**
      * Order instance.
      * 
@@ -91,6 +92,12 @@ class StopCharging extends FormRequest
             $charger -> charger_id, 
             $transactionID,
         );
+
+        # TODO: this should be deleted in production.
+        if( $this -> order -> charger_connector_type -> isChargerFast() )
+        {
+            Simulator :: plugOffCable( $charger -> charger_id );
+        }
     }
 
     /**
@@ -100,8 +107,9 @@ class StopCharging extends FormRequest
      */
     public function updateChargingStatus()
     {
-        $order = $this -> order;
-        $order -> updateChargingStatus( OrderStatusEnum :: CHARGED );
+        $this -> order -> charger_connector_type -> isChargerFast()
+            ? $this -> order -> updateChargingStatus( OrderStatusEnum :: FINISHED )
+            : $this -> order -> updateChargingStatus( OrderStatusEnum :: CHARGED  );
     }
 
     /**

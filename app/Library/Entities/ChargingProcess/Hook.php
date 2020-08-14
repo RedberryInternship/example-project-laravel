@@ -19,8 +19,6 @@ class Hook
       $availableOrderStatuses = OrderStatusEnum :: getConstantsValues();
       $initialStatuses        = [];
 
-      $now = app() -> runningUnitTests() ? now() -> timestamp : microtime( true );
-
       foreach( $availableOrderStatuses as $status )
       {
           $initialStatuses [ $status ] = null;
@@ -37,16 +35,24 @@ class Hook
    */
   public static function updateChargingStatusChangeDates( $order )
   {
-      $now = app() -> runningUnitTests() ? now() -> timestamp : microtime( true );
-
       $chargingStatus                 = $order -> charging_status;
       $orderChargingStatusChargeDates = $order -> charging_status_change_dates; 
     
       $isSet = @ $orderChargingStatusChargeDates [ $chargingStatus ];
       if( ! $isSet )
       {
-          $orderChargingStatusChargeDates [ $chargingStatus ] = $now;
+          $orderChargingStatusChargeDates [ $chargingStatus ] = self :: now();
           $order -> charging_status_change_dates = $orderChargingStatusChargeDates;
       }
+  }
+
+  /**
+   * Get now in Unix timestamp.
+   * 
+   * @return float
+   */
+  public static function now()
+  {
+    return app() -> runningUnitTests() ? now() -> timestamp : microtime( true );
   }
 }

@@ -9,16 +9,15 @@ use App\Facades\Simulator;
 use App\Facades\Charger;
 use App\Traits\Message;
 
-use App\Library\Entities\CronJobs\PreChargedOrders\OrdersGetter;
-
 class TestController extends Controller 
 {
   use Message;
     
   public function __invoke()
   {
-    $orders = OrdersGetter :: get();
-    dd( "Nothingness!" );
+    dd(
+      microtime(true),
+    );
   }
 
   public function firebase()

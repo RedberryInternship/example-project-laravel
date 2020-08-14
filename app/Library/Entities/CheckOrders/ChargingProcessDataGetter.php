@@ -20,7 +20,6 @@ class ChargingProcessDataGetter
     $transactionInfo = RealCharger :: transactionInfo( $chargerTransactionId );
     $chargerCode     = $transactionInfo -> chargePointCode;
     $chargerId       = Charger :: whereCode( $chargerCode ) -> first() -> charger_id;
-  
     return RealChargerAttributes :: instance()
       -> setChargerId              ( $chargerId                      )
       -> setChargerConnectorTypeId ( $transactionInfo -> connectorId );
