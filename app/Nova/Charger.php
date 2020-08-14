@@ -5,18 +5,11 @@ namespace App\Nova;
 use App\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
-use Spatie\NovaTranslatable\Translatable;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\Select;
-use App\Nova\Filters\ChargerPublished;
-use App\Nova\Filters\ChargerActive;
-use App\Nova\Filters\ChargerTags;
-//use App\Nova\Filters\ChargerTypes;
+use Spatie\NovaTranslatable\Translatable;
 use App\Nova\Filters\ChargerConnectorTypes;
 
 class Charger extends Resource
@@ -135,12 +128,7 @@ class Charger extends Resource
      */
     public function filters(Request $request)
     {
-        return [
-            new ChargerPublished,
-            new ChargerActive,
-            new ChargerTags,
-            new ChargerConnectorTypes
-        ];
+        return [];
     }
 
     /**

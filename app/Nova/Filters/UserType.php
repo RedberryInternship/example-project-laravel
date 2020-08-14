@@ -3,17 +3,10 @@
 namespace App\Nova\Filters;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Filters\Filter;
+use Laravel\Nova\Filters\BooleanFilter;
 
-class OrderStatus extends Filter
+class UserType extends BooleanFilter
 {
-    /**
-     * The filter's component.
-     *
-     * @var string
-     */
-    public $component = 'select-filter';
-
     /**
      * Apply the filter to the given query.
      *
@@ -24,7 +17,17 @@ class OrderStatus extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->where('status', $value);
+        if ($value['active'])
+        {
+            $query -> where('active', $value['active']);
+        }
+
+        if ($value['verified'])
+        {
+            $query -> where('verified', $value['verified']);
+        }
+
+        return $query;
     }
 
     /**
@@ -36,8 +39,8 @@ class OrderStatus extends Filter
     public function options(Request $request)
     {
         return [
-            'Active'   => '1',
-            'Inactive' => '0'
+            'Active'   => 'active',
+            'Verified' => 'verified',
         ];
     }
 }
