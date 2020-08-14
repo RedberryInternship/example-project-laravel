@@ -4,18 +4,13 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\DateTime;
-use App\Nova\Filters\OrderFinished;
-use App\Nova\Filters\OrderConfirmed;
-use App\Nova\Filters\OrderRefunded;
-use App\Nova\Filters\OrderRequestedAlready;
-use App\Nova\Filters\OrderStatus;
+use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\OrderType;
 use Titasgailius\SearchRelations\SearchesRelations;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
+
 
 class Order extends Resource
 {
@@ -34,6 +29,17 @@ class Order extends Resource
      * @var string
      */
     public static $title = 'id';
+
+    /**
+     * Override Resource Title.
+     */
+    public function title()
+    {
+        return
+            $this -> user -> first_name . ' ' .
+            $this -> user -> last_name . ' - ' .
+            $this -> id;
+    }
 
     /**
      * The columns that should be searched.
@@ -88,41 +94,24 @@ class Order extends Resource
                     return $chargerConnectorType -> charger -> name . ' - ' . $chargerConnectorType -> connector_type -> name;
                 }),
 
-            Boolean::make('finished')
-                ->trueValue(1)
-                ->falseValue(0),
+            Text::make('Charging Status')
+                ->readonly(),
 
-            Text::make('charge_fee'),
+            Text::make('Charge Fee'),
 
-            Text::make('charge_time'),
+            Text::make('Charge Time'),
 
-            Text::make('charger_transaction_id'),
+            Text::make('Charger Transaction Id'),
 
-            Boolean::make('confirmed')
-                ->trueValue(1)
-                ->falseValue(0),
+            Text::make('Confirm Date'),
 
-            Text::make('confirm_date'),
+            Text::make('Price'),
 
-            Boolean::make('refunded')
-                ->trueValue(1)
-                ->falseValue(0),
+            Text::make('Target Price'),
 
-            Text::make('price'),
+            Text::make('Comment'),
 
-            Text::make('target_price'),
-
-            Boolean::make('requested_already')
-                ->trueValue(1)
-                ->falseValue(0),
-
-            Boolean::make('status')
-                ->trueValue(1)
-                ->falseValue(0),
-
-            Text::make('comment'),
-
-            DateTime::make('created_at'),
+            DateTime::make('Created At'),
         ];
     }
 
@@ -146,11 +135,7 @@ class Order extends Resource
     public function filters(Request $request)
     {
         return [
-            new OrderFinished,
-            new OrderConfirmed,
-            new OrderRefunded,
-            new OrderRequestedAlready,
-            new OrderStatus
+            new OrderType
         ];
     }
 
@@ -173,6 +158,8 @@ class Order extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new DownloadExcel) -> withHeadings(),
+        ];
     }
 }
