@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule( Schedule $schedule )
     {
         $schedule -> command( 'command:check-orders-on-penalty'      ) -> everyMinute();
-        $schedule -> command( 'command:synchronize-real-chargers'    ) -> everyMinute();
+    #   $schedule -> command( 'command:synchronize-real-chargers'    ) -> everyMinute();
         $schedule -> command( 'command:pre-charged-orders-checker'   ) -> everyMinute();
         $schedule -> command( 'command:not-confirmed-orders-checker' ) -> everyMinute();
     }

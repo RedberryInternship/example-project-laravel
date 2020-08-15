@@ -14,7 +14,7 @@ class ChargersGetter
   public static function get()
   {
     $sqlQuery = 'select '
-      . 'chargers.id, chargers.name, chargers.code, chargers.description, chargers.location, '
+      . 'distinct (chargers.id), chargers.name, chargers.code, chargers.description, chargers.location, '
       . 'charger_connector_types.report as terminal_report, '
       . 'terminals.id as terminal_id, terminals.title as terminal_title '
       . 'from chargers '

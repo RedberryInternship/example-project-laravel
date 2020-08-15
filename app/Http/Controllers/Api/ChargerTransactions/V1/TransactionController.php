@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\Api\ChargerTransactions\V1;
 
 use App\Library\Interactors\OrdersMiddleware;
@@ -70,7 +69,6 @@ class TransactionController extends Controller
         'There is no such order with transaction id of '. $transaction_id,
       );
     }
-
   }
 }
 
