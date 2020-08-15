@@ -144,11 +144,16 @@ trait Calculator
   {
     $timestamp          = Timestamp :: build( $this );
     $chargingPower      = $this -> kilowatt -> getChargingPower();
-    $startChargingTime  = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING ) -> toTimeString();
+    $startChargingTime  = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
+
+    if( ! $startChargingTime )
+    {
+        return null;
+    }
 
     $chargingPriceInfo  = $this 
     -> charger_connector_type 
-    -> getSpecificChargingPrice( $chargingPower, $startChargingTime );
+    -> getSpecificChargingPrice( $chargingPower, $startChargingTime  -> toTimeString() );
     
     if( ! $chargingPriceInfo )
     {
@@ -165,7 +170,14 @@ trait Calculator
    */
   public function isChargingFree()
   {
-      return $this -> getCurrentChargingPrice() == 0;
+    $currentChargingPrice = $this -> getCurrentChargingPrice();
+
+    if( is_null( $currentChargingPrice ) )
+    {
+        return $currentChargingPrice;
+    }
+    
+    return $currentChargingPrice == 0;
   }
 
    /**

@@ -114,7 +114,7 @@ trait State
         return false;
     }
 
-    $elapsedTime          = $chargedTime -> diffInMinutes( now() );
+    $elapsedTime         = $chargedTime -> diffInMinutes( now() );
 
     return $elapsedTime >= $penaltyReliefMinutes;
   }

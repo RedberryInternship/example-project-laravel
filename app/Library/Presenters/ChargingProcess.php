@@ -39,6 +39,7 @@ class ChargingProcess
     $this -> addTimestampIfEnteredPenaltyMode ( $order );
     $this -> addPenaltyFeeIfOnPenalty         ( $order );
     $this -> setFinishedMessageWhenFinished   ( $order );
+    $this -> setIsChargingFreeAttribute       ( $order );
         
     $mainResourceData = [
       'order_id'                      => $order -> id,
@@ -180,6 +181,26 @@ class ChargingProcess
       $this -> setAdditionalData(
         [
           'message' => $this -> messages [ 'charging_successfully_finished' ],
+        ]
+      );
+    }
+  }
+
+  /**
+   * Set isChargingFree attribute.
+   * 
+   * @param  Order $order
+   * @return void
+   */
+  private function setIsChargingFreeAttribute( Order $order )
+  {
+    $isChargingFree = $order -> isChargingFree();
+
+    if( ! is_null( $isChargingFree ) )
+    {
+      $this -> setAdditionalData(
+        [
+          'is_free' => $isChargingFree,
         ]
       );
     }

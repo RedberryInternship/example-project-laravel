@@ -9,15 +9,19 @@ use App\Facades\Simulator;
 use App\Facades\Charger;
 use App\Traits\Message;
 
+use Redberry\GeorgianCardGateway\Refund;
+
 class TestController extends Controller 
 {
   use Message;
     
   public function __invoke()
   {
-    dd(
-      microtime(true),
-    );
+    Refund :: build()
+      -> setTrxId( 'CB3C5DB7C2009CEA4FEC3591BBEA102F' )
+      -> setRRN( '022816184228' )
+      -> setAmount( 2992 )
+      -> buildUrl();
   }
 
   public function firebase()

@@ -20,7 +20,7 @@ class ImportOrders
   public static function execute(): void
   {
     $orders           = DataGetter :: get( 'orders' );
-    $formattedOrders  = self :: format( $orders );    
+    $formattedOrders  = self :: format( $orders );
 
     Order :: insert( $formattedOrders );
   }
@@ -37,7 +37,7 @@ class ImportOrders
     $usersDataBridge                  = self :: usersDataBridge();
     
     $mappedOrders = array_map( function( $order ) use( $usersDataBridge, $chargerConnectorTypesDataBridge ) {
-      $initiatedDate                    = !! $order -> confirm_date ? Carbon :: createFromFormat( 'd/m/Y H:i:s',  $order -> confirm_date ) -> timestamp : null;
+      $initiatedDate                    = !! $order -> confirm_date ? Carbon :: createFromFormat( 'Y-m-d H:i:s',  $order -> confirm_date ) -> timestamp : null;
       $chargingStatusChangeDates        = json_encode([  OrderStatusEnum :: INITIATED => $initiatedDate ]);
       
       return [
