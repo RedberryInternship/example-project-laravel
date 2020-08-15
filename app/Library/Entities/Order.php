@@ -149,14 +149,18 @@ trait Order
                 $this -> updateChargingPower();
                 $this -> updateChargingStatus( OrderStatusEnum :: CHARGING );   
                 
-                if( $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT )
+
+                if( ! $this -> isChargingFree() )
                 {
-                    $this -> pay( PaymentTypeEnum :: CUT, $this -> target_price );
-                }
-                else
-                {
-                    $moneyToCut = Config :: initialChargePrice();
-                    $this -> pay( PaymentTypeEnum :: CUT, $moneyToCut );
+                    if( $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT )
+                    {
+                        $this -> pay( PaymentTypeEnum :: CUT, $this -> target_price );
+                    }
+                    else
+                    {
+                        $moneyToCut = Config :: initialChargePrice();
+                        $this -> pay( PaymentTypeEnum :: CUT, $moneyToCut );
+                    }
                 }
             }       
         break;
@@ -179,7 +183,7 @@ trait Order
             }
             else
             {
-                if( $this -> shouldPay() )
+                if( $this -> shouldPay() && (! $this -> isChargingFree()) )
                 {
                     $moneyToCut = Config :: nextChargePrice();
                     $this -> pay( PaymentTypeEnum :: CUT, $moneyToCut );
@@ -254,7 +258,10 @@ trait Order
      */
     private function makeLastPaymentsForLvl2Charging()
     {
-        $this -> cutOrRefund();
+        if( ! $this -> isChargingFree() )
+        {
+            $this -> cutOrRefund();
+        }
 
         if( $this -> isOnPenalty() )
         {

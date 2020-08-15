@@ -129,23 +129,43 @@ trait Calculator
   private function countConsumedMoneyByKilowatt()
   {
     $timestamp          = Timestamp :: build( $this );
-    $chargingPower      = $this -> kilowatt -> getChargingPower();        
-    $startChargingTime  = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
-    $startChargingTime  = $startChargingTime -> toTimeString();
     $elapsedMinutes     = $timestamp -> calculateChargingElapsedTimeInMinutes();
+    $chargingPrice      = $this -> getCurrentChargingPrice();
+    
+    return $chargingPrice * $elapsedMinutes;
+  }
+
+  /**
+   * Get current charging price.
+   * 
+   * @return float
+   */
+  private function getCurrentChargingPrice()
+  {
+    $timestamp          = Timestamp :: build( $this );
+    $chargingPower      = $this -> kilowatt -> getChargingPower();
+    $startChargingTime  = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING ) -> toTimeString();
 
     $chargingPriceInfo  = $this 
-        -> charger_connector_type 
-        -> getSpecificChargingPrice( $chargingPower, $startChargingTime );
+    -> charger_connector_type 
+    -> getSpecificChargingPrice( $chargingPower, $startChargingTime );
     
     if( ! $chargingPriceInfo )
     {
         throw new NoSuchChargingPriceException();
     }
 
-    $chargingPrice = $chargingPriceInfo -> price;
-    
-    return $chargingPrice * $elapsedMinutes;
+    return $chargingPriceInfo -> price;
+  }
+
+  /**
+   * Determine if charging price is zero a.k.a. free.
+   * 
+   * @return bool
+   */
+  public function isChargingFree()
+  {
+      return $this -> getCurrentChargingPrice() == 0;
   }
 
    /**
