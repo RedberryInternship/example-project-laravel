@@ -200,7 +200,7 @@ class ChargingProcess
     {
       $this -> setAdditionalData(
         [
-          'is_free' => $isChargingFree,
+          'is_charging_free' => $isChargingFree,
         ]
       );
     }

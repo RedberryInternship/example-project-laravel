@@ -170,6 +170,11 @@ trait Calculator
    */
   public function isChargingFree()
   {
+    if( $this -> charger_connector_type -> isChargerFast() )
+    {
+        return false;
+    }
+
     $currentChargingPrice = $this -> getCurrentChargingPrice();
 
     if( is_null( $currentChargingPrice ) )
