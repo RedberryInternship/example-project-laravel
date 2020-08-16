@@ -23,6 +23,7 @@ class TransactionsHistory extends JsonResource
             'duration'      => $this -> duration,
             'charge_power'  => $this -> charge_power,
             'address'       => $this -> address,
+            'user_card_pan' => $this -> user_card -> masked_pan
         ];
     }
 }
