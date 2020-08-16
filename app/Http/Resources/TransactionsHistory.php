@@ -15,6 +15,7 @@ class TransactionsHistory extends JsonResource
     public function toArray($request)
     {
         return [
+            'id'            => $this -> id,
             'charger_name'  => $this -> charger_name ,
             'start_date'    => $this -> start_date,
             'charge_price'  => $this -> charge_price,  

@@ -236,6 +236,12 @@ trait Calculator
 
     $timestamp              = Timestamp :: build( $this );
     $penaltyTimestamp       = $timestamp -> getPenaltyTimestamp();
+
+    if( ! $penaltyTimestamp )
+    {
+        return null;
+    }
+
     $finishedTimestamp      = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
 
     if( ! $finishedTimestamp )
