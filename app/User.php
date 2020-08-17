@@ -146,6 +146,7 @@ class User extends Authenticatable implements JWTSubject
         return $this
             -> hasMany( Order :: class )
             -> where( 'charging_status', OrderStatus :: FINISHED )
+            -> whereNotNull( 'charger_name' )
             -> orderBy( 'id', 'desc' );
     }
 
