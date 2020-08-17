@@ -12,7 +12,7 @@ class DataGetter
    */
   public static function get( string $name )
   {
-    $pathToData = base_path('database/boxwood-data/v2/') . $name . '.json';
+    $pathToData = base_path('database/boxwood-data/v3/') . $name . '.json';
     $data       = file_get_contents( $pathToData );
     
     return json_decode( $data );
