@@ -5,6 +5,8 @@ namespace App\Library\Entities;
 use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\ConnectorType as ConnectorTypeEnum;
 
+use App\FastChargingPrice;
+
 use App\Exceptions\NoSuchFastChargingPriceException;
 
 trait ChargerConnectorType
@@ -86,15 +88,16 @@ trait ChargerConnectorType
    */
   public function collectFastChargingPriceRanges( $elapsedMinutes )
   {
-    $fastChargingPriceRanges  = $this 
-      -> fast_charging_prices()
-      -> where(
-        [
-          [ 'start_minutes' , '<=' , $elapsedMinutes ],
-          [ 'end_minutes'   , '>=' , $elapsedMinutes ],
-        ]
-      )
-      -> orWhere( 'end_minutes', '<', $elapsedMinutes )
+    $fastChargingPriceRanges  = FastChargingPrice::where( 'charger_connector_type_id', $this -> id )
+      -> where(function($query) use ($elapsedMinutes) {
+        return $query -> where(
+          [
+            [ 'start_minutes' , '<=' , $elapsedMinutes ],
+            [ 'end_minutes'   , '>=' , $elapsedMinutes ],
+          ]
+        )
+        -> orWhere( 'end_minutes', '<', $elapsedMinutes );
+      })
       -> get();
 
     if( ! $fastChargingPriceRanges )
