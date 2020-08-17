@@ -299,7 +299,7 @@ trait Order
      */
     public function pay( $paymentType, $amount )
     {
-        $amount = intval( $amount );
+        $amount = intval( $amount ) * 100; #GEL
 
         switch( $paymentType )
         {
