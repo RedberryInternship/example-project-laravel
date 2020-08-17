@@ -25,7 +25,7 @@ class Payer
         'user_card_id' => $userCardId,
         'order_id'     => $orderId,
         'trx_id'       => $trxId,
-        'price'        => $price,
+        'price'        => $price / 100,
         'prrn'         => $RRN,
         'type'         => $type,
       ]
