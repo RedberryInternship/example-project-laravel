@@ -77,11 +77,10 @@ class Charger extends Base
      */
     public function find($charger_id)
     {
-        if( $charger_id == 27833 )
-        {
-            $this -> url = $this -> realChargersBaseUrl;
-        }
-
+        # if( $charger_id == 27833 )
+        # {
+        #     $this -> url = $this -> realChargersBaseUrl;
+        # }
 
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/info/' 
@@ -120,10 +119,10 @@ class Charger extends Base
      */
      public function start($charger_id, $connector_id)
      {
-        if( $charger_id == 27833 )
-        {
-            $this -> url = $this -> realChargersBaseUrl;
-        }
+        # if( $charger_id == 27833 )
+        # {
+        #     $this -> url = $this -> realChargersBaseUrl;
+        # }
 
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/start/'
@@ -169,10 +168,10 @@ class Charger extends Base
      */
     public function stop( $charger_id, $transaction_id )
     {
-        if( $charger_id == 27833 )
-        {
-            $this -> url = $this -> realChargersBaseUrl;
-        }
+        # if( $charger_id == 27833 )
+        # {
+        #     $this -> url = $this -> realChargersBaseUrl;
+        # }
 
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/stop/'
@@ -202,23 +201,22 @@ class Charger extends Base
     {
         /** This Code Should be deleted later on. I am ashamed that Im coding it. */
 
-        $order = \App\Order :: with( 'charger_connector_type.charger' ) 
-            -> where( 'charger_transaction_id', $id ) 
-            -> first();
+        # $order = \App\Order :: with( 'charger_connector_type.charger' ) 
+        #     -> where( 'charger_transaction_id', $id ) 
+        #     -> first()
+        # if( $order )
+        # {
+        #     $charger_id = $order -> charger_connector_type -> charger -> charger_id;
 
-        if( $order )
-        {
-            $charger_id = $order -> charger_connector_type -> charger -> charger_id;
-    
-            if( $charger_id == 27833 )
-            {
-                $this -> url = $this -> realChargersBaseUrl;
-            }
-        }
-        else
-        {
-            $this -> url = $this -> realChargersBaseUrl;
-        }
+        #     if( $charger_id == 27833 )
+        #     {
+        #         $this -> url = $this -> realChargersBaseUrl;
+        #     }
+        # }
+        # else
+        # {
+        #     $this -> url = $this -> realChargersBaseUrl;
+        # }
         
         /** Ends here. */
 

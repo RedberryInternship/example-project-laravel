@@ -14,7 +14,7 @@ class AddMinMaxPricesToChargerConnectorTypes extends Migration
     public function up()
     {
         #TODO: Needs Refactor
-# Giuna # Why ?
+        # Giuna # Why ?
 
         if( app() -> runningUnitTests() )
         {

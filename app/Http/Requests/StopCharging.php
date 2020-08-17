@@ -94,10 +94,10 @@ class StopCharging extends FormRequest
         );
 
         # TODO: this should be deleted in production.
-        if( $this -> order -> charger_connector_type -> isChargerFast() )
-        {
-            Simulator :: plugOffCable( $charger -> charger_id );
-        }
+        # if( $this -> order -> charger_connector_type -> isChargerFast() )
+        # {
+        #     Simulator :: plugOffCable( $charger -> charger_id );
+        # }
     }
 
     /**

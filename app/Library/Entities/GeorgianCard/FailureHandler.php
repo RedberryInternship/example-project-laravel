@@ -53,7 +53,7 @@ class FailureHandler
     if( $order -> charger_connector_type -> isChargerFast() )
     {
       # TODO: this should be deleted in production
-      Simulator :: plugOffCable( $chargerId );
+      # Simulator :: plugOffCable( $chargerId );
     }
   }
 

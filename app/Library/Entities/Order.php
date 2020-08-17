@@ -41,16 +41,17 @@ trait Order
         /**
          * TODO: This should be changed when app is in production
          */
-        if( $chargerInfo -> chargePointCode == "0110" )
-        {
-            $kiloWattHour  = $chargerInfo -> kiloWattHour;
-        }
-        else
-        {
-            $kiloWattHour  = $chargerInfo -> kiloWattHour / 1000;
-        }
+        
+        # if( $chargerInfo -> chargePointCode == "0110" )
+        # {
+        #     $kiloWattHour  = $chargerInfo -> kiloWattHour;
+        # }
+        # else
+        # {
+        #     $kiloWattHour  = $chargerInfo -> kiloWattHour / 1000;
+        # }
 
-        return $kiloWattHour;
+        return $chargerInfo -> kiloWattHour;
     }
 
     /**
@@ -117,7 +118,7 @@ trait Order
 
                     # TODO: this should be deleted in production
                     $this -> updateChargingStatus( OrderStatusEnum :: USED_UP );
-                    Simulator :: plugOffCable( $charger -> charger_id );
+                    # Simulator :: plugOffCable( $charger -> charger_id );
                 }
             }
             else
