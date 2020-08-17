@@ -38,7 +38,9 @@ class CarController extends Controller
             'model_id' => $request -> get('car_model_id')
         ]);
 
-        return response() -> json([], 200);
+        return response() -> json([
+            'added' => true
+        ], 200);
     }
 
     /**
