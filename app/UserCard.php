@@ -8,6 +8,11 @@ class UserCard extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'active'  => 'int',
+        'default' => 'int',
+    ];
+
     public function user()
     {
         return $this -> belongsTo('App\User');
