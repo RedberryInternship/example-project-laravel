@@ -96,9 +96,14 @@ class Timestamp
 
     if( (!! $startTimestamp) && (!! $endTimestamp) )
     {
-        return $startTimestamp -> diffInMinutes( $endTimestamp );
+      return $startTimestamp -> diffInMinutes( $endTimestamp );
     }
     
+    if( (!! $endTimestamp) )
+    {
+      return $startTimestamp -> diffInMinutes(now());
+    }
+
     return 0;
   }
 
