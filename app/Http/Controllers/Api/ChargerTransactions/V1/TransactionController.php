@@ -19,15 +19,6 @@ class TransactionController extends Controller
    */
    public function update( $transaction_id, $value )
   {
-    Log :: info(
-      [ 
-        'UPDATE' => [ 
-          'transaction_id' => $transaction_id,
-          'value'          => $value,
-         ] 
-      ]
-    );
-
     OrdersMiddleware :: check( $transaction_id );
 
     $order = Order :: with( 'kilowatt' ) 
@@ -36,14 +27,13 @@ class TransactionController extends Controller
 
     if( $order )
     {
+      Log :: channel( 'feedback-update' ) -> info( 'Update Happened | Transaction ID - ' . $transaction_id . ' | Value - ' . $value );
       $order -> kilowatt -> updateConsumedKilowatts( $value );
       $order -> chargingUpdate();
     }
     else
     {
-      Log :: channel( 'transaction_update' ) -> info(
-        'There is no such order with transaction id of '. $transaction_id,
-      );
+      Log :: channel( 'transaction_update' ) -> info( 'Nothing To Update '. $transaction_id );
     }
   }
 
@@ -57,6 +47,8 @@ class TransactionController extends Controller
    */
   public function finish( $transaction_id )
   {
+    Log :: channel( 'feedback-finish' ) -> info( 'FINISHED - Transaction ID - ' . $transaction_id );
+
     $order = Order :: where( 'charger_transaction_id', $transaction_id ) -> first();
 
     if( $order )
@@ -65,9 +57,7 @@ class TransactionController extends Controller
     }
     else
     {
-      Log :: channel( 'transaction_stop' ) -> info(
-        'There is no such order with transaction id of '. $transaction_id,
-      );
+      Log :: channel( 'feedback-finish' ) -> info( 'Nothing To Finish - Transaction ID - ' . $transaction_id );
     }
   }
 }

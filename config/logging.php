@@ -41,17 +41,6 @@ return [
             'ignore_exceptions' => false,
         ],
 
-        'transaction_update' => [
-            'driver' => 'daily',
-            'path' => storage_path('logs/chargerTransactions/update.log'),
-            'level' => 'debug',
-        ],
-
-        'transaction_stop' => [
-            'driver' => 'daily',
-            'path' => storage_path('logs/chargerTransactions/stop.log'),
-            'level' => 'debug',
-        ],
         'pay' => [
             'driver' => 'daily',
             'path' => storage_path('logs/payments/pay.log'),
@@ -97,6 +86,18 @@ return [
         'pre-charged' => [
             'driver' => 'daily',
             'path' => storage_path('logs/pre-charged-orders-check.log'),
+            'level' => 'debug',
+        ],
+       
+        'feedback-update' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/feedback/update.log'),
+            'level' => 'debug',
+        ],
+
+        'feedback-finish' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/feedback/finish.log'),
             'level' => 'debug',
         ],
 
