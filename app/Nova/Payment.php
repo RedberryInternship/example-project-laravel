@@ -67,10 +67,6 @@ class Payment extends Resource
 
             Text::make('trx_id'),
 
-            Boolean::make('status'),
-
-            Boolean::make('active'),
-
             Boolean::make('confirmed'),
 
             Text::make('confirm_date'),
@@ -83,7 +79,10 @@ class Payment extends Resource
                         $card -> user -> first_name . ' ' .
                         $card -> user -> last_name . ' - ' .
                         $card -> masked_pan;
-                })
+                }),
+
+            Text::make('Created At')
+                ->readonly(),
         ];
     }
 
