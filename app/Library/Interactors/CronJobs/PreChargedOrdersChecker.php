@@ -17,5 +17,6 @@ class PreChargedOrdersChecker
   {
     $orderIds = OrdersGetter :: get();
     OrdersStopper :: stop( $orderIds );
+    
   }
 }

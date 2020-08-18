@@ -80,7 +80,10 @@ class OrderEditor
   {
     if( $this -> shouldStop() )
     {
-      $this -> stop();
+      # $this -> stop();
+
+      $orderExists =  !! $this -> order ? 'TRUE' : 'FALSE'; 
+      Log :: channel( 'orders-check' ) -> info( 'Would Be Stopped Transaction - '. $this -> chargerTransactionId . ' | order exists - ' . $orderExists );
     }
     else if( $this -> shouldContinueCharging() )
     {
@@ -97,7 +100,32 @@ class OrderEditor
    */
   private function shouldStop(): bool
   {
-    return ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
+    if( ! $this -> order )
+    {
+      return true;
+    }
+    else if( in_array( $this -> order -> charging_status, $this -> ordersToStop()) )
+    {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Stop charging.
+   * 
+   * @return void
+   */
+  private function stop()
+  {
+    Log :: channel( 'orders-check' ) -> info( 'Stopped Transaction - '. $this -> chargerTransactionId );  
+    
+    $this -> order && $this -> order -> update([ 'checked' => true ]);
+
+    Charger :: stop(
+      $this -> chargerAttributes -> getChargerId(),
+      $this -> chargerTransactionId,
+    );
   }
 
   /**
@@ -116,23 +144,6 @@ class OrderEditor
     $continuableStatuses = [ OrderStatusEnum :: ON_HOLD, OrderStatusEnum :: NOT_CONFIRMED ];
 
     return in_array( $this -> order -> charging_status, $continuableStatuses );
-  }
-
-  /**
-   * Stop charging.
-   * 
-   * @return void
-   */
-  private function stop()
-  {
-    Log :: channel( 'orders-check' ) -> info( 'Stopped Transaction - '. $this -> chargerTransactionId );  
-    
-    $this -> order && $this -> order -> update([ 'checked' => true ]);
-
-    Charger :: stop(
-      $this -> chargerAttributes -> getChargerId(),
-      $this -> chargerTransactionId,
-    );
   }
 
   /**

@@ -93,6 +93,12 @@ return [
             'path' => storage_path('logs/orders-check/orders-check.log'),
             'level' => 'debug',
         ],
+        
+        'pre-charged' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/pre-charged-orders-check.log'),
+            'level' => 'debug',
+        ],
 
         'single' => [
             'driver' => 'single',
