@@ -70,12 +70,6 @@ class Payment extends Resource
 
             Text::make('trx_id'),
 
-            Boolean::make('confirmed'),
-
-            Text::make('confirm_date'),
-
-            Text::make('date'),
-
             BelongsTo::make('User Card')
                 ->displayUsing(function($card) {
                     return
