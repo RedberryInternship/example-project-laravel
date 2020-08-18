@@ -62,6 +62,8 @@ class Payment extends Resource
 
             BelongsTo::make('Order'),
 
+            Text::make('type'),
+
             Text::make('price'),
 
             Text::make('prrn'),
