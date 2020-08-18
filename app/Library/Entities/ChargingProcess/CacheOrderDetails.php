@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Library\Entities\FinishCharging;
+namespace App\Library\Entities\ChargingProcess;
 
 use App\Library\Entities\ChargingProcess\Timestamp;
 use App\Order;
