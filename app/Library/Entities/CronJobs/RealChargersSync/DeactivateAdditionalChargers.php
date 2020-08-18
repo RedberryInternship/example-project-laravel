@@ -20,6 +20,8 @@ class DeactivateAdditionalChargers
 
     $shouldBeDeactivated = array_diff( $localChargersIds, $realChargersIds );
 
+    \Log :: info( '------------' );
+    \Log :: info( 'COUNT - ' . count( $shouldBeDeactivated ) );
     \Log :: info( $shouldBeDeactivated );
   }
 
@@ -43,6 +45,6 @@ class DeactivateAdditionalChargers
    */
   public static function getLocalChargerIds(): array
   {
-    return Charger :: pluck('id') -> toArray();   
+    return Charger :: pluck('charger_id') -> toArray();   
   }
 }
