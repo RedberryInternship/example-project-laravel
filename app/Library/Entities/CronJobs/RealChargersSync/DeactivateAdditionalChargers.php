@@ -20,9 +20,10 @@ class DeactivateAdditionalChargers
 
     $shouldBeDeactivated = array_diff( $localChargersIds, $realChargersIds );
 
-    \Log :: info( '------------' );
-    \Log :: info( 'COUNT - ' . count( $shouldBeDeactivated ) );
-    \Log :: info( $shouldBeDeactivated );
+    if( ! empty( $shouldBeDeactivated ) )
+    {
+      Charger :: whereIn( 'charger_id', $shouldBeDeactivated ) -> update([ 'active' => false ]);
+    }
   }
 
   /**
