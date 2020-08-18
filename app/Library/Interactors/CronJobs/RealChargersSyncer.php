@@ -2,6 +2,7 @@
 
 namespace App\Library\Interactors\CronJobs;
 
+use App\Library\Entities\CronJobs\RealChargersSync\DeactivateAdditionalChargers;
 use App\Library\Entities\CronJobs\RealChargersSync\ChargersGetter;
 use App\Library\Entities\CronJobs\RealChargersSync\ChargersParser;
 use App\Library\Entities\CronJobs\RealChargersSync\ChargersEditor;
@@ -20,8 +21,10 @@ class RealChargersSyncer
     $realChargers   = ChargersGetter :: getAll();
     $parsedChargers = ChargersParser :: parseAll( $realChargers );
     $data           = Data :: build() -> setRealChargers( $parsedChargers );
-  
+    
     ChargersEditor :: update( $data );
+    
+    DeactivateAdditionalChargers :: execute( $realChargers );
   }
 
   /**

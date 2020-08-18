@@ -33,7 +33,7 @@ class TransactionController extends Controller
     }
     else
     {
-      Log :: channel( 'transaction_update' ) -> info( 'Nothing To Update |'. $transaction_id );
+      Log :: channel( 'feedback-update' ) -> info( 'Nothing To Update |'. $transaction_id );
     }
   }
 
