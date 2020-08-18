@@ -98,6 +98,8 @@ class Timestamp
     {
         return $startTimestamp -> diffInMinutes( $endTimestamp );
     }
+    
+    return 0;
   }
 
   /**
