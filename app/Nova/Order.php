@@ -116,7 +116,7 @@ class Order extends Resource
 
             Text::make('Comment') -> onlyOnDetail(),
 
-            Text::make('Created At') -> readonly(),
+            DateTime::make('Created At') -> readonly(),
         ];
     }
 
