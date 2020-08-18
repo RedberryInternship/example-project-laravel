@@ -102,6 +102,7 @@ trait Order
      */
     private function updateFastChargerOrder()
     {
+        $this -> updateChargingPowerIfNotUpdated();
         $chargingStatus = $this -> charging_status;
 
         if( $chargingStatus == OrderStatusEnum :: CHARGING )
@@ -148,7 +149,7 @@ trait Order
 
             if( $this -> chargingHasStarted() )
             {
-                $this -> updateChargingPower();
+                $this -> updateChargingPowerIfNotUpdated();
                 $this -> updateChargingStatus( OrderStatusEnum :: CHARGING );   
                 
 
@@ -209,11 +210,13 @@ trait Order
      * 
      * @return void
      */
-    private function updateChargingPower()
+    private function updateChargingPowerIfNotUpdated()
     {
-        $chargingPower  = $this -> getChargingPower();
-
-        $this -> kilowatt -> setChargingPower( $chargingPower );
+        if( ! $this -> kilowatt -> charging_power )
+        {
+            $chargingPower  = $this -> getChargingPower();
+            $this -> kilowatt -> setChargingPower( $chargingPower );
+        }
     }
 
     /**

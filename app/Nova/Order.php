@@ -102,17 +102,17 @@ class Order extends Resource
 
             Text::make('Charger Name') -> onlyOnDetail(),
 
-            Text::make('Start Date'),
-
             Text::make('Charge Price'),
 
             Text::make('Penalty Fee'),
 
             Text::make('Duration'),
             
-            Text::make('Charge Power') -> onlyOnDetail(),
+            Text::make('Charge Power'),
 
-            Text::make('Address'),
+            Text::make('Address') -> onlyOnDetail(),
+
+            Text::make('Start Date'),
 
             Text::make('Comment') -> onlyOnDetail(),
         ];
