@@ -46,6 +46,12 @@ return [
             'path' => storage_path('logs/payments/pay.log'),
             'level' => 'debug',
         ],
+        
+        'start-charging' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/charging/starts.log'),
+            'level' => 'debug',
+        ],
 
         'payment-result' => [
             'driver' => 'daily',
