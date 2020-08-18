@@ -17,11 +17,27 @@ class TestController extends Controller
     
   public function __invoke()
   {
-    Refund :: build()
-      -> setTrxId( 'CB3C5DB7C2009CEA4FEC3591BBEA102F' )
-      -> setRRN( '022816184228' )
-      -> setAmount( 2992 )
-      -> buildUrl();
+    //
+  }
+
+  public function refundView()
+  {
+    return view('refund');
+  }
+
+  public function doRefund()
+  {
+    $rrn = request() -> rrn;
+    $trxId = request() -> trxId;
+    $amount = request() -> amount;
+
+    $url = Refund :: build()
+    -> setTrxId( $trxId )
+    -> setRRN( $rrn )
+    -> setAmount( $amount )
+    -> buildUrl();
+
+    return redirect( $url );
   }
 
   public function firebase()
