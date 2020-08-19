@@ -23,7 +23,7 @@ class OrderType extends BooleanFilter
 
         foreach ($value as $status => $bool)
         {
-            if( $status == 'NULL' )
+            if( $status == 'NULL' && $bool )
             {
                 $shouldBeNull = true;
                 continue;
