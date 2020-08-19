@@ -18,9 +18,9 @@ class TestController extends Controller
 {
   use Message;
     
-  public function __invoke()
+  public function __invoke( Excel $excel )
   {
-    return Excel :: download( new UsersExport, 'users.xlsx', );
+    return Excel :: download( new UsersExport, 'users.xlsx');
   }
 
   public function refundView()
