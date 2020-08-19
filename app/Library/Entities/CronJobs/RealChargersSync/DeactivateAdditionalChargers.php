@@ -2,6 +2,7 @@
 
 namespace App\Library\Entities\CronJobs\RealChargersSync;
 
+use App\Enums\ChargerStatus as ChargerStatusEnum;
 use App\Charger;
 
 class DeactivateAdditionalChargers
@@ -22,7 +23,14 @@ class DeactivateAdditionalChargers
 
     if( ! empty( $shouldBeDeactivated ) )
     {
-      Charger :: whereIn( 'charger_id', $shouldBeDeactivated ) -> update([ 'active' => false ]);
+      Charger :: whereIn( 'charger_id', $shouldBeDeactivated ) 
+        -> whereNot( 'active', false ) 
+        -> update(
+          [ 
+            'active'  => false,
+            'status'  => ChargerStatusEnum :: INACTIVE,
+          ]
+        );
     }
   }
 
