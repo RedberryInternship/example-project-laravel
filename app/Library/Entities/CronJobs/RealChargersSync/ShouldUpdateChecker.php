@@ -17,7 +17,8 @@ class ShouldUpdateChecker
         # || $localCharger -> description != $realCharger[ 'description'] 
           || $localCharger -> active      != $realCharger[ 'active'     ]
           || $localCharger -> lat         != $realCharger[ 'lat'        ] 
-          || $localCharger -> lng         != $realCharger[ 'lng'        ];
+          || $localCharger -> lng         != $realCharger[ 'lng'        ]
+          || $localCharger -> status      != $realCharger[ 'status'     ];
   }
 
   /**
