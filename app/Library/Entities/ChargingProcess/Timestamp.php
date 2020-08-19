@@ -99,7 +99,7 @@ class Timestamp
       return $startTimestamp -> diffInMinutes( $endTimestamp );
     }
     
-    if( ! $endTimestamp )
+    if( (!! $startTimestamp) && ! $endTimestamp )
     {
       return $startTimestamp -> diffInMinutes(now());
     }
