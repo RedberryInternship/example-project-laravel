@@ -4,7 +4,7 @@ namespace App\Library\Entities\ChargingStart;
 
 use App\Library\DataStructures\StartTransaction as StartTransactionResponse;
 use App\Enums\OrderStatus as OrderStatusEnum;
-
+use App\Exceptions\Charger\StartChargingException;
 use App\Order;
 
 class OrderEditor
@@ -99,6 +99,11 @@ class OrderEditor
         'real_start_date'         => $startTimestamp,
       ]
     );
+
+    if( $orderStatus == OrderStatusEnum :: OUT_OF_NETWORK )
+    {
+      throw new StartChargingException( OrderStatusEnum :: OUT_OF_NETWORK, 400 );
+    }
   }
 
   /**
