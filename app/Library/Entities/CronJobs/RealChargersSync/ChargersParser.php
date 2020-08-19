@@ -2,6 +2,8 @@
 
 namespace App\Library\Entities\CronJobs\RealChargersSync;
 
+use App\Enums\ChargerStatus as ChargerStatusEnum;
+
 class ChargersParser
 {
   /**
@@ -62,6 +64,23 @@ class ChargersParser
       'lat'         => $realCharger -> latitude,
       'lng'         => $realCharger -> longitude,
       'connectors'  => $realCharger -> connectors,
+      'status'      => self :: getStatus( $realCharger -> status ),
     ]; 
+  }
+
+  /**
+   * Get charger status.
+   * 
+   * @param   int $statusCode
+   * @return  string 
+   */
+  private static function getStatus( $statusCode )
+  {
+    switch( $statusCode )
+    {
+      case -1: return ChargerStatusEnum :: INACTIVE;
+      case  0: return ChargerStatusEnum :: ACTIVE;
+      case  1: return ChargerStatusEnum :: CHARGING;
+    }
   }
 }

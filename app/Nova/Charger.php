@@ -10,7 +10,6 @@ use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Spatie\NovaTranslatable\Translatable;
-use App\Nova\Filters\ChargerConnectorTypes;
 
 class Charger extends Resource
 {
@@ -80,7 +79,7 @@ class Charger extends Resource
 
             Translatable::make([
                 Text::make('Location')
-                    ->sortable()
+                    ->sortable() -> hideFromIndex()
             ])->locales(['en', 'ru', 'ka']),
 
             Boolean::make('Public')
@@ -90,6 +89,8 @@ class Charger extends Resource
             Boolean::make('Active')
                 ->trueValue(1)
                 ->falseValue(0),
+            
+            Text::make('Status') -> readonly(),
 
             Text::make('Lat'),
 
