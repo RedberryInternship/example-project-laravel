@@ -137,7 +137,7 @@ class User extends Authenticatable implements JWTSubject
                     [ 'charging_status', '!=' , OrderStatus :: CANCELED       ],
                     [ 'charging_status', '!=' , OrderStatus :: BANKRUPT       ],
                     [ 'charging_status', '!=' , OrderStatus :: PAYMENT_FAILED ],
-                    [ 'charging_status', '!=' , OrderStatus :: OUT_OF_NETWORK ],
+                    [ 'charging_status', '!=' , OrderStatus :: NON_APP_MODE ],
                 ]
             );
     }

@@ -90,5 +90,5 @@ class OrderStatus extends Enum
   /**
    * Charger is not switched to application mode.
    */
-  const OUT_OF_NETWORK = 'OUT_OF_NETWORK';
+  const NON_APP_MODE   = 'NON_APP_MODE';
 }

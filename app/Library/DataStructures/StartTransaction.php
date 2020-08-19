@@ -9,7 +9,7 @@ class StartTransaction
   const SUCCESS        = 'SUCCESS';
   const FAILED         = 'FAILED';
   const NOT_CONFIRMED  = 'NOT_CONFIRMED';
-  const OUT_OF_NETWORK = 'OUT_OF_NETWORK';
+  const NON_APP_MODE   = 'NON_APP_MODE';
 
   /**
    * Transaction status.

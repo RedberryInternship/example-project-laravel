@@ -100,9 +100,9 @@ class OrderEditor
       ]
     );
 
-    if( $orderStatus == OrderStatusEnum :: OUT_OF_NETWORK )
+    if( $orderStatus == OrderStatusEnum :: NON_APP_MODE )
     {
-      throw new StartChargingException( OrderStatusEnum :: OUT_OF_NETWORK, 400 );
+      throw new StartChargingException( OrderStatusEnum :: NON_APP_MODE, 400 );
     }
   }
 
@@ -130,8 +130,8 @@ class OrderEditor
       case StartTransactionResponse :: NOT_CONFIRMED:
         $orderStatus = OrderStatusEnum :: NOT_CONFIRMED;
       
-      case StartTransactionResponse :: OUT_OF_NETWORK:
-        $orderStatus = OrderStatusEnum :: OUT_OF_NETWORK;
+      case StartTransactionResponse :: NON_APP_MODE:
+        $orderStatus = OrderStatusEnum :: NON_APP_MODE;
     }
 
     return $orderStatus;

@@ -138,7 +138,7 @@ class ChargingProcessStarter
   {
     $response = new StartTransactionResponse;
     $response -> setTransactionID( null );
-    $response -> setTransactionStatus( StartTransactionResponse :: OUT_OF_NETWORK );
+    $response -> setTransactionStatus( StartTransactionResponse :: NON_APP_MODE );
 
     return $response;
   }
