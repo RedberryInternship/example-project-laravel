@@ -24,7 +24,7 @@ class DeactivateAdditionalChargers
     if( ! empty( $shouldBeDeactivated ) )
     {
       Charger :: whereIn( 'charger_id', $shouldBeDeactivated ) 
-        -> whereNot( 'active', false ) 
+        -> where( 'active', '!=', false ) 
         -> update(
           [ 
             'active'  => false,
