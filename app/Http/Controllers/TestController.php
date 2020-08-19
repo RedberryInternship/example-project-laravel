@@ -11,13 +11,16 @@ use App\Traits\Message;
 
 use Redberry\GeorgianCardGateway\Refund;
 
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class TestController extends Controller 
 {
   use Message;
     
   public function __invoke()
   {
-    // 
+    return Excel :: download( new UsersExport, 'users.xlsx', );
   }
 
   public function refundView()
