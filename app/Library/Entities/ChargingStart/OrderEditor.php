@@ -124,6 +124,9 @@ class OrderEditor
 
       case StartTransactionResponse :: NOT_CONFIRMED:
         $orderStatus = OrderStatusEnum :: NOT_CONFIRMED;
+      
+      case StartTransactionResponse :: OUT_OF_NETWORK:
+        $orderStatus = OrderStatusEnum :: OUT_OF_NETWORK;
     }
 
     return $orderStatus;

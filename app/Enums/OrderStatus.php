@@ -86,4 +86,9 @@ class OrderStatus extends Enum
    * payment failure.
    */
   const PAYMENT_FAILED = 'PAYMENT_FAILED';
+
+  /**
+   * Charger is not switched to application mode.
+   */
+  const OUT_OF_NETWORK = 'OUT_OF_NETWORK';
 }

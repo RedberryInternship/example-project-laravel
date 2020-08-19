@@ -12,8 +12,6 @@ use App\Nova\Filters\OrderType;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
-
-
 class Order extends Resource
 {
     use SearchesRelations;

@@ -80,6 +80,11 @@ class ChargingProcessStarter
       }
     }
 
+    if( $transactionID == -100 )
+    {
+      return $this -> transactionOutOfNetwork();
+    }
+
     return $this -> transactionStartedSuccessfully( $transactionID );
   }
 
@@ -120,6 +125,20 @@ class ChargingProcessStarter
     $response = new StartTransactionResponse;
     $response -> setTransactionID( -1 );
     $response -> setTransactionStatus( StartTransactionResponse :: FAILED );
+
+    return $response;
+  }
+  
+  /**
+   * transaction is not switched to application mode.
+   * 
+   * @return StartTransactionResponse
+   */
+  public function transactionOutOfNetwork(): StartTransactionResponse
+  {
+    $response = new StartTransactionResponse;
+    $response -> setTransactionID( null );
+    $response -> setTransactionStatus( StartTransactionResponse :: OUT_OF_NETWORK );
 
     return $response;
   }

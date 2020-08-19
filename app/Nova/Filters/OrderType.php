@@ -61,6 +61,7 @@ class OrderType extends BooleanFilter
             OrderStatus::UNPLUGGED      => OrderStatus::UNPLUGGED,
             OrderStatus::NOT_CONFIRMED  => OrderStatus::NOT_CONFIRMED,
             OrderStatus::PAYMENT_FAILED => OrderStatus::PAYMENT_FAILED,
+            OrderStatus::OUT_OF_NETWORK => OrderStatus::OUT_OF_NETWORK,
             'NULL'                      => 'NULL',
         ];
     }

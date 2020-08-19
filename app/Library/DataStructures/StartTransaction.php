@@ -6,9 +6,10 @@ use App\Facades\Charger;
 
 class StartTransaction
 {
-  const SUCCESS       = 'SUCCESS';
-  const FAILED        = 'FAILED';
-  const NOT_CONFIRMED = 'NOT_CONFIRMED';
+  const SUCCESS        = 'SUCCESS';
+  const FAILED         = 'FAILED';
+  const NOT_CONFIRMED  = 'NOT_CONFIRMED';
+  const OUT_OF_NETWORK = 'OUT_OF_NETWORK';
 
   /**
    * Transaction status.

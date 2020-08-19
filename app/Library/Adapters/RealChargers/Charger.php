@@ -146,10 +146,7 @@ class Charger extends Base
                 );
 
             case -100:
-                throw new StartChargingException(
-                    'Charger with charger_id of ' . $charger_id . ' is already charging or it is offline!',
-                    400,
-                );
+                return -100;
             case -101:
                 return -101;
             case 0:
