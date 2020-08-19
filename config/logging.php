@@ -53,6 +53,12 @@ return [
             'level' => 'debug',
         ],
 
+        'pre-charged' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/charging/pre-charged.log'),
+            'level' => 'debug',
+        ],
+
         'payment-result' => [
             'driver' => 'daily',
             'path' => storage_path('logs/payments/georgian-card-results.log'),
@@ -86,12 +92,6 @@ return [
         'orders-check' => [
             'driver' => 'daily',
             'path' => storage_path('logs/orders-check/orders-check.log'),
-            'level' => 'debug',
-        ],
-        
-        'pre-charged' => [
-            'driver' => 'daily',
-            'path' => storage_path('logs/pre-charged-orders-check.log'),
             'level' => 'debug',
         ],
        

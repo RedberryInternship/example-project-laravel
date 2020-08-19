@@ -7,6 +7,7 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\HasMany;
 use App\Nova\Filters\OrderType;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
@@ -89,6 +90,8 @@ class Order extends Resource
                 ->sortable(),
             
             BelongsTo::make('User'),
+            
+            HasMany::make('Payments'),
 
             BelongsTo::make('Charger Connector Type')
                 -> displayUsing(function($chargerConnectorType) {

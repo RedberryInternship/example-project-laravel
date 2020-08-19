@@ -3,6 +3,7 @@
 namespace App\Library\Entities\ChargingStart;
 
 use App\Facades\Charger;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Library\DataStructures\StartTransaction as StartTransactionResponse;
 
@@ -93,12 +94,20 @@ class ChargingProcessStarter
           $this -> chargerId, 
           $this -> connectorTypeId,
       );
-
-      $log = 'Charging Start | ChargerID - '. $this -> chargerId . ' | ConnectorTypeId - ' . $this -> connectorTypeId . ' | Result - ' . $transactionID;
-      
-      Log :: channel( 'start-charging' ) -> info( $log );
-
+      $this -> logStart( $transactionID );
       return $transactionID;
+  }
+
+  /** 
+   * Log charger start.
+   * 
+   * @return void
+   */
+  private function logStart( $transactionID )
+  {
+    $chargerCode  = DB :: table( 'chargers' ) -> where( 'charger_id', $this -> chargerId ) -> first() -> code;
+    $log          = 'Charging Start | ChargerCode - '. $chargerCode . ' | ConnectorTypeId - ' . $this -> connectorTypeId . ' | ChargerID - '. $this -> chargerId .' | Result - ' . $transactionID;
+    Log :: channel( 'start-charging' ) -> info( $log );
   }
 
   /**

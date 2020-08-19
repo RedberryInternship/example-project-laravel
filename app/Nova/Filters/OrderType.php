@@ -19,13 +19,23 @@ class OrderType extends BooleanFilter
     public function apply(Request $request, $query, $value)
     {
         $statuses = [];
+        $shouldBeNull = false;
+
         foreach ($value as $status => $bool)
         {
+            if( $status == 'NULL' )
+            {
+                $shouldBeNull = true;
+                continue;
+            }
+
             if ($bool)
             {
                 $statuses[] = $status;
             }
         }
+
+        $shouldBeNull && $query -> whereNull( 'charging_status' );
 
         return empty($statuses) ? $query : $query -> whereIn('charging_status', $statuses);
     }
@@ -51,6 +61,7 @@ class OrderType extends BooleanFilter
             OrderStatus::UNPLUGGED      => OrderStatus::UNPLUGGED,
             OrderStatus::NOT_CONFIRMED  => OrderStatus::NOT_CONFIRMED,
             OrderStatus::PAYMENT_FAILED => OrderStatus::PAYMENT_FAILED,
+            'NULL'                      => null,
         ];
     }
 }
