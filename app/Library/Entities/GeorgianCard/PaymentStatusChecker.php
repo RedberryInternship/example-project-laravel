@@ -25,24 +25,7 @@ class PaymentStatusChecker
   {
     if( ! self :: succeeded() )
     {
-      switch( self :: getFailureCode() )
-      {
-        case -2:
-          return OrderStatusEnum :: BANKRUPT;
-
-        default:
-          return OrderStatusEnum :: PAYMENT_FAILED;
-      }
+      return OrderStatusEnum :: PAYMENT_FAILED;
     }
-  }
-
-  /**
-   * Get failure status code.
-   * 
-   * @return int
-   */
-  private static function getFailureCode()
-  {
-    return request() -> get( 'ext_result_code' );
   }
 }

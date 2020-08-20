@@ -34,9 +34,9 @@ class ImportUsers
         'last_name'    => $user -> last_name,
         'email'        => $user -> email,
         'password'     => $user -> password,
-        'phone_number' => $user -> phone_number, # what are we gonna do about phone numbers?
-        'active'       => 1, # Should this be like this?
-        'verified'     => 0, # Should this be like this?
+        'phone_number' => User::modifyPhoneNumberFormat($user -> phone_number),
+        'active'       => 1,
+        'verified'     => 1,
         'role_id'      => 1,
       ];
     }, $users );

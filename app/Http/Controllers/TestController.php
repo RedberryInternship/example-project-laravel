@@ -9,16 +9,38 @@ use App\Facades\Simulator;
 use App\Facades\Charger;
 use App\Traits\Message;
 
-use App\Library\Entities\CronJobs\PreChargedOrders\OrdersGetter;
+use Redberry\GeorgianCardGateway\Refund;
+
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TestController extends Controller 
 {
   use Message;
     
-  public function __invoke()
+  public function __invoke( Excel $excel )
   {
-    $orders = OrdersGetter :: get();
-    dd( "Nothingness!" );
+    return Excel :: download( new UsersExport, 'users.xlsx');
+  }
+
+  public function refundView()
+  {
+    return view('refund');
+  }
+
+  public function doRefund()
+  {
+    $rrn = request() -> rrn;
+    $trxId = request() -> trxId;
+    $amount = request() -> amount;
+
+    $url = Refund :: build()
+    -> setTrxId( $trxId )
+    -> setRRN( $rrn )
+    -> setAmount( $amount )
+    -> buildUrl();
+
+    return redirect( $url );
   }
 
   public function firebase()

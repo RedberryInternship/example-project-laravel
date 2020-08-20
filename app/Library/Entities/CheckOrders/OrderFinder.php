@@ -43,13 +43,17 @@ class OrderFinder
    */
   public function find()
   {
-    $chargerId                  = $this -> chargerInfo -> getChargerId();
-    $realChargerConnectorTypeId = $this -> chargerInfo -> getChargerConnectorTypeId();
+    $chargerId              = $this -> chargerInfo -> getChargerId();
+    $realChargerConnectorId = $this -> chargerInfo -> getChargerConnectorTypeId();
 
     return Order :: with( 'charger_connector_type.charger' )
-      -> whereIn( 'charging_status', $this -> orderStatuses())
-      -> whereHas( 'charger_connector_type', function( $query ) use( $realChargerConnectorTypeId, $chargerId ) {
-        $query -> where( 'm_connector_type_id', $realChargerConnectorTypeId );
+      -> where( function( $query ) {
+        $query -> where  ( 'checked', false );
+        $query -> orWhere( 'checked', null  );
+      })
+      -> whereNotIn( 'charging_status', $this -> finishedOrders() )
+      -> whereHas  ( 'charger_connector_type', function( $query ) use( $realChargerConnectorId, $chargerId ) {
+        $query -> where( 'm_connector_type_id', $realChargerConnectorId );
         $query -> whereHas( 'charger', function( $query ) use ( $chargerId ) {
           $query -> where( 'charger_id', $chargerId );
         });
@@ -58,17 +62,17 @@ class OrderFinder
   }
 
   /**
-   * Kind of orders to find.
+   * Orders we don't care.
    * 
    * @return array
    */
-  private function orderStatuses()
+  private function finishedOrders()
   {
     return [
-      OrderStatusEnum :: NOT_CONFIRMED,
-      OrderStatusEnum :: UNPLUGGED,
+      OrderStatusEnum :: FINISHED,
+      OrderStatusEnum :: BANKRUPT,
+      OrderStatusEnum :: PAYMENT_FAILED,
       OrderStatusEnum :: CANCELED,
-      OrderStatusEnum :: ON_HOLD,
     ];
   }
 }

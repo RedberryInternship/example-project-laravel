@@ -17,8 +17,7 @@ class OrdersEditor
     if( $orders )
     {
       $orders -> each( function( $order ) {
-        $order -> shouldGoToPenalty() && 
-        $order -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 
+        $order -> shouldGoToPenalty() && $order -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 
       });
     }
   }

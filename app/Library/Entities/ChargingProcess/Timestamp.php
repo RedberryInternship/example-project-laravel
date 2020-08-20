@@ -10,7 +10,6 @@ use App\Config;
 
 class Timestamp
 {
-
   /**
    * Order instance for current charging process.
    * 
@@ -46,7 +45,66 @@ class Timestamp
    */
   public function getInitiatedTimestamp()
   {
-      return $this -> getChargingStatusTimestamp( OrderStatusEnum :: INITIATED );
+    return $this -> getChargingStatusTimestamp( OrderStatusEnum :: INITIATED );
+  }
+
+  /**
+   * Get start timestamp.
+   * 
+   * @return Carbon|null
+   */
+  public function getStartTimestamp(): ?Carbon
+  {
+   return $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
+  }
+
+  /**
+   * Get end timestamp.
+   * 
+   * @return Carbon|null
+   */
+  public function getEndTimestamp(): ?Carbon
+  {
+    $isChargerFast    = $this -> order -> charger_connector_type -> isChargerFast();
+
+    if( $isChargerFast )
+    {
+        $endTimestamp = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
+    }
+    else
+    {
+        $endTimestamp = $this -> getStopChargingTimestamp();
+    }
+    
+    if( ! $endTimestamp )
+    {
+        $endTimestamp = now();
+    }
+    
+    return $endTimestamp;
+  }
+
+  /**
+   * Get charging duration.
+   * 
+   * @return int
+   */
+  public function getChargingDuration(): ?int
+  {
+    $startTimestamp = $this -> getStartTimestamp();
+    $endTimestamp   = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
+
+    if( (!! $startTimestamp) && (!! $endTimestamp) )
+    {
+      return $startTimestamp -> diffInMinutes( $endTimestamp );
+    }
+    
+    if( (!! $startTimestamp) && ! $endTimestamp )
+    {
+      return $startTimestamp -> diffInMinutes(now());
+    }
+
+    return 0;
   }
 
   /**
@@ -56,12 +114,12 @@ class Timestamp
    */
   public function getStopChargingTimestamp()
   {
-      if( $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP ) )
-      {
-          return $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP );
-      }
+    if( $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP ) )
+    {
+        return $this -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP );
+    }
 
-      return $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED );
+    return $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGED );
   }
 
   /**
@@ -83,12 +141,12 @@ class Timestamp
    */
   public function getChargingStatusTimestampInMilliseconds( $status )
   {
-      $timestamp      = $this -> order -> charging_status_change_dates [ $status ];
+    $timestamp      = $this -> order -> charging_status_change_dates [ $status ];
 
-      $milliseconds   = $timestamp * 1000;
-      $milliseconds   = round( $milliseconds );
+    $milliseconds   = $timestamp * 1000;
+    $milliseconds   = round( $milliseconds );
 
-      return $milliseconds;
+    return $milliseconds;
   }
 
   /**
@@ -99,14 +157,14 @@ class Timestamp
    */
   public function getChargingStatusTimestamp( $status )
   {
-      $statusTimestamp = @ $this -> order -> charging_status_change_dates [ $status ];
-            
-      if( ! $statusTimestamp )
-      {
-        return null;
-      }
-            
-      return Carbon :: createFromTimestamp( $statusTimestamp );
+    $statusTimestamp = @ $this -> order -> charging_status_change_dates [ $status ];
+        
+    if( ! $statusTimestamp )
+    {
+    return null;
+    }
+        
+    return Carbon :: createFromTimestamp( $statusTimestamp );
   }
 
   /**
@@ -116,14 +174,14 @@ class Timestamp
    */
   public function calculatePenaltyStartTime()
   {
-      $penaltyReliefModeStartTime = $this -> getStopChargingTimestamp();
+    $penaltyReliefModeStartTime = $this -> getStopChargingTimestamp();
 
-      $config               = Config :: first();
-      $penaltyReliefMinutes = $config -> penalty_relief_minutes;
-      $penaltyStartTime     = $penaltyReliefModeStartTime -> addMinutes( $penaltyReliefMinutes );
-      $penaltyStartTime     = $penaltyStartTime -> timestamp * 1000;
+    $config               = Config :: first();
+    $penaltyReliefMinutes = $config -> penalty_relief_minutes;
+    $penaltyStartTime     = $penaltyReliefModeStartTime -> addMinutes( $penaltyReliefMinutes );
+    $penaltyStartTime     = $penaltyStartTime -> timestamp * 1000;
 
-      return $penaltyStartTime;
+    return $penaltyStartTime;
   }
 
   /**
@@ -133,22 +191,14 @@ class Timestamp
    */
   public function calculateChargingElapsedTimeInMinutes()
   {
-      $startChargingTime   = $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
-      
-      if( $this -> order -> charger_connector_type -> isChargerFast() )
-      {
-          $finishChargingTime = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
-      }
-      else
-      {
-          $finishChargingTime = $this -> getStopChargingTimestamp();    
-      }
+    $startChargingTime   = $this -> getStartTimestamp();
+    $finishChargingTime  = $this -> getEndTimestamp();
 
-      if( ! $finishChargingTime )
-      {
-          $finishChargingTime = now();
-      }
-              
-      return $finishChargingTime -> diffInMinutes( $startChargingTime );
+    if( ! $finishChargingTime )
+    {
+        $finishChargingTime = now();
+    }
+            
+    return $finishChargingTime -> diffInMinutes( $startChargingTime );
   }
 }

@@ -21,10 +21,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/charger-groups', function (Request $request) {
-	$groups = ChargerGroup::all();
+	# $groups = ChargerGroup::all();
 
 	return [
-		'groups' => $groups
+		# 'groups' => $groups
 	];
 });
 

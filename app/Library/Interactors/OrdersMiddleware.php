@@ -16,11 +16,11 @@ class OrdersMiddleware
    * @return void
    */
   public static function check( $chargerTransactionId ): void
-  {
+  {    
     $result     = ChargingProcessDataGetter :: get  ( $chargerTransactionId );
     $foundOrder = OrderFinder               :: instance( $result ) -> find();
-
-    $foundOrder && OrderEditor :: instance()
+        
+    OrderEditor :: instance()
       -> setChargerTransactionId( $chargerTransactionId )
       -> setChargerAttributes   ( $result               )
       -> setOrder               ( $foundOrder           )

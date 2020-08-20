@@ -13,7 +13,7 @@ class ImportPhoneCodes
    */
   public static function execute(): void
   {
-    $phoneCodes           = DataGetter :: get( 'phone_codes' );
+    $phoneCodes           = DataGetter :: get( 'phone_codes' ) -> RECORDS;
     $formattedPhoneCodes  = self :: format( $phoneCodes );
 
     PhoneCode :: insert( $formattedPhoneCodes );

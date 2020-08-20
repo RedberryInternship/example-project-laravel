@@ -1,10 +1,8 @@
 <?php
 
-
 namespace App\Http\Controllers\Api\ChargerTransactions\V1;
 
 use App\Library\Interactors\OrdersMiddleware;
-use App\Library\Interactors\Firebase;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use App\Order;
@@ -29,14 +27,13 @@ class TransactionController extends Controller
 
     if( $order )
     {
+      Log :: channel( 'feedback-update' ) -> info( 'Update Happened | Transaction ID - ' . $transaction_id . ' | Value - ' . $value );
       $order -> kilowatt -> updateConsumedKilowatts( $value );
       $order -> chargingUpdate();
     }
     else
     {
-      Log :: channel( 'transaction_update' ) -> info(
-        'There is no such order with transaction id of '. $transaction_id,
-      );
+      Log :: channel( 'feedback-update' ) -> info( 'Nothing To Update |'. $transaction_id );
     }
   }
 
@@ -50,20 +47,18 @@ class TransactionController extends Controller
    */
   public function finish( $transaction_id )
   {
+    Log :: channel( 'feedback-finish' ) -> info( 'FINISHED - Transaction ID - ' . $transaction_id );
+
     $order = Order :: where( 'charger_transaction_id', $transaction_id ) -> first();
 
     if( $order )
     {
       $order -> finish();
-      Firebase :: sendFinishNotificationWithData( $transaction_id );
     }
     else
     {
-      Log :: channel( 'transaction_stop' ) -> info(
-        'There is no such order with transaction id of '. $transaction_id,
-      );
+      Log :: channel( 'feedback-finish' ) -> info( 'Nothing To Finish - Transaction ID - ' . $transaction_id );
     }
-
   }
 }
 

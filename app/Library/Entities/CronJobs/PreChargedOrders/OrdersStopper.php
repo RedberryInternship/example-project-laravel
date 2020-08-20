@@ -3,6 +3,7 @@
 namespace App\Library\Entities\CronJobs\PreChargedOrders;
 
 use App\Enums\OrderStatus as OrderStatusEnum;
+use Illuminate\Support\Facades\Log;
 use App\Facades\Charger;
 use App\Order;
 
@@ -26,8 +27,21 @@ class OrdersStopper
         $chargerId      = $order -> charger_connector_type -> charger -> charger_id;
         $transactionId  = $order -> charger_transaction_id;
         $order -> updateChargingStatus( OrderStatusEnum :: CHARGED );
-        Charger :: stop( $chargerId, $transactionId );
+        
+        self :: log( $order );
+        # Charger :: stop( $chargerId, $transactionId );
       }
     }
+  }
+
+  /**
+   * log.
+   * 
+   * @param Order $order
+   * @return void
+   */
+  private static function log( Order $order )
+  {
+    Log :: channel( 'pre-charged' ) -> info('Already Charged - Order ID '. $order -> id . ' | Transaction ID - '. $order -> charger_transaction_id );
   }
 }

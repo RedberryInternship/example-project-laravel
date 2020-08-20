@@ -6,11 +6,13 @@ use App\Enums\PaymentType as PaymentTypeEnum;
 use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
+use App\Library\Entities\ChargingProcess\CacheOrderDetails;
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Facades\Charger as RealCharger;
 use App\Library\Interactors\Firebase;
 use App\Library\Interactors\Payment;
-
+use App\Facades\Simulator;
+ 
 use App\Config;
 
 trait Order
@@ -39,16 +41,17 @@ trait Order
         /**
          * TODO: This should be changed when app is in production
          */
-        if( $chargerInfo -> chargePointCode == "0110" )
-        {
-            $kiloWattHour  = $chargerInfo -> kiloWattHour;
-        }
-        else
-        {
-            $kiloWattHour  = $chargerInfo -> kiloWattHour / 1000;
-        }
+        
+        # if( $chargerInfo -> chargePointCode == "0110" )
+        # {
+        #     $kiloWattHour  = $chargerInfo -> kiloWattHour;
+        # }
+        # else
+        # {
+        #     $kiloWattHour  = $chargerInfo -> kiloWattHour / 1000;
+        # }
 
-        return $kiloWattHour;
+        return $chargerInfo -> kiloWattHour;
     }
 
     /**
@@ -77,8 +80,9 @@ trait Order
         $chargerType == ChargerTypeEnum :: FAST
             ? $this -> updateFastChargerOrder()
             : $this -> updateLvl2ChargerOrder();
-        
+
         $this -> sendFirebaseNotification();
+        CacheOrderDetails :: execute( $this );
     }
 
     /**
@@ -98,6 +102,7 @@ trait Order
      */
     private function updateFastChargerOrder()
     {
+        $this -> updateChargingPowerIfNotUpdated();
         $chargingStatus = $this -> charging_status;
 
         if( $chargingStatus == OrderStatusEnum :: CHARGING )
@@ -113,7 +118,9 @@ trait Order
                         $this -> charger_transaction_id 
                     );
 
+                    # TODO: this should be deleted in production
                     $this -> updateChargingStatus( OrderStatusEnum :: USED_UP );
+                    # Simulator :: plugOffCable( $charger -> charger_id );
                 }
             }
             else
@@ -142,17 +149,21 @@ trait Order
 
             if( $this -> chargingHasStarted() )
             {
-                $this -> updateChargingPower();
+                $this -> updateChargingPowerIfNotUpdated();
                 $this -> updateChargingStatus( OrderStatusEnum :: CHARGING );   
                 
-                if( $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT )
+
+                if( ! $this -> isChargingFree() )
                 {
-                    $this -> pay( PaymentTypeEnum :: CUT, $this -> target_price );
-                }
-                else
-                {
-                    $moneyToCut = Config :: initialChargePrice();
-                    $this -> pay( PaymentTypeEnum :: CUT, $moneyToCut );
+                    if( $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT )
+                    {
+                        $this -> pay( PaymentTypeEnum :: CUT, $this -> target_price );
+                    }
+                    else
+                    {
+                        $moneyToCut = Config :: initialChargePrice();
+                        $this -> pay( PaymentTypeEnum :: CUT, $moneyToCut );
+                    }
                 }
             }       
         break;
@@ -175,7 +186,7 @@ trait Order
             }
             else
             {
-                if( $this -> shouldPay() )
+                if( $this -> shouldPay() && (! $this -> isChargingFree()) )
                 {
                     $moneyToCut = Config :: nextChargePrice();
                     $this -> pay( PaymentTypeEnum :: CUT, $moneyToCut );
@@ -199,11 +210,13 @@ trait Order
      * 
      * @return void
      */
-    private function updateChargingPower()
+    private function updateChargingPowerIfNotUpdated()
     {
-        $chargingPower  = $this -> getChargingPower();
-
-        $this -> kilowatt -> setChargingPower( $chargingPower );
+        if( ! $this -> kilowatt -> charging_power )
+        {
+            $chargingPower  = $this -> getChargingPower();
+            $this -> kilowatt -> setChargingPower( $chargingPower );
+        }
     }
 
     /**
@@ -215,12 +228,20 @@ trait Order
     public function finish()
     {
         $chargerType = $this -> charger_connector_type -> determineChargerType();
-
+        
+        $this -> updateFinishedTimestamp();
+        
         $chargerType == ChargerTypeEnum :: FAST
             ? $this -> makeLastPaymentsForFastCharging()
             : $this -> makeLastPaymentsForLvl2Charging();
-
-        $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
+        
+        if( $this -> canGoToFinishStatus( $this -> charging_status ) )
+        {
+            $this -> updateChargingStatus( OrderStatusEnum :: FINISHED );
+            Firebase :: sendFinishNotificationWithData( $this -> charger_transaction_id );
+        }
+        
+        CacheOrderDetails :: execute( $this );
     }
 
     /**
@@ -242,7 +263,10 @@ trait Order
      */
     private function makeLastPaymentsForLvl2Charging()
     {
-        $this -> cutOrRefund();
+        if( ! $this -> isChargingFree() )
+        {
+            $this -> cutOrRefund();
+        }
 
         if( $this -> isOnPenalty() )
         {
@@ -279,7 +303,7 @@ trait Order
      */
     public function pay( $paymentType, $amount )
     {
-        $amount = intval( $amount );
+        $amount = intval( $amount ) * 100; #GEL
 
         switch( $paymentType )
         {
@@ -287,5 +311,29 @@ trait Order
             case PaymentTypeEnum :: FINE    : return Payment :: charge ( $this, $amount );
             case PaymentTypeEnum :: CUT     : return Payment :: cut    ( $this, $amount );
         }
+    }
+
+    /**
+     * Set finished timestamp.
+     * 
+     * @return void
+     */
+    public function updateFinishedTimestamp(): void
+    {
+        $this -> update(
+            [
+                'real_end_date' => $this -> getRealFinishedTimestamp(),
+            ]
+        );
+    }
+
+    /**
+     * Get charging finished timestamp.
+     * 
+     * @return string|null
+     */
+    private function getRealFinishedTimestamp()
+    {
+        return RealCharger :: transactionInfo( $this -> charger_transaction_id ) -> transStop / 1000;
     }
 }

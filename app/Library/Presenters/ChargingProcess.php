@@ -34,11 +34,12 @@ class ChargingProcess
   {
     $startChargingTime = Timestamp :: build( $order ) -> getChargingStatusTimestampInMilliseconds( OrderStatusEnum :: CHARGING );
 
-    $this -> updateChargingStatus             ( $order );
+    $this -> triggerPenaltyChecker            ( $order );
     $this -> addTargetPriceWhenByAmount       ( $order );
     $this -> addTimestampIfEnteredPenaltyMode ( $order );
     $this -> addPenaltyFeeIfOnPenalty         ( $order );
     $this -> setFinishedMessageWhenFinished   ( $order );
+    $this -> setIsChargingFreeAttribute       ( $order );
         
     $mainResourceData = [
       'order_id'                      => $order -> id,
@@ -100,8 +101,13 @@ class ChargingProcess
    * @param  Order $order 
    * @return void
    */
-  private function updateChargingStatus( Order $order )
+  private function triggerPenaltyChecker( Order $order )
   {
+    if( $order -> charger_connector_type -> isChargerFast() )
+    {
+      return;
+    }
+
     if( $order -> shouldGoToPenalty() )
     {
         $order -> updateChargingStatus( OrderStatusEnum :: ON_FINE); 
@@ -175,6 +181,26 @@ class ChargingProcess
       $this -> setAdditionalData(
         [
           'message' => $this -> messages [ 'charging_successfully_finished' ],
+        ]
+      );
+    }
+  }
+
+  /**
+   * Set isChargingFree attribute.
+   * 
+   * @param  Order $order
+   * @return void
+   */
+  private function setIsChargingFreeAttribute( Order $order )
+  {
+    $isChargingFree = $order -> isChargingFree();
+
+    if( ! is_null( $isChargingFree ) )
+    {
+      $this -> setAdditionalData(
+        [
+          'is_charging_free' => $isChargingFree,
         ]
       );
     }

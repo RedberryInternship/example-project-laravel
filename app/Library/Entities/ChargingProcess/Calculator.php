@@ -36,7 +36,7 @@ trait Calculator
           -> where( 'type', PaymentTypeEnum :: CUT ) 
           -> sum( 'price' );
 
-      $paidMoney = round        ( $paidMoney, 2 );
+      $paidMoney = round( $paidMoney, 2 );
       
       return $paidMoney;
   }
@@ -102,9 +102,7 @@ trait Calculator
   {
       $consumedMoney          = 0;
 
-      $chargingPriceRanges -> each( function ( $chargingPriceInstance ) 
-      use ( &$consumedMoney, $elapsedMinutes ) {
-          
+      $chargingPriceRanges -> each( function ( $chargingPriceInstance ) use ( &$consumedMoney, $elapsedMinutes ) {     
           $startMinutes       = $chargingPriceInstance -> start_minutes;
           $endMinutes         = $chargingPriceInstance -> end_minutes;
           $price              = $chargingPriceInstance -> price;
@@ -131,23 +129,60 @@ trait Calculator
   private function countConsumedMoneyByKilowatt()
   {
     $timestamp          = Timestamp :: build( $this );
-    $chargingPower      = $this -> kilowatt -> getChargingPower();        
-    $startChargingTime  = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
-    $startChargingTime  = $startChargingTime -> toTimeString();
     $elapsedMinutes     = $timestamp -> calculateChargingElapsedTimeInMinutes();
+    $chargingPrice      = $this -> getCurrentChargingPrice();
+    
+    return $chargingPrice * $elapsedMinutes;
+  }
+
+  /**
+   * Get current charging price.
+   * 
+   * @return float
+   */
+  private function getCurrentChargingPrice()
+  {
+    $timestamp          = Timestamp :: build( $this );
+    $chargingPower      = $this -> kilowatt -> getChargingPower();
+    $startChargingTime  = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
+
+    if( ! $startChargingTime )
+    {
+        return null;
+    }
 
     $chargingPriceInfo  = $this 
-        -> charger_connector_type 
-        -> getSpecificChargingPrice( $chargingPower, $startChargingTime );
+    -> charger_connector_type 
+    -> getSpecificChargingPrice( $chargingPower, $startChargingTime  -> toTimeString() );
     
     if( ! $chargingPriceInfo )
     {
         throw new NoSuchChargingPriceException();
     }
 
-    $chargingPrice = $chargingPriceInfo -> price;
+    return $chargingPriceInfo -> price;
+  }
+
+  /**
+   * Determine if charging price is zero a.k.a. free.
+   * 
+   * @return bool
+   */
+  public function isChargingFree()
+  {
+    if( $this -> charger_connector_type -> isChargerFast() )
+    {
+        return false;
+    }
+
+    $currentChargingPrice = $this -> getCurrentChargingPrice();
+
+    if( is_null( $currentChargingPrice ) )
+    {
+        return $currentChargingPrice;
+    }
     
-    return $chargingPrice * $elapsedMinutes;
+    return $currentChargingPrice == 0;
   }
 
    /**
@@ -194,8 +229,19 @@ trait Calculator
    */
   public function countPenaltyFee()
   {
+    if( $this -> charger_connector_type -> isChargerFast() )
+    {
+        return null;
+    }
+
     $timestamp              = Timestamp :: build( $this );
     $penaltyTimestamp       = $timestamp -> getPenaltyTimestamp();
+
+    if( ! $penaltyTimestamp )
+    {
+        return null;
+    }
+
     $finishedTimestamp      = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
 
     if( ! $finishedTimestamp )

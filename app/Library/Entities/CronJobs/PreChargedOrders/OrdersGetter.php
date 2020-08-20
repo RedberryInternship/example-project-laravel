@@ -13,7 +13,7 @@ class OrdersGetter
    * is reached then the car is considered 
    * to be fully charged.
    */
-  private static $allowedMinutes = 3;
+  private static $allowedMinutes = 5;
 
   /**
    * Get pre charged orders.

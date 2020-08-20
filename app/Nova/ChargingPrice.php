@@ -4,9 +4,9 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\HasOne;
+
 class ChargingPrice extends Resource
 {
     public static $displayInNavigation = false;
@@ -43,12 +43,12 @@ class ChargingPrice extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Charger Connector Type', 'chargerConnectorType', 'App\Nova\ChargerConnectorType'),
-            Text::make('min_kwt'),
-            Text::make('max_kwt'),
-            Text::make('start_time'),
-            Text::make('end_time'),
-            Text::make('price'),
+            HasOne::make('Charger Connector Type'),
+            Text::make('Min Kwt'),
+            Text::make('Max Kwt'),
+            Text::make('Start Time'),
+            Text::make('End Time'),
+            Text::make('Price'),
         ];
     }
 

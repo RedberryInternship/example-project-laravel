@@ -5,7 +5,6 @@ namespace App\Library\Entities\ChargingProcess;
 use App\Library\Entities\ChargingProcess\Timestamp;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
-
 use App\Config;
 
 /**
@@ -95,6 +94,11 @@ trait State
    */
   public function shouldGoToPenalty()
   {
+    if( $this -> charger_connector_type -> isChargerFast() )
+    {
+      return false;
+    }
+
     if(  ! $this -> carHasAlreadyStoppedCharging() )
     {
         return false;
@@ -110,21 +114,40 @@ trait State
         return false;
     }
 
-    $elapsedTime          = $chargedTime -> diffInMinutes( now() );
+    $elapsedTime         = $chargedTime -> diffInMinutes( now() );
 
     return $elapsedTime >= $penaltyReliefMinutes;
   }
 
-    /**
-     * Determine if car has already stopped charging.
-     * 
-     * @return bool
-     */
-    private function carHasAlreadyStoppedCharging()
-    {
-        return  $this -> charging_status == OrderStatusEnum :: CHARGED 
-            ||  $this -> charging_status == OrderStatusEnum :: USED_UP ;
-    }
+  /**
+   * Determine if car has already stopped charging.
+   * 
+   * @return bool
+   */
+  private function carHasAlreadyStoppedCharging()
+  {
+      return in_array( $this -> charging_status, [ OrderStatusEnum :: CHARGED, OrderStatusEnum :: USED_UP ]);
+  }
+
+  /**
+   * Determine if order can go to finish status.
+   * 
+   * @param string|null
+   * @return bool
+   */
+  public function canGoToFinishStatus( $chargingStatus )
+  {
+    $finishableStatuses = [
+      OrderStatusEnum :: INITIATED ,
+      OrderStatusEnum :: CHARGING  ,
+      OrderStatusEnum :: CHARGED   ,
+      OrderStatusEnum :: USED_UP   ,
+      OrderStatusEnum :: ON_FINE   ,
+      OrderStatusEnum :: ON_HOLD   ,
+    ];
+
+    return in_array( $chargingStatus, $finishableStatuses );
+  }
 
    /**
    * Determine if consumed money is above 

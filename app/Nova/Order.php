@@ -7,10 +7,10 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\HasMany;
 use App\Nova\Filters\OrderType;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
-
 
 class Order extends Resource
 {
@@ -88,6 +88,8 @@ class Order extends Resource
                 ->sortable(),
             
             BelongsTo::make('User'),
+            
+            HasMany::make('Payments'),
 
             BelongsTo::make('Charger Connector Type')
                 -> displayUsing(function($chargerConnectorType) {
@@ -97,21 +99,25 @@ class Order extends Resource
             Text::make('Charging Status')
                 ->readonly(),
 
-            Text::make('Charge Fee'),
-
-            Text::make('Charge Time'),
-
             Text::make('Charger Transaction Id'),
 
-            Text::make('Confirm Date'),
+            Text::make('Charger Name') -> onlyOnDetail(),
 
-            Text::make('Price'),
+            Text::make('Charge Price'),
 
-            Text::make('Target Price'),
+            Text::make('Penalty Fee'),
 
-            Text::make('Comment'),
+            Text::make('Duration'),
+            
+            Text::make('Charge Power'),
 
-            DateTime::make('Created At'),
+            Text::make('Address') -> onlyOnDetail(),
+
+            Text::make('Start Date'),
+
+            Text::make('Comment') -> onlyOnDetail(),
+
+            DateTime::make('Created At') -> onlyOnDetail(),
         ];
     }
 

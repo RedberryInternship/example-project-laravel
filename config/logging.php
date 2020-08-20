@@ -41,20 +41,21 @@ return [
             'ignore_exceptions' => false,
         ],
 
-        'transaction_update' => [
-            'driver' => 'daily',
-            'path' => storage_path('logs/chargerTransactions/update.log'),
-            'level' => 'debug',
-        ],
-
-        'transaction_stop' => [
-            'driver' => 'daily',
-            'path' => storage_path('logs/chargerTransactions/stop.log'),
-            'level' => 'debug',
-        ],
         'pay' => [
             'driver' => 'daily',
             'path' => storage_path('logs/payments/pay.log'),
+            'level' => 'debug',
+        ],
+        
+        'start-charging' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/charging/starts.log'),
+            'level' => 'debug',
+        ],
+
+        'pre-charged' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/charging/pre-charged.log'),
             'level' => 'debug',
         ],
 
@@ -67,6 +68,42 @@ return [
         'payment-responses' => [
             'driver' => 'daily',
             'path' => storage_path('logs/payments/georgian-card-responses.log'),
+            'level' => 'debug',
+        ],
+
+        'firebase-update' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/firebase/update.log'),
+            'level' => 'debug',
+        ],
+        
+        'firebase-finish' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/firebase/finish.log'),
+            'level' => 'debug',
+        ],
+       
+        'firebase-payment-failed' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/firebase/payment-failed.log'),
+            'level' => 'debug',
+        ],
+
+        'orders-check' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/orders-check/orders-check.log'),
+            'level' => 'debug',
+        ],
+       
+        'feedback-update' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/feedback/update.log'),
+            'level' => 'debug',
+        ],
+
+        'feedback-finish' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/feedback/finish.log'),
             'level' => 'debug',
         ],
 

@@ -3,6 +3,7 @@
 namespace App\Library\Interactors;
 
 use App\Library\Entities\Firebase\FinishNotificationSender;
+use App\Library\Entities\Firebase\PaymentFailedSender;
 use App\Library\Entities\Firebase\ActiveOrdersSender;
 
 class Firebase
@@ -28,5 +29,16 @@ class Firebase
   public static function sendFinishNotificationWithData( $chargerTransactionId ): void
   {
     FinishNotificationSender :: send( $chargerTransactionId );
+  }
+
+  /**
+   * Send failed payment notification with active orders.
+   * 
+   * @param  int $chargerTransactionId
+   * @return void
+   */
+  public static function sendPaymentFailedNotificationWithData( $chargerTransactionId ): void
+  {
+    PaymentFailedSender :: send( $chargerTransactionId );
   }
 }

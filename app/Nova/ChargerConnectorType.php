@@ -4,8 +4,11 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\HasMany;
+
+use App\ChargerConnectorType as CCT;
+use App\ConnectorType;
 
 class ChargerConnectorType extends Resource
 {
@@ -43,10 +46,27 @@ class ChargerConnectorType extends Resource
      */
     public function fields(Request $request)
     {
-        return [
+
+        $fields = [
             ID::make()->sortable(),
-            Text::make('connector_type_id'),
+            Text::make('Connector Type', 'connector_type_id', function( $value ) {
+                return ConnectorType :: where( 'id', $value ) -> first() -> name;
+            }) -> readonly(),
         ];
+
+        if( $this -> id )
+        {
+            if(CCT :: find( $this -> id ) -> isChargerFast())
+            {
+                $fields []= HasMany::make('Fast Charging Prices');
+            }
+            else
+            {
+                $fields []= HasMany::make('Charging Prices');
+            }
+        }
+        
+        return $fields;
     }
 
     /**

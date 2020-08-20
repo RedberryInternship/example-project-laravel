@@ -2,15 +2,15 @@
 
 namespace App\Nova;
 
-use App\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\ChargerStatus;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\HasMany;
 use Spatie\NovaTranslatable\Translatable;
-use App\Nova\Filters\ChargerConnectorTypes;
 
 class Charger extends Resource
 {
@@ -80,7 +80,7 @@ class Charger extends Resource
 
             Translatable::make([
                 Text::make('Location')
-                    ->sortable()
+                    ->sortable() -> hideFromIndex()
             ])->locales(['en', 'ru', 'ka']),
 
             Boolean::make('Public')
@@ -90,19 +90,16 @@ class Charger extends Resource
             Boolean::make('Active')
                 ->trueValue(1)
                 ->falseValue(0),
+            
+            Text::make('Status') -> readonly(),
 
             Text::make('Lat'),
 
             Text::make('Lng'),
 
-            BelongsToMany::make('Connector Types'),
-
-            BelongsToMany::make('Tags'),
+            HasMany::make('Charger Connector Types'),
             
             BelongsTo::make('Company'),
-
-            BelongsToMany::make('Groups')
-                -> nullable(),
 
             BelongsToMany::make('Business Services')
                 -> nullable()
@@ -128,7 +125,9 @@ class Charger extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new ChargerStatus,
+        ];
     }
 
     /**

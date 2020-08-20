@@ -13,7 +13,7 @@ class OrdersFilter
    * 
    * @var int $allowedMinutes
    */
-  private static $allowedMinutes = 2;
+  private static $allowedMinutes = 5;
 
   /**
    * Filter not confirmed by elapsed time.

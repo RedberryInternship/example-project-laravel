@@ -2,12 +2,12 @@
 
 namespace App\Library\Adapters\RealChargers;
 
-use App\Exceptions\Charger\FindChargerException;
-use App\Exceptions\Charger\MishasBackException;
+use App\Exceptions\Charger\TransactionAlreadyFinishedException;
+use App\Exceptions\Charger\ChargerTransactionInfoException;
 use App\Exceptions\Charger\StartChargingException;
 use App\Exceptions\Charger\StopChargingException;
-use App\Exceptions\Charger\ChargerTransactionInfoException;
-use App\Exceptions\Charger\TransactionAlreadyFinishedException;
+use App\Exceptions\Charger\FindChargerException;
+use App\Exceptions\Charger\MishasBackException;
 
 class Charger extends Base
 {
@@ -77,11 +77,10 @@ class Charger extends Base
      */
     public function find($charger_id)
     {
-        if( $charger_id == 27833 )
-        {
-            $this -> url = $this -> realChargersBaseUrl;
-        }
-
+        # if( $charger_id == 27833 )
+        # {
+        #     $this -> url = $this -> realChargersBaseUrl;
+        # }
 
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/info/' 
@@ -120,10 +119,10 @@ class Charger extends Base
      */
      public function start($charger_id, $connector_id)
      {
-        if( $charger_id == 27833 )
-        {
-            $this -> url = $this -> realChargersBaseUrl;
-        }
+        # if( $charger_id == 27833 )
+        # {
+        #     $this -> url = $this -> realChargersBaseUrl;
+        # }
 
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/start/'
@@ -147,10 +146,7 @@ class Charger extends Base
                 );
 
             case -100:
-                throw new StartChargingException(
-                    'Charger with charger_id of ' . $charger_id . ' is already charging or it is offline!',
-                    400,
-                );
+                return -100;
             case -101:
                 return -101;
             case 0:
@@ -169,10 +165,10 @@ class Charger extends Base
      */
     public function stop( $charger_id, $transaction_id )
     {
-        if( $charger_id == 27833 )
-        {
-            $this -> url = $this -> realChargersBaseUrl;
-        }
+        # if( $charger_id == 27833 )
+        # {
+        #     $this -> url = $this -> realChargersBaseUrl;
+        # }
 
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/stop/'
@@ -202,19 +198,22 @@ class Charger extends Base
     {
         /** This Code Should be deleted later on. I am ashamed that Im coding it. */
 
-        $order = \App\Order :: with( 'charger_connector_type.charger' ) 
-            -> where( 'charger_transaction_id', $id ) 
-            -> first();
+        # $order = \App\Order :: with( 'charger_connector_type.charger' ) 
+        #     -> where( 'charger_transaction_id', $id ) 
+        #     -> first()
+        # if( $order )
+        # {
+        #     $charger_id = $order -> charger_connector_type -> charger -> charger_id;
 
-        if( $order )
-        {
-            $charger_id = $order -> charger_connector_type -> charger -> charger_id;
-    
-            if( $charger_id == 27833 )
-            {
-                $this -> url = $this -> realChargersBaseUrl;
-            }
-        }
+        #     if( $charger_id == 27833 )
+        #     {
+        #         $this -> url = $this -> realChargersBaseUrl;
+        #     }
+        # }
+        # else
+        # {
+        #     $this -> url = $this -> realChargersBaseUrl;
+        # }
         
         /** Ends here. */
 

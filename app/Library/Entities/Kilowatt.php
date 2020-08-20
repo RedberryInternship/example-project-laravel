@@ -10,7 +10,7 @@ trait Kilowatt
      * @param   float|string $chargingPower
      * @return  void
      */
-    public function setChargingPower($chargingPower)
+    public function setChargingPower( $chargingPower )
     {
         $this -> charging_power = (float) $chargingPower;
         $this -> save();

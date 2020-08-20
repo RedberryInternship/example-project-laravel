@@ -1,0 +1,4 @@
+[{"id":1, "status":1, "name":"", "price":0.0, "range_end":5.0, "range_start":0.0},
+ {"id":2, "status":1, "name":"", "price":0.0, "range_end":10.0, "range_start":5.0},
+ {"id":3, "status":1, "name":"", "price":0.0, "range_end":15.0, "range_start":10.0},
+ {"id":4, "status":1, "name":"title", "price":0.0, "range_end":21.0, "range_start":15.0}]

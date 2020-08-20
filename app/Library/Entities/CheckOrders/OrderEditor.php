@@ -4,6 +4,7 @@ namespace App\Library\Entities\CheckOrders;
 
 use App\Library\DataStructures\RealChargerAttributes;
 use App\Enums\OrderStatus as OrderStatusEnum;
+use Illuminate\Support\Facades\Log;
 use App\Facades\Charger;
 use App\Order;
 
@@ -79,9 +80,12 @@ class OrderEditor
   {
     if( $this -> shouldStop() )
     {
-      $this -> stop();
+      # $this -> stop();
+
+      $orderExists =  !! $this -> order ? 'TRUE' : 'FALSE'; 
+      Log :: channel( 'orders-check' ) -> info( 'Would Be Stopped Transaction - '. $this -> chargerTransactionId . ' | order exists - ' . $orderExists );
     }
-    else
+    else if( $this -> shouldContinueCharging() )
     {
       $this -> updateOrder();
     }
@@ -94,9 +98,17 @@ class OrderEditor
    * @param  Order $order
    * @return bool
    */
-  private function shouldStop()
+  private function shouldStop(): bool
   {
-    return ! $this -> order || in_array( $this -> order -> charging_status, $this -> ordersToStop());
+    if( ! $this -> order )
+    {
+      return true;
+    }
+    else if( in_array( $this -> order -> charging_status, $this -> ordersToStop()) )
+    {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -106,10 +118,32 @@ class OrderEditor
    */
   private function stop()
   {
-    Charger :: stop( 
+    Log :: channel( 'orders-check' ) -> info( 'Stopped Transaction - '. $this -> chargerTransactionId );  
+    
+    $this -> order && $this -> order -> update([ 'checked' => true ]);
+
+    Charger :: stop(
       $this -> chargerAttributes -> getChargerId(),
       $this -> chargerTransactionId,
     );
+  }
+
+  /**
+   * if status is on hold or not confirmed,
+   * then charging should be continued...
+   * 
+   * @return bool
+   */
+  public function shouldContinueCharging(): bool
+  {
+    if( ! $this -> order )
+    {
+      return false;
+    }
+
+    $continuableStatuses = [ OrderStatusEnum :: ON_HOLD, OrderStatusEnum :: NOT_CONFIRMED ];
+
+    return in_array( $this -> order -> charging_status, $continuableStatuses );
   }
 
   /**
@@ -120,7 +154,6 @@ class OrderEditor
   private function ordersToStop()
   {
     return [
-      OrderStatusEnum :: UNPLUGGED,
       OrderStatusEnum :: CANCELED,
     ];
   }
@@ -132,8 +165,6 @@ class OrderEditor
    */
   public function updateOrder()
   {
-    $this -> order -> charger_connector_type -> isChargerFast() 
-      ? $this -> order -> updateChargingStatus( OrderStatusEnum :: CHARGING  )
-      : $this -> order -> updateChargingStatus( OrderStatusEnum :: INITIATED );
+    $this -> order -> updateChargingStatus( OrderStatusEnum :: CHARGING );
   }
 }

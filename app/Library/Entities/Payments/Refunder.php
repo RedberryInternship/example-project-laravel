@@ -34,7 +34,7 @@ class Refunder
         'user_card_id' => $order -> user_card_id,
         'order_id'     => $order -> id,
         'trx_id'       => null, # @ refund doesn't have trx_id
-        'price'        => $amount,
+        'price'        => $amount / 100,
         'prrn'         => null, # @ refund doesn't have rrn
         'type'         => PaymentTypeEnum :: REFUND,
       ]

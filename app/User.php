@@ -95,11 +95,9 @@ class User extends Authenticatable implements JWTSubject
             return false;
         }
 
-        $phoneNumber = $phoneNumber[0] == '+' ? $phoneNumber : '+' . $phoneNumber;
-
         return SMS::sendSms([
             'message'     => $message,
-            'phoneNumber' => $phoneNumber
+            'phoneNumber' => self::modifyPhoneNumberFormat($phoneNumber)
         ]);
     }
 
@@ -139,8 +137,18 @@ class User extends Authenticatable implements JWTSubject
                     [ 'charging_status', '!=' , OrderStatus :: CANCELED       ],
                     [ 'charging_status', '!=' , OrderStatus :: BANKRUPT       ],
                     [ 'charging_status', '!=' , OrderStatus :: PAYMENT_FAILED ],
+                    [ 'charging_status', '!=' , OrderStatus :: NON_APP_MODE ],
                 ]
             );
+    }
+
+    public function orders_history()
+    {
+        return $this
+            -> hasMany( Order :: class )
+            -> where( 'charging_status', OrderStatus :: FINISHED )
+            -> whereNotNull( 'charger_name' )
+            -> orderBy( 'id', 'desc' );
     }
 
     public function user_cars()
@@ -233,5 +241,19 @@ class User extends Authenticatable implements JWTSubject
     public static function findBy($field, $value)
     {
         return self::where($field, $value) -> first();
+    }
+
+    public static function modifyPhoneNumberFormat($phoneNumber)
+    {
+        if (strlen($phoneNumber) == 9)
+        {
+            $phoneNumber = '+995' . $phoneNumber;
+        }
+        else if (strlen($phoneNumber) == '12' && $phoneNumber[0] != '+')
+        {
+            $phoneNumber = '+' . $phoneNumber;
+        }
+
+        return $phoneNumber;
     }
 }

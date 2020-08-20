@@ -3,6 +3,7 @@
 namespace App\Library\Entities\Firebase;
 
 use App\Http\Resources\Order as OrderResource;
+use Illuminate\Support\Facades\Log;
 use App\Library\Adapters\FCM;
 use App\Order;
 use App\User;
@@ -34,6 +35,12 @@ class FinishNotificationSender
     $ordersToSend = Order :: whereIn( 'id', $orderIds ) -> get();
     $data         = OrderResource :: collection( $ordersToSend ) -> resolve();
     
+    Log :: channel( 'firebase-finish' ) -> info(
+      [ 
+        'data' => $data,
+      ]
+    );
+
     FCM :: send( $user -> firebase_token, [ 'data' => $data ]);
   }
 }

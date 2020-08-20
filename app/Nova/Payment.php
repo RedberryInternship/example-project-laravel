@@ -5,7 +5,7 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
@@ -61,21 +61,13 @@ class Payment extends Resource
 
             BelongsTo::make('Order'),
 
+            Text::make('type'),
+
             Text::make('price'),
 
             Text::make('prrn'),
 
             Text::make('trx_id'),
-
-            Boolean::make('status'),
-
-            Boolean::make('active'),
-
-            Boolean::make('confirmed'),
-
-            Text::make('confirm_date'),
-
-            Text::make('date'),
 
             BelongsTo::make('User Card')
                 ->displayUsing(function($card) {
@@ -83,7 +75,10 @@ class Payment extends Resource
                         $card -> user -> first_name . ' ' .
                         $card -> user -> last_name . ' - ' .
                         $card -> masked_pan;
-                })
+                }),
+
+            DateTime::make('Created At')
+                ->readonly(),
         ];
     }
 
