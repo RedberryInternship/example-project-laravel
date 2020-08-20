@@ -16,14 +16,14 @@ class CleanUpAdditionalChargers
    */
   public static function execute( $realChargers ): void
   {
-    $realChargersIds  = self :: getRealChargerIds( $realChargers );
-    $localChargersIds = self :: getLocalChargerIds();
+    $realChargersIds    = self :: getRealChargerIds( $realChargers );
+    $localChargersIds   = self :: getLocalChargerIds();
 
-    $shouldBeDeactivated = array_diff( $localChargersIds, $realChargersIds );
+    $shouldNotBePresent = array_diff( $localChargersIds, $realChargersIds );
 
-    if( ! empty( $shouldBeDeactivated ) )
+    if( ! empty( $shouldNotBePresent ) )
     {
-      Charger :: whereIn( 'charger_id', $shouldBeDeactivated )
+      Charger :: whereIn( 'charger_id', $shouldNotBePresent )
         -> where( 'status', '!=', ChargerStatusEnum :: NOT_PRESENT )
         -> update(
           [ 

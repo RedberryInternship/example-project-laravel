@@ -2,12 +2,12 @@
 
 namespace App\Nova;
 
-use App\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\ChargerStatus;
 use Laravel\Nova\Fields\BelongsToMany;
 use Spatie\NovaTranslatable\Translatable;
 
@@ -129,7 +129,9 @@ class Charger extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new ChargerStatus,
+        ];
     }
 
     /**
