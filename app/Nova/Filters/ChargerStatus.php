@@ -19,12 +19,13 @@ class ChargerStatus extends BooleanFilter
      */
     public function apply(Request $request, $query, $value)
     {
+        $statuses = [];
         foreach( $value as $key => $val )
         {
-            $val && $query -> whereStatus( $key );
+            $val && $statuses []= $key;
         }
 
-        return $query;
+        return empty( $statuses ) ? $query : $query -> whereIn( 'status', $statuses );
     }
 
     /**
