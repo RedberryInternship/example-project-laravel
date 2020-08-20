@@ -24,7 +24,7 @@ Route::get('/charger-groups', function (Request $request) {
 	# $groups = ChargerGroup::all();
 
 	return [
-		'groups' => # $groups
+		# 'groups' => $groups
 	];
 });
 

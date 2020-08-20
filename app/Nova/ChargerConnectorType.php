@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasMany;
 
 use App\ChargerConnectorType as CCT;
+use App\ConnectorType;
 
 class ChargerConnectorType extends Resource
 {
@@ -45,9 +46,12 @@ class ChargerConnectorType extends Resource
      */
     public function fields(Request $request)
     {
+
         $fields = [
             ID::make()->sortable(),
-            Text::make('Connector Type Id'),
+            Text::make('Connector Type', 'connector_type_id', function( $value ) {
+                return ConnectorType :: where( 'id', $value ) -> first() -> name;
+            }) -> readonly(),
         ];
 
         if( $this -> id )

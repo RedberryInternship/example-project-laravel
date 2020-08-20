@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\ChargerStatus;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\HasMany;
 use Spatie\NovaTranslatable\Translatable;
 
 class Charger extends Resource
@@ -96,14 +97,9 @@ class Charger extends Resource
 
             Text::make('Lng'),
 
-            BelongsToMany::make('Connector Types'),
-
-            BelongsToMany::make('Tags'),
+            HasMany::make('Charger Connector Types'),
             
             BelongsTo::make('Company'),
-
-            BelongsToMany::make('Groups')
-                -> nullable(),
 
             BelongsToMany::make('Business Services')
                 -> nullable()
