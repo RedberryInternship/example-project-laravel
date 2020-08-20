@@ -5,7 +5,7 @@ namespace App\Library\Entities\CronJobs\RealChargersSync;
 use App\Enums\ChargerStatus as ChargerStatusEnum;
 use App\Charger;
 
-class DeactivateAdditionalChargers
+class CleanUpAdditionalChargers
 {
   /**
    * Deactivate chargers that are present in local DB
@@ -23,12 +23,11 @@ class DeactivateAdditionalChargers
 
     if( ! empty( $shouldBeDeactivated ) )
     {
-      Charger :: whereIn( 'charger_id', $shouldBeDeactivated ) 
-        -> where( 'active', '!=', false ) 
+      Charger :: whereIn( 'charger_id', $shouldBeDeactivated )
+        -> where( 'status', '!=', ChargerStatusEnum :: NOT_PRESENT )
         -> update(
           [ 
-            'active'  => false,
-            'status'  => ChargerStatusEnum :: INACTIVE,
+            'status'  => ChargerStatusEnum :: NOT_PRESENT,
           ]
         );
     }
