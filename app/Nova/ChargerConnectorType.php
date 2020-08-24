@@ -2,13 +2,13 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
+use App\ConnectorType;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasMany;
-
 use App\ChargerConnectorType as CCT;
-use App\ConnectorType;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class ChargerConnectorType extends Resource
 {
@@ -111,5 +111,13 @@ class ChargerConnectorType extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * Index query for charger connector types.
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        $query -> where( 'status', 'active' );
     }
 }
