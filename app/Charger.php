@@ -323,4 +323,29 @@ class Charger extends Model
     {
         return $this -> hasManyThrough(Order::class, ChargerConnectorType::class);
     }
+
+    /**
+     * Get charger ids with appropriate types.
+     * 
+     * @return array
+     */
+    public static function types(): array
+    {
+        $chargers = self :: with( 'charger_connector_types' ) -> get() 
+        -> map( function( $charger )
+        {
+            return [
+            'id' => $charger -> id,
+            'type' => $charger -> charger_connector_types -> first() -> determineChargerType()
+            ];
+        }) -> toArray();
+
+        $chargerTypes = [];
+        foreach( $chargers as $charger )
+        {
+        $chargerTypes[ $charger[ 'id' ] ] = $charger[ 'type' ];
+        }
+
+        return $chargerTypes;
+    }
 }
