@@ -88,7 +88,7 @@ class Charger extends Resource
                 ->trueValue(1)
                 ->falseValue(0),
 
-            Boolean::make('Active')
+            Boolean::make('Is Paid')
                 ->trueValue(1)
                 ->falseValue(0),
             
