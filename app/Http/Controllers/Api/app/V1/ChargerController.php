@@ -16,9 +16,6 @@ class ChargerController extends Controller
      */
     public function getChargers(Request $request, Charger $charger)
     {
-        $user    = auth('api') -> user();
-        $charger = $charger -> active();
-
         if ($request -> has('free'))
         {
             $charger = $charger -> filterByFreeOrNot($request -> get('free'));

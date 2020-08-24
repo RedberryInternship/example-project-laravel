@@ -93,11 +93,6 @@ class Charger extends Model
     {
         return $this -> belongsToMany('App\BusinessService', 'charger_business_services');
     }
-
-    public function scopeActive($query)
-    {
-        return $query -> where('active', 1);
-    } 
  
     public function scopeFilterByFreeOrNot($query, $free)
     {
