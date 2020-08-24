@@ -7,11 +7,11 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
-use App\Nova\Filters\ChargerType;
 use Laravel\Nova\Fields\BelongsTo;
-use App\Nova\Filters\ChargerStatus;
 use Laravel\Nova\Fields\BelongsToMany;
 use Spatie\NovaTranslatable\Translatable;
+use App\Nova\Filters\Charger\ChargerType;
+use App\Nova\Filters\Charger\ChargerStatus;
 
 class Charger extends Resource
 {

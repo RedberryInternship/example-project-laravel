@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Filters;
+namespace App\Nova\Filters\Charger;
 
 use App\Enums\ChargerStatus as ChargerStatusEnum;
 use Laravel\Nova\Filters\BooleanFilter;

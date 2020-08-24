@@ -1,14 +1,21 @@
 <?php
 
-namespace App\Nova\Filters;
+namespace App\Nova\Filters\Order;
 
+use App\Charger;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
 use App\Enums\ChargerType as ChargerTypeEnum;
-use App\Charger;
 
 class ChargerType extends Filter
 {
+    /**
+     * The filter's component.
+     *
+     * @var string
+     */
+    public $component = 'select-filter';
+
     /**
      * Apply the filter to the given query.
      *
@@ -21,11 +28,15 @@ class ChargerType extends Filter
     {
         if( $value == ChargerTypeEnum :: FAST )
         {
-            $query -> whereIn( 'id', $this -> getFastIds() );
+          $query -> whereHas( 'charger_connector_type.charger', function( $query ) {
+            return $query -> whereIn( 'id', Charger :: getFastIds() );
+          });
         }
         else if( $value == ChargerTypeEnum :: LVL2 )
         {
-            $query -> whereIn( 'id', $this -> getLvl2Ids() );
+          $query -> whereHas( 'charger_connector_type.charger', function( $query ) {
+            return $query -> whereIn( 'id', Charger :: getLvl2Ids() );
+          });
         }
 
         return $query;
@@ -43,45 +54,5 @@ class ChargerType extends Filter
             ChargerTypeEnum :: FAST => ChargerTypeEnum :: FAST,
             ChargerTypeEnum :: LVL2 => ChargerTypeEnum :: LVL2,
         ];
-    }
-
-    /**
-     * get lvl 2 charger ids.
-     * 
-     * @return array
-     */
-    private function getLvl2Ids(): array
-    {
-        $ids = [];
-
-        foreach( Charger :: types() as $key => $val )
-        {
-            if( $val == ChargerTypeEnum :: LVL2 )
-            {
-                $ids []= $key;
-            }
-        }
-
-        return $ids;
-    }
-    
-    /**
-     * get fast charger ids.
-     * 
-     * @return array
-     */
-    private function getFastIds(): array
-    {
-        $ids = [];
-
-        foreach( Charger :: types() as $key => $val )
-        {
-            if( $val == ChargerTypeEnum :: FAST )
-            {
-                $ids []= $key;
-            }
-        }
-
-        return $ids;
     }
 }

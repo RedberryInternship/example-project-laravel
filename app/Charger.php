@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 use App\Facades\Charger as MishasCharger;
 use Illuminate\Database\Eloquent\Builder;
+use App\Enums\ChargerType as ChargerTypeEnum;
 
 class Charger extends Model
 {
@@ -347,5 +348,45 @@ class Charger extends Model
         }
 
         return $chargerTypes;
+    }
+
+    /**
+     * get lvl 2 charger ids.
+     * 
+     * @return array
+     */
+    public static function getLvl2Ids(): array
+    {
+        $ids = [];
+
+        foreach( self :: types() as $key => $val )
+        {
+            if( $val == ChargerTypeEnum :: LVL2 )
+            {
+                $ids []= $key;
+            }
+        }
+
+        return $ids;
+    }
+    
+    /**
+     * get fast charger ids.
+     * 
+     * @return array
+     */
+    public static function getFastIds(): array
+    {
+        $ids = [];
+
+        foreach( self :: types() as $key => $val )
+        {
+            if( $val == ChargerTypeEnum :: FAST )
+            {
+                $ids []= $key;
+            }
+        }
+
+        return $ids;
     }
 }

@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Nova\Filters;
+namespace App\Nova\Filters\Charger;
 
+use App\Charger;
 use Illuminate\Http\Request;
-use Laravel\Nova\Filters\BooleanFilter;
+use Laravel\Nova\Filters\Filter;
+use App\Enums\ChargerType as ChargerTypeEnum;
 
-class UserType extends BooleanFilter
+class ChargerType extends Filter
 {
     /**
      * Apply the filter to the given query.
@@ -17,14 +19,13 @@ class UserType extends BooleanFilter
      */
     public function apply(Request $request, $query, $value)
     {
-        if ($value['active'])
+        if( $value == ChargerTypeEnum :: FAST )
         {
-            $query -> where('active', $value['active']);
+            $query -> whereIn( 'id', Charger :: getFastIds() );
         }
-
-        if ($value['verified'])
+        else if( $value == ChargerTypeEnum :: LVL2 )
         {
-            $query -> where('verified', $value['verified']);
+            $query -> whereIn( 'id', Charger :: getLvl2Ids() );
         }
 
         return $query;
@@ -39,8 +40,8 @@ class UserType extends BooleanFilter
     public function options(Request $request)
     {
         return [
-            'Active'   => 'active',
-            'Verified' => 'verified',
+            ChargerTypeEnum :: FAST => ChargerTypeEnum :: FAST,
+            ChargerTypeEnum :: LVL2 => ChargerTypeEnum :: LVL2,
         ];
     }
 }
