@@ -8,7 +8,9 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
-use App\Nova\Filters\OrderType;
+use App\Nova\Filters\Order\OrderType;
+use App\Nova\Filters\Order\ChargerType;
+use App\Nova\Filters\Order\ChargingType;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
@@ -141,7 +143,9 @@ class Order extends Resource
     public function filters(Request $request)
     {
         return [
-            new OrderType
+            new ChargingType,
+            new ChargerType,
+            new OrderType,
         ];
     }
 

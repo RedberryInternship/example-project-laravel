@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Filters;
+namespace App\Nova\Filters\Order;
 
 use App\Enums\OrderStatus;
 use Illuminate\Http\Request;

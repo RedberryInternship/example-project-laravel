@@ -73,6 +73,7 @@ class OrderFinder
       OrderStatusEnum :: BANKRUPT,
       OrderStatusEnum :: PAYMENT_FAILED,
       OrderStatusEnum :: CANCELED,
+      OrderStatusEnum :: UNPLUGGED,
     ];
   }
 }

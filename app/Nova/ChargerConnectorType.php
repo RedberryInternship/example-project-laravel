@@ -2,13 +2,14 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
+use App\ConnectorType;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasMany;
-
+use Laravel\Nova\Fields\BelongsTo;
 use App\ChargerConnectorType as CCT;
-use App\ConnectorType;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class ChargerConnectorType extends Resource
 {
@@ -20,7 +21,7 @@ class ChargerConnectorType extends Resource
      *
      * @var string
      */
-    public static $model = 'App\ChargerConnectorType';
+    public static $model = CCT :: class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -46,27 +47,37 @@ class ChargerConnectorType extends Resource
      */
     public function fields(Request $request)
     {
+        $isFast = null;
 
-        $fields = [
+        if( $this -> id )
+        {
+            $isFast = CCT :: find( $this -> id ) -> isChargerFast();
+        }
+        
+        return [
             ID::make()->sortable(),
             Text::make('Connector Type', 'connector_type_id', function( $value ) {
                 return ConnectorType :: where( 'id', $value ) -> first() -> name;
             }) -> readonly(),
-        ];
+            HasMany::make('Fast Charging Prices') -> canSee( function() use( $isFast ){
+                
+                if( is_null( $isFast ) )
+                {
+                    return true;
+                }
 
-        if( $this -> id )
-        {
-            if(CCT :: find( $this -> id ) -> isChargerFast())
-            {
-                $fields []= HasMany::make('Fast Charging Prices');
-            }
-            else
-            {
-                $fields []= HasMany::make('Charging Prices');
-            }
-        }
-        
-        return $fields;
+                return $isFast;
+            }),
+            HasMany::make('Charging Prices') -> canSee( function() use( $isFast ) {
+
+                if( is_null( $isFast ) )
+                {
+                    return true;
+                }
+                
+                return ! $isFast;
+            }),
+        ];
     }
 
     /**
@@ -111,5 +122,13 @@ class ChargerConnectorType extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * Index query for charger connector types.
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        $query -> where( 'status', 'active' );
     }
 }

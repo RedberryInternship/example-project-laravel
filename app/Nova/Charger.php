@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\BelongsTo;
-use App\Nova\Filters\ChargerStatus;
-use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Spatie\NovaTranslatable\Translatable;
+use App\Nova\Filters\Charger\ChargerType;
+use App\Nova\Filters\Charger\ChargerStatus;
 
 class Charger extends Resource
 {
@@ -48,7 +49,7 @@ class Charger extends Resource
      *
      * @var string
      */
-    public static $with = [];
+    public static $with = [ 'charger_connector_types.charging_prices', 'charger_connector_types.fast_charging_prices' ];
 
     /**
      * Get the fields displayed by the resource.
@@ -87,7 +88,7 @@ class Charger extends Resource
                 ->trueValue(1)
                 ->falseValue(0),
 
-            Boolean::make('Active')
+            Boolean::make('Is Paid')
                 ->trueValue(1)
                 ->falseValue(0),
             
@@ -127,6 +128,7 @@ class Charger extends Resource
     {
         return [
             new ChargerStatus,
+            new ChargerType,
         ];
     }
 

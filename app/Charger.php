@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 use App\Facades\Charger as MishasCharger;
 use Illuminate\Database\Eloquent\Builder;
+use App\Enums\ChargerType as ChargerTypeEnum;
 
 class Charger extends Model
 {
@@ -93,11 +94,6 @@ class Charger extends Model
     {
         return $this -> belongsToMany('App\BusinessService', 'charger_business_services');
     }
-
-    public function scopeActive($query)
-    {
-        return $query -> where('active', 1);
-    } 
  
     public function scopeFilterByFreeOrNot($query, $free)
     {
@@ -327,5 +323,70 @@ class Charger extends Model
     public function chargerConnectorTypeOrders()
     {
         return $this -> hasManyThrough(Order::class, ChargerConnectorType::class);
+    }
+
+    /**
+     * Get charger ids with appropriate types.
+     * 
+     * @return array
+     */
+    public static function types(): array
+    {
+        $chargers = self :: with( 'charger_connector_types' ) -> get() 
+        -> map( function( $charger )
+        {
+            return [
+            'id' => $charger -> id,
+            'type' => $charger -> charger_connector_types -> first() -> determineChargerType()
+            ];
+        }) -> toArray();
+
+        $chargerTypes = [];
+        foreach( $chargers as $charger )
+        {
+        $chargerTypes[ $charger[ 'id' ] ] = $charger[ 'type' ];
+        }
+
+        return $chargerTypes;
+    }
+
+    /**
+     * get lvl 2 charger ids.
+     * 
+     * @return array
+     */
+    public static function getLvl2Ids(): array
+    {
+        $ids = [];
+
+        foreach( self :: types() as $key => $val )
+        {
+            if( $val == ChargerTypeEnum :: LVL2 )
+            {
+                $ids []= $key;
+            }
+        }
+
+        return $ids;
+    }
+    
+    /**
+     * get fast charger ids.
+     * 
+     * @return array
+     */
+    public static function getFastIds(): array
+    {
+        $ids = [];
+
+        foreach( self :: types() as $key => $val )
+        {
+            if( $val == ChargerTypeEnum :: FAST )
+            {
+                $ids []= $key;
+            }
+        }
+
+        return $ids;
     }
 }
