@@ -55,8 +55,8 @@ trait ChargerConnectorType
 
     $chargingPrice  = $this 
       -> charging_prices() 
-      -> where( 'min_kwt', '<=', $chargingPower )
-      -> where( 'max_kwt', '>=', $chargingPower )
+      -> where( 'min_kwt', '<=', intval($chargingPower) )
+      -> where( 'max_kwt', '>=', intval($chargingPower) )
       -> whereRaw( $rawSql )
       -> first();
 

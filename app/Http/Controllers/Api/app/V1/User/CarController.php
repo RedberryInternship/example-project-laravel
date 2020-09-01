@@ -33,6 +33,13 @@ class CarController extends Controller
     {
         $user = auth('api') -> user();
 
+        if( ! $request -> get('car_model_id') )
+        {
+            return response() -> json([
+                'added' => false
+            ], 422);
+        }
+
         UserCarModel::create([
             'user_id'  => $user -> id,
             'model_id' => $request -> get('car_model_id')
