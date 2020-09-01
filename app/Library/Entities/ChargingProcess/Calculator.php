@@ -50,7 +50,7 @@ trait Calculator
   {
       if( $this -> hasAlreadyUsedUpMoney() )
       {
-          return null;
+          return $this -> target_price;
       }
       
       if( count( $this -> payments ) == 0 )

@@ -5,7 +5,6 @@ namespace App\Library\Entities\Payments;
 use App\Library\Adapters\Payments\Refunder as GeorgianCardRefunder;
 use App\Enums\PaymentType as PaymentTypeEnum;
 use App\Payment as PaymentModel;
-use App\Helpers\App;
 use App\Order;
 
 class Refunder
