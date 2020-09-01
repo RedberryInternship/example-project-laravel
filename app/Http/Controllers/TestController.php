@@ -14,11 +14,18 @@ use Redberry\GeorgianCardGateway\Refund;
 use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
 
+use App\Helpers\App;
+
 class TestController extends Controller 
 {
   use Message;
     
   public function __invoke( Excel $excel )
+  {
+    dd( "nothingness" );
+  }
+
+  private function exportUsers()
   {
     return Excel :: download( new UsersExport, 'users.xlsx');
   }

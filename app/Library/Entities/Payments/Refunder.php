@@ -5,6 +5,7 @@ namespace App\Library\Entities\Payments;
 use App\Library\Adapters\Payments\Refunder as GeorgianCardRefunder;
 use App\Enums\PaymentType as PaymentTypeEnum;
 use App\Payment as PaymentModel;
+use App\Helpers\App;
 use App\Order;
 
 class Refunder
@@ -26,7 +27,7 @@ class Refunder
       
     $trxId  = $lastPayment -> trx_id;
     $RRN    = $lastPayment -> prrn;
-    
+
     GeorgianCardRefunder :: refund( $trxId, $RRN, $amount );
     
     PaymentModel         :: create(

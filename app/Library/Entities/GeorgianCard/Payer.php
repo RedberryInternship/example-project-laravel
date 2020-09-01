@@ -2,6 +2,7 @@
 
 namespace App\Library\Entities\GeorgianCard;
 
+use App\Helpers\App;
 use App\Payment;
 
 class Payer
@@ -20,12 +21,17 @@ class Payer
     $RRN        = request() -> get( 'p_rrn'              );
     $type       = request() -> get( 'o_transaction_type' );
 
+    if( ! App :: dev() )
+    {
+      $price /= 100;
+    }
+
     Payment :: create(
       [
         'user_card_id' => $userCardId,
         'order_id'     => $orderId,
         'trx_id'       => $trxId,
-        'price'        => $price / 100,
+        'price'        => $price,
         'prrn'         => $RRN,
         'type'         => $type,
       ]

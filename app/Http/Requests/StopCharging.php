@@ -11,6 +11,7 @@ use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Facades\Simulator;
 use App\Facades\Charger;
 use App\Traits\Message;
+use App\Helpers\App;
 use App\Order;
 
 
@@ -93,11 +94,14 @@ class StopCharging extends FormRequest
             $transactionID,
         );
 
-        # TODO: this should be deleted in production.
-        # if( $this -> order -> charger_connector_type -> isChargerFast() )
-        # {
-        #     Simulator :: plugOffCable( $charger -> charger_id );
-        # }
+        # GLITCH
+        if(App :: dev())
+        {
+            if( $this -> order -> charger_connector_type -> isChargerFast() )
+            {
+                Simulator :: plugOffCable( $charger -> charger_id );
+            }
+        }
     }
 
     /**

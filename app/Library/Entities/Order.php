@@ -12,6 +12,7 @@ use App\Facades\Charger as RealCharger;
 use App\Library\Interactors\Firebase;
 use App\Library\Interactors\Payment;
 use App\Facades\Simulator;
+use App\Helpers\App;
  
 use App\Config;
 
@@ -38,18 +39,11 @@ trait Order
     {
         $chargerInfo   = RealCharger :: transactionInfo( $this -> charger_transaction_id );
 
-        /**
-         * TODO: This should be changed when app is in production
-         */
-        
-        # if( $chargerInfo -> chargePointCode == "0110" )
-        # {
-        #     $kiloWattHour  = $chargerInfo -> kiloWattHour;
-        # }
-        # else
-        # {
-        #     $kiloWattHour  = $chargerInfo -> kiloWattHour / 1000;
-        # }
+        # GLITCH
+        if(App :: dev() && $chargerInfo -> chargePointCode != "0110")
+        {
+            return $chargerInfo -> kiloWattHour / 1000;
+        }
 
         return $chargerInfo -> kiloWattHour;
     }
@@ -118,9 +112,13 @@ trait Order
                         $this -> charger_transaction_id 
                     );
 
-                    # TODO: this should be deleted in production
                     $this -> updateChargingStatus( OrderStatusEnum :: USED_UP );
-                    # Simulator :: plugOffCable( $charger -> charger_id );
+                    
+                    # GLITCH
+                    if(App :: dev())
+                    {
+                        Simulator :: plugOffCable( $charger -> charger_id );
+                    }
                 }
             }
             else
@@ -303,7 +301,10 @@ trait Order
      */
     public function pay( $paymentType, $amount )
     {
-        $amount = intval( $amount ) * 100; #GEL
+        if(! App :: dev())
+        {
+            $amount = $amount * 100;
+        }
 
         switch( $paymentType )
         {
