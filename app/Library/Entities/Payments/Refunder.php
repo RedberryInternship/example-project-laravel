@@ -19,6 +19,11 @@ class Refunder
    */
   public static function refund( Order $order, int $amount ): void
   {
+    if( $amount == 0 )
+    {
+      return;
+    }
+
     $lastPayment = $order 
       -> payments() 
       -> whereType( PaymentTypeEnum :: CUT )
