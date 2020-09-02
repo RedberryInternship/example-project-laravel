@@ -17,6 +17,7 @@ class OrdersGetter
   public static function get()
   {
     return Order :: whereIn( 'charging_status', self :: activeOrdersStatuses() )
+      -> get()
       -> filter(function( $order ) {
         $startTime = Timestamp :: build( $order ) -> getStartTimestamp();
 
