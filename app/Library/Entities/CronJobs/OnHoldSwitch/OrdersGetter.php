@@ -43,4 +43,5 @@ class OrdersGetter
    * should be switch to ON_HOLD.
    */
   private static $minutes = 2;
+
 }
