@@ -4,7 +4,6 @@ namespace App\Library\Entities\CronJobs\OnHoldSwitch;
 
 use App\Order;
 use App\Enums\OrderStatus as OrderStatusEnum;
-use App\Library\Entities\ChargingProcess\Timestamp;
 
 class OrdersGetter
 {
@@ -16,12 +15,12 @@ class OrdersGetter
    */
   public static function get()
   {
-    return Order :: whereIn( 'charging_status', self :: activeOrdersStatuses() )
+    return Order :: with( 'kilowatt' ) 
+      -> whereIn( 'charging_status', self :: activeOrdersStatuses() )
       -> get()
       -> filter(function( $order ) {
-        $startTime = Timestamp :: build( $order ) -> getStartTimestamp();
-
-        return $startTime && ($startTime -> diffInMinutes(now()) > self :: $minutes );
+        $kilowattLastUpdate = $order -> kilowatt -> updated_at;
+        return $kilowattLastUpdate -> diffInMinutes(now()) > self :: $minutes;
       });
   }
 

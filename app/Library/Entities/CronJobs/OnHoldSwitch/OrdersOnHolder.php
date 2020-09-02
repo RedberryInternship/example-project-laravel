@@ -15,9 +15,7 @@ class OrdersOnHolder
   public static function execute( $orders ): void
   {
     $orders && $orders -> each( function( $order ) {
-      # $order -> updateChargingStatus( OrderStatusEnum :: ON_HOLD );
+      $order -> updateChargingStatus( OrderStatusEnum :: ON_HOLD );
     });
-    
-    $orders && \Log :: info( 'SHOULD BE ON_HOLD ORDERS COUNT - ' . $orders -> count() );
   }
 }
