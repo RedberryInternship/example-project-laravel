@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
         $schedule -> command( 'command:synchronize-real-chargers'    ) -> everyMinute();
         $schedule -> command( 'command:pre-charged-orders-checker'   ) -> everyMinute();
         $schedule -> command( 'command:not-confirmed-orders-checker' ) -> everyMinute();
+        $schedule -> command( 'command:hold-silent-orders'           ) -> everyMinute();
     }
 
     /**
