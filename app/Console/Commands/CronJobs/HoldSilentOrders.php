@@ -5,7 +5,7 @@ namespace App\Console\Commands\CronJobs;
 use App\Library\Interactors\CronJobs\OnHoldSwitcher;
 use Illuminate\Console\Command;
 
-class SynchronizeRealChargers extends Command
+class HoldSilentOrders extends Command
 {
     /**
      * The name and signature of the console command.
