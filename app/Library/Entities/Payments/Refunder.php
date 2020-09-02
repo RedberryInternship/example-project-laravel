@@ -5,7 +5,6 @@ namespace App\Library\Entities\Payments;
 use App\Library\Adapters\Payments\Refunder as GeorgianCardRefunder;
 use App\Enums\PaymentType as PaymentTypeEnum;
 use App\Payment as PaymentModel;
-use App\Helpers\App;
 use App\Order;
 
 class Refunder
@@ -19,6 +18,11 @@ class Refunder
    */
   public static function refund( Order $order, int $amount ): void
   {
+    if( $amount == 0 )
+    {
+      return;
+    }
+
     $lastPayment = $order 
       -> payments() 
       -> whereType( PaymentTypeEnum :: CUT )
