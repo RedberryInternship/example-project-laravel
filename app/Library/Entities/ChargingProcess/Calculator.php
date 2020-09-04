@@ -242,7 +242,7 @@ trait Calculator
         return null;
     }
 
-    $finishedTimestamp      = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
+    $finishedTimestamp      = $timestamp -> getEndTimestamp();
 
     if( ! $finishedTimestamp )
     {

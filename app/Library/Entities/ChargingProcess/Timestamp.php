@@ -3,10 +3,10 @@
 namespace App\Library\Entities\ChargingProcess;
 
 use App\Enums\OrderStatus as OrderStatusEnum;
+use App\Helpers\App;
 use Carbon\Carbon;
-
-use App\Order;
 use App\Config;
+use App\Order;
 
 class Timestamp
 {
@@ -55,7 +55,14 @@ class Timestamp
    */
   public function getStartTimestamp(): ?Carbon
   {
-   return $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
+    if(App :: dev() || (! $this -> order -> charger_connector_type -> isChargerFast()))
+    {
+      return $this -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
+    }
+    else
+    {
+      return Carbon :: createFromTimestamp( $this -> order -> real_start_date );
+    }
   }
 
   /**
@@ -65,11 +72,20 @@ class Timestamp
    */
   public function getEndTimestamp(): ?Carbon
   {
-    $isChargerFast    = $this -> order -> charger_connector_type -> isChargerFast();
+    $isChargerFast   = $this -> order -> charger_connector_type -> isChargerFast();
+    $endTimestamp    = null;
 
     if( $isChargerFast )
     {
-        $endTimestamp = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
+        if( App :: dev() )
+        {
+          $realEndDate = $this -> order -> real_end_date;
+          $realEndDate && $endTimestamp = Carbon :: createFromTimestamp( $realEndDate );
+        }
+        else
+        {
+          $endTimestamp = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
+        }
     }
     else
     {
@@ -92,7 +108,7 @@ class Timestamp
   public function getChargingDuration(): ?int
   {
     $startTimestamp = $this -> getStartTimestamp();
-    $endTimestamp   = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
+    $endTimestamp   = $this -> getEndTimestamp();
 
     if( (!! $startTimestamp) && (!! $endTimestamp) )
     {
