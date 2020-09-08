@@ -12,6 +12,7 @@ use App\Library\Entities\GeorgianCard\FailureHandler;
 use App\Library\Entities\GeorgianCard\UserCardSaver;
 use App\Library\Entities\GeorgianCard\Payer;
 use Illuminate\Support\Facades\Log;
+use App\Order;
 
 use Redberry\GeorgianCardGateway\Responses\RegisterPayment;
 use Redberry\GeorgianCardGateway\Responses\PaymentAvail;
@@ -55,6 +56,8 @@ class GeorgianCard implements GeorgianCardHandler
     {
       FailureHandler :: handle();
     }
+    
+    Order :: find(request()->get('o_id')) -> unlockPayments();
 
     return $data;
   }

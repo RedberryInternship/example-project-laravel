@@ -2,12 +2,10 @@
 
 namespace App\Library\Entities;
 
-use App\Enums\ChargerType as ChargerTypeEnum;
-use App\Enums\ConnectorType as ConnectorTypeEnum;
-
-use App\FastChargingPrice;
-
 use App\Exceptions\NoSuchFastChargingPriceException;
+use App\Enums\ConnectorType as ConnectorTypeEnum;
+use App\Enums\ChargerType as ChargerTypeEnum;
+use App\FastChargingPrice;
 
 trait ChargerConnectorType
 {
