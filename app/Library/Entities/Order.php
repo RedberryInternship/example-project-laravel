@@ -31,6 +31,28 @@ trait Order
     }
 
     /**
+     * Lock payments.
+     * 
+     * @return void
+     */
+    public function lockPayments()
+    {
+        $this -> lock_payments = true;
+        $this -> save();
+    }
+
+    /**
+     * Unlock payments.
+     * 
+     * @return void
+     */
+    public function unlockPayments()
+    {
+        $this -> lock_payments = false;
+        $this -> save();
+    }
+
+    /**
      * Get charging power.
      * 
      * @return float
@@ -306,12 +328,53 @@ trait Order
             $amount = $amount * 100;
         }
 
+        if( $this -> shouldContinueTransaction( $paymentType ) )
+        {
+            return;
+        }
+
         switch( $paymentType )
         {
             case PaymentTypeEnum :: REFUND  : return Payment :: refund ( $this, $amount );
             case PaymentTypeEnum :: FINE    : return Payment :: charge ( $this, $amount );
             case PaymentTypeEnum :: CUT     : return Payment :: cut    ( $this, $amount );
         }
+
+        $this -> lockPaymentsIfNecessary( $paymentType );
+    }
+
+    /**
+     * Determine if payments are locked.
+     * 
+     * @return bool
+     */
+    private function isPaymentLocked()
+    {
+        return $this -> lock_payments;
+    }
+
+    /**
+     * Lock payments if necessary.
+     * 
+     * @param  string $paymentType
+     * @return void
+     */
+    private function lockPaymentsIfNecessary( $paymentType )
+    {
+        if( $paymentType != PaymentTypeEnum :: REFUND )
+        {
+            $this -> lockPayments();
+        }
+    }
+
+    /**
+     * Determine if transaction should be continued.
+     * 
+     * @return bool
+     */
+    private function shouldContinueTransaction( $paymentType ): bool
+    {
+        return $this -> isPaymentLocked() && $paymentType != PaymentTypeEnum :: REFUND;
     }
 
     /**
