@@ -61,7 +61,7 @@ class Timestamp
     }
     else
     {
-      return Carbon :: createFromTimestamp( $this -> order -> real_start_date );
+      return $this -> order -> real_start_date ? Carbon :: createFromTimestamp( $this -> order -> real_start_date ) : null;
     }
   }
 
@@ -79,12 +79,12 @@ class Timestamp
     {
         if( App :: dev() )
         {
-          $realEndDate = $this -> order -> real_end_date;
-          $realEndDate && $endTimestamp = Carbon :: createFromTimestamp( $realEndDate );
+          $endTimestamp = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
         }
         else
         {
-          $endTimestamp = $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
+          $realEndDate = $this -> order -> real_end_date;
+          $realEndDate && $endTimestamp = Carbon :: createFromTimestamp( $realEndDate );
         }
     }
     else
