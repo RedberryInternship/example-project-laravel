@@ -333,14 +333,14 @@ trait Order
             return;
         }
 
+        $this -> lockPaymentsIfNecessary( $paymentType );
+
         switch( $paymentType )
         {
             case PaymentTypeEnum :: REFUND  : return Payment :: refund ( $this, $amount );
             case PaymentTypeEnum :: FINE    : return Payment :: charge ( $this, $amount );
             case PaymentTypeEnum :: CUT     : return Payment :: cut    ( $this, $amount );
         }
-
-        $this -> lockPaymentsIfNecessary( $paymentType );
     }
 
     /**
