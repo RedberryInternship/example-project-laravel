@@ -15,6 +15,9 @@ class ChargingPrice extends Model
         'price'
     ];
 
+    /**
+     * Present timestamps.
+     */
     public $timestamps = true;
 
     /**

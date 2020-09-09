@@ -29,7 +29,7 @@ class OrdersStopper
         $order -> updateChargingStatus( OrderStatusEnum :: CHARGED );
         
         self :: log( $order );
-        # Charger :: stop( $chargerId, $transactionId );
+        Charger :: stop( $chargerId, $transactionId );
       }
     }
   }

@@ -127,4 +127,37 @@ class Payment extends Resource
             (new DownloadExcel) -> withHeadings(),
         ];
     }
+
+    /**
+     * Create policy.
+     * 
+     * @param Request $request
+     * @return mixed
+     */
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
+
+    /**
+     * Delete policy.
+     * 
+     * @param Request $request
+     * @return mixed
+     */
+    public function authorizedToDelete(Request $request)
+    {
+        return false;
+    }
+
+    /**
+     * Update policy.
+     * 
+     * @param Request $request
+     * @return mixed
+     */
+    public function authorizedToUpdate(Request $request)
+    {
+        return false;
+    }
 }

@@ -12,6 +12,11 @@ use Spatie\NovaTranslatable\Translatable;
 class Tag extends Resource
 {
     /**
+     * Should appear in navigation.
+     */
+    public static $displayInNavigation = false;
+
+    /**
      * The model the resource corresponds to.
      *
      * @var string

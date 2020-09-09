@@ -7,12 +7,16 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 
 class ChargerUser extends Resource
 {
     use SearchesRelations;
+
+    /**
+     * Should appear in navigation.
+     */
+    public static $displayInNavigation = false;
 
     /**
      * The model the resource corresponds to.

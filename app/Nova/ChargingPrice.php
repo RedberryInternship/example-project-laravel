@@ -2,10 +2,11 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasOne;
+use Laravel\Nova\Fields\Select;
 
 class ChargingPrice extends Resource
 {
@@ -41,13 +42,14 @@ class ChargingPrice extends Resource
      */
     public function fields(Request $request)
     {
+        $timeOptions = $this -> selectData();
         return [
             ID::make()->sortable(),
             HasOne::make('Charger Connector Type'),
             Text::make('Min Kwt'),
             Text::make('Max Kwt'),
-            Text::make('Start Time'),
-            Text::make('End Time'),
+            Select::make('Start Time') -> options( $timeOptions ),
+            Select::make('End Time') -> options( $timeOptions ),
             Text::make('Price'),
         ];
     }
@@ -94,5 +96,37 @@ class ChargingPrice extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * Prepare select timing data.
+     * 
+     * @return array
+     */
+    private function selectData(): array
+    {
+        $data = [];
+        for($hour=0; $hour<=24; $hour++)
+        {
+            $hr          = $this -> digitFul($hour);
+            $time        = $hr . ':' . '00';
+            $data[$time] = $time;
+        }
+        return $data;
+    }
+
+    /**
+     * Make number presented with 2 digits.
+     * 
+     * @return string
+     */
+    private function digitFul( $num ): string
+    {
+        if( $num < 10 )
+        {
+            return '0' . strval($num);
+        }
+        
+        return strval($num);
     }
 }

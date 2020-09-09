@@ -6,8 +6,6 @@ use Laravel\Nova\Nova;
 use Laravel\Nova\Cards\Help;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\NovaApplicationServiceProvider;
-use Illuminate\Support\Facades\Auth;
-use Redberry\ChargerPrices\ChargerPrices;
 use Redberry\ChargerTerminals\ChargerTerminals;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
@@ -83,7 +81,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function tools()
     {
         return [
-            new ChargerPrices,
+          # new ChargerPrices,
             new ChargerTerminals,
         ];
     }
