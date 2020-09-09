@@ -8,7 +8,6 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Textarea;
 use Spatie\NovaTranslatable\Translatable;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class BusinessService extends Resource
 {

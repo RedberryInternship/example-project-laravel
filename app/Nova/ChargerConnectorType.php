@@ -13,7 +13,9 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class ChargerConnectorType extends Resource
 {
-
+    /**
+     * Should appear in navigation.
+     */
     public static $displayInNavigation = false;
 
     /**
@@ -77,6 +79,7 @@ class ChargerConnectorType extends Resource
                 
                 return ! $isFast;
             }),
+            HasMany::make('Orders'),
         ];
     }
 
@@ -130,5 +133,38 @@ class ChargerConnectorType extends Resource
     public static function indexQuery(NovaRequest $request, $query)
     {
         $query -> where( 'status', 'active' );
+    }
+
+    /**
+     * Create policy.
+     * 
+     * @param Request $request
+     * @return mixed
+     */
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
+
+    /**
+     * Delete policy.
+     * 
+     * @param Request $request
+     * @return mixed
+     */
+    public function authorizedToDelete(Request $request)
+    {
+        return false;
+    }
+
+    /**
+     * Update policy.
+     * 
+     * @param Request $request
+     * @return mixed
+     */
+    public function authorizedToUpdate(Request $request)
+    {
+        return false;
     }
 }
