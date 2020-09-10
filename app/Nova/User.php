@@ -80,22 +80,22 @@ class User extends Resource
 
             BelongsTo::make('Role'),
             
-            Text::make('first_name')
+            Text::make('First Name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Text::make('last_name')
+            Text::make('Last Name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Text::make('phone_number')
+            Text::make('Phone Number')
                 ->rules('required','string', 'min:9')
                 ->creationRules('unique:users,phone_number')
                 ->updateRules('unique:users,phone_number,{{resourceId}}'),           
 
             Text::make('Email')
                 ->sortable()
-                ->onlyOnDetail(),
+                ->hideFromIndex(),
 
             Boolean::make('active')
                 ->trueValue(1)
@@ -104,7 +104,7 @@ class User extends Resource
             Boolean::make('verified')
                 ->trueValue(1)
                 ->falseValue(0)
-                ->onlyOnDetail(),
+                ->hideFromIndex(),
 
             BelongsToMany::make('User Car Model','car_models', 'App\Nova\CarModel'),
 
