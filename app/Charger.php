@@ -25,6 +25,7 @@ class Charger extends Model
       'charger_id' => 'int',
       'public' => 'int',
       'active' => 'int',
+      'is_paid' => 'int',
     ];
 
     public function company()
