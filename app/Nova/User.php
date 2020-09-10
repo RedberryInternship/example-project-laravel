@@ -5,9 +5,10 @@ namespace App\Nova;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Password;
+use App\Nova\Filters\User\Role;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\User\UserType;
 use Laravel\Nova\Fields\BelongsToMany;
@@ -140,6 +141,7 @@ class User extends Resource
     public function filters(Request $request)
     {
         return [
+            new Role,
             new UserType,
         ];
     }
