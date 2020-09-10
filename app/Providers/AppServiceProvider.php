@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
+use App\Helpers\App;
 use App\Library\Interactors\SMS;
-use App\Library\Interactors\GeorgianCard;
 use Illuminate\Support\Facades\URL;
+use App\Library\Interactors\GeorgianCard;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if(env('APP_ENV') !== 'local') 
+        if( ! App :: dev() ) 
         { 
             URL::forceScheme('https'); 
         }

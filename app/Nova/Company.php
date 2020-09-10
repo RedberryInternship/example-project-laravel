@@ -3,6 +3,8 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Spatie\NovaTranslatable\Translatable;
@@ -55,6 +57,22 @@ class Company extends Resource
             Translatable::make([
                 Text::make('name')
             ])->locales(['en', 'ru', 'ka']),
+
+            Text::make('Identification Code')
+                ->sortable(),
+            
+            Date::make('Contract Started')
+                ->sortable(),
+            
+            Date::make('Contract Ended')
+                ->sortable(),
+
+            Text::make('Bank Account'),
+
+            Text::make('Address'),
+
+            File::make('Contract File')
+                ->disk('public'),
         ];
     }
 
