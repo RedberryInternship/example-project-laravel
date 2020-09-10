@@ -3,6 +3,7 @@
 namespace App\Nova\Metrics;
 
 use Illuminate\Http\Request;
+use App\Enums\OrderStatus as OrderStatusEnum;
 use Laravel\Nova\Metrics\Partition;
 
 use App\Order;
@@ -18,7 +19,17 @@ class ChargingProcesses extends Partition
     public function calculate(Request $request)
     {
         $orders = Order :: active();
-        return $this->count($request, $orders, 'charging_status');
+        return $this->count($request, $orders, 'charging_status') 
+            -> colors(
+                [
+                    OrderStatusEnum :: INITIATED => '#f4c63d',
+                    OrderStatusEnum :: CHARGING  => '#4caf50',
+                    OrderStatusEnum :: CHARGED   => '#114814',
+                    OrderStatusEnum :: USED_UP   => '#114814',
+                    OrderStatusEnum :: ON_FINE   => '#f64747',
+                    OrderStatusEnum :: ON_HOLD   => '#999',
+                ]
+            );
     }
 
     /**

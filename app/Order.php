@@ -135,6 +135,7 @@ class Order extends Model
             OrderStatusEnum :: CHARGED,
             OrderStatusEnum :: USED_UP,
             OrderStatusEnum :: ON_FINE,
+            OrderStatusEnum :: ON_HOLD,
         ]);
     }
 }
