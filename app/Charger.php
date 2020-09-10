@@ -23,6 +23,8 @@ class Charger extends Model
     protected $casts = [
       'name' => 'array',
       'charger_id' => 'int',
+      'public' => 'int',
+      'active' => 'int',
     ];
 
     public function company()
