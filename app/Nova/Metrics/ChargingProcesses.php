@@ -17,7 +17,7 @@ class ChargingProcesses extends Partition
      */
     public function calculate(Request $request)
     {
-        $orders = Order :: where('charging_status', '!=', 'FINISHED' );
+        $orders = Order :: active();
         return $this->count($request, $orders, 'charging_status');
     }
 
