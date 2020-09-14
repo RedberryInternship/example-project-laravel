@@ -4,28 +4,51 @@ namespace App\Library\Entities\Exports;
 
 use App\User;
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class UsersExporter implements FromArray, WithHeadings, WithColumnFormatting
+class UsersExporter implements FromArray, WithHeadings, WithColumnFormatting, WithStyles, WithColumnWidths
 {
+  use CommonParams;
+
+  /**
+   * IDs to be filtered with.
+   * 
+   * @var array $IDs
+   */
+  private $ids;
+
   /**
    * Export all user data to excel.
    */
   public function array(): array
   {
-    return dd(User :: all() -> toArray());
-  }
+    $query = User :: with( 'user_cards' );
 
-  /**
-   * Heading.
-   * 
-   * @return array
-   */
-  public function headings(): array 
-  {
-    return array_keys($this -> array()[0]);
+    if($this -> ids && ! empty( $this -> ids ))
+    {
+      $query -> whereIn('id', $this -> ids);
+    }
+
+    return $query
+      -> get() 
+      -> map( function( $user ) {
+
+        $userDefaultCard = $user -> user_cards -> where( 'default', true ) -> first();
+        $maskedPan = $userDefaultCard ? $userDefaultCard -> masked_pan : '---';
+
+        return [
+          'ID'      => $user -> id,
+          'სახელი'  => $user -> first_name,
+          'გვარი'   => $user -> last_name,
+          'ტელეფონის ნომერი' => $user -> phone_number,
+          'მეილი'   => $user -> email,
+          'ბარათი'  => $maskedPan,
+        ];
+      })
+      -> toArray();
   }
 
   /**
@@ -36,7 +59,36 @@ class UsersExporter implements FromArray, WithHeadings, WithColumnFormatting
   public function columnFormats(): array
   {
     return [
-      'D' => NumberFormat :: FORMAT_TEXT,
+      'D' => "+#",
     ];
+  }
+
+  /**
+   * Apply column width.
+   * 
+   * @return array
+   */
+  public function columnWidths(): array
+  {
+    return [
+      'A' => 5,
+      'B' => 25,
+      'C' => 25,
+      'D' => 25,
+      'E' => 35,
+      'F' => 25,
+    ];
+  }
+
+  /**
+   * set ids to filter users collection.
+   * 
+   * @param array $ids
+   * @return self
+   */
+  public function setIDs( array $ids ): self
+  {
+    $this -> ids = $ids;
+    return $this;
   }
 }
