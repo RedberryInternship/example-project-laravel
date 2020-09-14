@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Contact;
 use App\ContactMessage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Foundation\Http\FormRequest;
@@ -14,12 +15,14 @@ class ContactMessageRequest extends FormRequest implements ValidatesWhenResolved
     /**
      * Admin Mail Addresses.
      * 
-     * @var array
+     * @return array
      */
-    protected $mailAddresses = [
-        'imeda@redberry.ge',
-        'mako@redberry.ge',
-    ];
+    protected function mailAddresses(): array
+    {
+        return [
+            Contact :: first() -> email,
+        ];
+    }
 
     /**
      * Determine if the user is authorized to make this request.
@@ -78,7 +81,7 @@ class ContactMessageRequest extends FormRequest implements ValidatesWhenResolved
     {
         $user     = auth('api') -> user();
 
-        $to       = $this -> mailAddresses;
+        $to       = $this -> mailAddresses();
         $from     = $user && $user -> email && filter_var($user -> email, FILTER_VALIDATE_EMAIL) ? $user -> email : 'unknown@example.com';
         $fromName = $user ? $user -> first_name . ' ' . $user -> last_name : 'unknown sender';
 
