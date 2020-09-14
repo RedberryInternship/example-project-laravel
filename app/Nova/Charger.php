@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\Charger\Company;
 use Laravel\Nova\Fields\BelongsToMany;
 use Spatie\NovaTranslatable\Translatable;
 use App\Nova\Filters\Charger\ChargerType;
@@ -129,6 +130,7 @@ class Charger extends Resource
         return [
             new ChargerStatus,
             new ChargerType,
+            new Company,
         ];
     }
 
