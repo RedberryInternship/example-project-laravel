@@ -8,7 +8,6 @@ use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Spatie\NovaTranslatable\Translatable;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Company extends Resource
 {

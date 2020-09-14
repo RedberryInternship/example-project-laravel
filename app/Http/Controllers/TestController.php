@@ -14,7 +14,7 @@ use Redberry\GeorgianCardGateway\Refund;
 use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
 
-use App\Helpers\App;
+use App\Library\Interactors\Exporter;
 
 class TestController extends Controller 
 {
@@ -22,6 +22,7 @@ class TestController extends Controller
     
   public function __invoke( Excel $excel )
   {
+    return Exporter :: exportUsers();
     dd( "nothingness" );
   }
 
