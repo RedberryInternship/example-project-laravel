@@ -2,7 +2,9 @@
 
 namespace App\Nova\Actions;
 
+use App\Helpers\App;
 use Laravel\Nova\Actions\Action;
+use Illuminate\Support\Facades\URL;
 use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use App\Library\Entities\Exports\UsersExporter;
@@ -10,6 +12,19 @@ use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class ExportUsers extends DownloadExcel
 {
+    /**
+     * Constructor.
+     * 
+     * @return void
+     */
+    public function __construct()
+    {
+        if( ! App :: dev() )
+        {
+            URL::forceScheme('https');
+        }
+    }
+
     /**
      * Ids to be filtered.
      * 
@@ -34,7 +49,7 @@ class ExportUsers extends DownloadExcel
             $this->getFilename(),
             $this->getWriterType()
         );
-
+        
         return Action::download(
             $this->getDownloadUrl($response),
             $this->getFilename()
