@@ -2,13 +2,11 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\BelongsTo;
 
 class UserCard extends Resource
 {
@@ -65,8 +63,10 @@ class UserCard extends Resource
                 ->readonly(),
             Text::make('transaction_id')
                 ->readonly(),
-            Boolean::make('default'),
-            Boolean::make('active'),
+            Boolean::make('default')
+                ->onlyOnDetail(),
+            Boolean::make('active')
+                ->onlyOnDetail(),
         ];
     }
 

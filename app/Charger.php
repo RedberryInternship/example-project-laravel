@@ -23,6 +23,9 @@ class Charger extends Model
     protected $casts = [
       'name' => 'array',
       'charger_id' => 'int',
+      'public' => 'int',
+      'active' => 'int',
+      'is_paid' => 'int',
     ];
 
     public function company()
@@ -63,6 +66,20 @@ class Charger extends Model
     public function charger_connector_types()
     {
         return $this -> hasMany(ChargerConnectorType::class);
+    }
+
+    /**
+     * Retrieve charger's orders.
+     * 
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function orders()
+    {
+        $chargerConnectorTypeIds = $this -> charger_connector_types -> map(function( $cct ) {
+            return $cct -> id;
+        }) -> toArray();
+
+        return Order :: whereIn( 'charger_connector_type_id', $chargerConnectorTypeIds ) -> get();
     }
 
     public function groups()

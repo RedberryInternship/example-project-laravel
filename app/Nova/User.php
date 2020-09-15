@@ -5,18 +5,20 @@ namespace App\Nova;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Gravatar;
-use Laravel\Nova\Fields\Password;
+use App\Nova\Filters\User\Role;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Password;
+use App\Nova\Actions\ExportUsers;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\User\UserType;
 use Laravel\Nova\Fields\BelongsToMany;
-use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
-
+use App\Library\Entities\Nova\Resource\ActionTrait;
 
 class User extends Resource
 {
+    use ActionTrait;
+
     /**
      * The model the resource corresponds to.
      *
@@ -79,26 +81,23 @@ class User extends Resource
                 ->nullable(),
 
             BelongsTo::make('Role'),
-
-            Gravatar::make(),
             
-            Text::make('first_name')
+            Text::make('First Name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Text::make('last_name')
+            Text::make('Last Name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Text::make('phone_number')
+            Text::make('Phone Number')
                 ->rules('required','string', 'min:9')
                 ->creationRules('unique:users,phone_number')
                 ->updateRules('unique:users,phone_number,{{resourceId}}'),           
 
             Text::make('Email')
                 ->sortable()
-                ->creationRules('unique:users,email')
-                ->updateRules('unique:users,email,{{resourceId}}'),
+                ->hideFromIndex(),
 
             Boolean::make('active')
                 ->trueValue(1)
@@ -106,7 +105,8 @@ class User extends Resource
 
             Boolean::make('verified')
                 ->trueValue(1)
-                ->falseValue(0),
+                ->falseValue(0)
+                ->hideFromIndex(),
 
             BelongsToMany::make('User Car Model','car_models', 'App\Nova\CarModel'),
 
@@ -143,6 +143,7 @@ class User extends Resource
     public function filters(Request $request)
     {
         return [
+            new Role,
             new UserType,
         ];
     }
@@ -166,8 +167,16 @@ class User extends Resource
      */
     public function actions(Request $request)
     {
+        $exportableUsers = new ExportUsers;
+        $selectedRecords = $this -> getSelectedResourceIds($request);
+
+        if($selectedRecords)
+        {
+            $exportableUsers->setIds($selectedRecords);
+        }
+
         return [
-            (new DownloadExcel) -> withHeadings(),
+            $exportableUsers,
         ];
     }
 }

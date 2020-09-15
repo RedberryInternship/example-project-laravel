@@ -4,11 +4,15 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Text;
 
 class ConnectorType extends Resource
 {
+    /**
+     * Should appear in navigation.
+     */
+    public static $displayInNavigation = false;
+
     /**
      * The model the resource corresponds to.
      *
@@ -96,5 +100,38 @@ class ConnectorType extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * Create policy.
+     * 
+     * @param Request $request
+     * @return mixed
+     */
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
+
+    /**
+     * Delete policy.
+     * 
+     * @param Request $request
+     * @return mixed
+     */
+    public function authorizedToDelete(Request $request)
+    {
+        return false;
+    }
+
+    /**
+     * Update policy.
+     * 
+     * @param Request $request
+     * @return mixed
+     */
+    public function authorizedToUpdate(Request $request)
+    {
+        return false;
     }
 }

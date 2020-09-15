@@ -12,13 +12,22 @@ class Company extends Model
     /**
      * Fillable Fields.
      */
-    protected $fillable = ['name'];
+    protected $guarded = [];
 
     /**
      * Translatable Fields.
      */
     protected $translatable = ['name'];
 
+    /**
+     * Casts fields.
+     * 
+     * @var array $casts
+     */
+    protected $casts = [
+        'contract_started' => 'date',
+        'contract_ended' => 'date',
+    ];
     /**
      * Get Company Users.
      */

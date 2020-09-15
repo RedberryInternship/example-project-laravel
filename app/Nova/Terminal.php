@@ -33,6 +33,11 @@ class Terminal extends Resource
     ];
 
     /**
+     * Grouping nova resource.
+     */
+    public static $group = 'Charger Resources';
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request

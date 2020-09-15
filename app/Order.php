@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Library\Entities\Order as OrderEntity;
-
-use App\Library\Entities\ChargingProcess\Calculator;
-use App\Library\Entities\ChargingProcess\State;
 use App\Library\Entities\ChargingProcess\Hook;
+use App\Library\Entities\ChargingProcess\State;
+use App\Library\Entities\ChargingProcess\Calculator;
 
 class Order extends Model
 {
@@ -119,5 +119,23 @@ class Order extends Model
         return $query -> with([ 'payments' => function ( $q ) {
             return $q -> confirmed() -> withUserCards();
         }]);
+    }
+
+    /**
+     * Get active orders.
+     * 
+     * @param Builder
+     * @return Builder
+     */
+    public function scopeActive( $query )
+    {
+        return $query -> whereIn( 'charging_status', [
+            OrderStatusEnum :: INITIATED,
+            OrderStatusEnum :: CHARGING,
+            OrderStatusEnum :: CHARGED,
+            OrderStatusEnum :: USED_UP,
+            OrderStatusEnum :: ON_FINE,
+            OrderStatusEnum :: ON_HOLD,
+        ]);
     }
 }
