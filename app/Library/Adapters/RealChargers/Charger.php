@@ -8,6 +8,7 @@ use App\Exceptions\Charger\StartChargingException;
 use App\Exceptions\Charger\StopChargingException;
 use App\Exceptions\Charger\FindChargerException;
 use App\Exceptions\Charger\MishasBackException;
+use Illuminate\Support\Facades\Log;
 
 class Charger extends Base
 {
@@ -32,6 +33,7 @@ class Charger extends Base
      */
     public function all()
     {
+        Log :: channel( 'request-charger' ) -> info( 'GET_ALL_CHARGERS' );
         $service_url = $this -> url . '/es-services/mobile/ws/chargers';
         $result      = $this -> fetchData( $service_url );
         
@@ -82,6 +84,8 @@ class Charger extends Base
         #     $this -> url = $this -> realChargersBaseUrl;
         # }
 
+        Log :: channel( 'request-charger' ) -> info( 'GET_ONE_CHARGER' );
+
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/info/' 
                         . $charger_id;
@@ -123,6 +127,10 @@ class Charger extends Base
         # {
         #     $this -> url = $this -> realChargersBaseUrl;
         # }
+        
+
+        $text = 'START | CHARGER ID - ' . $charger_id . ' | CONNECTOR - ' . $connector_id;
+        Log :: channel( 'request-charger' ) -> info( $text );
 
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/start/'
@@ -170,6 +178,9 @@ class Charger extends Base
         #     $this -> url = $this -> realChargersBaseUrl;
         # }
 
+        $text = 'STOP | CHARGER ID - ' . $charger_id . ' | TRANSACTION - ' . $transaction_id;
+        Log :: channel( 'request-charger' ) -> info( $text );
+
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/charger/stop/'
                         . $charger_id .'/' 
@@ -216,6 +227,9 @@ class Charger extends Base
         # }
         
         /** Ends here. */
+
+        $text = 'TRANSACTION_INFO | TRANSACITON_ID - ' . $id;
+        Log :: channel( 'request-charger' ) -> info( $text );
 
         $service_url = $this -> url 
                         . '/es-services/mobile/ws/transaction/info/'
