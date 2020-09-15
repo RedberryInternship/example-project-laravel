@@ -9,14 +9,16 @@ use App\Nova\Filters\User\Role;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Password;
+use App\Nova\Actions\ExportUsers;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\User\UserType;
 use Laravel\Nova\Fields\BelongsToMany;
-use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
-
+use App\Library\Entities\Nova\Resource\ActionTrait;
 
 class User extends Resource
 {
+    use ActionTrait;
+
     /**
      * The model the resource corresponds to.
      *
@@ -165,8 +167,16 @@ class User extends Resource
      */
     public function actions(Request $request)
     {
+        $exportableUsers = new ExportUsers;
+        $selectedRecords = $this -> getSelectedResourceIds($request);
+
+        if($selectedRecords)
+        {
+            $exportableUsers->setIds($selectedRecords);
+        }
+
         return [
-            (new DownloadExcel) -> withHeadings(),
+            $exportableUsers,
         ];
     }
 }
