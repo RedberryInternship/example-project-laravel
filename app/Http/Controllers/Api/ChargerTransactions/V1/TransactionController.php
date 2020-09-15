@@ -52,7 +52,7 @@ class TransactionController extends Controller
     if( $order )
     {
       $order -> finish();
-      
+
       Log :: channel( 'feedback-finish' ) -> info( 'FINISHED - Transaction ID - ' . $transaction_id );
     }
     else
@@ -61,4 +61,3 @@ class TransactionController extends Controller
     }
   }
 }
-
