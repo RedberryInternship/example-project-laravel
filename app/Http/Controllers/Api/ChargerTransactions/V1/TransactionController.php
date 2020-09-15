@@ -47,13 +47,13 @@ class TransactionController extends Controller
    */
   public function finish( $transaction_id )
   {
-    Log :: channel( 'feedback-finish' ) -> info( 'FINISHED - Transaction ID - ' . $transaction_id );
-
     $order = Order :: where( 'charger_transaction_id', $transaction_id ) -> first();
 
     if( $order )
     {
       $order -> finish();
+
+      Log :: channel( 'feedback-finish' ) -> info( 'FINISHED - Transaction ID - ' . $transaction_id );
     }
     else
     {
@@ -61,4 +61,3 @@ class TransactionController extends Controller
     }
   }
 }
-

@@ -29,16 +29,11 @@ class ExportUsers extends DownloadExcel
         
         $this -> ids && $usersExportable -> setIDs($this -> ids);
         
-        $response = Excel::download(
-            $usersExportable,
-            $this->getFilename(),
-            $this->getWriterType()
-        );
+        Excel::store( $usersExportable, 'public/download.xlsx');
 
-        return Action::download(
-            $this->getDownloadUrl($response),
-            $this->getFilename()
-        );
+        $downloadUrl = config('app')['url'] . '/storage/download.xlsx';
+
+        return Action::download( $downloadUrl, $this->getFilename());
     }
 
     /**
