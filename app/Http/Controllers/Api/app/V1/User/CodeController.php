@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\app\V1\User;
 
-use App\User;
+use App\Enums\AppFormType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\SendCodeRequest;
 use App\Http\Requests\User\VerifyCodeRequest;
@@ -18,15 +18,16 @@ class CodeController extends Controller
      */
     public function sendCode(SendCodeRequest $request)
     {
-        $code = rand(pow(10, 4-1), pow(10, 4)-1);
-        
-        $request -> updateOrCreateCode($code);
+        $formType     = request()->get('type');
 
-        User::sendSms($request -> get('phone_number'), $code);
-
-        return response() -> json([
-            'phone_number' => $request -> get('phone_number')
-        ]);
+        switch($formType)
+        {
+            case AppFormType::REGISTER            :  return $request -> userRegistration();
+            case AppFormType::PASSWORD_RESET      :  return $request -> passwordReset();
+            case AppFormType::PHONE_NUMBER_CHANGE :  return $request -> phoneNumberUpdate();
+        }
+       
+        return $request -> default();
     }
 
     /**

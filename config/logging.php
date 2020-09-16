@@ -107,6 +107,12 @@ return [
             'level' => 'debug',
         ],
 
+        'request-charger' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/request/charger.log'),
+            'level' => 'debug',
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
