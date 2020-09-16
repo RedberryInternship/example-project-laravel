@@ -97,11 +97,11 @@ class SendCodeRequest extends FormRequest implements ValidatesWhenResolved
     {
         $user = $this -> pullUser();
 
-        if(! $user)
+        if($user)
         {
             return response() -> json(
                 [
-                    'status' => self :: USER_DOES_NOT_EXISTS,
+                    'status' => self :: USER_ALREADY_EXISTS,
                     'phone_number' => request() -> get( 'phone_number' ),
                 ], 422
             );
