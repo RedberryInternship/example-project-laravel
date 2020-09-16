@@ -55,7 +55,7 @@ class SendCodeRequest extends FormRequest implements ValidatesWhenResolved
      */
     public function userRegistration()
     {
-        $user = $this -> user();
+        $user = $this -> pullUser();
 
         if($user)
         {
@@ -75,7 +75,7 @@ class SendCodeRequest extends FormRequest implements ValidatesWhenResolved
      */
     public function passwordReset()
     {
-        $user = $this -> user();
+        $user = $this -> pullUser();
 
         if(! $user)
         {
@@ -95,7 +95,7 @@ class SendCodeRequest extends FormRequest implements ValidatesWhenResolved
      */
     public function phoneNumberUpdate()
     {
-        $user = $this -> user();
+        $user = $this -> pullUser();
 
         if(! $user)
         {
@@ -138,7 +138,7 @@ class SendCodeRequest extends FormRequest implements ValidatesWhenResolved
      * 
      * @return User
      */
-    public function user()
+    public function pullUser()
     {
         return User::findBy('phone_number', request()->get('phone_number'));
     }
