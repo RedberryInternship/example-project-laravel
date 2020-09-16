@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Api\app\V1\User;
 
-use App\User;
 use App\Enums\AppFormType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\SendCodeRequest;
 use App\Http\Requests\User\VerifyCodeRequest;
-use Exception;
 
 class CodeController extends Controller
 {
