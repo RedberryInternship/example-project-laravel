@@ -8,15 +8,17 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
+use App\Nova\Actions\ExportOrders;
 use App\Nova\Filters\Order\OrderType;
 use App\Nova\Filters\Order\ChargerType;
 use App\Nova\Filters\Order\ChargingType;
 use Titasgailius\SearchRelations\SearchesRelations;
-use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
+use App\Library\Entities\Nova\Resource\ActionTrait;
 
 class Order extends Resource
 {
-    use SearchesRelations;
+    use SearchesRelations,
+        ActionTrait;
 
     /**
      * The model the resource corresponds to.
@@ -169,7 +171,7 @@ class Order extends Resource
     public function actions(Request $request)
     {
         return [
-            (new DownloadExcel) -> withHeadings(),
+            $this -> createCustomExportableExcelAction(ExportOrders :: class),
         ];
     }
 

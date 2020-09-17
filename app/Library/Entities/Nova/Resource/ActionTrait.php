@@ -11,20 +11,39 @@ trait ActionTrait
    * 
    * @return array|null
    */
-  private function getSelectedResourceIds(Request $request): ?array
+  private function getSelectedResourceIds(): ?array
   {
-      if($request -> resources == 'all')
+      if(request() -> resources == 'all')
       {
           return [];
       }
 
-      if($request -> resources != null )
+      if(request() -> resources != null )
       {
           return array_map( function( $resourceId ) {
               return intval( $resourceId );
-          }, explode( ',', $request->all()[ 'resources' ]));
+          }, explode( ',', request() -> all()[ 'resources' ]));
       }
 
       return null;
+  }
+
+  /**
+   * Create custom exportable action.
+   * 
+   * @param string
+   * @return mixed
+   */
+  private function createCustomExportableExcelAction( string $className )
+  {
+    $exportableUsers = new $className;
+    $selectedRecords = $this -> getSelectedResourceIds();
+
+    if($selectedRecords)
+    {
+        $exportableUsers->setIds($selectedRecords);
+    }
+
+    return $exportableUsers;
   }
 }

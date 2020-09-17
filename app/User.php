@@ -101,6 +101,16 @@ class User extends Authenticatable implements JWTSubject
         ]);
     }
 
+    /**
+     * Get full name of the user.
+     * 
+     * @return string
+     */
+    public function fullName()
+    {
+        return $this -> first_name . ' ' . $this -> last_name;
+    }
+
     public function company()
     {
         return $this -> belongsTo(Company::class);
