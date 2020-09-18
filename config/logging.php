@@ -111,6 +111,7 @@ return [
             'driver' => 'daily',
             'path' => storage_path('logs/request/charger.log'),
             'level' => 'debug',
+            'permission' => 0777,
         ],
 
         'single' => [
