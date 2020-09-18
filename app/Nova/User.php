@@ -167,16 +167,8 @@ class User extends Resource
      */
     public function actions(Request $request)
     {
-        $exportableUsers = new ExportUsers;
-        $selectedRecords = $this -> getSelectedResourceIds($request);
-
-        if($selectedRecords)
-        {
-            $exportableUsers->setIds($selectedRecords);
-        }
-
         return [
-            $exportableUsers,
+            $this -> createCustomExportableExcelAction(ExportUsers :: class),
         ];
     }
 }

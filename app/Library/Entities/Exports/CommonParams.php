@@ -27,7 +27,7 @@ trait CommonParams
       1  => [
         'font' => [
           'bold' => true
-        ]
+        ],
       ],
     ];
   }
