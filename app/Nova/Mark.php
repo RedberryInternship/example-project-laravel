@@ -29,7 +29,9 @@ class Mark extends Resource
      * @var array
      */
     public static $search = [
-        'id','name'
+        'id',
+        'id',
+        'name',
     ];
 
     /**

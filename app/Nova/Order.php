@@ -52,6 +52,7 @@ class Order extends Resource
      */
     public static $search = [
         'id',
+        'charger_transaction_id',
     ];
 
     /**

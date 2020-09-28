@@ -30,8 +30,7 @@ class ExcelCustomExporter extends DownloadExcel
    * @return array
    */
   public function handle(ActionRequest $request, Action $exportable): array
-  { 
-
+  {
     if( ! $this -> exportable )
     {
       throw new \Exception( 'Exportable class should be set.', 500 );

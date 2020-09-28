@@ -37,7 +37,8 @@ class Charger extends Resource
      */
     public static $search = [
         'id',
-        'name'
+        'name',
+        'code',
     ];
 
     /**
