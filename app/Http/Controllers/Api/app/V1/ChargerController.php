@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Charger;
 use App\Http\Resources\ChargerCollection;
+use App\Enums\ChargerStatus as ChargerStatusEnum;
 use App\Http\Resources\Charger as ChargerResource;
 
 class ChargerController extends Controller
@@ -45,6 +46,7 @@ class ChargerController extends Controller
 
         $chargers = $charger
                 -> OrderBy('id', 'desc')
+                -> where('status', '!=', ChargerStatusEnum :: NOT_PRESENT)
                 -> withAllAttributes()
                 -> get();
 
