@@ -30,6 +30,7 @@ class OrderController extends Controller
         $user = Auth::user();
 
         $orders = Order::whereHas('charger_connector_type.charger', function($query) use ($user) {
+            $query -> whereNotNull('chargers.company_id');
             $query -> where('chargers.company_id', $user -> company_id);
         }) -> with([
             'payments',

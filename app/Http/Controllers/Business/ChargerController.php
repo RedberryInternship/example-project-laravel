@@ -29,9 +29,10 @@ class ChargerController extends Controller
     {
         $user     = Auth::user();
         $chargers = Charger::where('company_id', $user -> company_id)
-                          -> with('groups')
-                          -> orderBy('id', 'DESC')
-                          -> get();
+                        ->whereNotNull('company_id')
+                        -> with('groups')
+                        -> orderBy('id', 'DESC')
+                        -> get();
 
         return view('business.chargers.index') -> with([
             'tabTitle'       => 'დამტენები',
