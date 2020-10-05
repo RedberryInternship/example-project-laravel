@@ -75,6 +75,8 @@ class Company extends Resource
                 ->disk('public'),
 
             HasMany::make('Users'),
+            
+            HasMany::make('Chargers'),
         ];
     }
 
