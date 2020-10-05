@@ -22,15 +22,15 @@
                     <div class="input-field col s12">
                         <i class="material-icons prefix pt-2">email</i>
                         <input id="email" type="text" name="email" autocomplete="off" value="{{ old('email') }}" required>
-                        <label for="email" class="center-align">ელ. ფოსტა</label>
+                        <label for="email" class="center-align" class="input-lab">ელ. ფოსტა</label>
                     </div>
                 </div>
 
                 <div class="row margin">
                     <div class="input-field col s12">
                         <i class="material-icons prefix pt-2">lock_outline</i>
-                        <input id="password" type="password" name="password" required>
-                        <label for="password">პაროლი</label>
+                        <input id="password" type="password" autocomplete="off" name="password" required>
+                        <label for="password" class="input-lab">პაროლი</label>
                     </div>
                 </div>
 

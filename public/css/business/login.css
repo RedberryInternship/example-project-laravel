@@ -30,6 +30,53 @@
   color: aliceblue;
 }
 
+input {
+  border-radius: 20px !important;
+  padding-left: 10px !important;
+  border: 1px solid rgb(165, 165, 165) !important;
+  padding-bottom: 1em !important;
+  padding-top: 1em !important;
+  height: auto !important;
+}
+
+.input-field.col label {
+  left: 1.75rem;
+  top: .3em;
+}
+
+.input-field > input[type]:-webkit-autofill:not(.browser-default) + label, 
+.input-field > input[type=date]:not(.browser-default) + label, 
+.input-field > input[type=time]:not(.browser-default) + label {
+  -webkit-transform: translateY(-24px) scale(.8);
+  transform: translateY(-24px) scale(.8);
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+}
+
+.input-field > input[type]:-webkit-autofill:not(.browser-default) + label, 
+.input-field > input[type=date]:not(.browser-default) + label, 
+.input-field > input[type=time]:not(.browser-default) + label {
+  -webkit-transform: translateY(-24px) scale(.8);
+  transform: translateY(-24px) scale(.8);
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+}
+
+.input-field > label:not(.label-icon).active {
+  -webkit-transform: translateY(-24px) scale(.8);
+  -ms-transform: translateY(-24px) scale(.8);
+  transform: translateY(-24px) scale(.8);
+  -webkit-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  transform-origin: 0 0;
+}
+
+.input-field > label {
+  -webkit-transform: translateY(10px);
+  -ms-transform: translateY(10px);
+  transform: translateY(10px);
+}
+
 @media(max-height: 725px)
 {
   .login-title {
