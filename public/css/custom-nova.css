@@ -1,0 +1,25 @@
+.bg-grad-sidebar > h4 {
+  padding-left: 16px;
+  position: relative;
+}
+
+.bg-grad-sidebar > h4::after {
+  content: "";
+  left: 0;
+  top: 45%;
+  width: 6px;
+  height: 1px;
+  position: absolute;
+  background-color: white;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.bg-grad-sidebar > ul {
+  margin-bottom: 2.5rem;
+}
+
+.bg-grad-sidebar > ul li {
+  margin-bottom: 0.75rem;
+}
+

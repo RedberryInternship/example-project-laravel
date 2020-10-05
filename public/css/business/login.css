@@ -1,0 +1,52 @@
+.login-bg {
+  background: #080822;
+}
+
+.custom-auth-btn {
+  background-color: steelblue;
+  left: 50% !important;
+  transform: translateX(-50%);
+  margin-bottom: 2em;
+}
+
+.custom-auth-btn:hover {
+  background-color: darkslateblue;
+}
+
+.ml-4 {
+  margin-left: auto !important;
+  text-align: center;
+}
+
+.auth-error {
+  color: indianred;
+  font-size: 12px;
+  padding-left: 1.5em;
+}
+
+.login-title {
+  position: fixed;
+  top: 1em;
+  color: aliceblue;
+}
+
+@media(max-height: 725px)
+{
+  .login-title {
+    top: .5em;
+  } 
+}
+
+@media(max-height: 650px)
+{
+  .login-title {
+    top: 0em;
+  } 
+}
+
+@media(max-height: 600px)
+{
+  .login-title {
+    display: none;
+  } 
+}
