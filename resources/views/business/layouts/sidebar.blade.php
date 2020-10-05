@@ -3,9 +3,7 @@
     <div class="brand-sidebar">
         <h1 class="logo-wrapper">
             <a class="brand-logo darken-1" href="{{ url('/business') }}">
-                <img class="hide-on-med-and-down " src="../../../app-assets/images/logo/materialize-logo.png" alt="materialize logo" />
-                <img class="show-on-medium-and-down hide-on-med-and-up" src="../../../app-assets/images/logo/materialize-logo-color.png" alt="materialize logo" />
-                <span class="logo-text hide-on-med-and-down">Admin</span>
+                <span class="logo-text hide-on-med-and-down">Business Admin</span>
             </a>
     </div>
 

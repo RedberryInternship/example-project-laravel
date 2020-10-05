@@ -11,8 +11,8 @@
 
         <title>E-space {{ isset($tabTitle) ? ' | ' . $tabTitle : NULL }}</title>
 
-        <link rel="apple-touch-icon" href="/images/logo.png">
-        <link rel="shortcut icon" type="image/x-icon" href="/images/logo.png">
+        <link rel="apple-touch-icon" href="/images/favicon.png">
+        <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <!-- BEGIN: VENDOR CSS-->
         <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/vendors.min.css">
