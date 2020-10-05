@@ -2,10 +2,12 @@
 
 namespace App\Nova;
 
+use App\Role as RoleModel;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use App\Nova\Filters\User\Role;
+use App\Enums\Role as RoleEnum;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Password;
@@ -14,6 +16,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\User\UserType;
 use Laravel\Nova\Fields\BelongsToMany;
 use App\Library\Entities\Nova\Resource\ActionTrait;
+
 
 class User extends Resource
 {
@@ -73,12 +76,11 @@ class User extends Resource
      */
     public function fields(Request $request)
     {
-        return [
+        $isBusinessman = $this -> isUserBusinessman();
+
+        $fields = [
             ID::make()
                 ->sortable(),
-
-            BelongsTo::make('Company')
-                ->nullable(),
 
             BelongsTo::make('Role'),
             
@@ -108,21 +110,31 @@ class User extends Resource
                 ->falseValue(0)
                 ->hideFromIndex(),
 
-            BelongsToMany::make('User Car Model','car_models', 'App\Nova\CarModel'),
-
-            HasMany::make('User Charger', 'user_chargers', 'App\Nova\ChargerUser'),
+            BelongsToMany::make('User Car Model','car_models', 'App\Nova\CarModel') -> canSee(function() use($isBusinessman) {
+                return ! $isBusinessman;
+            }),
             
             Password::make('Password')
                 ->onlyOnForms()
                 ->creationRules('required', 'string', 'min:8')
                 ->updateRules('nullable', 'string', 'min:8'),
                 
-            HasMany::make('User Cards'),
+            HasMany::make('User Cards') -> canSee(function() use($isBusinessman) {
+                return ! $isBusinessman;
+            }),
 
-            HasMany::make('Orders'),
+            HasMany::make('Orders') -> canSee(function() use($isBusinessman) {
+                return ! $isBusinessman;
+            }),
+            BelongsTo::make('Company') -> canSee(function() use($isBusinessman) {
+                return $isBusinessman;
+            }) -> hideFromIndex(),
         ];
-    }
 
+
+
+        return $fields;
+    }
     /**
      * Get the cards available for the request.
      *
@@ -170,5 +182,15 @@ class User extends Resource
         return [
             $this -> createCustomExportableExcelAction(ExportUsers :: class),
         ];
+    }
+
+    /**
+     * Determine if user is business.
+     * 
+     * @return boolean
+     */
+    private function isUserBusinessman()
+    {
+        return $this -> role && $this -> role -> name == RoleEnum :: BUSINESS;
     }
 }

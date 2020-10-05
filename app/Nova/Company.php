@@ -5,6 +5,7 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\File;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Spatie\NovaTranslatable\Translatable;
@@ -72,6 +73,8 @@ class Company extends Resource
 
             File::make('Contract File')
                 ->disk('public'),
+
+            HasMany::make('Users'),
         ];
     }
 

@@ -195,11 +195,6 @@ class User extends Authenticatable implements JWTSubject
         return $this -> belongsTo('App\Role');
     }
 
-    public function user_chargers()
-    {
-        return $this -> hasMany('App\ChargerUser');
-    }
-
     public function business_services()
     {
         return $this -> hasMany(BusinessService::class);

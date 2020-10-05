@@ -29,7 +29,7 @@ class ChargerController extends Controller
     {
         $user     = Auth::user();
         $chargers = Charger::where('company_id', $user -> company_id)
-                        ->whereNotNull('company_id')
+                        -> whereNotNull('company_id')
                         -> with('groups')
                         -> orderBy('id', 'DESC')
                         -> get();
