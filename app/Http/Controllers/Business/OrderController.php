@@ -32,7 +32,6 @@ class OrderController extends Controller
         $orders = Order::whereHas('charger_connector_type.charger', function($query) use ($user) {
             $query -> where('chargers.company_id', $user -> company_id);
         }) -> with([
-            'user',
             'payments',
             'user_card',
             'charger_connector_type.charger'
@@ -43,7 +42,7 @@ class OrderController extends Controller
         return view('business.orders.index') -> with([
             'user'           => $user,
             'orders'         => $orders,
-            'tabTitle'       => 'დატენვები',
+            'tabTitle'       => 'ტრანზაქციები',
             'activeMenuItem' => 'orders'
         ]);
     }

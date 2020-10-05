@@ -9,7 +9,6 @@ use App\Helpers\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Charger as ChargerResource;
 
 class ChargerController extends Controller
 {

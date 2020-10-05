@@ -7,7 +7,7 @@
 				<div class="card-content">
 					<div class="row mb-2">
 						<div class="col s12 flex justify-space-between">
-                            <h4 class="card-title">დატენვები</h4>
+                            <h4 class="card-title">{{ $tabTitle }}</h4>
                             
                             <a href="{{ url('/business/exports/orders') }}" class="btn waves-effect waves-light green">
                                 რეპორტი
@@ -22,9 +22,8 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
+                                            <th>დამტენის კოდი</th>
                                             <th>დამტენი</th>
-                                            <th>მომხმარებელი</th>
-                                            <th>ბარათი</th>
                                             <th>გადახდები</th>
                                             <th>დრო</th>
                                             <th class="center">დასრულებული</th>
@@ -35,16 +34,15 @@
                                         @foreach($orders as $order)
                                             <tr>
                                                 <td>{{ $order -> id }}</td>
+                                                <td>{{ $order -> charger_connector_type -> charger -> code }}</td>
                                                 <td>{{ $order -> charger_connector_type -> charger -> location }}</td>
-                                                <td>{{ $order -> user ? $order -> user -> first_name . ' ' . $order -> user -> last_name : '-' }}</td>
-                                                <td>{{ $order -> user_card ? $order -> user_card -> masked_pan : '-' }}</td>
                                                 <td>
                                                     @foreach ($order -> payments as $payment)
                                                         {{ $payment -> type . ': ' . $payment -> price }}
                                                         <br>
                                                     @endforeach
                                                 </td>
-                                                <td>{{ $order -> created_at -> format('d-m-Y H:i') }}</td>
+                                                <td>{{ $order -> created_at }}</td>
                                                 <td class="center">
                                                     <i class="material-icons dp48" style="{{ $order -> charging_status == 'FINISHED' ? 'color: green' : 'color: red' }}">
                                                         {{ $order -> charging_status == 'FINISHED' ? 'check' : 'close' }}
