@@ -2,7 +2,6 @@
 
 namespace App\Nova;
 
-use App\Role as RoleModel;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
@@ -17,6 +16,9 @@ use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\User\UserType;
 use App\Nova\Actions\DeleteUserData;
 use Laravel\Nova\Fields\BelongsToMany;
+use App\Nova\Filters\User\EndDateRange;
+use App\Nova\Filters\User\StartDateRange;
+use App\Nova\Actions\ExportUsersStatistics;
 use App\Library\Entities\Nova\Resource\ActionTrait;
 
 class User extends Resource
@@ -113,6 +115,8 @@ class User extends Resource
                 ->hideFromIndex()
                 ->readonly(),
 
+            DateTime::make('Registered At', 'created_at') -> hideFromIndex(),
+
             DateTime::make('Deactivated At') -> canSee(function() {
                 return !! $this -> deactivated_at;
             })->hideFromIndex(),
@@ -162,6 +166,8 @@ class User extends Resource
     public function filters(Request $request)
     {
         return [
+            new StartDateRange,
+            new EndDateRange,
             new Role,
             new UserType,
         ];
@@ -189,6 +195,7 @@ class User extends Resource
         return [
             $this -> createCustomExportableExcelAction(ExportUsers :: class),
             (new DeleteUserData) -> onlyOnDetail(),
+            (new ExportUsersStatistics) -> onlyOnIndex(),
         ];
     }
 

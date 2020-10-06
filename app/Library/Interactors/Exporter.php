@@ -5,6 +5,7 @@ namespace App\Library\Interactors;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Library\Entities\Exports\UsersExporter;
 use App\Library\Entities\Exports\OrdersExporter;
+use App\Library\Entities\Exports\UsersStatisticsExporter;
 
 class Exporter
 {
@@ -26,5 +27,16 @@ class Exporter
   public static function exportOrders()
   {
     return Excel :: download( new OrdersExporter, 'orders.xlsx' );
+  }
+
+  /**
+   * Export users statistics.
+   * 
+   * @param int $year
+   * @return \File
+   */
+  public static function exportUsersStatistics()
+  {
+    return Excel :: download(new UsersStatisticsExporter, 'users-statistics.xlsx');
   }
 }

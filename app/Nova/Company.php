@@ -8,10 +8,10 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Spatie\NovaTranslatable\Translatable;
 use App\Enums\ContractMethod as ContractMethodEnum;
-use Laravel\Nova\Fields\Number;
 
 class Company extends Resource
 {
