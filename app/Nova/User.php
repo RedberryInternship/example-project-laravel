@@ -11,12 +11,13 @@ use App\Enums\Role as RoleEnum;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Password;
+use Laravel\Nova\Fields\DateTime;
 use App\Nova\Actions\ExportUsers;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\User\UserType;
+use App\Nova\Actions\DeleteUserData;
 use Laravel\Nova\Fields\BelongsToMany;
 use App\Library\Entities\Nova\Resource\ActionTrait;
-
 
 class User extends Resource
 {
@@ -103,12 +104,18 @@ class User extends Resource
 
             Boolean::make('active')
                 ->trueValue(1)
-                ->falseValue(0),
+                ->falseValue(0)
+                ->readonly(),
 
             Boolean::make('verified')
                 ->trueValue(1)
                 ->falseValue(0)
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->readonly(),
+
+            DateTime::make('Deactivated At') -> canSee(function() {
+                return !! $this -> deactivated_at;
+            })->hideFromIndex(),
 
             BelongsToMany::make('User Car Model','car_models', 'App\Nova\CarModel') -> canSee(function() use($isBusinessman) {
                 return ! $isBusinessman;
@@ -181,6 +188,7 @@ class User extends Resource
     {
         return [
             $this -> createCustomExportableExcelAction(ExportUsers :: class),
+            (new DeleteUserData) -> onlyOnDetail(),
         ];
     }
 

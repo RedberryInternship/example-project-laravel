@@ -43,6 +43,7 @@ class User extends Authenticatable implements JWTSubject
      * Casting fields to into another type.
      */
     protected $casts = [
+        'deactivated_at'    => 'datetime',
         'email_verified_at' => 'datetime',
     ];
 
@@ -260,5 +261,33 @@ class User extends Authenticatable implements JWTSubject
         }
 
         return $phoneNumber;
+    }
+
+    /**
+     * Deactivate user by deleting every personal info,
+     * that exists in db.
+     * 
+     * @return void
+     */
+    public function deactivate()
+    {
+        $this -> phone_number   = '---';
+        $this -> first_name     = '---';
+        $this -> last_name      = '---';
+        $this -> password       = '---';
+        $this -> email          = '---';
+        $this -> active         = false;
+        $this -> deactivated_at = now();
+        $this -> save();
+
+        UserCard :: where('user_id', $this -> id)
+            -> update(
+                [
+                    'masked_pan'        => '---',
+                    'transaction_id'    => '---',
+                    'card_holder'       => '---',
+                    'prrn'              => '---',
+                ]
+            );
     }
 }
