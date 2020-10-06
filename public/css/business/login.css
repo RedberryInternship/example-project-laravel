@@ -77,6 +77,10 @@ input {
   transform: translateY(10px);
 }
 
+.input-field .prefix {
+  top: 0;
+}
+
 @media(max-height: 725px)
 {
   .login-title {
