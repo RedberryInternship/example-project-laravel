@@ -61,8 +61,36 @@ class Timestamp
     }
     else
     {
-      return $this -> order -> real_start_date ? Carbon :: createFromTimestamp( $this -> order -> real_start_date ) : null;
+      return $this -> getOriginalStartTime();
     }
+  }
+
+  /**
+   * Original start time.
+   * 
+   * @return \Carbon | null
+   */
+  public function getOriginalStartTime(): ?Carbon
+  {
+    $startDate = $this -> order -> real_start_date;
+
+    return $startDate 
+      ? Carbon :: createFromTimestamp( $startDate ) 
+      : null;
+  }
+
+  /**
+   * Original end time.
+   * 
+   * @return \Carbon | null
+   */
+  public function getOriginalEndTime(): ?Carbon
+  {
+    $endDate = $this -> order -> real_end_date;
+
+    return $endDate 
+      ? Carbon :: createFromTimestamp($endDate)
+      : null; 
   }
 
   /**
@@ -83,8 +111,7 @@ class Timestamp
         }
         else
         {
-          $realEndDate = $this -> order -> real_end_date;
-          $realEndDate && $endTimestamp = Carbon :: createFromTimestamp( $realEndDate );
+          $endTimestamp = $this -> getOriginalEndTime();
         }
     }
     else

@@ -21,6 +21,7 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     Route::post('/charger-transfer', 'ChargerTransferController');
 
     Route::resource('/orders', 'OrderController');
+    Route::get('/order-exports', 'OrderController@downloadExcel');
     Route::resource('/profile', 'ProfileController');
     Route::resource('/chargers', 'ChargerController');
     Route::resource('/groups', 'GroupController');
@@ -34,10 +35,6 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
         Route::get('/transactions', 'TransactionsController');
         Route::get('/active-chargers', 'ActiveChargersController');
         Route::get('/charger-statuses', 'ChargerStatusesController');
-    });
-
-    Route::group(['prefix' => 'exports', 'namespace' => 'Exports'], function() {
-        Route::get('/orders', 'OrderController');
     });
 });
 

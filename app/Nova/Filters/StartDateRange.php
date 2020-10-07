@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Nova\Filters\User;
+namespace App\Nova\Filters;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\DateFilter;
 
-class EndDateRange extends DateFilter
+class StartDateRange extends DateFilter
 {
     /**
      * Apply the filter to the given query.
@@ -18,9 +18,9 @@ class EndDateRange extends DateFilter
      */
     public function apply(Request $request, $query, $value)
     {
-        $endDate = Carbon :: parse( $value );
+        $startDate = Carbon :: parse( $value );
 
-        $value && $query->whereDate('created_at', '<=', $endDate );
+        $value && $query->whereDate('created_at', '>=', $startDate );
 
         return $query;
     }

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Business\Analytics;
 
-use Auth;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionsController extends Controller
 {

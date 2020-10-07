@@ -9,10 +9,10 @@
 						<div class="col s12 flex justify-space-between">
                             <h4 class="card-title">{{ $tabTitle }}</h4>
                             
-                            <a href="{{ url('/business/exports/orders') }}" class="btn waves-effect waves-light green">
+                            <a href="{{ url('/business/order-exports') }}" class="btn waves-effect waves-light green">
                                 რეპორტი
                             </a>
-	                    </div>
+                        </div>
                     </div>
 
                     <div class="row mb-2">

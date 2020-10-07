@@ -12,18 +12,16 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\DateTime;
 use App\Nova\Actions\ExportUsers;
+use App\Nova\Filters\EndDateRange;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\User\UserType;
+use App\Nova\Filters\StartDateRange;
 use App\Nova\Actions\DeleteUserData;
 use Laravel\Nova\Fields\BelongsToMany;
-use App\Nova\Filters\User\EndDateRange;
-use App\Nova\Filters\User\StartDateRange;
 use App\Nova\Actions\ExportUsersStatistics;
-use App\Library\Entities\Nova\Resource\ActionTrait;
 
 class User extends Resource
 {
-    use ActionTrait;
 
     /**
      * The model the resource corresponds to.
@@ -193,7 +191,7 @@ class User extends Resource
     public function actions(Request $request)
     {
         return [
-            $this -> createCustomExportableExcelAction(ExportUsers :: class),
+            new ExportUsers,
             (new DeleteUserData) -> onlyOnDetail(),
             (new ExportUsersStatistics) -> onlyOnIndex(),
         ];

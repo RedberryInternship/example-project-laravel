@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Twilio;
 use App\Facades\SMS;
 use App\Enums\OrderStatus;
 use App\Entities\BusinessIncome;

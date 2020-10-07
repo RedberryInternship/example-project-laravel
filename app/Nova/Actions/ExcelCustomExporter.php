@@ -16,13 +16,6 @@ class ExcelCustomExporter extends DownloadExcel
    */
   protected $exportable;
   
-  /**
-   * Ids to be filtered.
-   * 
-   * @var array|null
-   */
-  private $ids;
-
     /**
    * @param ActionRequest $request
    * @param Action        $exportable
@@ -37,24 +30,14 @@ class ExcelCustomExporter extends DownloadExcel
     }
 
     $exportable = new $this -> exportable;
-
-    $this -> ids && $exportable -> setIDs($this -> ids);
+    $ids = $this -> getIds();
+    $ids && $exportable -> setIDs($ids);
     
     Excel::store( $exportable, 'public/download.xlsx');
 
     $downloadUrl = config('app')['url'] . '/storage/download.xlsx';
 
     return Action::download( $downloadUrl, $this->getFilename());
-  }
-
-  /**
-   * set ids to be filtered.
-   * 
-   * @var array|null
-   */
-  public function setIds($ids)
-  {
-      $this -> ids = $ids;
   }
 
   /**
@@ -68,5 +51,13 @@ class ExcelCustomExporter extends DownloadExcel
     $this -> exportable = $exportable;
   }
 
-    
+  /**
+   * Get ids to be filtered with.
+   * 
+   * @return array
+   */
+  public function getIds(): ?array
+  {
+    return $this -> query() -> pluck('id')->toArray();
+  }
 }
