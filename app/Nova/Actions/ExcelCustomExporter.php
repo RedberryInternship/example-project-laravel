@@ -16,7 +16,7 @@ class ExcelCustomExporter extends DownloadExcel
    */
   protected $exportable;
   
-    /**
+  /**
    * @param ActionRequest $request
    * @param Action        $exportable
    *

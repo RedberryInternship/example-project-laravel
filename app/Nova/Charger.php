@@ -10,8 +10,9 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\Charger\Company;
 use Laravel\Nova\Fields\BelongsToMany;
-use Spatie\NovaTranslatable\Translatable;
+use App\Nova\Actions\ExportChargerOrders;
 use App\Nova\Filters\Charger\ChargerType;
+use Spatie\NovaTranslatable\Translatable;
 use App\Nova\Filters\Charger\ChargerStatus;
 
 class Charger extends Resource
@@ -154,6 +155,8 @@ class Charger extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new ExportChargerOrders) -> onlyOnDetail(),
+        ];
     }
 }

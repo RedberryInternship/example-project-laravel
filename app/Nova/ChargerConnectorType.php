@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasMany;
 use App\ChargerConnectorType as CCT;
+use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class ChargerConnectorType extends Resource
@@ -60,6 +61,9 @@ class ChargerConnectorType extends Resource
             Text::make('Connector Type', 'connector_type_id', function( $value ) {
                 return ConnectorType :: where( 'id', $value ) -> first() -> name;
             }) -> readonly(),
+
+            HasOne::make('Charger'),
+            
             HasMany::make('Fast Charging Prices') -> canSee( function() use( $isFast ){
                 
                 if( is_null( $isFast ) )
