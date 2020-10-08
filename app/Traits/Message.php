@@ -90,6 +90,6 @@ trait Message
     ' / The Charging process is completed. Please unplug the cable during ' . 
     $penaltyReliefMinutes . ' minutes Otherwise, you will be fined: 1 min. - ' . $penaltyPricePerMinute . ' GEL';
 
-    return $sms;
+    return $tempSms;
   }
 }
