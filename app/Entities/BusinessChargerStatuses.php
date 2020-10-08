@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use App\Charger;
+use App\Enums\ChargerStatus as ChargerStatusEnum;
 
 trait BusinessChargerStatuses
 {
@@ -22,21 +23,22 @@ trait BusinessChargerStatuses
             });
         }
 
+        $active = (clone $query)
+            -> where('status', ChargerStatusEnum :: ACTIVE )
+            -> count();
+
+        $inactive = (clone $query)
+            -> where('status', ChargerStatusEnum :: INACTIVE )
+            -> count();
+
+        $charging = (clone $query)
+            -> where('status', ChargerStatusEnum :: CHARGING )
+            -> count();
+
         return [
-            'active'   => (clone $query)
-                     -> where('active', true)
-                     -> count(),
-
-            'inActive' => (clone $query)
-                     -> where('active', false)
-                     -> count(),
-
-            'on'       => (clone $query)
-                     -> where('active', true)
-                     -> whereHas('charger_connector_types.orders', function($q) use ($connectorTypes) {
-                        $q -> where('orders.charging_status', '!=', 'FINISHED');
-                     })
-                     -> count(),
+            'Free'          => $active,
+            'Charging'      => $charging,
+            'Not Working'   => $inactive,
         ];
     }
 }

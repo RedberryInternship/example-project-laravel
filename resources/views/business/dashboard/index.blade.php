@@ -12,5 +12,5 @@
 
 @section('js')
 	<script src="/app-assets/vendors/chartjs/chart.min.js"></script>
-	<script src="/js/dashboard.js"></script>
+	<script src="/js/business/dashboard.js"></script>
 @endsection

@@ -42,7 +42,7 @@ let getData = () => {
                 datasets: [
                     {
                         data: dataSetsFromData(res.data.lvl2),
-                        backgroundColor: ["#03a9f4", "#00bcd4", "#ffc107", "#e91e63", "#4caf50"]
+                        backgroundColor: ['#27AE60', '#EBC257', '#EB5757']
                     }
                 ]
             };
@@ -53,7 +53,7 @@ let getData = () => {
                 datasets: [
                     {
                         data: dataSetsFromData(res.data.fast),
-                        backgroundColor: ["#03a9f4", "#00bcd4", "#ffc107", "#e91e63", "#4caf50"]
+                        backgroundColor: ['#27AE60', '#EBC257', '#EB5757']
                     }
                 ]
             };
