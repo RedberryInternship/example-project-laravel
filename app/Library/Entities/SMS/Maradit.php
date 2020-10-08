@@ -42,7 +42,7 @@ class Maradit
 	 * Default: GSM 7 bit default alphabet, http://en.wikipedia.org/wiki/GSM_03.38
 	 * UCS2   : Unicode encoding, http://en.wikipedia.org/wiki/UCS-2
 	 * */
-    private $data_coding = 'Default';
+    private $data_coding = 'UCS2';
 
     /**
      * Maradit Class Constructor.

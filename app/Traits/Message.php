@@ -62,7 +62,8 @@ trait Message
    */
   public function chargingCompleteMessage(): string
   {
-    return 'ელექტრომობილის დამუხტვა დასრულებულია / The Charging process is completed';
+    $sms = 'ელექტრომობილის დამუხტვა დასრულებულია / The Charging process is completed';
+    return base64_encode( $sms );
   }
 
   /**
@@ -77,9 +78,11 @@ trait Message
     $penaltyReliefMinutes = $config -> penalty_relief_minutes;
     $penaltyPricePerMinute = $config -> penalty_price_per_minute;
 
-    return 'ელექტრომობილის დამუხტვა დასრულებულია. გთხოვთ, ' . $penaltyReliefMinutes . ' წუთის განმავლობაში გამოაერთოთ სადენი, '.
-           'წინააღმდეგ შემთხვევაში დაგერიცხებათ ჯარიმა: 1 წუთი - '. $penaltyPricePerMinute .' ლარი'.
-           ' / The Charging process is completed. Please unplug the cable during ' . 
-           $penaltyReliefMinutes . ' minutes Otherwise, you will be fined: 1 min. - ' . $penaltyPricePerMinute . ' GEL';
+    $sms = 'ელექტრომობილის დამუხტვა დასრულებულია. გთხოვთ, ' . $penaltyReliefMinutes . ' წუთის განმავლობაში გამოაერთოთ სადენი, '.
+      'წინააღმდეგ შემთხვევაში დაგერიცხებათ ჯარიმა: 1 წუთი - '. $penaltyPricePerMinute .' ლარი'.
+      ' / The Charging process is completed. Please unplug the cable during ' . 
+      $penaltyReliefMinutes . ' minutes Otherwise, you will be fined: 1 min. - ' . $penaltyPricePerMinute . ' GEL';
+
+    return base64_encode( $sms );
   }
 }
