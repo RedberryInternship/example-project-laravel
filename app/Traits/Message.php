@@ -1,9 +1,9 @@
 <?php
 /** cSpell:disable */
 
-
 namespace App\Traits;
 
+use App\Config;
 
 trait Message
 {
@@ -54,4 +54,30 @@ trait Message
       'ka' => 'დამუხტვა წარმატებით დასრულდა!',
     ],
   ];
+
+  /**
+   * Charging complete message.
+   * 
+   * @return string
+   */
+  public function chargingCompleteMessage(): string
+  {
+    return 'ელექტრომობილის დამუხტვა დასრულებულია / The Charging process is completed';
+  }
+
+  /**
+   * On penalty message.
+   * 
+   * @return string
+   */
+  public function onPenaltyMessage(): string
+  {
+    $config = Config :: first();
+
+    $penaltyReliefMinutes = $config -> penalty_relief_minutes;
+    $penaltyPricePerMinute = $config -> penalty_price_per_minute;
+
+    return 'ელექტრომობილის დამუხტვა დასრულებულია. გთხოვთ, ' . $penaltyReliefMinutes . ' წუთის განმავლობაში გამოაერთოთ სადენი, წინააღმდეგ შემთხვევაში დაგერიცხებათ ჯარიმა: 1 წუთი - '. $penaltyPricePerMinute .' ლარი'.
+           ' / The Charging process is completed. Please unplug the cable during ' . $penaltyReliefMinutes . ' minutes Otherwise, you will be fined: 1 min. - ' . $penaltyPricePerMinute . ' GEL';
+  }
 }
