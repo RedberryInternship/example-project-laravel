@@ -17,7 +17,6 @@ use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\User\UserType;
 use App\Nova\Filters\StartDateRange;
 use App\Nova\Actions\DeleteUserData;
-use App\Nova\Actions\ExportUserOrders;
 use Laravel\Nova\Fields\BelongsToMany;
 use App\Nova\Actions\ExportUsersStatistics;
 
@@ -193,7 +192,6 @@ class User extends Resource
     {
         return [
             new ExportUsers,
-            (new ExportUserOrders) -> onlyOnDetail(),
             (new DeleteUserData) -> onlyOnDetail(),
             (new ExportUsersStatistics) -> onlyOnIndex(),
         ];
