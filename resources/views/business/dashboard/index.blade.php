@@ -7,7 +7,7 @@
 @endsection
 
 @section('css')
-	<link rel="stylesheet" type="text/css" href="/css/dashboard.css">
+	<link rel="stylesheet" type="text/css" href="/css/business/dashboard.css">
 @endsection
 
 @section('js')
