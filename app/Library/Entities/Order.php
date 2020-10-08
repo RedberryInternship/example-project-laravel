@@ -12,27 +12,12 @@ use App\Facades\Charger as RealCharger;
 use App\Library\Interactors\Firebase;
 use App\Library\Interactors\Payment;
 use App\Facades\Simulator;
-use App\Traits\Message;
 use App\Helpers\App;
 use App\Config;
 use App\User;
 
 trait Order
 {
-    use Message;
-
-    /**
-     * Update order charging status.
-     * 
-     * @param   string $chargingStatus
-     * @return  void
-     */
-    public function updateChargingStatus( $chargingStatus )
-    {
-        $this -> charging_status = $chargingStatus;
-        $this -> save();
-    }
-
     /**
      * Lock payments.
      * 
@@ -205,7 +190,6 @@ trait Order
                     );
 
                     $this -> updateChargingStatus( OrderStatusEnum :: USED_UP );
-                    User :: sendSms($this -> user -> phone_number, $this -> onPenaltyMessage());
                 }
             }
             else
@@ -224,7 +208,6 @@ trait Order
                     );
 
                     $this -> updateChargingStatus( OrderStatusEnum :: CHARGED );
-                    User :: sendSms($this -> user -> phone_number, $this -> onPenaltyMessage());
                 } 
             }
         }
@@ -267,7 +250,6 @@ trait Order
         }
         
         CacheOrderDetails :: execute( $this );
-        User :: sendSms($this -> user -> phone_number, $this -> chargingCompleteMessage());
     }
 
     /**

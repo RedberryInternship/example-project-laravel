@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Helpers\App;
+use App\Traits\Message;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Library\Entities\Order as OrderEntity;
 use App\Library\Entities\ChargingProcess\Hook;
@@ -12,9 +14,10 @@ use App\Library\Entities\ChargingProcess\Calculator;
 
 class Order extends Model
 {
-    use OrderEntity,
-        Calculator,
-        State;
+    use State;
+    use Message;
+    use Calculator;
+    use OrderEntity;
 
     /**
      * Laravel guarded attribute.
@@ -137,5 +140,26 @@ class Order extends Model
             OrderStatusEnum :: ON_FINE,
             OrderStatusEnum :: ON_HOLD,
         ]);
+    }
+
+    /**
+     * Update order charging status.
+     * 
+     * @param   string $chargingStatus
+     * @return  void
+     */
+    public function updateChargingStatus( $chargingStatus )
+    {
+        $this -> charging_status = $chargingStatus;
+        $this -> save();
+
+        if( $chargingStatus == OrderStatusEnum :: USED_UP || $chargingStatus == OrderStatusEnum :: CHARGED )
+        {
+            App :: dev() && User :: sendSms($this -> user -> phone_number, $this -> onPenaltyMessage());
+        }
+        else if( $chargingStatus == OrderStatusEnum :: FINISHED )
+        {
+            User :: sendSms($this -> user -> phone_number, $this -> chargingCompleteMessage());
+        }
     }
 }

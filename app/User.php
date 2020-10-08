@@ -8,13 +8,13 @@ use App\Entities\BusinessIncome;
 use App\Entities\BusinessExpense;
 use App\Entities\BusinessTransactions;
 use App\Entities\BusinessWastedEnergy;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
 use App\Entities\BusinessChargerStatuses;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
-{
+{  
     use Notifiable;
     use BusinessIncome;
     use BusinessExpense;
