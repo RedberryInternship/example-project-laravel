@@ -8,12 +8,11 @@ use App\Traits\ValidatorCustomJsonResponse as Response;
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Http\Resources\Order as OrderResource;
 use App\Enums\OrderStatus as OrderStatusEnum;
+use App\Library\Entities\Helper;
 use App\Facades\Simulator;
 use App\Facades\Charger;
 use App\Traits\Message;
-use App\Helpers\App;
 use App\Order;
-
 
 class StopCharging extends FormRequest
 {
@@ -95,7 +94,7 @@ class StopCharging extends FormRequest
         );
 
         # GLITCH
-        if(App :: dev())
+        if(Helper :: isDev())
         {
             if( $this -> order -> charger_connector_type -> isChargerFast() )
             {

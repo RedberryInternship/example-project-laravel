@@ -4,23 +4,13 @@ namespace App;
 
 use App\Facades\SMS;
 use App\Enums\OrderStatus;
-use App\Entities\BusinessIncome;
-use App\Entities\BusinessExpense;
-use App\Entities\BusinessTransactions;
-use App\Entities\BusinessWastedEnergy;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
-use App\Entities\BusinessChargerStatuses;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements JWTSubject
 {  
     use Notifiable;
-    use BusinessIncome;
-    use BusinessExpense;
-    use BusinessTransactions;
-    use BusinessWastedEnergy;
-    use BusinessChargerStatuses;
 
     /**
      * The attributes that aren't mass assignable.
@@ -222,19 +212,6 @@ class User extends Authenticatable implements JWTSubject
                 return $user -> first_name . ' ' . $user -> last_name;
             })
             -> toArray();
-    }
-
-    /**
-     * Get Business Active Chargers.
-     */
-    public function businessActiveChargers()
-    {
-        return Charger::where('company_id', $this -> company_id)
-            -> withCount('chargerConnectorTypeOrders')
-        //  -> with('charger_connector_types.orders')
-            -> orderBy('charger_connector_type_orders_count', 'DESC')
-            -> limit(5)
-            -> get();
     }
 
     /**

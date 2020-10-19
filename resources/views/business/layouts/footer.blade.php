@@ -18,8 +18,5 @@
 <script src="../../../app-assets/js/search.js"></script>
 <script src="../../../app-assets/js/custom/custom-script.js"></script>
 <!-- END THEME  JS-->
-<!-- BEGIN PAGE LEVEL JS-->
-<script src="../../../app-assets/js/scripts/dashboard-ecommerce.js"></script>
-<!-- END PAGE LEVEL JS-->
 
 @yield('js')

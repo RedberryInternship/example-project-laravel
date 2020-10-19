@@ -4,8 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\Helpers\App;
 use App\Traits\Message;
+use App\Library\Entities\Helper;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Library\Entities\Order as OrderEntity;
 use App\Library\Entities\ChargingProcess\Hook;
@@ -143,6 +143,17 @@ class Order extends Model
     }
 
     /**
+     * Orders from new version of the application.
+     * 
+     * @param Builder
+     * @return Builder
+     */
+    public function scopeWithoutOld( $query )
+    {
+        return $query -> where('id', '>', 9664);
+    }
+
+    /**
      * Update order charging status.
      * 
      * @param   string $chargingStatus
@@ -155,7 +166,7 @@ class Order extends Model
 
         if( $chargingStatus == OrderStatusEnum :: USED_UP || $chargingStatus == OrderStatusEnum :: CHARGED )
         {
-            App :: dev() && User :: sendSms($this -> user -> phone_number, $this -> onPenaltyMessage());
+            Helper :: isDev() && User :: sendSms($this -> user -> phone_number, $this -> onPenaltyMessage());
         }
         else if( $chargingStatus == OrderStatusEnum :: FINISHED )
         {

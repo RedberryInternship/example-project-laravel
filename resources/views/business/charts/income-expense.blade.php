@@ -2,11 +2,11 @@
 <div>
     <div class="card-content">
         <h4 class="card-title">
-            {{-- ტრანზაქციები რაოდენობა | დახარჯული ელ. ენერგია --}}
+            {{-- შემოსავალი --}}
         </h4>
 
         <p class="caption mb-2">
-            {{-- Here can be text --}}
+            {{-- Description --}}
         </p>
 
         @php 
@@ -15,7 +15,7 @@
         @endphp
 
         <div class="charts-select-filter">
-            <select id="transactions-select">
+            <select id="income-expense-select">
                 @for($y = $currentYear; $y >= $year; $y--)
                     <option value="{{ $y }}">{{ $y }} წელი</option>
                 @endfor
@@ -23,9 +23,9 @@
         </div>
 
         <div class="row">
-            <div class="col s12 wrap-transactions-chart">
-                <div class="sample-chart-wrapper">
-                    <canvas id="transactions-chart" width="400" height="400"></canvas>
+            <div class="col s12">
+                <div class="sample-chart-wrapper wrap-income-expense-chart">
+                    <canvas id="income-expense-chart" width="400" height="400"></canvas>
                 </div>
             </div>
         </div>

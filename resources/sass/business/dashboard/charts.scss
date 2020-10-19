@@ -1,0 +1,17 @@
+.charts-select-filter {
+  width: 13rem;
+  padding-left: 2rem;
+}
+
+.wrap-top-charts {
+  display: flex;
+  width: 100% !important;
+  position: relative;
+  z-index: 1;
+}
+
+.wrap-transactions-chart,
+.wrap-income-expense-chart {
+  position: relative;
+  z-index: 1;
+}

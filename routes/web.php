@@ -7,7 +7,7 @@
 */
 
 use Illuminate\Support\Facades\Route;
-use App\Helpers\App;
+use App\Library\Entities\Helper;
 
 Route::get('/', function () {
     return redirect('http://e-space.ge');
@@ -24,17 +24,18 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     Route::get('/order-exports', 'OrderController@downloadExcel');
     Route::resource('/profile', 'ProfileController');
     Route::resource('/chargers', 'ChargerController');
+    Route::post('/filter-chargers', 'ChargerController@getFilteredChargers');
     Route::resource('/groups', 'GroupController');
     Route::resource('/group-prices', 'GroupPriceController');
     Route::resource('/group-fast-prices', 'GroupFastPriceController');
     Route::resource('/charging-prices', 'ChargingPricesController');
     Route::resource('/fast-charging-prices', 'FastChargingPricesController');
 
-    Route::group(['prefix' => 'analytics', 'namespace' => 'Analytics'], function() {
-        Route::get('/income', 'IncomeController');
-        Route::get('/transactions', 'TransactionsController');
-        Route::get('/active-chargers', 'ActiveChargersController');
-        Route::get('/charger-statuses', 'ChargerStatusesController');
+    Route::group(['prefix' => 'analytics'], function() {
+        Route::get('/income', 'AnalyticsController@incomeAndExpense');
+        Route::get('/transactions', 'AnalyticsController@businessTransactionsAndWastedEnergy');
+        Route::get('/top-chargers', 'AnalyticsController@topChargers');
+        Route::get('/charger-statuses', 'AnalyticsController@businessChargerStatuses');
     });
 });
 
@@ -48,7 +49,7 @@ Route::post('refund', 'TestController@doRefund') -> name('refund');
 /**
  * Testing routes for development purposes
  */
- if( App :: dev() )
+ if( Helper :: isDev() )
  {
     Route::get('test'   , 'TestController');
     Route::get('/disconnect' , 'TestController@disconnect');

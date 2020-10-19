@@ -4,9 +4,9 @@ namespace App\Library\Entities\GeorgianCard;
 
 use App\Library\Entities\GeorgianCard\PaymentStatusChecker;
 use App\Library\Interactors\Firebase;
+use App\Library\Entities\Helper;
 use App\Facades\Simulator;
 use App\Facades\Charger;
-use App\Helpers\App;
 use App\Order;
 
 class FailureHandler
@@ -52,7 +52,7 @@ class FailureHandler
     Charger :: stop( $chargerId, $transactionId );
     
     # GLITCH
-    if( App :: dev() && $order -> charger_connector_type -> isChargerFast() )
+    if( Helper :: isDev() && $order -> charger_connector_type -> isChargerFast() )
     {
       Simulator :: plugOffCable( $chargerId );
     }

@@ -1,106 +1,62 @@
-import months from '../constants/Months';
+import { Chart } from 'chart.js'
+import { transactionsService } from '../utils/services'
+import { charts } from '../utils/enum'
 
-let initChart = chartData => {
-    const ctx = 'transactions-chart';
+const { TRANSACTIONS } = charts;
 
-    // Chart Options
-    const chartOptions = {
-        elements: {
-            rectangle: {
-                borderWidth: 2,
-                borderColor: "rgb(0, 255, 0)",
-                borderSkipped: "left"
+export let transactionsChartObject = null;
+
+export default async () => {
+    const response = await fetch(transactionsService);
+    const data = await response.json();
+    
+    const transactions = data.transactions;
+    const energy = data.energy;
+    const monthLabels = data.month_labels;
+
+    transactionsChartObject = new Chart(TRANSACTIONS,{
+        type: 'line',
+        data: {
+          labels:monthLabels,
+          datasets: [
+            {
+              data: transactions,
+              label: 'ტრანზაქციების სიხშირე',
+              yAxisID: 'A',
+              backgroundColor: '#f443367d'
+            },
+            {
+              data: energy,
+              label: 'მოხმარებული ელ. ენერგია',
+              yAxisID: 'B',
+              backgroundColor: '#3f51b57a'
             }
+          ],
         },
-        responsive: true,
-        maintainAspectRatio: false,
-        responsiveAnimationDuration: 500,
-        legend: {
-            position: "top"
-        },
-        scales: {
-            xAxes: [
-                {
-                    display: true,
-                    gridLines: {
-                        color: "#f3f3f3",
-                        drawTicks: false
-                    },
-                    scaleLabel: {
-                        display: true
-                    }
-                }
-            ],
-            yAxes: [
-                {
-                    display: true,
-                    gridLines: {
-                        color: "#f3f3f3",
-                        drawTicks: false
-                    },
-                    scaleLabel: {
-                        display: true
-                    }
-                }
-            ]
-        },
-        title: {
-            display: false,
-            text: "Chart.js Horizontal Bar Chart"
+        options: {
+          maintainAspectRatio: false,
+          scales: {
+            yAxes: [{
+              id: 'A',
+              type: 'linear',
+              position: 'left',
+              scaleLabel: {
+                display: true,
+                labelString: "დამუხტვების სიხშირე"
+              }
+            }, 
+            {
+              id: 'B',
+              type: 'linear',
+              position: 'right',
+              scaleLabel: {
+                display: true,
+                labelString: "მოხმარებული ელ. ენერგია"
+              }
+            }
+          ]
+          }
         }
-    };
+      });
+}
 
-    // Chart Config
-    let config = {
-        type: "bar",
-        options: chartOptions,
-        data: chartData
-    };
-
-    new Chart(ctx, config);
-};
-
-let getData = () => {
-    axios
-        .get('/business/analytics/transactions')
-        .then(res => {
-            // Chart Data
-            let chartData = {
-                labels: monthLabelsFromData(res.data.transactions),
-                datasets: [
-                    {
-                        label: "ტრანზაქციების რაოდენობა",
-                        data: dataSetsFromData(res.data.transactions),
-                        backgroundColor: "#14afd7",
-                        hoverBackgroundColor: "#00acc1",
-                        borderColor: "transparent"
-                    },
-                    {
-                        label: "დახარჯული ელ. ენერგია",
-                        data: dataSetsFromData(res.data.energy),
-                        backgroundColor: "#efc964",
-                        hoverBackgroundColor: "#00acc1",
-                        borderColor: "transparent"
-                    }
-                ]
-            };
-
-            initChart(chartData);
-        });
-};
-
-let monthLabelsFromData = data => {
-    return Object
-        .keys(data)
-        .map(index => months[parseInt(index.split('-')[1])]);
-};
-
-let dataSetsFromData = data => {
-    return Object
-        .keys(data)
-        .map(index => parseInt(data[index]));
-};
-
-export default function() {
-    getData();
-};

@@ -1,80 +1,59 @@
-let initChart = (chartData, ctx) => {
-    // Chart Options
-    const chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        responsiveAnimationDuration: 500,
-        legend: {
-            position: "top"
+import { chargerStatusesService } from '../utils/services'
+import { displayChargersModal } from '../utils/helpers'
+import { charts, chargerType as chargerTypeEnum } from '../utils/enum'
+
+const { LVL2, FAST } = chargerTypeEnum;
+const { LVL2_CHARGER_STATUSES, FAST_CHARGER_STATUSES } = charts;
+
+export default async () => {
+    const result = await fetch(chargerStatusesService);
+    const data = await result.json();
+    
+    renderChart({
+        chart: LVL2_CHARGER_STATUSES,
+        data: data
+    });
+  
+    renderChart({
+        chart: FAST_CHARGER_STATUSES,
+        data: data,
+    });
+};
+
+
+const renderChart = ({ chart, data }) => {
+
+    const isFast = chart === FAST_CHARGER_STATUSES;
+    const chargerStatusesCount = isFast ? data.fast : data.lvl2;
+    const chargerType = isFast ? FAST : LVL2;
+    const chargerStatuses = data.statuses;
+
+    const chartObj = new Chart(chart, {
+        type: "pie",
+        data: {
+            labels: data.labels,
+            datasets: [
+                {
+                    data: chargerStatusesCount,
+                    backgroundColor: ['#27AE60', '#EBC257', '#EB5757']
+                }
+            ]
         },
-        title: {
-            display: false,
-            text: "Chart.js Polar Area Chart"
+        options: {
+            maintainAspectRatio: false,
+            onClick: (e, activeElements) => {
+                if(! activeElements.length ){
+                    return;
+                }
+
+                const index = activeElements[0]._index;
+                const chargersStatus = chargerStatuses[index];
+                const chargersType = activeElements[0]._chart.chargersType;
+                
+                displayChargersModal(chargersType, chargersStatus);
+            }
         },
-        scale: {
-            ticks: {
-                beginAtZero: true
-            },
-            reverse: false
-        },
-        animation: {
-            animateRotate: false
-        }
-    };
+    });
 
-    // Chart Config
-    let config = {
-        type: "polarArea",
-        options: chartOptions,
-        data: chartData
-    };
-
-    new Chart(ctx, config);
-};
-
-let getData = () => {
-    axios
-        .get('/business/analytics/charger-statuses')
-        .then(res => {
-            // Chart Data
-            let lvl2ChartData = {
-                labels: chargerStatusesLabelsFromData(res.data.lvl2),
-                datasets: [
-                    {
-                        data: dataSetsFromData(res.data.lvl2),
-                        backgroundColor: ['#27AE60', '#EBC257', '#EB5757']
-                    }
-                ]
-            };
-
-            // Chart Data
-            let fastChartData = {
-                labels: chargerStatusesLabelsFromData(res.data.fast),
-                datasets: [
-                    {
-                        data: dataSetsFromData(res.data.fast),
-                        backgroundColor: ['#27AE60', '#EBC257', '#EB5757']
-                    }
-                ]
-            };
-
-            initChart(lvl2ChartData, 'charger-statuses-chart-lvl2');
-            initChart(fastChartData, 'charger-statuses-chart-fast');
-        });
-};
-
-let chargerStatusesLabelsFromData = data => {
-    return Object
-        .keys(data)
-        .map(index => index);
-};
-
-let dataSetsFromData = data => {
-    return Object
-        .keys(data)
-        .map(index => parseInt(data[index]));
-};
-
-export default function () {
-    getData();
+    chartObj.chargersType = chargerType;
 };

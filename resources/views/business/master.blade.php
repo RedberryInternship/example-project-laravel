@@ -8,6 +8,7 @@
         <meta name="description" content="Materialize is a Material Design Admin Template,It's modern, responsive and based on Material Design by Google.">
         <meta name="keywords" content="materialize, admin template, dashboard template, flat admin template, responsive admin template, eCommerce dashboard, analytic dashboard">
         <meta name="author" content="ThemeSelect">
+        <meta name="_token" content="{{ csrf_token() }}">
 
         <title>E-space {{ isset($tabTitle) ? ' | ' . $tabTitle : NULL }}</title>
 

@@ -11,10 +11,9 @@ use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Facades\Charger as RealCharger;
 use App\Library\Interactors\Firebase;
 use App\Library\Interactors\Payment;
+use App\Library\Entities\Helper;
 use App\Facades\Simulator;
-use App\Helpers\App;
 use App\Config;
-use App\User;
 
 trait Order
 {
@@ -50,7 +49,7 @@ trait Order
         $chargerInfo   = RealCharger :: transactionInfo( $this -> charger_transaction_id );
 
         # GLITCH
-        if(App :: dev() && $chargerInfo -> chargePointCode != "0110")
+        if(Helper :: isDev() && $chargerInfo -> chargePointCode != "0110")
         {
             return $chargerInfo -> kiloWattHour / 1000;
         }
@@ -125,7 +124,7 @@ trait Order
                     $this -> updateChargingStatus( OrderStatusEnum :: USED_UP );
                     
                     # GLITCH
-                    if(App :: dev())
+                    if(Helper :: isDev())
                     {
                         Simulator :: plugOffCable( $charger -> charger_id );
                     }
@@ -311,7 +310,7 @@ trait Order
      */
     public function pay( $paymentType, $amount )
     {
-        if(! App :: dev())
+        if(! Helper :: isDev())
         {
             $amount = $amount * 100;
         }

@@ -9,7 +9,6 @@ use App\Facades\Simulator;
 use App\Traits\Message;
 
 use Redberry\GeorgianCardGateway\Refund;
-use App\Library\Interactors\Exporter;
 
 class TestController extends Controller 
 {
@@ -17,7 +16,6 @@ class TestController extends Controller
     
   public function __invoke()
   {
-    return Exporter :: exportOrders();
     dd( "nothingness" );
   }
 

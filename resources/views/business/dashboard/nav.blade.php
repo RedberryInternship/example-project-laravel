@@ -24,7 +24,7 @@
             <div class="card-content center">
                 <img src="/images/business/active-charger.png" alt="images" class="width-40">
                 <h5 class="white-text lighten-4">&nbsp;</h5>
-                <p class="white-text lighten-4">აქტიური დამტენები</p>
+                <p class="white-text lighten-4">TOP დამტენები</p>
             </div>
         </div>
     </div>

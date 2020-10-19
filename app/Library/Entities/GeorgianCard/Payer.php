@@ -2,7 +2,7 @@
 
 namespace App\Library\Entities\GeorgianCard;
 
-use App\Helpers\App;
+use App\Library\Entities\Helper;
 use App\Payment;
 
 class Payer
@@ -21,7 +21,7 @@ class Payer
     $RRN        = request() -> get( 'p_rrn'              );
     $type       = request() -> get( 'o_transaction_type' );
 
-    if( ! App :: dev() )
+    if( ! Helper :: isDev() )
     {
       $price /= 100;
     }

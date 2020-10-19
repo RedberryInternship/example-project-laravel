@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Business;
 use App\Charger;
 use App\BusinessService;
 use App\ChargerConnectorType;
-use App\Helpers\Language;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Library\Entities\Helper;
 use App\Http\Controllers\Controller;
+use App\Enums\ChargerType as ChargerTypeEnum;
+use App\Enums\ConnectorType as ConnectorTypeEnum;
 
 class ChargerController extends Controller
 {
@@ -27,7 +28,7 @@ class ChargerController extends Controller
      */
     public function index()
     {
-        $user     = Auth::user();
+        $user     = auth() -> user();
         $chargers = Charger::where('company_id', $user -> company_id)
                         -> whereNotNull('company_id')
                         -> with('groups')
@@ -50,7 +51,7 @@ class ChargerController extends Controller
      */
     public function edit($id)
     {
-        $user    = Auth::user();
+        $user    = auth() -> user();
         $charger = Charger::where('id', $id) -> with([
             'groups',
             'business_services',
@@ -65,7 +66,7 @@ class ChargerController extends Controller
                                                       -> where('charger_id', $id)
                                                       -> get();
 
-        $languages               = Language::all();
+        $languages               = Helper::allLang();
 
         $businessServices        = BusinessService::all();
         $chargerBusinessServices = $charger -> business_services -> pluck('id') -> toArray();
@@ -91,7 +92,7 @@ class ChargerController extends Controller
      */
     public function update(Request $request, Charger $charger)
     {
-        $user = Auth::user();
+        $user = auth() -> user();
 
         if ($user -> company_id != $charger -> company_id)
         {
@@ -106,5 +107,28 @@ class ChargerController extends Controller
         $charger -> business_services() -> sync($request -> get('charger_business_services'));
 
         return redirect() -> back();
+    }
+
+    /**
+     * Get filtered chargers for modal on dashboards.
+     * 
+     * @return \JSON
+     */
+    public function getFilteredChargers()
+    {
+        $companyId = auth() -> user() -> company_id;
+        $chargerStatus = request() -> get('status');
+        $chargerType = request() -> get('type');
+
+        $connectorTypes = $chargerType === ChargerTypeEnum :: FAST
+            ? [ ConnectorTypeEnum :: COMBO_2, ConnectorTypeEnum :: CHADEMO ]
+            : [ ConnectorTypeEnum :: TYPE_2 ];
+
+        return Charger :: with('charger_connector_types.connector_type') 
+            -> whereCompanyId($companyId)
+            -> whereStatus($chargerStatus)
+            -> whereHas('charger_connector_types.connector_type', function( $query ) use( $connectorTypes ) {
+                return $query -> whereIn('name', $connectorTypes );
+            }) -> get();
     }
 }
