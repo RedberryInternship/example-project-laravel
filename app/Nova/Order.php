@@ -99,12 +99,12 @@ class Order extends Resource
             BelongsTo::make('Charger Connector Type')
                 -> displayUsing(function($chargerConnectorType) {
                     return $chargerConnectorType -> charger -> name . ' - ' . $chargerConnectorType -> connector_type -> name;
-                }),
+                }) -> onlyOnDetail(),
 
             Text::make('Charging Status')
                 ->readonly(),
 
-            Text::make('Charger Transaction Id'),
+            Text::make('Charger Transaction Id') -> onlyOnDetail(),
 
             Text::make('Charger Name') -> onlyOnDetail(),
 
@@ -115,6 +115,8 @@ class Order extends Resource
             Text::make('Duration'),
             
             Text::make('Charge Power'),
+
+            Text::make('Consumed Kilowatts'),
 
             Text::make('Address') -> onlyOnDetail(),
 
