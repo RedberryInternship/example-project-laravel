@@ -46,6 +46,8 @@ class CacheOrderDetails
       'duration'      => $timestamp -> getChargingDuration(),
       'charge_power'  => $order     -> kilowatt -> charging_power,
       'address'       => $charger   -> location,
+      'company_id'    => $charger   -> company_id,
+      'consumed_kilowatts' => @round($order -> kilowatt -> consumed, 2),
     ];
   }
 
