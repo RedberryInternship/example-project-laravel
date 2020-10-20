@@ -67,8 +67,8 @@ class OldOrderDataUpdate
             'start_date'         => $order -> created_at,
             'charge_price'       => $chargePrice,
             'company_id'         => $foundOrder -> company_id,
-            'charger_name'       => json_decode($foundOrder -> name) -> ka,
-            'address'            => json_decode($foundOrder -> location) -> ka,
+            'charger_name'       => @json_decode($foundOrder -> name) -> ka,
+            'address'            => @json_decode($foundOrder -> location) -> ka,
           ]
         );
     });
