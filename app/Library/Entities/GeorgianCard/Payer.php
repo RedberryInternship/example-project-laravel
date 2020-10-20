@@ -4,6 +4,7 @@ namespace App\Library\Entities\GeorgianCard;
 
 use App\Library\Entities\Helper;
 use App\Payment;
+use App\Order;
 
 class Payer
 {
@@ -26,6 +27,8 @@ class Payer
       $price /= 100;
     }
 
+    $order = Order :: find( $orderId );
+
     Payment :: create(
       [
         'user_card_id' => $userCardId,
@@ -34,6 +37,8 @@ class Payer
         'price'        => $price,
         'prrn'         => $RRN,
         'type'         => $type,
+        'user_id'      => $order -> user_id,
+        'company_id'   => $order -> company_id,
       ]
     );
   }
