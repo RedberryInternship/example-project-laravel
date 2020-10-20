@@ -9,14 +9,9 @@
             {{-- Here can be text --}}
         </p>
 
-        @php 
-            $year = 2019;
-            $currentYear = now() -> year;
-        @endphp
-
         <div class="charts-select-filter">
             <select id="transactions-select">
-                @for($y = $currentYear; $y >= $year; $y--)
+                @for($y = now() -> year; $y >= $firstYear; $y--)
                     <option value="{{ $y }}">{{ $y }} წელი</option>
                 @endfor
             </select>

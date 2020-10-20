@@ -19,10 +19,8 @@ class BusinessOrdersGetter
 
     $user = auth() -> user();
 
-    return Order::with(['kilowatt', 'payments', 'charger_connector_type.charger'])
-        -> whereHas('charger_connector_type.charger', function( $query ) use($user) {
-          return $query -> where('company_id', $user -> company_id);
-        }) 
+    return Order::with(['payments', 'charger_connector_type.charger'])
+        -> where('company_id', $user -> company_id) 
         -> where('charging_status', OrderStatusEnum :: FINISHED) 
         -> whereYear('created_at', '=', $year) 
         -> get();

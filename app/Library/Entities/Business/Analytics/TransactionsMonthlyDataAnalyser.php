@@ -21,7 +21,7 @@ class TransactionsMonthlyDataAnalyser
     $orders -> each( function($order) use(&$transactionsMonthlyData, &$usedEnergyMonthlyData) {
         $month = $order -> created_at -> month;
         $transactionsMonthlyData[$month - 1]+= $order -> payments -> whereIn('type', [PaymentTypeEnum :: CUT, PaymentTypeEnum :: FINE ]) -> count();
-        $order -> kilowatt && $usedEnergyMonthlyData[$month - 1] += $order -> kilowatt -> consumed;
+        $order -> consumed_kilowatts && $usedEnergyMonthlyData[$month - 1] += $order -> consumed_kilowatts;
     });
 
     $usedEnergyMonthlyData = Helper :: convertWattsToKilowatts($usedEnergyMonthlyData);

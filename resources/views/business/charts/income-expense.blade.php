@@ -9,14 +9,9 @@
             {{-- Description --}}
         </p>
 
-        @php 
-            $year = 2019;
-            $currentYear = now() -> year;
-        @endphp
-
         <div class="charts-select-filter">
             <select id="income-expense-select">
-                @for($y = $currentYear; $y >= $year; $y--)
+                @for($y = now() -> year; $y >= $firstYear; $y--)
                     <option value="{{ $y }}">{{ $y }} წელი</option>
                 @endfor
             </select>

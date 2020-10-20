@@ -2,7 +2,6 @@
 
 namespace App\Library\Entities\Business\Analytics;
 
-use App\Library\Entities\Business\Analytics\BusinessOrdersGetter;
 use App\Library\Entities\Helper;
 
 class IncomeExpenseAnalyser
@@ -12,10 +11,8 @@ class IncomeExpenseAnalyser
    * 
    * @return array
    */
-  public static function analyse(): array
+  public static function analyse( $orders ): array
   {
-    $orders = BusinessOrdersGetter :: get();
-
     return [
       'income'  => self :: countIncome( $orders ),
       'expense' => self :: countExpense( $orders ),
@@ -60,14 +57,7 @@ class IncomeExpenseAnalyser
       $orders -> each(function( $order ) use( &$freshMonthlyData ) {
         $month = $order -> created_at -> month - 1;
 
-        $kilowatt = 0;
-
-        if( $order -> kilowatt && $order -> kilowatt -> consumed)
-        {
-          $kilowatt = $order -> kilowatt -> consumed / 100;
-        }
-
-        $expense = $kilowatt * 2;
+        $expense = $order -> consumed_kilowatts * 0.18;
         $freshMonthlyData[$month] += $expense;
       });
 

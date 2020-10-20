@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Order;
 
 class DashboardController extends Controller
 {
@@ -20,12 +20,23 @@ class DashboardController extends Controller
      */
     public function __invoke()
     {
-        $user = Auth::user();
-
         return view('business.dashboard.index') -> with([
-            'user'           => $user,
+            'user'           => auth() -> user(),
             'tabTitle'       => 'მთავარი',
-            'activeMenuItem' => 'dashboard'
+            'activeMenuItem' => 'dashboard',
+            'firstYear'      => $this -> firstOrderYear(),
         ]);
+    }
+
+    /**
+     * First order year.
+     * 
+     * @return int $year
+     */
+    private function firstOrderYear(): ?int
+    {
+        $companyId = auth() -> user() -> company_id;
+        $order = Order :: whereCompanyId($companyId) -> first();
+        return $order ? $order -> created_at -> year : now() -> year; 
     }
 }

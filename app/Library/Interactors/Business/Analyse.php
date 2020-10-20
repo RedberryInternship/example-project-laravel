@@ -38,7 +38,9 @@ class Analyse
    */
   public static function incomeExpense(): array
   {
-    return IncomeExpenseAnalyser :: analyse();
+    $orders = BusinessOrdersGetter :: get();
+
+    return IncomeExpenseAnalyser :: analyse( $orders );
   }
 
   /**
