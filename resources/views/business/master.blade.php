@@ -27,6 +27,7 @@
         <!-- END: Page Level CSS-->
         <!-- BEGIN: Custom CSS-->
         <link rel="stylesheet" type="text/css" href="../../../app-assets/css/custom/style.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/business/sidebar.css">
         <!-- END: Custom CSS-->
 
         @yield('css')

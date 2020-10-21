@@ -9,6 +9,7 @@ import {
   registerTransactionsSelectAndEventListener,
   registerIncomeExpenseSelectAndEventListener,
   registerChargersModalBgCloseEventListener,
+  registerLogoutEventListener,
 } from './utils/helpers'
 
 // Global variables
@@ -30,3 +31,4 @@ document.addEventListener('DOMContentLoaded', dashboardNavigation, false);
 document.addEventListener('DOMContentLoaded', registerIncomeExpenseSelectAndEventListener, false);
 document.addEventListener('DOMContentLoaded', registerTransactionsSelectAndEventListener, false);
 document.addEventListener('DOMContentLoaded', registerChargersModalBgCloseEventListener, false);
+document.addEventListener('DOMContentLoaded', registerLogoutEventListener, false);

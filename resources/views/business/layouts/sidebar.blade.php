@@ -48,8 +48,8 @@
             </a>
         </li>
 
-        <li class="bold">
-            <a class="waves-effect waves-cyan " href="/business/logout">
+        <li class="bold sidebar-logout-menu-item">
+            <a class="waves-effect waves-cyan logout-from-business-admin">
                 <i class="material-icons" style="transform: rotate(180deg);">exit_to_app</i>
 
                 <span class="menu-title" data-i18n="Chat">გამოსვლა</span>

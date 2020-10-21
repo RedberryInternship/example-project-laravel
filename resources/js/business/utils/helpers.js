@@ -3,7 +3,8 @@ import { incomeExpenseChartObject } from '../charts/income-expense'
 import { 
   transactionsService, 
   incomeExpenseService, 
-  filterChargersService 
+  filterChargersService,
+  logout, 
 } from './services';
 
 export const registerTransactionsSelectAndEventListener = () => {
@@ -17,6 +18,14 @@ export const registerIncomeExpenseSelectAndEventListener = () => {
 export const registerChargersModalBgCloseEventListener = () => {
   $('.chargers-modal-bg').on('click', closeChargersModal.bind(null, false));
   $('.charger-modal-close-btn').on('click', closeChargersModal.bind(null, true));
+}
+
+export const registerLogoutEventListener = () => {
+  document.querySelector('.logout-from-business-admin').addEventListener('click', () => {
+    const shouldLogout = confirm('ნამდვილად გსურთ Business ადმინ პანელიდან გასვლა?');
+
+    shouldLogout && (window.location = logout);
+  });
 }
 
 /**
@@ -155,7 +164,7 @@ const createChargerModalNode = (data) => {
     </td>
     <td>${status}</td>
     <td class="center">
-        <a href="/business/chargers/${id}/edit" class="btn waves-effect waves-light btn-small">
+        <a href="/business/chargers/${id}/edit" target="_blank" class="btn waves-effect waves-light btn-small">
             <i class="material-icons">edit</i>
         </a>
     </td>

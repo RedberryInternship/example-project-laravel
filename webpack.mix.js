@@ -14,4 +14,5 @@ const mix = require('laravel-mix');
 mix .js('resources/js/business/dashboard.js',            'public/js/business')
     .sass('resources/sass/business/dashboard/index.scss', 'public/css/business/dashboard.css')
     .sass('resources/sass/business/login.scss', 'public/css/business')
+    .sass('resources/sass/business/sidebar.scss', 'public/css/business')
     .sass('resources/sass/nova/main.scss',      'public/css/nova');
