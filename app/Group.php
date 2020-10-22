@@ -6,25 +6,30 @@ use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
 {
-    protected $fillable = [
-        'name',
-        'user_id'
-    ];
+    /**
+     * Laravel guarded attribute.
+     * 
+     * @var array
+     */
+    protected $guarded = [];
 
+    /**
+     * Relation to user.
+     * 
+     * @return User
+     */
     public function user()
     {
         return $this -> belongsTo(User::class);
     }
 
+    /**
+     * Relation to chargers.
+     * 
+     * @return Collection
+     */
     public function chargers()
     {
     	return $this -> belongsToMany(Charger::class);
-    }
-
-    public function scopeWithChargers($query)
-    {
-        return $query -> with(['chargers' => function($q) {
-            return $q -> withAllAttributes();
-        }]);
     }
 }

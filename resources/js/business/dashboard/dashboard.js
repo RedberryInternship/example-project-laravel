@@ -1,4 +1,4 @@
-import axios from '../vendor/axios';
+import axios from '../../vendor/axios';
 import chartIncomeExpense from './charts/income-expense';
 import chartChargerStatuses from './charts/charger-statuses';
 import chartTopChargers from './charts/top-chargers';

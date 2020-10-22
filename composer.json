@@ -26,7 +26,6 @@
         "predis/predis": "^1.1",
         "pulkitjalan/geoip": "^4.0",
         "rackspace/php-opencloud": "dev-master",
-        "redberry/charger-prices": "*",
         "redberry/charger-terminals": "*",
         "spatie/laravel-schemaless-attributes": "^1.6",
         "spatie/laravel-translatable": "^4.2",
@@ -46,10 +45,6 @@
         {
             "type": "path",
             "url": "./nova"
-        },
-        {
-            "type": "path",
-            "url": "./nova-components/ChargerPrices"
         },
         {
             "type": "path",

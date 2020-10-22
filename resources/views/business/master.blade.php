@@ -9,6 +9,7 @@
         <meta name="keywords" content="materialize, admin template, dashboard template, flat admin template, responsive admin template, eCommerce dashboard, analytic dashboard">
         <meta name="author" content="ThemeSelect">
         <meta name="_token" content="{{ csrf_token() }}">
+        @yield('meta')
 
         <title>E-space {{ isset($tabTitle) ? ' | ' . $tabTitle : NULL }}</title>
 

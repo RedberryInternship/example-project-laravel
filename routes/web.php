@@ -31,6 +31,12 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     Route::resource('/charging-prices', 'ChargingPricesController');
     Route::resource('/fast-charging-prices', 'FastChargingPricesController');
 
+    /** Whitelist api */
+    Route::post('/chargers/toggle-visibility', 'WhitelistController@toggleHiddenField');
+    Route::get('/chargers/whitelist', 'WhitelistController@getWhitelist');
+    Route::post('/chargers/add/whitelist', 'WhitelistController@addToWhitelist');
+    Route::post('/chargers/remove-from/whitelist', 'WhitelistController@removeFromWhitelist');
+
     Route::group(['prefix' => 'analytics'], function() {
         Route::get('/income', 'AnalyticsController@incomeAndExpense');
         Route::get('/transactions', 'AnalyticsController@businessTransactionsAndWastedEnergy');

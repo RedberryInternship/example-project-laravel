@@ -40,11 +40,11 @@ class ChargerController extends Controller
             }
         }
 
-        Charger::addFilterAttributeToChargers($chargers);
+        Charger::addIsFavoriteAttributes($chargers);
 
         Charger::addChargingPrices($chargers);
 
-        Charger::addIsFreeAttributeToChargers($chargers);
+        Charger::addIsFreeAttributes($chargers);
 
         return new ChargerCollection($chargers);
     }
