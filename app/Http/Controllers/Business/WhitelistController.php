@@ -32,9 +32,9 @@ class WhitelistController extends Controller
    * 
    * @return JSON
    */
-  public function getWhitelist()
+  public function getWhitelist( $chargerId )
   {
-    //
+    return Charger :: with( 'whitelist' ) -> find($chargerId) -> whitelist;
   }
 
   /**

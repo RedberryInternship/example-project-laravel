@@ -9,8 +9,12 @@ import { getCSRF } from './meta'
  */
 export const curl = (api, config) => {
   const mergedConfigs = {...config, ...curlDefaultConfig };
-  mergedConfigs.body._token = getCSRF();
-  mergedConfigs.body = JSON.stringify(mergedConfigs.body);
+  
+  if( mergedConfigs.method === 'POST')
+  {
+    mergedConfigs.body._token = getCSRF();
+    mergedConfigs.body = JSON.stringify(mergedConfigs.body);
+  }
 
   return fetch(api, mergedConfigs);
 }

@@ -1,5 +1,13 @@
-import { toggleButton, whitelistButton } from './elements'
-import { toggleChargerVisibility } from './actions'
+import { 
+  toggleButton, 
+  whitelistButton, 
+  whitelistModalBG, 
+} from './elements'
+import { 
+  toggleChargerVisibility,
+  openWhitelistModal,
+  closeWhitelistModal,
+ } from './actions'
 
 /**
  * Register all the event listeners.
@@ -8,4 +16,6 @@ import { toggleChargerVisibility } from './actions'
  */
 export const listen = () => {
   toggleButton().addEventListener('click', toggleChargerVisibility);
+  whitelistButton().addEventListener('click', openWhitelistModal);
+  whitelistModalBG().addEventListener('click', closeWhitelistModal);
 }

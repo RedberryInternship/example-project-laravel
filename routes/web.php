@@ -33,7 +33,7 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
 
     /** Whitelist api */
     Route::post('/chargers/toggle-visibility', 'WhitelistController@toggleHiddenField');
-    Route::get('/chargers/whitelist', 'WhitelistController@getWhitelist');
+    Route::get('/chargers/{charger_id}/whitelist', 'WhitelistController@getWhitelist');
     Route::post('/chargers/add/whitelist', 'WhitelistController@addToWhitelist');
     Route::post('/chargers/remove-from/whitelist', 'WhitelistController@removeFromWhitelist');
 

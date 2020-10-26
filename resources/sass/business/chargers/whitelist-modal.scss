@@ -1,0 +1,39 @@
+.whitelist-modal-bg {
+  background-color: rgba(20, 30, 117, 0.774);
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  display: none;
+}
+
+.whitelist-modal-wrapper {
+  background-color: beige;
+  width: 40%;
+  height: 70%;
+  padding-top: 5em;
+  padding-bottom: 3em;
+  padding-left: 2em;
+  padding-right: 2em;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+}
+
+.whitelist-modal {
+  overflow-y: auto;
+  height: 100%;
+  padding-right: 3em;
+}
+
+.whitelist-modal-close-btn {
+  position: absolute;
+  width: 3em;
+  right: 1em;
+  top: 1em;
+  cursor: pointer;
+}

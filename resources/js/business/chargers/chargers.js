@@ -1,4 +1,7 @@
 import { listen } from './listeners/listener'
+import { fetchAllTheData } from './data/fetch-all-data'
 
-window.onload = listen;
-
+window.onload = () => {
+  fetchAllTheData();
+  listen();
+};

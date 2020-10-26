@@ -1,5 +1,10 @@
 import * as Service from '../utils/service'
 import { isHidden, getChargerId } from '../utils/meta'
+import { 
+  whitelistModal, 
+  whitelistModalBG,
+  whitelistModalCloseButton,
+ } from './elements'
 
 /**
  * Toggle charger visibility.
@@ -19,5 +24,27 @@ export const toggleChargerVisibility = async () => {
   catch(e)
   {
     console.log(e);
+  }
+}
+
+/**
+ * Open whitelist modal.
+ * 
+ * @returns {void}
+ */
+export const openWhitelistModal = () => {
+  whitelistModalBG().style.display = 'block';
+}
+
+/**
+ * Close whitelist modal.
+ * 
+ * @param {Event} e
+ * @returns {void}
+ */
+export const closeWhitelistModal = (e) => {
+  if( e.target == whitelistModalBG() || e.target === whitelistModalCloseButton())
+  {
+    whitelistModalBG().style.display = 'none';
   }
 }

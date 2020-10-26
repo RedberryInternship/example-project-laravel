@@ -128,11 +128,11 @@ class Charger extends Model
     }
 
     /**
-     * Relation to whitelists.
+     * Relation to whitelist.
      * 
      * @return Collection
      */
-    public function whitelists()
+    public function whitelist()
     {
         return $this -> hasMany(Whitelist :: class);
     }

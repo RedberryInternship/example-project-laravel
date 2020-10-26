@@ -4,7 +4,9 @@ import {
   getChargerWhitelistApi,
   addToWhitelistApi,
   removeFromWhitelistApi,
+  getPhoneCodesApi,
  } from './api';
+ import { getChargerId } from './meta'
 
 /**
  * Service for toggling charger visibility.
@@ -27,7 +29,10 @@ export const toggleChargerVisibility = ({ charger_id, hidden }) => {
  * @returns {Promise<string[]>}
  */
 export const getChargerWhitelist = () => {
-  return curl(getChargerWhitelistApi);
+  const chargerId = getChargerId();
+  const api = getChargerWhitelistApi(chargerId);
+  
+  return curl(api);
 }
 
 /**
@@ -58,4 +63,8 @@ export const removeFromWhitelist = ({charger_id, whitelist_id}) => {
       whitelist_id,
     }
   });
+}
+
+export const getPhoneCodes = () => {
+  return curl(getPhoneCodesApi);
 }

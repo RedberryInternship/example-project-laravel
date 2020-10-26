@@ -2,6 +2,7 @@
     "/js/business/chargers.js": "/js/business/chargers.js",
     "/js/business/dashboard.js": "/js/business/dashboard.js",
     "/css/business/dashboard.css": "/css/business/dashboard.css",
+    "/css/business/chargers.css": "/css/business/chargers.css",
     "/css/business/login.css": "/css/business/login.css",
     "/css/business/sidebar.css": "/css/business/sidebar.css",
     "/css/nova/main.css": "/css/nova/main.css"

@@ -5,11 +5,18 @@
 	<meta name="hidden" content="{{ $charger -> hidden }}">
 @endsection
 
+@section('css')
+	<link rel="stylesheet" href="{{ asset( 'css/business/chargers.css' ) }}" />
+@endsection
+
 @section('js')
 	<script src="{{ asset('js/business/chargers.js') }}"></script>
 @endsection
 
 @section('body')
+
+	@include('business.chargers.whitelist-modal')
+
 	<div class="row">
 		<div class="col s12">
 			<div class="card">
