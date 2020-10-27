@@ -130,7 +130,6 @@ const wrapChargerModalNodes = ( nodes ) => {
   <table class="responsive-table">
     <thead>
         <tr>
-            <th>ID</th>
             <th>სახელი</th>
             <th>კოდი</th>
             <th class="center">საჯარო</th>
@@ -156,7 +155,6 @@ const createChargerModalNode = (data) => {
 
   return `
   <tr>
-    <td>${id}</td>
     <td>${name.ka}</td>
     <td>${code}</td>
     <td class="center">

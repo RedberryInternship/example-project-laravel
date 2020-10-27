@@ -8,6 +8,7 @@ use App\Http\Requests\Business\RemoveFromWhitelist;
 use App\Http\Requests\Business\ToggleHiddenField;
 use App\Http\Requests\Business\AddToWhitelist;
 
+use App\Whitelist;
 use App\Charger;
 
 class WhitelistController extends Controller
@@ -19,8 +20,8 @@ class WhitelistController extends Controller
    */
   public function toggleHiddenField( ToggleHiddenField $request )
   {
-    $chargerId  = request() -> charger_id;
-    $hidden     = request() -> hidden;
+    $chargerId  = $request -> charger_id;
+    $hidden     = $request -> hidden;
 
     Charger :: whereId( $chargerId ) -> update([ 'hidden' => $hidden ]);
 
@@ -44,7 +45,12 @@ class WhitelistController extends Controller
    */
   public function addToWhitelist( AddToWhitelist $request )
   {
-    //
+    Whitelist :: create(
+      [
+        'charger_id'  => $request -> charger_id,
+        'phone'       => $request -> phone,
+      ]
+    );
   }
 
   /**
@@ -54,6 +60,6 @@ class WhitelistController extends Controller
    */
   public function removeFromWhitelist( RemoveFromWhitelist $request )
   {
-    //
+    Whitelist :: find( $request -> whitelist_id ) -> delete();
   }
 }

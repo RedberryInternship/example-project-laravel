@@ -23,7 +23,7 @@ export const fetchAllTheData = async () => {
  * 
  * @returns {Promise<void>}
  */
-const fetchChargerWhitelistData = async () => {
+export const fetchChargerWhitelistData = async () => {
   try {
     const result = await getChargerWhitelist();
     const data = await result.json();
@@ -44,7 +44,7 @@ const fetchChargerWhitelistData = async () => {
 const fetchPhoneCodes = async () => {
   try {
     const result = await getPhoneCodes();
-    const data = await result.json();
+    const { data } = await result.json();
 
     state.phoneNumbers = data;
   }

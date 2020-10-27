@@ -3,6 +3,7 @@
 @section('meta')
 	<meta name="charger_id" content="{{ $charger -> id }}">
 	<meta name="hidden" content="{{ $charger -> hidden }}">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 @endsection
 
 @section('css')
@@ -14,8 +15,6 @@
 @endsection
 
 @section('body')
-
-	@include('business.chargers.whitelist-modal')
 
 	<div class="row">
 		<div class="col s12">

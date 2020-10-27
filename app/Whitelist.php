@@ -13,6 +13,13 @@ class Whitelist extends Model {
   protected $guarded = [];
 
   /**
+   * Disable laravel`s timestamps.
+   * 
+   * @var boolean
+   */
+  public $timestamps = false;
+
+  /**
    * Relationship with charger.
    */
   public function charger()

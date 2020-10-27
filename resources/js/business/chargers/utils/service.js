@@ -53,13 +53,12 @@ export const addToWhitelist = ({charger_id, phone}) => {
 /**
  * Remove phone number from whitelist.
  * 
- * @param {*} whitelistParams 
+ * @param {BigInteger} whitelist_id 
  */
-export const removeFromWhitelist = ({charger_id, whitelist_id}) => {
+export const removeFromWhitelist = (whitelist_id) => {
   return curl(removeFromWhitelistApi, {
     method: 'POST',
     body: {
-      charger_id,
       whitelist_id,
     }
   });

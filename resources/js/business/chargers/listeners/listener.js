@@ -1,12 +1,18 @@
 import { 
   toggleButton, 
   whitelistButton, 
-  whitelistModalBG, 
-} from './elements'
+  whitelistModalBG,
+  whitelistModalSelect,
+  whitelistInput,
+  addWhitelistButton,
+} from '../UI/elements'
 import { 
   toggleChargerVisibility,
   openWhitelistModal,
   closeWhitelistModal,
+  changePhoneCode,
+  watchPhoneNumber,
+  addPhoneNumber,
  } from './actions'
 
 /**
@@ -18,4 +24,7 @@ export const listen = () => {
   toggleButton().addEventListener('click', toggleChargerVisibility);
   whitelistButton().addEventListener('click', openWhitelistModal);
   whitelistModalBG().addEventListener('click', closeWhitelistModal);
+  whitelistModalSelect().addEventListener('change', changePhoneCode);
+  whitelistInput().addEventListener('keydown', watchPhoneNumber);
+  addWhitelistButton().addEventListener('click', addPhoneNumber);
 }

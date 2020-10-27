@@ -25,7 +25,6 @@ class RemoveFromWhitelist extends FormRequest implements ValidatesWhenResolved
   public function rules()
   {
     return [
-        'charger_id'   => 'required',
         'whitelist_id' => 'required',
     ];
   }

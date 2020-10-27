@@ -18,4 +18,3 @@ export const curl = (api, config) => {
 
   return fetch(api, mergedConfigs);
 }
-
