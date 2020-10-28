@@ -5,7 +5,7 @@ namespace App\Console\Commands\ChargingSimulation;
 use Illuminate\Console\Command;
 use App\Facades\Simulator;
 
-
+//todo Vobi, please explain that class, Why use it?
 class ChargerShutdown extends Command
 {
     /**

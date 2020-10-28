@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Inspiring;
 
+//todo Vobi ეს ფაილი რატომ არის როუტებბში?
 /*
 |--------------------------------------------------------------------------
 | Console Routes

@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 
 use App\Library\Interactors\CronJobs\PreChargedOrdersChecker;
 
+//todo Vobi, please explain that class, Why use it? when does it run? and how?
 class CheckPrechargedOrders extends Command
 {
     /**
@@ -39,6 +40,6 @@ class CheckPrechargedOrders extends Command
      */
     public function handle()
     {
-        PreChargedOrdersChecker :: check();     
+        PreChargedOrdersChecker :: check();
     }
 }

@@ -20,15 +20,16 @@ class ChargingController extends Controller
 
   /**
    * Route method for starting Charging
-   * 
+   *
    * @param   StartCharging $request
    * @return  JsonResponse
    */
   public function start( StartCharging $request )
   {
     $requestModel = new ChargingStarterRequest;
+    //todo Vobi, Style like that is wrong :(, the same style everywhere.
     $requestModel -> setChargerConnectorTypeId( $request -> charger_connector_type_id );
-    $requestModel -> setChargingType          ( $request -> charging_type             );
+    $requestModel -> setChargingType( $request -> charging_type             );
     $requestModel -> setPrice                 ( $request -> price                     );
     $requestModel -> setUserCardId            ( $request -> user_card_id              );
 
@@ -38,9 +39,9 @@ class ChargingController extends Controller
   }
 
   /**
-   * Route method for stop charging 
+   * Route method for stop charging
    * call to Misha's back.
-   * 
+   *
    * @param   StopCharging $request
    * @return  JsonResponse
    */
@@ -50,7 +51,7 @@ class ChargingController extends Controller
     $request -> updateChargingStatus();
 
     $resource = $request -> buildResource();
-    
+
     return $resource;
   }
 }

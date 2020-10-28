@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 
 use App\Library\Interactors\Scripts\UpdateData;
 
+//todo Vobi, please explain that class, Why use it? when does it run? and how?
 class CacheOrdersAndPaymentsForeignKeys extends Command
 {
     /**
@@ -40,7 +41,7 @@ class CacheOrdersAndPaymentsForeignKeys extends Command
     public function handle()
     {
         $this -> info('Starting caching foreign keys...');
-        
+
         UpdateData :: cacheOrdersAndPaymentsForeignKeys();
         $this -> info('');
         $this -> info('Successfully completed caching...');

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
+//todo Vobi, please explain that class, Why use it? when does it run? and how?
 class ComposerUpdate extends Command
 {
     /**

@@ -37,6 +37,8 @@ class GroupFastPriceController extends Controller
     public function update(Request $request, $groupID)
     {
         $user  = Auth::user();
+        //todo Vobi, აქ ისე პრიდაპირ არ შეგიძლია where გაუკეთო და გრუპით და იუზერით გაფილტრო პირდაპირ, ქვემოთ კიდევ რომ არ მოგიწიოს შემოწმება ??
+        //ასევე დასზღევ ვა არ ჭირდება იქენბა და საერთოდ არ დაბრუნდა გრუპა??
         $group = Group::with('chargers.charger_connector_types.connector_type') -> find($groupID);
 
         $startMinutes = $request -> get('start_minutes');
@@ -48,6 +50,7 @@ class GroupFastPriceController extends Controller
             return redirect() -> back();
         }
 
+        //todo Vobi, split that
         foreach ($group -> chargers as $charger)
         {
             foreach ($charger -> charger_connector_types as $chargerConnectorType)
