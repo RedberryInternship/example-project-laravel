@@ -5,6 +5,7 @@ namespace App\Console\Commands\ChargingSimulation;
 use Illuminate\Console\Command;
 use App\Facades\Charger;
 
+//todo Vobi, please explain that class, Why use it?
 class StopCharging extends Command
 {
     /**
@@ -40,8 +41,8 @@ class StopCharging extends Command
     {
         $charger_id = (int) $this -> ask('Give me charger_id');
         $transaction_id = (int) $this -> ask('Give me transaction_id');
-        
-        
+
+
         dump(Charger::stop($charger_id, $transaction_id));
     }
 }

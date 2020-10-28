@@ -9,11 +9,12 @@ use App\Library\Entities\CronJobs\RealChargersSync\ChargersEditor;
 
 use App\Library\DataStructures\RealChargersSync as Data;
 
+//todo Vobi,  დეტალურად ავღწეროთ თუ რისთვის დატომ გამოიყენებ ეს კლასი.
 class RealChargersSyncer
 {
   /**
    * Sync all chargers.
-   * 
+   *
    * @return void
    */
   public static function syncAll()
@@ -21,15 +22,15 @@ class RealChargersSyncer
     $realChargers   = ChargersGetter :: getAll();
     $parsedChargers = ChargersParser :: parseAll( $realChargers );
     $data           = Data :: build() -> setRealChargers( $parsedChargers );
-    
+
     ChargersEditor :: update( $data );
-    
+
     CleanUpAdditionalChargers :: execute( $realChargers );
   }
 
   /**
    * Sync single charger.
-   * 
+   *
    * @param  int $id
    * @return void
    */

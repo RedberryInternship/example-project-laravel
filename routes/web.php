@@ -5,6 +5,8 @@
 | Web Routes
 |--------------------------------------------------------------------------
 */
+//todo Vobi აქაც ფაილის სახელი დამაბნეველია მგონი ები ბიზნეს ობიექტებიბს მიხედვით გავაკეთოთ ეს ფაილის სახელებბი და როუტები აჯობებს.
+// api.php web.php ორივე აპი არის.
 
 use Illuminate\Support\Facades\Route;
 use App\Library\Entities\Helper;
@@ -60,9 +62,9 @@ Route::post('refund', 'TestController@doRefund') -> name('refund');
     Route::get('test'   , 'TestController');
     Route::get('/disconnect' , 'TestController@disconnect');
     Route::post('/disconnect', 'TestController@disconnect');
-    
+
     Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
-            
+
     Route::get('firebase', 'TestController@firebase');
     Route::get('refund', 'TestController@refundView');
  }

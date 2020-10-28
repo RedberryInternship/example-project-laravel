@@ -5,6 +5,7 @@ namespace App\Console\Commands\CronJobs;
 use App\Library\Interactors\CronJobs\RealChargersSyncer;
 use Illuminate\Console\Command;
 
+//todo Vobi, please explain that class, Why use it? when does it run? and how?
 class SynchronizeRealChargers extends Command
 {
     /**

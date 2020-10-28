@@ -6,6 +6,7 @@ use Exception;
 use App\Traits\Message;
 use App\Enums\GeneralError as GeneralErrorEnum;
 
+//todo Vobi, That class name is wrong :)), DeviceEcxeption or something like that :)).
 class MishasBackException extends Exception
 {
     use Message;
