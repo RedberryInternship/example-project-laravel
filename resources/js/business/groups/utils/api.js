@@ -1,0 +1,1 @@
+export const deleteChargingPrices = '/business/groups/charging-prices/delete'

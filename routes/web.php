@@ -26,6 +26,7 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     Route::resource('/chargers', 'ChargerController');
     Route::post('/filter-chargers', 'ChargerController@getFilteredChargers');
     Route::resource('/groups', 'GroupController');
+    Route::delete('/groups/charging-prices/delete', 'GroupController@deleteChargingPrices');
     Route::resource('/group-prices', 'GroupPriceController');
     Route::resource('/group-fast-prices', 'GroupFastPriceController');
     Route::resource('/charging-prices', 'ChargingPricesController');

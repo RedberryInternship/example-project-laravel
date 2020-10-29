@@ -22,7 +22,7 @@ class GroupFastPriceController extends Controller
             'chargers.charger_connector_types.fast_charging_prices'
         ])->find($groupID);
 
-        return view('business.group-fast-prices.edit')->with([
+        return view('business.groups.fast-prices.edit')->with([
             'group' => $group
         ]);
     }

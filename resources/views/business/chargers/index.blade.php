@@ -17,11 +17,10 @@
                                 <table class="responsive-table">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
                                             <th>სახელი</th>
                                             <th>კოდი</th>
                                             <th class="center">საჯარო</th>
-                                            <th class="center">აქტიური</th>
+                                            <th class="center">სტატუსი</th>
                                             <th class="center">რედაქტირება</th>
                                         </tr>
                                     </thead>
@@ -29,14 +28,13 @@
                                     <tbody>
                                         @foreach($chargers as $charger)
                                             <tr>
-                                                <td>{{ $charger -> id }}</td>
                                                 <td>{{ $charger -> name }}</td>
                                                 <td>{{ $charger -> code }}</td>
                                                 <td class="center">
                                                     <i class="material-icons dp48" style="{{ $charger -> public ? 'color: green' : 'color: red' }}">{{ $charger -> public ? 'check' : 'close' }}</i>
                                                 </td>
                                                 <td class="center">
-                                                    <i class="material-icons dp48" style="{{ $charger -> active ? 'color: green' : 'color: red' }}">{{ $charger -> active ? 'check' : 'close' }}</i>
+                                                    <i class="material-icons dp48" style="font-size: 1em; font-family: arial">{{ $charger -> status}}</i>
                                                 </td>
                                                 <td class="center">
                                                     <a href="/business/chargers/{{ $charger -> id }}/edit" class="btn waves-effect waves-light btn-small">

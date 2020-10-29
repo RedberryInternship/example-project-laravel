@@ -1,5 +1,9 @@
 @extends('business.master')
 
+@section('js')
+<script src="/js/business/transactions.js"></script>
+@endsection
+
 @section('body')
 	<div class="row">
 		<div class="col s12">
@@ -26,7 +30,7 @@
                                             <th>დამტენი</th>
                                             <th>გადახდები</th>
                                             <th>დრო</th>
-                                            <th class="center">დასრულებული</th>
+                                            <th class="center"> - </th>
                                         </tr>
                                     </thead>
 
@@ -44,9 +48,7 @@
                                                 </td>
                                                 <td>{{ $order -> created_at }}</td>
                                                 <td class="center">
-                                                    <i class="material-icons dp48" style="{{ $order -> charging_status == 'FINISHED' ? 'color: green' : 'color: red' }}">
-                                                        {{ $order -> charging_status == 'FINISHED' ? 'check' : 'close' }}
-                                                    </i>
+                                                    <i class="material-icons dp48">remove_red_eye</i>
                                                 </td>
                                             </tr>
                                         @endforeach

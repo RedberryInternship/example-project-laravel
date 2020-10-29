@@ -22,7 +22,7 @@ class GroupPriceController extends Controller
             'chargers.charger_connector_types.charging_prices',
         ]) -> find($groupID);
 
-        return view('business.group-prices.edit') -> with([
+        return view('business.groups.lvl2-prices.edit') -> with([
             'group' => $group
         ]);
     }

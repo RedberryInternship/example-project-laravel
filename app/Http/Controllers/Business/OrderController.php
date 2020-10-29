@@ -22,7 +22,7 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function index()
     {
@@ -50,10 +50,20 @@ class OrderController extends Controller
     /**
      * Download business transactions report.
      * 
-     * @return \File
+     * @return File
      */
     public function downloadExcel()
     {
         return Exporter :: exportBusinessOrders();
+    }
+
+    /**
+     * Get specific transaction.
+     * 
+     * @return JSON
+     */
+    public function show($id) 
+    {
+        return Order :: find($id);
     }
 }

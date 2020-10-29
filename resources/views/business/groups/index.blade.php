@@ -1,5 +1,9 @@
 @extends('business.master')
 
+@section('css')
+<link rel="stylesheet" href="/css/business/groups.css" />
+@endsection
+
 @section('body')
 	<div class="row">
 		<div class="col s12">

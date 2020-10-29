@@ -1,16 +1,34 @@
 @extends('business.master')
 
+@section('css')
+    <link rel="stylesheet" href="/css/business/groups.css" />
+@endsection
+
+@section('js')
+    <script src="/js/business/groups.js"></script>
+@endsection
+
+@section('meta')
+    <meta name="group_id" content="{{ $group -> id }}" />
+@endsection
+
 @section('body')
     <div class="row flex align-center">
-        <div class="col s4">
+        <div class="col s2">
             <h4 class="card-title">
                 {{ $group -> name }}
             </h4>
         </div>
 
-        <div class="col s8 flex align-center justify-flex-end">
+        <div class="col s10 flex align-center justify-flex-end">
+            <a class="delete-group-prices-btn">
+                <button type="submit" class="btn red darken-4 waves-effect waves-light col pull-s3">
+                    ჯგუფის ტარიფების წაშლა
+                </button>
+            </a>
+            
             <a href="{{ url('/business/group-prices/' . $group -> id) }}">
-                <button type="submit" class="mr-2 btn waves-effect waves-light btn-small">
+                <button type="submit" class="btn waves-effect waves-light btn-small col pull-s1">
                     level2 დამტენების ფასების დამატება
                 </button>
             </a>
@@ -25,8 +43,8 @@
 
     @if ($group -> chargers -> count())
         <div class="row">
-            <div class="col s12">
-                <table class="responsive-table">
+            <div class="col s12 blue-grey">
+                <table class="responsive-table white-text">
                     <thead>
                         <tr>
                             <th>ჩარჯერის ჯგუფის დამტენები</th>
@@ -70,8 +88,8 @@
     <br>
 
     <div class="row">
-        <div class="col s12">
-            <table class="responsive-table">
+        <div class="col s12 teal lighten-5">
+            <table class="responsive-table ">
                 <thead>
                     <tr>
                         <th>სხვა დამტენები</th>

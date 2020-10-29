@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Business;
 
-use App\Group;
-use Illuminate\Http\Request;
+use App\Http\Requests\Business\RemoveGroupChargingPrices;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Group;
+use App\User;
 
 class GroupController extends Controller
 {
@@ -68,7 +70,8 @@ class GroupController extends Controller
      */
     public function edit(Group $group)
     {
-        $user = Auth::user();
+        $userId = auth() -> user() -> id;
+        $user = User :: find( $userId );
         
         if ($group -> user_id != $user -> id)
         {
@@ -94,12 +97,14 @@ class GroupController extends Controller
             $groupChargerIds[] = $charger -> id;
         }
 
-        return view('business.groups.edit') -> with([
-            'user'            => $user,
-            'group'           => $group,
-            'groupChargerIds' => $groupChargerIds,
-            'activeMenuItem'  => 'groups'
-        ]); 
+        return view('business.groups.edit') -> with(
+            [
+                'user'            => $user,
+                'group'           => $group,
+                'groupChargerIds' => $groupChargerIds,
+                'activeMenuItem'  => 'groups'
+            ]
+        ); 
     }
 
     /**
@@ -114,6 +119,33 @@ class GroupController extends Controller
         $group -> delete();
 
         return redirect() -> back();
+    }
+
+    /**
+     * Remove group charger charging prices.
+     * 
+     * @return View
+     */
+    public function deleteChargingPrices(RemoveGroupChargingPrices $request) 
+    {
+        $group = Group :: with(
+            [
+                'chargers.charger_connector_types.charging_prices',
+                'chargers.charger_connector_types.fast_charging_prices',
+            ]
+        ) -> find($request -> group_id);
+
+        $group -> chargers -> each(function( $charger ) {
+            $charger -> charger_connector_types -> each( function($chargerConnectorType) {
+                $chargerConnectorType -> charging_prices -> each(function( $chargingPrice) {
+                    $chargingPrice -> delete();
+                });
+                
+                $chargerConnectorType -> fast_charging_prices -> each(function( $fastChargingPrice) {
+                    $fastChargingPrice -> delete();
+                });
+            }); 
+        });
     }
 }
 
