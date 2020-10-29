@@ -1,0 +1,1 @@
+export const getTransactionInfo = (id) => `/business/orders/${id}`

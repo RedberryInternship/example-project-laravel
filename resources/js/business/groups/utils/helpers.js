@@ -31,8 +31,6 @@ export const curl = (api, config ) => {
     }
   }
 
-  console.log(mergedConfig);
-
   mergedConfig.body = JSON.stringify(mergedConfig.body);
 
   return fetch(api, mergedConfig);

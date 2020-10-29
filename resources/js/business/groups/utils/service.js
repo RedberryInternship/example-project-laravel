@@ -17,3 +17,18 @@ export const deleteChargingPrices = () => {
   });
 }
 
+/**
+ * Store all the company chargers
+ * into this group.
+ * 
+ * @returns {Promise}
+ */
+export const storeAllChargersIntoGroup = () => {
+  return curl(API.storeAllChargersIntoGroup, {
+    method: 'POST',
+    body: {
+      group_id: getGroupId(),
+    }
+  });
+}
+

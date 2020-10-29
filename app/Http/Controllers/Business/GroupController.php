@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Business;
 
 use App\Http\Requests\Business\RemoveGroupChargingPrices;
+use App\Http\Requests\Business\StoreAllChargersIntoGroup;
+use App\Library\Interactors\Business\Groups;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -22,7 +24,7 @@ class GroupController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function index()
     {
@@ -36,23 +38,19 @@ class GroupController extends Controller
             'tabTitle'       => 'დამტენების ჯგუფები',
             'activeMenuItem' => 'groups',
             'groups'         => $groups,
-            'user'           => $user
+            'user'           => $user,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return View
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
-
-        $request -> merge([
-            'user_id' => $user -> id
-        ]);
+        $request -> merge([ 'user_id' => auth() -> user() -> id ]);
 
         if ($request -> has('name') && $request -> get('name'))
         {   
@@ -65,18 +63,13 @@ class GroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function edit(Group $group)
     {
         $userId = auth() -> user() -> id;
-        $user = User :: find( $userId );
-        
-        if ($group -> user_id != $user -> id)
-        {
-            return redirect() -> back();
-        }
+        $user   = User :: with( 'company.chargers' ) -> find( $userId );
+        $companyChargers = $user -> company -> chargers;
 
         $group -> load([
             'chargers' => function($query) {
@@ -99,10 +92,11 @@ class GroupController extends Controller
 
         return view('business.groups.edit') -> with(
             [
-                'user'            => $user,
-                'group'           => $group,
-                'groupChargerIds' => $groupChargerIds,
-                'activeMenuItem'  => 'groups'
+                'user'             => $user,
+                'group'            => $group,
+                'groupChargerIds'  => $groupChargerIds,
+                'activeMenuItem'   => 'groups',
+                'allChargersAreIn' => $companyChargers -> count() === $group -> chargers -> count(),
             ]
         ); 
     }
@@ -111,7 +105,7 @@ class GroupController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  ChargerGroup  $chargerGroup
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Group $group)
     {
@@ -128,24 +122,19 @@ class GroupController extends Controller
      */
     public function deleteChargingPrices(RemoveGroupChargingPrices $request) 
     {
-        $group = Group :: with(
-            [
-                'chargers.charger_connector_types.charging_prices',
-                'chargers.charger_connector_types.fast_charging_prices',
-            ]
-        ) -> find($request -> group_id);
+       Groups :: deleteGroupChargersChargingPrices($request -> group_id);
+    }
 
-        $group -> chargers -> each(function( $charger ) {
-            $charger -> charger_connector_types -> each( function($chargerConnectorType) {
-                $chargerConnectorType -> charging_prices -> each(function( $chargingPrice) {
-                    $chargingPrice -> delete();
-                });
-                
-                $chargerConnectorType -> fast_charging_prices -> each(function( $fastChargingPrice) {
-                    $fastChargingPrice -> delete();
-                });
-            }); 
-        });
+    /**
+     * Store all the company chargers 
+     * to group chargers.
+     * 
+     * @param int $groupId
+     * @return void
+     */
+    public static function storeAllChargersToGroup(StoreAllChargersIntoGroup $request)
+    {
+        Groups :: storeAllCompanyChargersIntoGroup($request -> group_id);
     }
 }
 

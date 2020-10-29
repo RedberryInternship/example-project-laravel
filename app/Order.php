@@ -141,6 +141,17 @@ class Order extends Model
             OrderStatusEnum :: ON_HOLD,
         ]);
     }
+    
+    /**
+     * Get active orders.
+     * 
+     * @param Builder
+     * @return Builder
+     */
+    public function scopeFinished( $query )
+    {
+        return $query -> where( 'charging_status', OrderStatusEnum :: FINISHED );
+    }
 
     /**
      * Orders from new version of the application.

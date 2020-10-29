@@ -21,12 +21,14 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     Route::post('/charger-transfer', 'ChargerTransferController');
 
     Route::resource('/orders', 'OrderController');
+    Route::get('/orders/{id}', 'OrderController@show');
     Route::get('/order-exports', 'OrderController@downloadExcel');
     Route::resource('/profile', 'ProfileController');
     Route::resource('/chargers', 'ChargerController');
     Route::post('/filter-chargers', 'ChargerController@getFilteredChargers');
     Route::resource('/groups', 'GroupController');
     Route::delete('/groups/charging-prices/delete', 'GroupController@deleteChargingPrices');
+    Route::post('/groups/store/all', 'GroupController@storeAllChargersToGroup');
     Route::resource('/group-prices', 'GroupPriceController');
     Route::resource('/group-fast-prices', 'GroupFastPriceController');
     Route::resource('/charging-prices', 'ChargingPricesController');

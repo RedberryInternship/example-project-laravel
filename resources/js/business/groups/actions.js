@@ -1,4 +1,7 @@
-import { deleteChargingPrices } from './utils/service'
+import { 
+  deleteChargingPrices,
+  storeAllChargersIntoGroup, 
+} from './utils/service'
 import copy from './utils/copy'
 
 /**
@@ -18,6 +21,25 @@ export const deleteAllChargingPricesAndReload =  async() => {
     document.location.reload();
   }
   catch(e) {
+    console.log(e);
+  }
+}
+
+/**
+ * Store all the company chargers into this 
+ * group and reload the page.
+ * 
+ * @returns {void}
+ */
+export const storeAllChargersIntoGroupAndReload = async () => {
+  if(! confirm(copy.confirmStoringAllChargersIntoGroup)) {
+    return;
+  }
+
+  try {
+    await storeAllChargersIntoGroup();
+    document.location.reload();
+  } catch(e) {
     console.log(e);
   }
 }

@@ -6,6 +6,7 @@ use App\Order;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Library\Interactors\Exporter;
+use App\Library\Interactors\Business\Orders;
 
 class OrderController extends Controller
 {
@@ -31,7 +32,9 @@ class OrderController extends Controller
         $orders = Order::whereHas('charger_connector_type.charger', function($query) use ($user) {
             $query -> whereNotNull('chargers.company_id');
             $query -> where('chargers.company_id', $user -> company_id);
-        }) -> with([
+        })
+        -> finished() 
+        -> with([
             'payments',
             'user_card',
             'charger_connector_type.charger'
@@ -64,6 +67,6 @@ class OrderController extends Controller
      */
     public function show($id) 
     {
-        return Order :: find($id);
+        return Orders :: getInfo($id);
     }
 }

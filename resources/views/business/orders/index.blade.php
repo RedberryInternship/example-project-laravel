@@ -1,7 +1,11 @@
 @extends('business.master')
 
+@section('css')
+    <link rel="stylesheet" href="/css/business/transactions.css" />
+@endsection
+
 @section('js')
-<script src="/js/business/transactions.js"></script>
+    <script src="/js/business/transactions.js"></script>
 @endsection
 
 @section('body')
@@ -48,7 +52,7 @@
                                                 </td>
                                                 <td>{{ $order -> created_at }}</td>
                                                 <td class="center">
-                                                    <i class="material-icons dp48">remove_red_eye</i>
+                                                    <i class="material-icons dp48 open-modal-button" data-transaction-id="{{ $order -> id }}">remove_red_eye</i>
                                                 </td>
                                             </tr>
                                         @endforeach
