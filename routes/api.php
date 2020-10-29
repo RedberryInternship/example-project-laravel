@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Route;
 | API Routes
 |--------------------------------------------------------------------------
 */
-
+//todo Vobi, რადგანაც აქ გავქვს app/V1 როუტები, მემგონი ჯობბია რომ ფაისლახ იგივე სახელი ერქვას.
+// ასევე თუ ეს იუზერის როუტები არის მაშნ ფაილს user.php ჯობია ერქვას, და თითეული
 Route::group(['prefix' => 'app/V1'], function () {
 	/* User Auth/Register */
 	Route::group(['namespace' => 'Api\app\V1'], function () {
@@ -27,15 +28,15 @@ Route::group(['prefix' => 'app/V1'], function () {
 		Route::group(['namespace' => 'Api\app\V1'], function () {
 			Route::get('/get-user-cars', 'User\CarController@index');
 			Route::post('/add-user-car', 'User\CarController@store');
-			Route::post('/delete-user-car', 'User\CarController@destroy');
+			Route::post('/delete-user-car', 'User\CarController@destroy'); //todo Vobi, რესტის სტანდართით ეს delete უნდა იყოს
 
 			Route::post('/add-favorite', 'FavoriteController@postAddFavorite');
 			Route::post('/remove-favorite', 'FavoriteController@postRemoveFavotite');
 			Route::get('/user-favorites', 'FavoriteController@getUserFavorites');
 			Route::get('/transactions-history', 'User\TransactionController');
 			Route::get('/user-chargers/{quantity?}', 'User\ChargerController');
-			Route::post('/update-user-info', 'UserController@postUpdateUserInfo');
-			Route::post('/update-firebase-token', 'User\FirebaseTokenController@update');
+			Route::post('/update-user-info', 'UserController@postUpdateUserInfo'); //todo Vobi, რესტის სტანდართით ეს put უნდა იყოს
+			Route::post('/update-firebase-token', 'User\FirebaseTokenController@update'); //todo Vobi, რესტის სტანდართით ეს put უნდა იყოს
 			Route::get('/me', 'UserController@getMe');
 
 			/** Charging */

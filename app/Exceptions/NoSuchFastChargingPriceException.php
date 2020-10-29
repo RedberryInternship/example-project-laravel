@@ -24,6 +24,6 @@ class NoSuchFastChargingPriceException extends Exception
                 'status'        => 'There is no appropriate charging price in database.',
                 'status_code'   => 500,
             ], 500
-        );    
+        );
     }
 }

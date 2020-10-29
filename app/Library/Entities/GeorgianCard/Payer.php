@@ -10,16 +10,16 @@ class Payer
 {
   /**
    * Make payment.
-   * 
+   *
    * @return void
    */
   public static function createPaymentRecord()
   {
     $userCardId = request() -> get( 'o_user_card_id'     );
     $orderId    = request() -> get( 'o_id'               );
-    $trxId      = request() -> get( 'trx_id'             );
+    $trxId      = request() -> get( 'trx_id'             ); //todo Vobi, ცოტა ნომრაულრი სახელი რომ იყოს არ შეგვიძლია?
     $price      = request() -> get( 'o_amount'           );
-    $RRN        = request() -> get( 'p_rrn'              );
+    $RRN        = request() -> get( 'p_rrn'              ); //todo Vobi, ცოტა ნომრაულრი სახელი რომ იყოს არ შეგვიძლია?
     $type       = request() -> get( 'o_transaction_type' );
 
     if( ! Helper :: isDev() )

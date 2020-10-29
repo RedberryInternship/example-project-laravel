@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
+//todo Vobi, please explain that class, Why use it? when does it run? and how?
 class Kernel extends ConsoleKernel
 {
     /**

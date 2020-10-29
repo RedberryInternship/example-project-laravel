@@ -1,5 +1,5 @@
 <?php
-
+//todo Vobi, ეს რა სტილზე არის გასწორებული ??? :))
 return [
 	'merchant_id' 		=> env( 'MERCHANT_ID'		 	, ''	),
 	'page_id' 				=> env( 'PAGE_ID'		 		 	, ''	),
@@ -7,5 +7,5 @@ return [
 	'ccy' 						=> env( 'CCY'				 		 	, ''	),
 	'back_url_f' 			=> env( 'BACK_URL_F' 		 	, ''	),
 	'back_url_s' 			=> env( 'BACK_URL_S' 		 	, ''	),
-	'refund_api_pass' => env( 'REFUND_API_PASS'	, ''  ), 
+	'refund_api_pass' => env( 'REFUND_API_PASS'	, ''  ),
 ];

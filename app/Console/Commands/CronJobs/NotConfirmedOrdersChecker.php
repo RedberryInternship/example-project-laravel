@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 
 use App\Library\Interactors\CronJobs\NotConfirmedOrdersChecker as NotConfirmedChecker;
 
+//todo Vobi, please explain that class, Why use it? when does it run? and how?
 class NotConfirmedOrdersChecker extends Command
 {
     /**

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     /**
-     * BusinessController Constructor. 
+     * BusinessController Constructor.
      */
     public function __construct()
     {
@@ -21,13 +21,13 @@ class AuthController extends Controller
 
     /**
      * Login Page.
-     * 
+     *
      * @return view
      */
     public function login()
     {
         return view('business.auth.login') -> with([
-            'tabTitle'            => 'ავტორიზაცია',
+            'tabTitle'            => 'ავტორიზაცია', //todo Vobi, აქ მულტი ლენგუჯის მხარდაწერა როგორც ვატყობ არ არის გათვალისწინებული.??
             'activeMenuItem'      => 'login',
             'backgroundClassName' => 'login'
         ]);
@@ -35,9 +35,9 @@ class AuthController extends Controller
 
     /**
      * Authenticate Business User.
-     * 
+     *
      * @param Request $request
-     * 
+     *
      * @return redirect
      */
     public function auth(Request $request)
@@ -49,7 +49,7 @@ class AuthController extends Controller
 
         $email    = $request -> get('email');
         $password = $request -> get('password');
-        
+
         $user     = User::where('email', $email) -> first();
 
         if ($user && Hash::check($password, $user -> password))
@@ -64,7 +64,7 @@ class AuthController extends Controller
 
     /**
      * Logout Business User from Admin Panel.
-     * 
+     *
      * @return redirect
      */
     public function logout()

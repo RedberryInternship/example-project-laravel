@@ -19,7 +19,7 @@ class PaymentAvail extends Response
                 'id'        => config('georgian-card-gateway.account_id'),
                 'amount'    => null,
                 'currency'  => 981,
-                'exponent'  => 2,    
+                'exponent'  => 2,
             ],
         ],
     ];
@@ -29,10 +29,10 @@ class PaymentAvail extends Response
 
   /**
    * Set Result code.
-   * 
+   *
    * @example 1 => good to go.
    * @example 2 => stop.
-   * 
+   *
    * @param   int $code
    * @return  void
    */
@@ -40,14 +40,14 @@ class PaymentAvail extends Response
   {
     $this -> response [ 'result' ][ 'code' ] = $code;
   }
-  
+
   /**
    * Describe result.
-   * 
+   *
    * @example 1 => payment is available on order X
    * @example 2 => payment is not available on order X
-   * 
-   * @param   string $desc 
+   *
+   * @param   string $desc
    * @return  void
    */
   public function setResultDesc( string $desc ): void
@@ -57,20 +57,20 @@ class PaymentAvail extends Response
 
   /**
    * Set merchant transaction id of this specific transaction.
-   * 
+   *
    * @example 758843E9FDCB2AEA868EB175D534F082
-   * 
+   *
    * @param   string $merchantTrxId
    * @return void
    */
   public function setMerchantTRX( string $merchantTrxId ): void
   {
-    $this -> response [ 'merchant-trx' ] = $merchantTrxId; 
+    $this -> response [ 'merchant-trx' ] = $merchantTrxId;
   }
 
   /**
    * Set primary transaction id.
-   * 
+   *
    * @param string $primaryTrixPcid
    */
   public function setPrimaryTrxPcid( string $primaryTrxPcid ): void
@@ -80,7 +80,7 @@ class PaymentAvail extends Response
 
   /**
    * Describe purchase shortly.
-   * 
+   *
    * @param   string $shortDesc
    * @return  void
    */
@@ -91,7 +91,7 @@ class PaymentAvail extends Response
 
   /**
    * Describe purchase more thoroughly.
-   * 
+   *
    * @param   string $longDesc
    * @return  void
    */
@@ -102,7 +102,7 @@ class PaymentAvail extends Response
 
   /**
    * Set purchase amount.
-   * 
+   *
    * @param   int $amount
    * @return  void
    */
@@ -114,7 +114,7 @@ class PaymentAvail extends Response
   /**
    * Set account id.
    * optional, necessary if there are many pos terminals.
-   * 
+   *
    * @param  string $accountId
    * @return void
    */
