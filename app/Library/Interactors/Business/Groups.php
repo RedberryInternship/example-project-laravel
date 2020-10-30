@@ -2,7 +2,6 @@
 
 namespace App\Library\Interactors\Business;
 
-use App\Http\Requests\Business\StoreAllChargersIntoGroup;
 use App\Library\Entities\Business\Groups\GroupChargersChargingPricesDestroyer;
 use App\Library\Entities\Business\Groups\storeAllCompanyChargersIntoGroup;
 

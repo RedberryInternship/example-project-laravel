@@ -25,6 +25,7 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     Route::resource('/orders', 'OrderController');
     Route::get('/orders/{id}', 'OrderController@show');
     Route::get('/order-exports', 'OrderController@downloadExcel');
+    Route::get('/profile/download-contract', 'ProfileController@downloadContractFile');
     Route::resource('/profile', 'ProfileController');
     Route::resource('/chargers', 'ChargerController');
     Route::post('/filter-chargers', 'ChargerController@getFilteredChargers');

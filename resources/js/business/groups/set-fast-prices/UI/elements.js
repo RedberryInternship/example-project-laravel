@@ -1,0 +1,1 @@
+export const setFastPricesForm = () => document.querySelector('.set-fast-charging-price')

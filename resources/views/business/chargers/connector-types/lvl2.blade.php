@@ -49,6 +49,12 @@
                             <tr>
                                 <form
                                         action="{{ url(isset($group) ? '/business/group-prices/' . $group -> id : '/business/charging-prices') }}"
+                                        class="set-lvl2-charging-price"
+                                        
+                                        @if(isset($group))
+                                        data-group-name="{{ $group -> name }}"
+                                        @endif
+
                                         method="POST">
                                     @csrf
 

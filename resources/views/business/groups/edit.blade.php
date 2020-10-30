@@ -5,7 +5,7 @@
 @endsection
 
 @section('js')
-    <script src="/js/business/groups.js"></script>
+    <script src="/js/business/groups-edit.js"></script>
 @endsection
 
 @section('meta')

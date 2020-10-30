@@ -1,0 +1,1 @@
+export const setLvl2PricesForm = () => document.querySelector('.set-lvl2-charging-price')

@@ -8,6 +8,10 @@
     "/css/business/login.css": "/css/business/login.css",
     "/css/business/sidebar.css": "/css/business/sidebar.css",
     "/css/nova/main.css": "/css/nova/main.css",
-    "/js/business/groups.js": "/js/business/groups.js",
+    "/js/business/groups-edit.js": "/js/business/groups-edit.js",
+    "/js/business/groups-listing.js": "/js/business/groups-listing.js",
+    "/js/business/groups-set-fast-prices.js": "/js/business/groups-set-fast-prices.js",
+    "/js/business/groups-set-lvl2-prices.js": "/js/business/groups-set-lvl2-prices.js",
+    "/js/business/profile.js": "/js/business/profile.js",
     "/js/business/transactions.js": "/js/business/transactions.js"
 }

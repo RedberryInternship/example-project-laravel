@@ -1,11 +1,69 @@
 @extends('business.master')
 
+@section('js')
+    <script src="/js/business/profile.js"></script>
+@endsection
+
 @section('body')<div class="row">
 		<div class="col s12">
+            <div class="card">
+                <div class="card-content row">
+                    <table class="col s5">
+                        <tbody>
+                            <tr>
+                                <td><b>კომპანია</b></td>
+                                <td>{{ $company -> name }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>მისამართი</td>
+                                <td>{{ $company -> address }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>კონტრაქტის მეთოდი</b></td>
+                                <td>{{ $company -> contract_method }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>გადასახადი</b></td>
+                                <td>{{ $company -> contract_value }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="col s5 push-s1">
+                        <tbody>
+                            <tr>
+                                <td><b>ბანკის ექაუნთი</b></td>
+                                <td>{{ $company -> bank_account }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>საიდენტიფიკაციო კოდი</b></td>
+                                <td>{{ $company -> identification_code }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>კონტრაქტის დასაწყისი</b></td>
+                                <td>{{ $company -> contract_started -> toDateString() }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>კონტრაქტის დასასრული</b></td>
+                                <td>{{ $company -> contract_ended -> toDateString() }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                @if($company -> contract_file)
+                    <div class="card-content">
+                        <a href="/business/profile/download-contract" class="btn">
+                            ჩამოტვირთე კონტრაქტის ფაილი
+                            <i class="material-icons right">attachment</i>
+                        </a>
+                    </div>
+                @endif
+            </div>
+
 			<div class="card card-tabs">
 				<div class="card-content">
 					<div class="row">
-					    <form class="col s12" action="{{ url('/business/profile') }}" method="POST">
+					    <form class="col s12 save-profile" action="{{ url('/business/profile') }}" method="POST">
 					    	@csrf
 
 					      	<div class="row">

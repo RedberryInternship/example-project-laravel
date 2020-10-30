@@ -4,6 +4,10 @@
 <link rel="stylesheet" href="/css/business/groups.css" />
 @endsection
 
+@section('js')
+    <script src="/js/business/groups-set-fast-prices.js"></script>    
+@endsection
+
 @section('body')
     <div class="row flex align-center">
         <div class="col s12 flex align-center">

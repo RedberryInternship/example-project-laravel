@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
 
-use App\Http\Requests\Business\RemoveFromWhitelist;
-use App\Http\Requests\Business\ToggleHiddenField;
-use App\Http\Requests\Business\AddToWhitelist;
+use App\Http\Requests\Business\Whitelists\RemoveFromWhitelist;
+use App\Http\Requests\Business\Whitelists\ToggleHiddenField;
+use App\Http\Requests\Business\Whitelists\AddToWhitelist;
 
 use App\Whitelist;
 use App\Charger;

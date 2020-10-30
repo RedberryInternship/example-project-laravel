@@ -3,5 +3,5 @@ import { deleteAllChargingPricesAndReload, storeAllChargersIntoGroupAndReload } 
 
 export default () => {
   deleteAllChargingPricesButton().addEventListener('click', deleteAllChargingPricesAndReload);
-  storeAllChargersIntoGroupButton().addEventListener('click', storeAllChargersIntoGroupAndReload);
+  storeAllChargersIntoGroupButton() && storeAllChargersIntoGroupButton().addEventListener('click', storeAllChargersIntoGroupAndReload);
 }

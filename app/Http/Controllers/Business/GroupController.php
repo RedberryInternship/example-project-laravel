@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Business;
 
-use App\Http\Requests\Business\RemoveGroupChargingPrices;
-use App\Http\Requests\Business\StoreAllChargersIntoGroup;
+use App\Http\Requests\Business\Groups\RemoveGroupChargingPrices;
+use App\Http\Requests\Business\Groups\StoreAllChargersIntoGroup;
+use App\Http\Requests\Business\Groups\StoreGroup;
 use App\Library\Interactors\Business\Groups;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Group;
@@ -28,8 +28,9 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $user   = Auth::user();
-        $groups = Group::where('user_id', $user -> id)
+        $userId  = auth() -> user() -> id;
+        $user    = User :: find( $userId );
+        $groups  = Group::where('user_id', $user -> id)
                       -> with('chargers')
                       -> orderBy('id', 'DESC')
                       -> get();
@@ -48,14 +49,14 @@ class GroupController extends Controller
      * @param  Request  $request
      * @return View
      */
-    public function store(Request $request)
+    public function store(StoreGroup $request)
     {
-        $request -> merge([ 'user_id' => auth() -> user() -> id ]);
-
-        if ($request -> has('name') && $request -> get('name'))
-        {   
-            Group::create($request -> all());
-        }
+        Group::create(
+            [
+                'name' => $request -> name,
+                'user_id' => auth() -> user() -> id,
+            ]
+        );
 
         return redirect() -> back();
     }

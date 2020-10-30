@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Business;
+namespace App\Http\Requests\Business\Whitelists;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
-class RemoveGroupChargingPrices extends FormRequest implements ValidatesWhenResolved
+class RemoveFromWhitelist extends FormRequest implements ValidatesWhenResolved
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class RemoveGroupChargingPrices extends FormRequest implements ValidatesWhenReso
   public function rules()
   {
     return [
-        'group_id' => 'required',
+        'whitelist_id' => 'required',
     ];
   }
 }

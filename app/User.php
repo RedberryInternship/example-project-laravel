@@ -118,7 +118,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function user_cards()
     {
-        return $this -> hasMany('App\UserCard') -> where( 'active', true );
+        return $this -> hasMany(UserCard :: class) -> where( 'active', true );
     }
 
     public function orders()

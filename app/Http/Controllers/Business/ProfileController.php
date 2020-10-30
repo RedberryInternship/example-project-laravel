@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Business;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\User;
 
 class ProfileController extends Controller
 {
@@ -19,14 +20,16 @@ class ProfileController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function index()
     {
-        $user = Auth::user();
+        $userId = auth() -> user() -> id;
+        $user   = User :: with( 'company' ) -> find($userId);
 
         return view('business.profile.index') -> with([
             'user'           => $user,
+            'company'        => $user -> company,
             'tabTitle'       => 'პროფილი',
             'activeMenuItem' => 'profile'
         ]);
@@ -35,12 +38,13 @@ class ProfileController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return View
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
+        $userId = auth() -> user() -> id;
+        $user   = User :: find($userId);
 
         $rules = [
             'first_name'   => 'required',
@@ -74,5 +78,22 @@ class ProfileController extends Controller
         $user -> update($data);
 
         return redirect() -> back();
+    }
+
+    /**
+     * Download contract file.
+     * 
+     * @return File
+     */
+    public static function downloadContractFile()
+    {
+        $userId           = auth() -> user() -> id;
+        $user             = User :: with( 'company' ) -> find( $userId );
+        $contractFilePath = $user -> company -> contract_file;
+
+        $ext = explode('.', $contractFilePath);
+        $ext = end($ext);
+
+        return Storage :: disk('public') -> download( $contractFilePath, 'contract.' . $ext );
     }
 }

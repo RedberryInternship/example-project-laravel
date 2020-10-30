@@ -43,11 +43,11 @@ class TopChargersAnalyser
    */
   private static function ordersFrequencyQuery( $companyId ): string
   {
-    return 'select count(*) as charge_count, chargers.code from chargers '
+    return 'select count(*) as charge_count, chargers.location, chargers.code from chargers '
         .'left join charger_connector_types on charger_connector_types.charger_id = chargers.id '
         .'left join orders on orders.charger_connector_type_id = charger_connector_types.id '
         .'where chargers.company_id = ' . $companyId . ' '
-        .'group by chargers.code order by charge_count desc limit 10';
+        .'group by chargers.code, chargers.location order by charge_count desc limit 10';
   }
 
   /**
@@ -57,12 +57,12 @@ class TopChargersAnalyser
    */
   private static function accumulatedKilowattsPerChargerQuery( $companyId ): string
   {
-    return 'select sum(kilowatts.consumed) as kilowatts, chargers.code from chargers '
+    return 'select sum(kilowatts.consumed) as kilowatts, chargers.location, chargers.code from chargers '
         .'left join charger_connector_types on charger_connector_types.charger_id = chargers.id '
         .'left join orders on orders.charger_connector_type_id = charger_connector_types.id '
         .'left join kilowatts on kilowatts.order_id = orders.id '
         .'where chargers.company_id = ' . $companyId .' '
-        .'group by chargers.code order by kilowatts desc limit 10';
+        .'group by chargers.code, chargers.location order by kilowatts desc limit 10';
   }
 
   /**
@@ -72,10 +72,10 @@ class TopChargersAnalyser
    */
   private static function accumulatedDurationPerChargerQuery( $companyId ): string
   {
-    return 'select sum(orders.duration) as duration, chargers.code from chargers '
+    return 'select sum(orders.duration) as duration, chargers.code, chargers.location from chargers '
         .'left join charger_connector_types on chargers.id = charger_connector_types.charger_id '
         .'left join orders on charger_connector_types.id = orders.charger_connector_type_id '
         .'where chargers.company_id = '. $companyId .' '
-        .'group by chargers.code order by duration desc limit 10';
+        .'group by chargers.code, chargers.location order by duration desc limit 10';
   }
 }

@@ -17,6 +17,7 @@ export default async () => {
         rawData: topByOrders,
         column: 'charge_count',
         color: 'yellowgreen',
+        unit: '',
     });
     
     generateTopChart({
@@ -25,6 +26,7 @@ export default async () => {
         rawData: topByKilowatts,
         column: 'kilowatts',
         color: '#1976D2',
+        unit: 'კვტ.'
     });
 
     generateTopChart({
@@ -33,10 +35,11 @@ export default async () => {
         rawData: topByDuration,
         column: 'duration',
         color: '#FFC107',
+        unit: 'წუთი',
     });
 }
 
-const generateTopChart = ({ chart, title, rawData, column, color }) => {
+const generateTopChart = ({ chart, title, rawData, column, color, unit }) => {
     const data = rawData.map((el) => el[column]);
     const labels = rawData.map((el) => el.code);
 
@@ -50,6 +53,7 @@ const generateTopChart = ({ chart, title, rawData, column, color }) => {
                     label: `TOP ${title}`,
                     data: data,
                     fill: false,
+                    xAxisID:'X',
                 }
             ]
         },
@@ -59,11 +63,69 @@ const generateTopChart = ({ chart, title, rawData, column, color }) => {
                 enabled: true,
                 mode: 'nearest',
                 callbacks: {
-                    title: (item) => `დამტენი - ${item[0].label}`,
-                    label: (item) => `${title}: ${item.value}`,
+                    title: (item) => {
+                        const descriptionJSON = rawData[item[0].index].location;
+                        return JSON.parse(descriptionJSON).ka;
+                    },
+                    label: (item) => `${title}: ${item.value} ${unit}`,
                 }
+            },
+            scales: {
+                xAxes: [
+                    {
+                        id: 'X',
+                        scaleLabel: {
+                            display: true,
+                            labelString: title,
+                        }
+                    }
+                ]
             }
         }
     });
 }
 
+
+/** 
+ * 
+ *   type: 'line',
+  data: {
+    labels:['Георгий', 'Нино', 'Сандро'],
+    datasets: [
+      {
+        data: [ 2, 3, 7 ],
+        label: '-- House del Lada --',
+        yAxisID: 'A',
+        backgroundColor: '#f443367d'
+      },
+      {
+        data: [ 10, 25, 3 ],
+        label: '-- House del Shala --',
+        yAxisID: 'B',
+        backgroundColor: '#3f51b57a'
+      }
+    ],
+  },
+  options: {
+    scales: {
+      yAxes: [{
+        id: 'A',
+        type: 'linear',
+        position: 'left',
+        scaleLabel: {
+          display: true,
+          labelString: "Laada"
+        }
+      }, {
+        id: 'B',
+        type: 'linear',
+        position: 'right',
+        scaleLabel: {
+          display: true,
+          labelString: "shala"
+        }
+      }]
+    }
+  }
+});
+*/

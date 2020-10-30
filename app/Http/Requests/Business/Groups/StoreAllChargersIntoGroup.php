@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Business;
+namespace App\Http\Requests\Business\Groups;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
-class ToggleHiddenField extends FormRequest implements ValidatesWhenResolved
+class StoreAllChargersIntoGroup extends FormRequest implements ValidatesWhenResolved
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -24,9 +24,8 @@ class ToggleHiddenField extends FormRequest implements ValidatesWhenResolved
    */
   public function rules()
   {
-      return [
-          'charger_id' => 'required',
-          'hidden'     => 'required|boolean',
-      ];
+    return [
+        'group_id' => 'required',
+    ];
   }
 }
