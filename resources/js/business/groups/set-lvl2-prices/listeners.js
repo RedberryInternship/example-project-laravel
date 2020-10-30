@@ -7,6 +7,5 @@ import { confirmSettingChargingPrices } from './actions'
  * @returns {void}
  */
 export default () => {
-  console.log(setLvl2PricesForm());
   setLvl2PricesForm().addEventListener('submit', confirmSettingChargingPrices);
 }
