@@ -1,4 +1,8 @@
 
+h1, h2, h3, h4, h5, h6, span, p {
+  letter-spacing: 1px;
+}
+
 .espace-brand-wrapper {
   background-color: #0a102d;
   padding: 2em 1em 1em 1em;
@@ -12,6 +16,7 @@
 
     &.business-title {
       font-size: 1.2em;
+      letter-spacing: .5px;
     }
     .business-icon {
       top: .2em;

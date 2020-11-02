@@ -30,6 +30,27 @@ export default async () => {
     },
     options: {
       maintainAspectRatio: false,
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              fontSize: 14,
+            }
+          }
+        ],
+        xAxes: [
+          {
+            ticks: {
+              fontSize: 14,
+            }
+          }
+        ]
+      },
+      legend: {
+        labels: {
+          fontSize: 14,
+        }
+      }
     }
   });
 

@@ -51,8 +51,15 @@ const renderChart = ({ chart, data }) => {
                 const chargersType = activeElements[0]._chart.chargersType;
                 
                 displayChargersModal(chargersType, chargersStatus);
+            },
+
+            legend: {
+                labels: {
+                    fontSize: 14,
+                }
             }
         },
+        
     });
 
     chartObj.chargersType = chargerType;

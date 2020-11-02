@@ -23,7 +23,7 @@ export default async () => {
               data: transactions,
               label: 'ტრანზაქციების სიხშირე',
               yAxisID: 'A',
-              backgroundColor: '#f443367d'
+              backgroundColor: '#f443367d',
             },
             {
               data: energy,
@@ -42,7 +42,11 @@ export default async () => {
               position: 'left',
               scaleLabel: {
                 display: true,
-                labelString: "დამუხტვების სიხშირე"
+                labelString: "დამუხტვების სიხშირე",
+                fontSize: 14,
+              },
+              ticks: {
+                fontSize: 14,
               }
             }, 
             {
@@ -51,10 +55,26 @@ export default async () => {
               position: 'right',
               scaleLabel: {
                 display: true,
-                labelString: "მოხმარებული ელ. ენერგია"
+                labelString: "მოხმარებული ელ. ენერგია",
+                fontSize: 14,
+              },
+              ticks: {
+                fontSize: 14,
               }
             }
+          ],
+          xAxes: [
+            {
+              ticks: {
+                fontSize: 14,
+              }
+            }    
           ]
+          },
+          legend: {
+            labels: {
+              fontSize: 14,
+            }
           }
         }
       });
