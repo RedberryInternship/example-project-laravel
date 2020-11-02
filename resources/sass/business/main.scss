@@ -4,7 +4,7 @@ h1, h2, h3, h4, h5, h6, span, p {
 }
 
 .espace-brand-wrapper {
-  background-color: #0a102d;
+  background-color: #0a102d31;
   padding: 2em 1em 1em 1em;
   text-align: center;
   box-shadow: -1px 3px 6px 1px #262b4b;
@@ -28,6 +28,10 @@ h1, h2, h3, h4, h5, h6, span, p {
   .espace-brand {
     width: 11em;
     display: inline-block;
+  }
+
+  @media(max-width: 993px) {
+    display: none;
   }
 }
 
