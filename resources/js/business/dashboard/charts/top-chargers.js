@@ -77,10 +77,11 @@ const generateTopChart = ({ chart, title, rawData, column, color, unit }) => {
                         scaleLabel: {
                             display: true,
                             labelString: title,
+                            fontSize: 14,
                         },
                         ticks: {
                           fontSize: 14,
-                        }
+                        },
                     }
                 ]
             },
@@ -88,7 +89,7 @@ const generateTopChart = ({ chart, title, rawData, column, color, unit }) => {
               labels: {
                 fontSize: 14,
               }
-            }
+            },
         }
     });
 }
