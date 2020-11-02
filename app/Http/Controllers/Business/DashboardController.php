@@ -25,6 +25,7 @@ class DashboardController extends Controller
             'tabTitle'       => 'მთავარი',
             'activeMenuItem' => 'dashboard',
             'firstYear'      => $this -> firstOrderYear(),
+            'companyName'    => auth() -> user() -> company -> name,
         ]);
     }
 

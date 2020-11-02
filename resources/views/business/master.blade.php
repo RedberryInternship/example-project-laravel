@@ -20,6 +20,7 @@
         <link rel="stylesheet" type="text/css" href="/app-assets/css/pages/dashboard.css">
         <link rel="stylesheet" type="text/css" href="/app-assets/css/custom/style.css">
         <link rel="stylesheet" type="text/css" href="/css/business/sidebar.css">
+        <link rel="stylesheet" type="text/css" href="/css/business/main.css">
         @yield('css')
     </head>
 

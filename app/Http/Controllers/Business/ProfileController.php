@@ -27,12 +27,15 @@ class ProfileController extends Controller
         $userId = auth() -> user() -> id;
         $user   = User :: with( 'company' ) -> find($userId);
 
-        return view('business.profile.index') -> with([
-            'user'           => $user,
-            'company'        => $user -> company,
-            'tabTitle'       => 'პროფილი',
-            'activeMenuItem' => 'profile'
-        ]);
+        return view('business.profile.index') -> with(
+            [
+                'user'           => $user,
+                'company'        => $user -> company,
+                'companyName'    => $user -> company -> companyName,
+                'tabTitle'       => 'პროფილი',
+                'activeMenuItem' => 'profile',
+            ]
+        );
     }
 
     /**

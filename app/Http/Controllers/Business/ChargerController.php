@@ -10,9 +10,23 @@ use App\Library\Entities\Helper;
 use App\Http\Controllers\Controller;
 use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\ConnectorType as ConnectorTypeEnum;
+use App\User;
 
 class ChargerController extends Controller
 {
+    /**
+     * User instance.
+     * 
+     * @var $user
+     */
+    private $user;
+
+    /**
+     * Company name.
+     * 
+     * @var string $companyName
+     */
+
     /**
      * ChargerController Constructor. 
      */
@@ -28,7 +42,9 @@ class ChargerController extends Controller
      */
     public function index()
     {
-        $user     = auth() -> user();
+        $userId   = auth() -> user() -> id;
+        $user     = User :: with( 'company' ) -> find( $userId );
+
         $chargers = Charger::where('company_id', $user -> company_id)
                         -> whereNotNull('company_id')
                         -> with('groups')
@@ -39,7 +55,8 @@ class ChargerController extends Controller
             'tabTitle'       => 'დამტენები',
             'activeMenuItem' => 'chargers',
             'chargers'       => $chargers,
-            'user'           => $user
+            'user'           => $user,
+            'companyName'    => $user -> company -> name,
         ]);
     }
 
@@ -79,7 +96,8 @@ class ChargerController extends Controller
             'tabTitle'                => 'რედაქტირება',
             'activeMenuItem'          => 'chargers',
             'charger'                 => $charger,
-            'user'                    => $user
+            'user'                    => $user,
+            'companyName'             => $user -> company -> name,
         ]);
     }
 

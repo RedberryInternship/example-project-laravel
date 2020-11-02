@@ -27,7 +27,7 @@ class AuthController extends Controller
     public function login()
     {
         return view('business.auth.login') -> with([
-            'tabTitle'            => 'ავტორიზაცია', //todo Vobi, აქ მულტი ლენგუჯის მხარდაწერა როგორც ვატყობ არ არის გათვალისწინებული.??
+            'tabTitle'            => 'ავტორიზაცია',
             'activeMenuItem'      => 'login',
             'backgroundClassName' => 'login'
         ]);

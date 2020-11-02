@@ -40,6 +40,7 @@ class GroupController extends Controller
             'activeMenuItem' => 'groups',
             'groups'         => $groups,
             'user'           => $user,
+            'companyName'    => $user -> company -> name,
         ]);
     }
 
@@ -98,6 +99,7 @@ class GroupController extends Controller
                 'groupChargerIds'  => $groupChargerIds,
                 'activeMenuItem'   => 'groups',
                 'allChargersAreIn' => $companyChargers -> count() === $group -> chargers -> count(),
+                'companyName'      => $user -> company -> name,
             ]
         ); 
     }

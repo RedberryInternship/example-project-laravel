@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Business;
 
-use Auth;
 use App\Group;
 use App\FastChargingPrice;
 use Illuminate\Http\Request;
@@ -14,18 +13,19 @@ class GroupFastPriceController extends Controller
      * Display the specified resource.
      *
      * @param  int  $groupID
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($groupID)
     {
-        $group = Group::with([
-            'chargers.charger_connector_types.fast_charging_prices'
-        ])->find($groupID);
-
+        $user   = auth() -> user();
+        $group  = Group :: with('chargers.charger_connector_types.fast_charging_prices') -> find( $groupID );
+        
         return view('business.groups.fast-prices.edit')
-            ->with(
+            -> with(
                 [
-                    'group' => $group
+                    'group'         => $group,
+                    'user'          => $user,
+                    'companyName'   => $user -> company -> name,
                 ]
             );
     }
@@ -33,15 +33,13 @@ class GroupFastPriceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $groupID)
     {
-        $user  = Auth::user();
-        //todo Vobi, აქ ისე პრიდაპირ არ შეგიძლია where გაუკეთო და გრუპით და იუზერით გაფილტრო პირდაპირ, ქვემოთ კიდევ რომ არ მოგიწიოს შემოწმება ??
-        //ასევე დასზღევ ვა არ ჭირდება იქენბა და საერთოდ არ დაბრუნდა გრუპა??
+        $user  = auth() -> user();
         $group = Group::with('chargers.charger_connector_types.connector_type') -> find($groupID);
 
         $startMinutes = $request -> get('start_minutes');
@@ -53,7 +51,6 @@ class GroupFastPriceController extends Controller
             return redirect() -> back();
         }
 
-        //todo Vobi, split that
         foreach ($group -> chargers as $charger)
         {
             foreach ($charger -> charger_connector_types as $chargerConnectorType)

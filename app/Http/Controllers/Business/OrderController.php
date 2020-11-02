@@ -34,20 +34,25 @@ class OrderController extends Controller
             $query -> where('chargers.company_id', $user -> company_id);
         })
         -> finished() 
-        -> with([
-            'payments',
-            'user_card',
-            'charger_connector_type.charger'
-        ]) -> orderBy(
-            'id', 'DESC'
-        ) -> paginate($this -> numbersPerPage);
+        -> with(
+            [
+                'payments',
+                'user_card',
+                'charger_connector_type.charger',
+            ]
+        ) 
+        -> orderBy( 'id', 'DESC' ) 
+        -> paginate( $this -> numbersPerPage );
 
-        return view('business.orders.index') -> with([
-            'user'           => $user,
-            'orders'         => $orders,
-            'tabTitle'       => 'ტრანზაქციები',
-            'activeMenuItem' => 'orders'
-        ]);
+        return view('business.orders.index') -> with(
+            [
+                'orders'         => $orders,
+                'tabTitle'       => 'ტრანზაქციები',
+                'activeMenuItem' => 'orders',
+                'user'           => $user,
+                'companyName'    => $user -> company -> name,
+            ]
+        );
     }
 
     /**

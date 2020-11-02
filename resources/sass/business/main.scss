@@ -1,0 +1,31 @@
+
+.espace-brand-wrapper {
+  background-color: #0a102d;
+  padding: 2em 1em 1em 1em;
+  text-align: center;
+  box-shadow: -1px 3px 6px 1px #262b4b;
+  
+  h1 {
+    font-size: 1.5em;
+    color: whitesmoke;
+    margin: .5em 0 0 0;
+
+    &.business-title {
+      font-size: 1.2em;
+    }
+    .business-icon {
+      top: .2em;
+      font-size: 1.2em;
+      position: relative;
+    }
+  }
+  
+  .espace-brand {
+    width: 11em;
+    display: inline-block;
+  }
+}
+
+.sidenav {
+  padding-top: 6em;
+}
