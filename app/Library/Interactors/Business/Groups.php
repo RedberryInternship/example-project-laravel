@@ -3,7 +3,7 @@
 namespace App\Library\Interactors\Business;
 
 use App\Library\Entities\Business\Groups\GroupChargersChargingPricesDestroyer;
-use App\Library\Entities\Business\Groups\storeAllCompanyChargersIntoGroup;
+use App\Library\Entities\Business\Groups\StoreAllCompanyChargersIntoGroup;
 
 class Groups
 {
@@ -26,6 +26,6 @@ class Groups
    */
   public static function storeAllCompanyChargersIntoGroup( $groupId )
   {
-    storeAllCompanyChargersIntoGroup :: execute( $groupId );
+    StoreAllCompanyChargersIntoGroup :: execute( $groupId );
   }
 }
