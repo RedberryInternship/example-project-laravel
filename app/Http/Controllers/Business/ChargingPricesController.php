@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Business;
 
 use App\ChargingPrice;
 use App\ChargerConnectorType;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Business\Chargers\AddLvl2Price;
 
 class ChargingPricesController extends Controller
 {
@@ -21,18 +20,18 @@ class ChargingPricesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return Response
      */
-    public function store(Request $request)
+    public function store(AddLvl2Price $request)
     {
-        $user = Auth::user();
+        $user = auth() -> user();
 
-        $chargerConnectorType = ChargerConnectorType::with('charger') -> find($request -> get('charger_connector_type_id'));
+        $chargerConnectorType = ChargerConnectorType :: with('charger') -> find($request -> get('charger_connector_type_id'));
 
         if ($chargerConnectorType -> charger -> company_id == $user -> company_id)
         {
-            ChargingPrice::create($request -> all());
+            ChargingPrice :: create($request -> all());
         }
 
         return redirect() -> back();
@@ -41,16 +40,16 @@ class ChargingPricesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  ChargingPrice  $chargingPrice
-     * @return \Illuminate\Http\Response
+     * @param ChargingPrice  $chargingPrice
+     * @return Response
      */
     public function destroy(ChargingPrice $chargingPrice)
     {
-        $user = Auth::user();
+        $user = auth() -> user();
 
-        $chargingPrice -> load(['chargerConnectorType.charger']);
+        $chargingPrice -> load( 'charger_connector_type.charger' );
 
-        if ($chargingPrice -> chargerConnectorType -> charger -> company_id == $user -> company_id)
+        if ($chargingPrice -> charger_connector_type -> charger -> company_id == $user -> company_id)
         {
             $chargingPrice -> delete();
         }

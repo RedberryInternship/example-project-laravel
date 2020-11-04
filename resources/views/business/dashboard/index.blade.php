@@ -1,4 +1,4 @@
-@extends('business.master')
+@extends('business.layouts.master')
 
 @section('body')
 	@include('business.dashboard.nav')

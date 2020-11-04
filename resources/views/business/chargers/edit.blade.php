@@ -1,4 +1,4 @@
-@extends('business.master')
+@extends('business.layouts.master')
 
 @section('meta')
 	<meta name="charger_id" content="{{ $charger -> id }}">
@@ -133,7 +133,7 @@
 
 				      		<div class="row">
 					      		<div class="input-field col s12">
-					      			<select id="charger_business_services" name="charger_business_services[]" class="select2 browser-default" multiple="multiple">
+					      			<select id="charger_business_services" name="charger_business_services" class="select2 browser-default" multiple="multiple">
 					      				@foreach ($businessServices as $businessService)
 					      					<option value="{{ $businessService -> id }}" @if(in_array($businessService -> id, $chargerBusinessServices)) selected @endif>
 					      						{{ $businessService -> getTranslation('title', 'ka') }}
@@ -154,8 +154,6 @@
 			</div>
 		</div>
 	</div>
-
 	@include('business.chargers.connector-types.lvl2')
-
 	@include('business.chargers.connector-types.fast')
 @endsection

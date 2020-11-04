@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Business;
 
+use App\User;
 use App\Charger;
 use App\BusinessService;
 use App\ChargerConnectorType;
@@ -10,7 +11,6 @@ use App\Library\Entities\Helper;
 use App\Http\Controllers\Controller;
 use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\ConnectorType as ConnectorTypeEnum;
-use App\User;
 
 class ChargerController extends Controller
 {
@@ -69,36 +69,42 @@ class ChargerController extends Controller
     public function edit($id)
     {
         $user    = auth() -> user();
-        $charger = Charger::where('id', $id) -> with([
-            'groups',
-            'business_services',
-        ]) -> first();
+        $charger = Charger::where('id', $id) 
+            -> with(
+                [
+                    'business_services',
+                    'groups',
+                ]
+            ) 
+            -> first();
 
-        if ($user -> company_id != $charger -> company_id)
-        {
-            return redirect() -> back();
-        }
-
-        $chargerConnectorTypes   = ChargerConnectorType::with(['connector_type', 'charging_prices', 'fast_charging_prices'])
-                                                      -> where('charger_id', $id)
-                                                      -> get();
-
-        $languages               = Helper::allLang();
-
-        $businessServices        = BusinessService::all();
         $chargerBusinessServices = $charger -> business_services -> pluck('id') -> toArray();
-
-        return view('business.chargers.edit') -> with([
-            'chargerBusinessServices' => $chargerBusinessServices,
-            'businessServices'        => $businessServices,
-            'chargerConnectorTypes'   => $chargerConnectorTypes,
-            'languages'               => $languages,
-            'tabTitle'                => 'რედაქტირება',
-            'activeMenuItem'          => 'chargers',
-            'charger'                 => $charger,
-            'user'                    => $user,
-            'companyName'             => $user -> company -> name,
-        ]);
+        $chargerConnectorTypes   = ChargerConnectorType :: active()
+            -> with(
+                [ 
+                    'connector_type', 
+                    'charging_prices', 
+                    'fast_charging_prices'
+                ]
+            )
+            -> where('charger_id', $id)
+            -> get();
+            
+        return view('business.chargers.edit') 
+            -> with(
+                [
+                    'chargerBusinessServices' => $chargerBusinessServices,
+                    'businessServices'        => BusinessService::all(),
+                    'chargerConnectorTypes'   => $chargerConnectorTypes,
+                    'languages'               => Helper :: allLang(),
+                    'tabTitle'                => 'რედაქტირება',
+                    'activeMenuItem'          => 'chargers',
+                    'charger'                 => $charger,
+                    'user'                    => $user,
+                    'companyName'             => $user -> company -> name,
+                    'dayTimesRange'           => Helper :: dayTimesRange(),
+                ]
+            );
     }
 
     /**

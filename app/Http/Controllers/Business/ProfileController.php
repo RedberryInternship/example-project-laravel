@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Business;
 
+use App\Http\Requests\Business\Profile\UpdateInfo;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -34,6 +35,7 @@ class ProfileController extends Controller
                 'companyName'    => $user -> company -> companyName,
                 'tabTitle'       => 'პროფილი',
                 'activeMenuItem' => 'profile',
+                'companyName'    => $user -> company -> name,
             ]
         );
     }
@@ -44,42 +46,18 @@ class ProfileController extends Controller
      * @param  Request  $request
      * @return View
      */
-    public function store(Request $request)
+    public function store(UpdateInfo $request)
     {
         $userId = auth() -> user() -> id;
         $user   = User :: find($userId);
 
-        $rules = [
-            'first_name'   => 'required',
-            'phone_number' => 'required',
-            'email'        => 'email|required'
-        ];
-
-        if ($request -> get('password'))
-        {
-            $rules['password'] = 'required|confirmed|min:6';
-        }
-
-        $request -> validate($rules);
-
-        $data = $request -> except([
-            '_token',
-            'password',
-            'password_confirmation'
-        ]);
-
-        if ($request -> get('password'))
-        {
-            $data = $request -> merge([
-                'password' => bcrypt($request -> get('password'))
-            ]) -> except([
-                '_token',
-                'password_confirmation'
-            ]);
-        }
+        $data = [];
+        $request -> has( 'first_name'   ) && $data[ 'first_name'    ]= $request -> get('first_name');
+        $request -> has( 'phone_number' ) && $data[ 'phone_number'  ]= $request -> get('phone_number');
+        $request -> has( 'email'        ) && $data[ 'email'         ]= $request -> get('email');
+        $request -> has( 'password'     ) && $data[ 'password'      ]= bcrypt( $request -> get('password') );
 
         $user -> update($data);
-
         return redirect() -> back();
     }
 

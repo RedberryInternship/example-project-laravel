@@ -1,4 +1,4 @@
-@extends('business.master')
+@extends('business.layouts.master')
 
 @section('js')
     <script src="/js/business/profile.js"></script>

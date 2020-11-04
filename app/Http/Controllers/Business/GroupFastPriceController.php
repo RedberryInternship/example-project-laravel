@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Business;
 
 use App\Group;
 use App\FastChargingPrice;
-use Illuminate\Http\Request;
+use App\Library\Entities\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Business\Chargers\AddFastPrice;
 
 class GroupFastPriceController extends Controller
 {
@@ -26,6 +27,7 @@ class GroupFastPriceController extends Controller
                     'group'         => $group,
                     'user'          => $user,
                     'companyName'   => $user -> company -> name,
+                    'dayTimesRange' => Helper :: dayTimesRange(),
                 ]
             );
     }
@@ -33,39 +35,39 @@ class GroupFastPriceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
+     * @param  AddFastPrice  $request
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request, $groupID)
+    public function update(AddFastPrice $request, $groupID)
     {
         $user  = auth() -> user();
         $group = Group::with('chargers.charger_connector_types.connector_type') -> find($groupID);
-
-        $startMinutes = $request -> get('start_minutes');
-        $endMinutes   = $request -> get('end_minutes');
-        $price        = $request -> get('price');
 
         if ($user -> id != $group -> user_id)
         {
             return redirect() -> back();
         }
 
-        foreach ($group -> chargers as $charger)
-        {
-            foreach ($charger -> charger_connector_types as $chargerConnectorType)
-            {
-                if (in_array(strtolower($chargerConnectorType -> connector_type -> name), ['combo 2', 'chademo']))
-                {
-                    FastChargingPrice::create([
-                        'charger_connector_type_id' => $chargerConnectorType->id,
-                        'start_minutes'             => $startMinutes,
-                        'end_minutes'               => $endMinutes,
-                        'price'                     => $price
-                    ]);
-                }
-            }
-        }
+        $group 
+            -> chargers 
+            -> each( function( $charger ) {
+                $charger
+                    -> charger_connector_types 
+                    -> each( function( $chargerConnectorType )  {
+                        if( $chargerConnectorType -> isActive() && $chargerConnectorType -> isChargerFast() )
+                        {
+                            FastChargingPrice::create(
+                                [
+                                    'charger_connector_type_id' => $chargerConnectorType -> id,
+                                    'start_minutes'             => request() -> get('start_minutes'),
+                                    'end_minutes'               => request() -> get('end_minutes'),
+                                    'price'                     => request() -> get('price'),
+                                ]
+                            );
+                        }
+                    });
+            });
 
         return redirect('/business/groups/' . $groupID . '/edit' );
     }

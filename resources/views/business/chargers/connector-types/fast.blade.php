@@ -73,19 +73,19 @@
                                     <td>
                                         <div class="input-field">
                                             <label for="start_minutes">0</label>
-                                            <input type="text" id="start_minutes" name="start_minutes">
+                                            <input type="number" id="start_minutes" name="start_minutes">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-field">
                                             <label for="end_minutes">20</label>
-                                            <input type="text" id="end_minutes" name="end_minutes">
+                                            <input type="number" id="end_minutes" name="end_minutes">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-field">
                                             <label for="price">1</label>
-                                            <input type="text" id="price" name="price">
+                                            <input type="number" step="0.01" id="price" name="price">
                                         </div>
                                     </td>
                                     <td class="right">

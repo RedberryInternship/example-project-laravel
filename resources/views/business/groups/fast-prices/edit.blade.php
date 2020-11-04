@@ -1,4 +1,4 @@
-@extends('business.master')
+@extends('business.layouts.master')
 
 @section('css')
 <link rel="stylesheet" href="/css/business/groups.css" />

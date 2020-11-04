@@ -4,16 +4,15 @@ namespace App\Http\Controllers\Business;
 
 use App\FastChargingPrice;
 use App\ChargerConnectorType;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Business\Chargers\AddFastPrice;
 
 class FastChargingPricesController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -23,12 +22,11 @@ class FastChargingPricesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function store(Request $request)
+    public function store(AddFastPrice $request)
     {
-        $user = Auth::user();
+        $user = auth() -> user();
 
         $chargerConnectorType = ChargerConnectorType::with('charger') -> find($request -> get('charger_connector_type_id'));
 
@@ -44,15 +42,15 @@ class FastChargingPricesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(FastChargingPrice $fastChargingPrice)
     {
-        $user = Auth::user();
+        $user = auth() -> user();
         
-        $fastChargingPrice -> load(['chargerConnectorType.charger']);
+        $fastChargingPrice -> load('charger_connector_type.charger');
 
-        if ($fastChargingPrice -> chargerConnectorType -> charger -> company_id == $user -> company_id)
+        if ($fastChargingPrice -> charger_connector_type -> charger -> company_id == $user -> company_id)
         {
             $fastChargingPrice -> delete();
         }

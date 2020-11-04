@@ -22,7 +22,7 @@ import {
  */
 export const listen = () => {
   toggleButton().addEventListener('click', toggleChargerVisibility);
-  whitelistButton().addEventListener('click', openWhitelistModal);
+  whitelistButton() && whitelistButton().addEventListener('click', openWhitelistModal);
   whitelistModalBG().addEventListener('click', closeWhitelistModal);
   whitelistModalSelect().addEventListener('change', changePhoneCode);
   whitelistInput().addEventListener('keydown', watchPhoneNumber);

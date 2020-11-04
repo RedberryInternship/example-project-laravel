@@ -121,4 +121,22 @@ class Helper
             }
         });
     }
+
+    /**
+     * Day time range.
+     * 
+     * @return array
+     */
+    public static function dayTimesRange(): array 
+    {
+        $ranges = [];
+
+        for($i=0; $i<=24; $i++)
+        {
+            $hrs = $i < 10 ? '0'.$i : strval($i);
+            $ranges []= $hrs . ':00';
+        }
+
+        return $ranges;
+    }
 }

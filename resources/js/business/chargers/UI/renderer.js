@@ -3,7 +3,10 @@ import {
   whitelistModal as whitelistModalElem, 
 } from './elements'
 import whitelistModal from './WhitelistModal/whitelist-modal'
-import generateWhitelistContent, { listenToRemoveClicks } from './WhitelistModal/components/whitelist-content'
+import generateWhitelistContent, { 
+  listenToRemoveClicks 
+} from './WhitelistModal/components/whitelist-content'
+import { parseIntoHTML } from '../utils/helpers'
 
 /**
  * Render select ui.
@@ -11,9 +14,8 @@ import generateWhitelistContent, { listenToRemoveClicks } from './WhitelistModal
  * @returns {void}
  */
 export const renderWhitelistModal = () => {
-  const modal =  whitelistModal();
-  const body = documentBody();
-  body.innerHTML = modal + body.innerHTML;
+  const modal =  parseIntoHTML(whitelistModal());
+  documentBody().prepend(modal);
   listenToRemoveClicks();
 }
 
