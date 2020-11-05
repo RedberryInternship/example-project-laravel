@@ -5,8 +5,7 @@
 .custom-auth-btn {
   background-color: steelblue;
   left: 50% !important;
-  -webkit-transform: translateX(-50%);
-          transform: translateX(-50%);
+  transform: translateX(-50%);
   margin-bottom: 2em;
 }
 
@@ -48,30 +47,23 @@ input {
 .input-field > input[type]:-webkit-autofill:not(.browser-default) + label,
 .input-field > input[type=date]:not(.browser-default) + label,
 .input-field > input[type=time]:not(.browser-default) + label {
-  -webkit-transform: translateY(-24px) scale(0.8);
   transform: translateY(-24px) scale(0.8);
-  -webkit-transform-origin: 0 0;
   transform-origin: 0 0;
 }
 
 .input-field > input[type]:-webkit-autofill:not(.browser-default) + label,
 .input-field > input[type=date]:not(.browser-default) + label,
 .input-field > input[type=time]:not(.browser-default) + label {
-  -webkit-transform: translateY(-24px) scale(0.8);
   transform: translateY(-24px) scale(0.8);
-  -webkit-transform-origin: 0 0;
   transform-origin: 0 0;
 }
 
 .input-field > label:not(.label-icon).active {
-  -webkit-transform: translateY(-24px) scale(0.8);
   transform: translateY(-24px) scale(0.8);
-  -webkit-transform-origin: 0 0;
   transform-origin: 0 0;
 }
 
 .input-field > label {
-  -webkit-transform: translateY(10px);
   transform: translateY(10px);
 }
 

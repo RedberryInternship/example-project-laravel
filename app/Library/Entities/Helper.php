@@ -139,4 +139,21 @@ class Helper
 
         return $ranges;
     }
+
+    /**
+     * Create url with query parameters.
+     * 
+     * @return string
+     */
+    public static function url( $uri, $params ): string
+    {   
+        $uri .= '?';
+        
+        foreach( $params as $key => $value )
+        {
+            $uri .= '&' . $key . '=' .$value;
+        }
+
+        return $uri;
+    }
 }

@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Route;
 | API Routes
 |--------------------------------------------------------------------------
 */
-//todo Vobi, რადგანაც აქ გავქვს app/V1 როუტები, მემგონი ჯობბია რომ ფაისლახ იგივე სახელი ერქვას.
-// ასევე თუ ეს იუზერის როუტები არის მაშნ ფაილს user.php ჯობია ერქვას, და თითეული
 Route::group(['prefix' => 'app/V1'], function () {
 	/* User Auth/Register */
 	Route::group(['namespace' => 'Api\app\V1'], function () {

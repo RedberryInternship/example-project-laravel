@@ -22,23 +22,33 @@ class BusinessOrdersExporter implements FromArray, WithHeadings, WithStyles, Wit
   private $ids;
 
   /**
+   * Set ids.
+   * 
+   * @param array $filteredOrderIds
+   * @return void
+   */
+  public function setIds( $filteredOrderIds )
+  {
+    $this -> ids = $filteredOrderIds;
+  }
+
+  /**
    * Export all user data to excel.
    */
   public function array(): array
   {
-
-    $user = User :: with('company') -> find(auth()->user()->id);
-
-    $query = Order :: with(
+    $user   = User :: with( 'company' ) -> find( auth() -> user() -> id );
+    $query  = Order :: with(
       [
         'charger_connector_type.charger.company',
         'kilowatt',
       ]
     )
-    -> whereHas('charger_connector_type.charger', function($query) use($user) {
-      $query -> where('company_id', $user -> company -> id );
+    -> whereHas( 'charger_connector_type.charger', function( $query ) use( $user ) {
+      $query -> where( 'company_id', $user -> company -> id );
     })
-    -> orderBy('id', 'desc');
+    -> whereIn( 'id', $this -> ids )
+    -> orderBy( 'id', 'desc' );
 
     return $query
       -> get()

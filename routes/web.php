@@ -56,6 +56,7 @@ Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers
 });
 
 Route::post('refund', 'TestController@doRefund') -> name('refund');
+Route::get('refund', 'TestController@refundView');
 
 /**
  * Testing routes for development purposes
@@ -67,7 +68,4 @@ Route::post('refund', 'TestController@doRefund') -> name('refund');
     Route::post('/disconnect', 'TestController@disconnect');
 
     Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
-
-    Route::get('firebase', 'TestController@firebase');
-    Route::get('refund', 'TestController@refundView');
  }

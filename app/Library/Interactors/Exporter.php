@@ -44,10 +44,14 @@ class Exporter
   /**
    * Export business orders.
    * 
+   * @param array $filteredOrderIds
    * @return \File
    */
-  public static function exportBusinessOrders()
-  {
-    return Excel :: download(new BusinessOrdersExporter, 'business-orders.xlsx');
+  public static function exportBusinessOrders( $filteredOrderIds )
+  { 
+    $exporter = new BusinessOrdersExporter();
+    $exporter -> setIds($filteredOrderIds);
+
+    return Excel :: download( $exporter, 'business-orders.xlsx');
   }
 }

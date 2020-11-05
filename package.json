@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "chart.js": "^2.9.3",
-        "firebase": "^7.15.1"
+        "firebase": "^7.15.1",
+        "materialize-css": "^1.0.0-rc.2"
     }
 }

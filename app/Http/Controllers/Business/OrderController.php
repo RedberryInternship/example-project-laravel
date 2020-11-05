@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Business;
 
 use App\Order;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Library\Entities\Helper;
 use App\Library\Interactors\Exporter;
 use App\Library\Interactors\Business\Orders;
 
@@ -26,31 +26,18 @@ class OrderController extends Controller
      * @return View
      */
     public function index()
-    {
-        $user = Auth::user();
-
-        $orders = Order::whereHas('charger_connector_type.charger', function($query) use ($user) {
-            $query -> whereNotNull('chargers.company_id');
-            $query -> where('chargers.company_id', $user -> company_id);
-        })
-        -> finished() 
-        -> with(
-            [
-                'payments',
-                'user_card',
-                'charger_connector_type.charger',
-            ]
-        ) 
-        -> orderBy( 'id', 'DESC' ) 
-        -> paginate( $this -> numbersPerPage );
+    {   
+        $user   = auth() -> user();
+        $orders = Order :: filterBusinessTransactions() -> paginate( $this -> numbersPerPage );
 
         return view('business.orders.index') -> with(
             [
-                'orders'         => $orders,
-                'tabTitle'       => 'ტრანზაქციები',
-                'activeMenuItem' => 'orders',
-                'user'           => $user,
-                'companyName'    => $user -> company -> name,
+                'orders'                 => $orders,
+                'tabTitle'               => 'ტრანზაქციები',
+                'activeMenuItem'         => 'orders',
+                'user'                   => $user,
+                'contractDownloadPath'   => Helper :: url('/business/order-exports', request() -> input()),
+                'companyName'            => $user -> company -> name,
             ]
         );
     }
@@ -62,7 +49,8 @@ class OrderController extends Controller
      */
     public function downloadExcel()
     {
-        return Exporter :: exportBusinessOrders();
+        $filteredOrderIds = Order :: filterBusinessTransactions() -> pluck('id') -> toArray();
+        return Exporter :: exportBusinessOrders( $filteredOrderIds );
     }
 
     /**

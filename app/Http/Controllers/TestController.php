@@ -18,7 +18,6 @@ class TestController extends Controller
   public function __invoke()
   {
     [ $allLang, $isDev ] = [ Helper::allLang(), Helper::isDev() ];
-    
     dd( 'nothingness' );
   }
 

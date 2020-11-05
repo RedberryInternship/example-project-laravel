@@ -1,3 +1,8 @@
+
+@php
+    $paginator -> appends(request() -> input());
+@endphp
+
 @if ($paginator -> lastPage() > 1)
     <ul class="pagination">
         @if ($paginator -> currentPage() != 1)
