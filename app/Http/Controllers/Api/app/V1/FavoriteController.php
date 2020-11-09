@@ -44,17 +44,25 @@ class FavoriteController extends Controller
     		$status = 200;
     	}
 
-    	return response() -> json(['status' => $status], $status);
+    	return response() -> json(
+				[ 
+					'status' => $status
+				], 
+				$status,
+			);
     }
 
     public function getUserFavorites()
     {
-		$user = auth('api') -> user();
+			$user 						= auth('api') -> user();
+			$favoriteChargers = $user -> favorites;
 
-		$favoriteChargers = $user -> favorites;
-
-		Charger::addIsFreeAttributeToCharger($favoriteChargers);
-		
-		return response() -> json(['user_favorite_chargers' => $favoriteChargers]);
+			Charger::addIsFreeAttributes($favoriteChargers);
+			
+			return response() -> json(
+				[
+					'user_favorite_chargers' => $favoriteChargers, 
+				]
+			);
     }
 }
