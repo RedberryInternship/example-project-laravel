@@ -11,7 +11,7 @@ export default async () => {
   const result = await fetch(incomeExpenseService);
   const data = await result.json();
 
-  console.log(data);
+  const headings = ['შემოსავალი ჯარიმის გარეშე', 'ჯარიმის შემოსავალი', 'ხარჯი' ];
 
   incomeExpenseChartObject = new Chart(INCOME_EXPENSE, {
     type: 'bar',
@@ -19,19 +19,20 @@ export default async () => {
       labels: data.month_labels,
       datasets: [
         {
-          label: 'შემოსავალი ჯარიმის გარეშე',
+          label: headings[0],
           backgroundColor: '#FFC107',
           data: data.income_without_penalty,
           stack: 'A',
         },
         {
-          label: 'ჯარიმის შემოსავალი',
+          label: headings[1],
           backgroundColor: '#6a1b9a',
           data: data.penalty,
           stack: 'A',
+          
         },
         {
-          label: 'ხარჯი',
+          label: headings[2],
           backgroundColor: 'crimson',
           data: data.expense,
           stack: 'B',
@@ -56,6 +57,16 @@ export default async () => {
             stacked: true,
           }
         ]
+      },
+
+      tooltips: {
+        callbacks: {
+          label: (item) => { 
+            const { datasetIndex, value } = item;
+            const heading = headings[datasetIndex];
+            return `${heading}: ${value} GEL`;
+           },
+        }
       },
       legend: {
         labels: {

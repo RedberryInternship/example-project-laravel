@@ -21,7 +21,7 @@ class ChargerStatusAnalyser
     return [
       'lvl2' => self :: businessChargerStatuses($lvl2Connectors),
       'fast' => self :: businessChargerStatuses($fastConnectors),
-      'labels' => ['Free', 'Charging', 'Not Working'],
+      'labels' => ['თავისუფალი', 'ამჟამად მუხტავს', 'არ მუშაობს'],
       'statuses' => [ ChargerStatusEnum::ACTIVE, ChargerStatusEnum::CHARGING, ChargerStatusEnum::INACTIVE ],
     ];
   }
