@@ -29,7 +29,7 @@ Route::group(['prefix' => 'app/V1'], function () {
 			Route::post('/delete-user-car', 'User\CarController@destroy'); //todo Vobi, რესტის სტანდართით ეს delete უნდა იყოს
 
 			Route::post('/add-favorite', 'FavoriteController@postAddFavorite');
-			Route::post('/remove-favorite', 'FavoriteController@postRemoveFavotite');
+			Route::post('/remove-favorite', 'FavoriteController@postRemoveFavorite');
 			Route::get('/user-favorites', 'FavoriteController@getUserFavorites');
 			Route::get('/transactions-history', 'User\TransactionController');
 			Route::get('/user-chargers/{quantity?}', 'User\ChargerController');
