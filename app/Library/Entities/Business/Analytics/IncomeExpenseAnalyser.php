@@ -14,28 +14,50 @@ class IncomeExpenseAnalyser
   public static function analyse( $orders ): array
   {
     return [
-      'income'  => self :: countIncome( $orders ),
-      'expense' => self :: countExpense( $orders ),
-      'month_labels' => Helper :: getMonthNames(),
+      'income_without_penalty'  => self :: countIncomeWithoutPenalty( $orders ),
+      'penalty'                 => self :: countPenalty( $orders ),
+      'expense'                 => self :: countExpense( $orders ),
+      'month_labels'            => Helper :: getMonthNames(),
     ];
   }
 
   /**
-   * Count income.
+   * Count income without penalty prices.
    * 
    * @return array
    */
-  private static function countIncome( $orders ): array 
+  private static function countIncomeWithoutPenalty( $orders ): array 
   {
       $freshMonthlyData = Helper :: getFreshMonthlyData();
 
       $orders -> each(function( $order ) use( &$freshMonthlyData ) {
-        $month = $order -> created_at -> month - 1;
+        $month        = $order -> created_at -> month - 1;
+        $chargePrice  = $order -> charge_price ?? 0;
+        
+        $freshMonthlyData[$month] += $chargePrice;
+      });
 
-        $penaltyFee = $order -> penalty_fee ?? 0;
-        $chargePrice = $order -> charge_price ?? 0;
+      array_walk($freshMonthlyData, function( &$el ) {
+        $el = round($el, 2);
+      });
 
-        $freshMonthlyData[$month] += ($penaltyFee + $chargePrice);
+      return $freshMonthlyData;
+  }
+  
+  /**
+   * Count penalty prices.
+   * 
+   * @return array
+   */
+  private static function countPenalty( $orders ): array 
+  {
+      $freshMonthlyData = Helper :: getFreshMonthlyData();
+
+      $orders -> each(function( $order ) use( &$freshMonthlyData ) {
+        $month        = $order -> created_at -> month - 1;
+        $penaltyFee   = $order -> penalty_fee ?? 0;
+
+        $freshMonthlyData[$month] += $penaltyFee;
       });
 
       array_walk($freshMonthlyData, function( &$el ) {
