@@ -27,9 +27,9 @@ class ChargingController extends Controller
   public function start( StartCharging $request )
   {
     $requestModel = new ChargingStarterRequest;
-    //todo Vobi, Style like that is wrong :(, the same style everywhere.
+    
     $requestModel -> setChargerConnectorTypeId( $request -> charger_connector_type_id );
-    $requestModel -> setChargingType( $request -> charging_type             );
+    $requestModel -> setChargingType          ( $request -> charging_type             );
     $requestModel -> setPrice                 ( $request -> price                     );
     $requestModel -> setUserCardId            ( $request -> user_card_id              );
 

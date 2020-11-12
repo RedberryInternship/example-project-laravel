@@ -38,11 +38,11 @@ class Charger extends Model
      * @var array
      */
     protected $casts = [
-      'name' => 'array',
-      'charger_id' => 'int',
-      'public' => 'int',
-      'active' => 'int',
-      'is_paid' => 'int',
+        'charger_id'  => 'int',
+        'name'        => 'array',
+        'public'      => 'int',
+        'active'      => 'int',
+        'is_paid'     => 'int',
     ];
 
     /**
@@ -168,6 +168,27 @@ class Charger extends Model
     }
 
     /**
+     * Determine if penalty is enabled.
+     * 
+     * @return boolean
+     */
+    public function isPenaltyEnabled(): bool
+    {
+        return $this -> penalty_enabled;
+    }
+
+    /**
+     * Determine if charging on this 
+     * charger is paid.
+     * 
+     * @return boolean
+     */
+    public function isPaid(): bool
+    {
+        return $this -> is_paid;
+    }
+
+    /**
      * Add is favorite attribute to
      * chargers collection.
      * 
@@ -282,15 +303,15 @@ class Charger extends Model
        );
     }
 
-    /**
-      * Is the charger free.
-      *
-      * @return bool
-      */
-      public static function isChargerFree($id)
-      {
-          return in_array($id, static::getFreeChargersIds());
-      }
+   /**
+    * Is the charger free.
+    *
+    * @return bool
+    */
+    public static function isChargerFree($id)
+    {
+        return in_array($id, static::getFreeChargersIds());
+    }
     
     public function hasChargingConnector($type, $chargerConnectorTypes)
     {
