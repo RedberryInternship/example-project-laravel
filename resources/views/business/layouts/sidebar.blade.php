@@ -1,7 +1,7 @@
 <aside class="sidenav-main nav-expanded nav-lock nav-collapsible sidenav-dark sidenav-active-rounded">
     <div class="espace-brand-wrapper">
             <a href="{{ url('/business') }}">
-                <img src="/images/business/branding.svg" class="espace-brand">
+                <img src="/images/original-logo.png" class="espace-brand">
             </a>
             <h1>Business Admin</h1>
             <hr>
