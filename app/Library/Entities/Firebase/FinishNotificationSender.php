@@ -22,7 +22,7 @@ class FinishNotificationSender
     $finishedOrder = Order :: where( 'charger_transaction_id', $chargerTransactionId ) -> first();
     $user          = User  :: find( $finishedOrder -> user_id );
 
-    if( $user -> firebase_token ) {
+    if( ! $user -> firebase_token ) {
       Log :: info(
         "User {$user -> id} doesn't have firebase token."
       );

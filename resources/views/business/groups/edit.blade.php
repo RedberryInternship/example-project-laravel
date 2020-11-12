@@ -59,6 +59,11 @@
                         @foreach ($group -> chargers as $charger)
                             <tr>
                                 <td>{{ $charger -> name }}</td>
+                                <td style="text-align: center">
+                                    <a href="{{ url('/business/chargers/' . $charger -> id . '/edit') }}" class="btn waves-effect waves-light btn-small">
+                                        <i class="material-icons">edit</i>
+                                    </a>
+                                </td>
                                 <td style="text-align: center;">
                                     <form action="{{ url('/business/charger-transfer') }}" method="POST">
                                         @csrf
@@ -70,12 +75,6 @@
                                             <i class="material-icons">cancel</i>
                                         </button>
                                     </form>
-                                </td>
-
-                                <td style="text-align: center">
-                                    <a href="{{ url('/business/chargers/' . $charger -> id . '/edit') }}" class="btn waves-effect waves-light btn-small">
-                                        <i class="material-icons">edit</i>
-                                    </a>
                                 </td>
                             </tr>
                         @endforeach
@@ -116,6 +115,11 @@
                                 <tr>
                                     <td>{{ $charger -> name }}</td>
                                     <td style="text-align: center;">
+                                        <a href="{{ url('/business/chargers/' . $charger -> id . '/edit') }}" class="btn waves-effect waves-light btn-small">
+                                            <i class="material-icons">edit</i>
+                                        </a>
+                                    </td>
+                                    <td style="text-align: center;">
                                         <form action="{{ url('/business/charger-transfer') }}" method="POST">
                                             @csrf
                                             <input type="hidden" name="charger-id" value="{{ $charger -> id }}">
@@ -125,11 +129,6 @@
                                                 <i class="material-icons">backup</i>
                                             </button>
                                         </form>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <a href="{{ url('/business/chargers/' . $charger -> id . '/edit') }}" class="btn waves-effect waves-light btn-small">
-                                            <i class="material-icons">edit</i>
-                                        </a>
                                     </td>
                                 </tr>
                             @endif
