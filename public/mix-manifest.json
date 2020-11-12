@@ -1,9 +1,18 @@
 {
-    "/firebase-messaging-sw.js": "/firebase-messaging-sw.js",
-    "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css",
-    "/css/dashboard.css": "/css/dashboard.css",
-    "/css/custom-nova.css": "/css/custom-nova.css",
-    "/js/dashboard.js": "/js/dashboard.js",
-    "/js/firebase.js": "/js/firebase.js"
+    "/js/business/chargers.js": "/js/business/chargers.js",
+    "/js/business/dashboard.js": "/js/business/dashboard.js",
+    "/css/business/dashboard.css": "/css/business/dashboard.css",
+    "/css/business/chargers.css": "/css/business/chargers.css",
+    "/css/business/groups.css": "/css/business/groups.css",
+    "/css/business/transactions.css": "/css/business/transactions.css",
+    "/css/business/login.css": "/css/business/login.css",
+    "/css/business/sidebar.css": "/css/business/sidebar.css",
+    "/css/business/main.css": "/css/business/main.css",
+    "/css/nova/main.css": "/css/nova/main.css",
+    "/js/business/groups-edit.js": "/js/business/groups-edit.js",
+    "/js/business/groups-listing.js": "/js/business/groups-listing.js",
+    "/js/business/groups-set-fast-prices.js": "/js/business/groups-set-fast-prices.js",
+    "/js/business/groups-set-lvl2-prices.js": "/js/business/groups-set-lvl2-prices.js",
+    "/js/business/profile.js": "/js/business/profile.js",
+    "/js/business/transactions.js": "/js/business/transactions.js"
 }

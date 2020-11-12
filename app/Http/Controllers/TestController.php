@@ -9,7 +9,7 @@ use App\Facades\Simulator;
 use App\Traits\Message;
 
 use Redberry\GeorgianCardGateway\Refund;
-use App\Library\Interactors\Exporter;
+use App\Library\Entities\Helper;
 
 class TestController extends Controller 
 {
@@ -17,8 +17,8 @@ class TestController extends Controller
     
   public function __invoke()
   {
-    return Exporter :: exportOrders();
-    dd( "nothingness" );
+    [ $allLang, $isDev ] = [ Helper::allLang(), Helper::isDev() ];
+    dd( 'nothingness' );
   }
 
   public function refundView()

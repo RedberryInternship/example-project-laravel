@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers\Api\app\V1;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+
 use App\Charger;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\ChargerCollection;
+use App\Enums\ChargerStatus as ChargerStatusEnum;
 use App\Http\Resources\Charger as ChargerResource;
 
 class ChargerController extends Controller
@@ -14,45 +16,15 @@ class ChargerController extends Controller
      * @param Request $request
      * @param Charger $charger
      */
-    public function getChargers(Request $request, Charger $charger)
+    public function getChargers()
     {
-        if ($request -> has('free'))
-        {
-            $charger = $charger -> filterByFreeOrNot($request -> get('free'));
-        }
-
-        if ($request -> has('type'))
-        {
-            $charger = $charger -> filterByType($request -> get('type'));
-        }
-
-        if ($request -> has('public'))
-        {
-            $charger = $charger -> filterByPublicOrNot($request -> get('public'));
-        }
-
-        if ($request -> has('businessID'))
-        {
-            $charger = $charger -> filterByBusiness($request -> get('businessID'));
-        }
-
-        if ($request -> has('text'))
-        {
-            $charger = $charger -> filterByText($request -> get('text'));
-        }
-
-        $charger  = $charger -> groupedChargersWithSiblingChargers();
-
-        $chargers = $charger
-                -> OrderBy('id', 'desc')
+        $chargers = Charger :: OrderBy('id', 'desc')
+                -> where('status', '!=', ChargerStatusEnum :: NOT_PRESENT)
                 -> withAllAttributes()
                 -> get();
 
-        Charger::addFilterAttributeToChargers($chargers);
-
         Charger::addChargingPrices($chargers);
-
-        Charger::addIsFreeAttributeToChargers($chargers);
+        Charger::addIsFreeAttributes($chargers);
 
         return new ChargerCollection($chargers);
     }
@@ -69,7 +41,7 @@ class ChargerController extends Controller
             -> withAllAttributes()
             -> find( $charger_id );
 
-        Charger :: addIsFreeAttributeToCharger( $charger );
+        Charger :: addIsFreeAttributes( $charger );
 
         return new ChargerResource( $charger );
     }

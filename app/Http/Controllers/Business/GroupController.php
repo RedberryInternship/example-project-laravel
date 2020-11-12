@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Business;
 
-use App\Group;
-use App\Charger;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Business\Groups\RemoveGroupChargingPrices;
+use App\Http\Requests\Business\Groups\StoreAllChargersIntoGroup;
+use App\Http\Requests\Business\Groups\StoreGroup;
+use App\Library\Interactors\Business\Groups;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Group;
+use App\User;
 
 class GroupController extends Controller
 {
@@ -21,12 +24,13 @@ class GroupController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function index()
     {
-        $user   = Auth::user();
-        $groups = Group::where('user_id', $user -> id)
+        $userId  = auth() -> user() -> id;
+        $user    = User :: find( $userId );
+        $groups  = Group::where('user_id', $user -> id)
                       -> with('chargers')
                       -> orderBy('id', 'DESC')
                       -> get();
@@ -35,67 +39,39 @@ class GroupController extends Controller
             'tabTitle'       => 'დამტენების ჯგუფები',
             'activeMenuItem' => 'groups',
             'groups'         => $groups,
-            'user'           => $user
+            'user'           => $user,
+            'companyName'    => $user -> company -> name,
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return View
      */
-    public function store(Request $request)
+    public function store(StoreGroup $request)
     {
-        $user = Auth::user();
-
-        $request -> merge([
-            'user_id' => $user -> id
-        ]);
-
-        if ($request -> has('name') && $request -> get('name'))
-        {   
-            Group::create($request -> all());
-        }
+        Group::create(
+            [
+                'name' => $request -> name,
+                'user_id' => auth() -> user() -> id,
+            ]
+        );
 
         return redirect() -> back();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function edit(Group $group)
     {
-        $user = Auth::user();
-        
-        if ($group -> user_id != $user -> id)
-        {
-            return redirect() -> back();
-        }
+        $userId = auth() -> user() -> id;
+        $user   = User :: with( 'company.chargers' ) -> find( $userId );
+        $companyChargers = $user -> company -> chargers;
 
         $group -> load([
             'chargers' => function($query) {
@@ -116,31 +92,23 @@ class GroupController extends Controller
             $groupChargerIds[] = $charger -> id;
         }
 
-        return view('business.groups.edit') -> with([
-            'user'            => $user,
-            'group'           => $group,
-            'groupChargerIds' => $groupChargerIds,
-            'activeMenuItem'  => 'groups'
-        ]); 
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        return view('business.groups.edit') -> with(
+            [
+                'user'             => $user,
+                'group'            => $group,
+                'groupChargerIds'  => $groupChargerIds,
+                'activeMenuItem'   => 'groups',
+                'allChargersAreIn' => $companyChargers -> count() === $group -> chargers -> count(),
+                'companyName'      => $user -> company -> name,
+            ]
+        ); 
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  ChargerGroup  $chargerGroup
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Group $group)
     {
@@ -148,6 +116,28 @@ class GroupController extends Controller
         $group -> delete();
 
         return redirect() -> back();
+    }
+
+    /**
+     * Remove group charger charging prices.
+     * 
+     * @return View
+     */
+    public function deleteChargingPrices(RemoveGroupChargingPrices $request) 
+    {
+       Groups :: deleteGroupChargersChargingPrices($request -> group_id);
+    }
+
+    /**
+     * Store all the company chargers 
+     * to group chargers.
+     * 
+     * @param int $groupId
+     * @return void
+     */
+    public static function storeAllChargersToGroup(StoreAllChargersIntoGroup $request)
+    {
+        Groups :: storeAllCompanyChargersIntoGroup($request -> group_id);
     }
 }
 

@@ -10,19 +10,21 @@ use App\Order;
 class TransactionController extends Controller
 {
   /**
-   * Update charging info. what is the 
+   * Update charging info. what is the
    * current kilowatt value.
-   * 
+   *
    * @param  string  $transaction_id
    * @param  int     $value
    * @return void
    */
    public function update( $transaction_id, $value )
   {
+    //todo Vobi, აქ იუზერის გაფილტვრა არის საჭირო, ამ შემთხვეავაში ნებბისმიერ სხვა იუზერს შეუძია სხვისი ტრანქზცია დააბდეითოს.
+    //მხოლოდ თავისი ტრანზაქცია უნდა შეეძლოს რომ დააბდეითოს
     OrdersMiddleware :: check( $transaction_id );
 
-    $order = Order :: with( 'kilowatt' ) 
-      -> where( 'charger_transaction_id', $transaction_id ) 
+    $order = Order :: with( 'kilowatt' )
+      -> where( 'charger_transaction_id', $transaction_id )
       -> first();
 
     if( $order )
@@ -38,10 +40,10 @@ class TransactionController extends Controller
   }
 
   /**
-   * Misha's route for letting us know when 
-   * the charging is completed and 
+   * Misha's route for letting us know when
+   * the charging is completed and
    * the cable is disconnected.
-   * 
+   *
    * @param string $transaction_id
    * @return void
    */

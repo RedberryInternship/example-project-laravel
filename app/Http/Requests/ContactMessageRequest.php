@@ -14,7 +14,7 @@ class ContactMessageRequest extends FormRequest implements ValidatesWhenResolved
 {
     /**
      * Admin Mail Addresses.
-     * 
+     *
      * @return array
      */
     protected function mailAddresses(): array
@@ -48,7 +48,7 @@ class ContactMessageRequest extends FormRequest implements ValidatesWhenResolved
 
     /**
      * Handle Failed Validation.
-     * 
+     *
      * @param Validator $validator
      */
     protected function failedValidation(Validator $validator)
@@ -60,7 +60,7 @@ class ContactMessageRequest extends FormRequest implements ValidatesWhenResolved
 
     /**
      * Store Contact Form Message in DB.
-     * 
+     *
      * @return void
      */
     public function store()
@@ -82,7 +82,8 @@ class ContactMessageRequest extends FormRequest implements ValidatesWhenResolved
         $user     = auth('api') -> user();
 
         $to       = $this -> mailAddresses();
-        $from     = $user && $user -> email && filter_var($user -> email, FILTER_VALIDATE_EMAIL) ? $user -> email : 'unknown@example.com';
+        //todo Vobi, პრამეტრები კარგი იქნება enviroment ცვლადებში თუ გავიტანთ და არ იქნება პირდაპირ კოდში გაჰარკდოებული, მგ: unknown@example.com'
+        $from     = $user && $user -> email && filter_var($user -> email, FILTER_VALIDATE_EMAIL) ? $user -> email : 'unknown@example.com'; //todo Vobi, enviroment
         $fromName = $user ? $user -> first_name . ' ' . $user -> last_name : 'unknown sender';
 
         $content  =
@@ -93,7 +94,7 @@ class ContactMessageRequest extends FormRequest implements ValidatesWhenResolved
             Mail::send([], [], function ($message) use ($to, $from, $content) {
                 $message
                     -> to($to)
-                    -> from($from, 'E-space App')
+                    -> from($from, 'E-space App') //todo Vobi, enviroment
                     -> subject('Contact Form')
                     -> setBody($content, 'text/html; charset=utf-8');
             });

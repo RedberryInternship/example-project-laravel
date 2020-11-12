@@ -4,13 +4,19 @@ namespace App\Http\Controllers\Api\app\V1\User;
 
 use App\Order;
 use App\Charger;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ChargerCollection;
 
 class ChargerController extends Controller
 {
-    public function __invoke(Order $order, Charger $charger, $quantity = 3)
+    /**
+     * Last used chargers.
+     * 
+     * @param Order $order
+     * @param int   $quantity
+     * @return JSON
+     */
+    public function __invoke(Order $order, $quantity = 3)
     {
         $user   = auth('api') -> user();
 
@@ -34,11 +40,11 @@ class ChargerController extends Controller
             }
         }
 
-        Charger::addFilterAttributeToChargers($chargers);
+        Charger::addIsFavoriteAttributes($chargers);
 
         Charger::addChargingPrices($chargers);
 
-        Charger::addIsFreeAttributeToChargers($chargers);
+        Charger::addIsFreeAttributes($chargers);
 
         return new ChargerCollection($chargers);
     }

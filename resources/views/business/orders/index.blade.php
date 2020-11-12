@@ -1,33 +1,96 @@
-@extends('business.master')
+@extends('business.layouts.master')
+
+@section('css')
+    <link rel="stylesheet" href="/css/business/transactions.css" />
+@endsection
+
+@section('js')
+    <script src="/js/business/transactions.js"></script>
+@endsection
 
 @section('body')
 	<div class="row">
 		<div class="col s12">
-			<div class="card card-tabs">
-				<div class="card-content">
-					<div class="row mb-2">
+
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
 						<div class="col s12 flex justify-space-between">
-                            <h4 class="card-title">დატენვები</h4>
+                            <h4 class="card-title">{{ $tabTitle }}</h4>
                             
-                            <a href="{{ url('/business/exports/orders') }}" class="btn waves-effect waves-light green">
+                            <a href="{{ $contractDownloadPath }}" class="btn waves-effect waves-light green">
                                 რეპორტი
                             </a>
-	                    </div>
+                        </div>
                     </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+						<div class="col s12">
+                           <form action="" class="row">
+                                <div class="col s6">
+                                    <div class="input-field">
+                                        <i class="material-icons prefix">search</i>
+                                        <input type="text" name="search" id="search" value="{{ request() -> get( 'search' ) }}" />
+                                        <label for="search">Search</label>
+                                    </div>
+                                    <div class="input-field">
+                                        <select name="charger_type" id="charger_type">
+                                            @php $chargerType = request() -> get('charger_type'); @endphp
+    
+                                            <option value="" disabled selected>დამტენის ტიპი</option>
+                                            <option value="FAST" @if($chargerType === 'FAST') selected @endif >სწრაფი</option>
+                                            <option value="LVL2" @if($chargerType === 'LVL2') selected @endif >მე-2 დონის</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field">
+                                        <input type="text" name="start_date" value="{{ request() -> get('start_date') }}" class="datepicker" id="start_date">
+                                        <label for="start_date">თარიღი (დან)</label>
+                                    </div>
+                                    <div class="input-field">
+                                        <input type="text" value="{{ request() -> get('end_date') }}" name="end_date" class="datepicker" id="end_date">
+                                        <label for="end_date">თარიღი (მდე)</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col s6 flex">
+                                    <div class="input-field">
+                                        <button type="submit" class="btn teal lighten-2 filter-btn">
+                                            <i class="material-icons right">filter_list</i>
+                                            გაფილტვრა
+                                        </button>
+                                    </div>
+                                    <div class="input-field left-2-em filter-btn">
+                                        <a href="{{ route('orders.index') }}" class="btn white grey-text">
+                                            <i class="material-icons">remove</i>
+                                        </a>
+                                    </div>
+                                </div>
+                           </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+			<div class="card card-tabs">
+				<div class="card-content">	
                     <div class="row mb-2">
                         <div class="col s12">
                             @if ($orders -> count())
-                                <table class="responsive-table">
+                                <table>
                                     <thead>
                                         <tr>
                                             <th>ID</th>
+                                            <th>დამტენის კოდი</th>
                                             <th>დამტენი</th>
-                                            <th>მომხმარებელი</th>
-                                            <th>ბარათი</th>
                                             <th>გადახდები</th>
                                             <th>დრო</th>
-                                            <th class="center">დასრულებული</th>
+                                            <th class="center"> - </th>
                                         </tr>
                                     </thead>
 
@@ -35,20 +98,17 @@
                                         @foreach($orders as $order)
                                             <tr>
                                                 <td>{{ $order -> id }}</td>
+                                                <td>{{ $order -> charger_connector_type -> charger -> code }}</td>
                                                 <td>{{ $order -> charger_connector_type -> charger -> location }}</td>
-                                                <td>{{ $order -> user ? $order -> user -> first_name . ' ' . $order -> user -> last_name : '-' }}</td>
-                                                <td>{{ $order -> user_card ? $order -> user_card -> masked_pan : '-' }}</td>
                                                 <td>
                                                     @foreach ($order -> payments as $payment)
                                                         {{ $payment -> type . ': ' . $payment -> price }}
                                                         <br>
                                                     @endforeach
                                                 </td>
-                                                <td>{{ $order -> created_at -> format('d-m-Y H:i') }}</td>
+                                                <td>{{ $order -> created_at }}</td>
                                                 <td class="center">
-                                                    <i class="material-icons dp48" style="{{ $order -> charging_status == 'FINISHED' ? 'color: green' : 'color: red' }}">
-                                                        {{ $order -> charging_status == 'FINISHED' ? 'check' : 'close' }}
-                                                    </i>
+                                                    <i class="material-icons dp48 open-modal-button" data-transaction-id="{{ $order -> id }}">remove_red_eye</i>
                                                 </td>
                                             </tr>
                                         @endforeach

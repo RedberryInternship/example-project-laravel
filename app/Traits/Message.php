@@ -1,9 +1,9 @@
 <?php
 /** cSpell:disable */
 
-
 namespace App\Traits;
 
+use App\Config;
 
 trait Message
 {
@@ -54,4 +54,42 @@ trait Message
       'ka' => 'დამუხტვა წარმატებით დასრულდა!',
     ],
   ];
+
+  /**
+   * Charging complete message.
+   * 
+   * @return string
+   */
+  public function chargingCompleteMessage(): string
+  {
+    $sms      = 'ელექტრომობილის დამუხტვა დასრულებულია / The Charging process is completed';
+    $tempSms  = 'Eleqtromobilis damuxtva dasrulebulia / The Charging process is completed';
+    
+    return $tempSms;
+  }
+
+  /**
+   * On penalty message.
+   * 
+   * @return string
+   */
+  public function onPenaltyMessage(): string
+  {
+    $config = Config :: first();
+
+    $penaltyReliefMinutes = $config -> penalty_relief_minutes;
+    $penaltyPricePerMinute = $config -> penalty_price_per_minute;
+
+    $sms = 'ელექტრომობილის დამუხტვა დასრულებულია. გთხოვთ, ' . $penaltyReliefMinutes . ' წუთის განმავლობაში გამოაერთოთ სადენი, '.
+      'წინააღმდეგ შემთხვევაში დაგერიცხებათ ჯარიმა: 1 წუთი - '. $penaltyPricePerMinute .' ლარი'.
+      ' / The Charging process is completed. Please unplug the cable during ' . 
+      $penaltyReliefMinutes . ' minutes Otherwise, you will be fined: 1 min. - ' . $penaltyPricePerMinute . ' GEL';
+
+    $tempSms = 'Eleqtromobilis dmuxtva dasrulebulia. gtxovt, ' . $penaltyReliefMinutes . ' wutis ganmavlobashi gamoaertot sadeni, '.
+    'winaagmdeg shemtxvevashi dagericxebat jarima: 1 wuti - '. $penaltyPricePerMinute .' lari'.
+    ' / The Charging process is completed. Please unplug the cable during ' . 
+    $penaltyReliefMinutes . ' minutes Otherwise, you will be fined: 1 min. - ' . $penaltyPricePerMinute . ' GEL';
+
+    return $tempSms;
+  }
 }

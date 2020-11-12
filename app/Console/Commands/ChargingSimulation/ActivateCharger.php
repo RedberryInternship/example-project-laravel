@@ -5,6 +5,7 @@ namespace App\Console\Commands\ChargingSimulation;
 use Illuminate\Console\Command;
 use App\Facades\Simulator;
 
+//todo Vobi, please explain that class
 class ActivateCharger extends Command
 {
     /**
@@ -37,15 +38,15 @@ class ActivateCharger extends Command
      * @return mixed
      */
     public function handle()
-    {   
+    {
 
         $charger_id = (int) $this -> ask('Give me charger_id');
-        
-        
+
+
         dump(
             Simulator::activateSimulatorMode($charger_id),
             Simulator::upAndRunning($charger_id),
         );
 
-    }  
+    }
 }

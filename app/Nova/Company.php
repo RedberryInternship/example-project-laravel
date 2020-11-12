@@ -2,12 +2,16 @@
 
 namespace App\Nova;
 
+use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\File;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\HasMany;
 use Spatie\NovaTranslatable\Translatable;
+use App\Enums\ContractMethod as ContractMethodEnum;
 
 class Company extends Resource
 {
@@ -72,6 +76,16 @@ class Company extends Resource
 
             File::make('Contract File')
                 ->disk('public'),
+
+            Select::make('Contract Method') 
+                -> options( ContractMethodEnum :: getConstants() ) 
+                -> rules('required'),
+
+            Number::make('Contract Value') -> step(0.01) -> rules('required'),
+
+            HasMany::make('Users'),
+            
+            HasMany::make('Chargers'),
         ];
     }
 

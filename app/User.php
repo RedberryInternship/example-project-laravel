@@ -2,26 +2,15 @@
 
 namespace App;
 
-use Twilio;
 use App\Facades\SMS;
 use App\Enums\OrderStatus;
-use App\Entities\BusinessIncome;
-use App\Entities\BusinessExpense;
-use App\Entities\BusinessTransactions;
-use App\Entities\BusinessWastedEnergy;
-use App\Entities\BusinessChargerStatuses;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements JWTSubject
-{
+{  
     use Notifiable;
-    use BusinessIncome;
-    use BusinessExpense;
-    use BusinessTransactions;
-    use BusinessWastedEnergy;
-    use BusinessChargerStatuses;
 
     /**
      * The attributes that aren't mass assignable.
@@ -43,6 +32,7 @@ class User extends Authenticatable implements JWTSubject
      * Casting fields to into another type.
      */
     protected $casts = [
+        'deactivated_at'    => 'datetime',
         'email_verified_at' => 'datetime',
     ];
 
@@ -128,7 +118,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function user_cards()
     {
-        return $this -> hasMany('App\UserCard') -> where( 'active', true );
+        return $this -> hasMany(UserCard :: class) -> where( 'active', true );
     }
 
     public function orders()
@@ -195,11 +185,6 @@ class User extends Authenticatable implements JWTSubject
         return $this -> belongsTo('App\Role');
     }
 
-    public function user_chargers()
-    {
-        return $this -> hasMany('App\ChargerUser');
-    }
-
     public function business_services()
     {
         return $this -> hasMany(BusinessService::class);
@@ -230,19 +215,6 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Get Business Active Chargers.
-     */
-    public function businessActiveChargers()
-    {
-        return Charger::where('company_id', $this -> company_id)
-            -> withCount('chargerConnectorTypeOrders')
-        //  -> with('charger_connector_types.orders')
-            -> orderBy('charger_connector_type_orders_count', 'DESC')
-            -> limit(5)
-            -> get();
-    }
-
-    /**
      * Find User By Field Name.
      * 
      * @param $field
@@ -265,5 +237,33 @@ class User extends Authenticatable implements JWTSubject
         }
 
         return $phoneNumber;
+    }
+
+    /**
+     * Deactivate user by deleting every personal info,
+     * that exists in db.
+     * 
+     * @return void
+     */
+    public function deactivate()
+    {
+        $this -> phone_number   = '---';
+        $this -> first_name     = '---';
+        $this -> last_name      = '---';
+        $this -> password       = '---';
+        $this -> email          = '---';
+        $this -> active         = false;
+        $this -> deactivated_at = now();
+        $this -> save();
+
+        UserCard :: where('user_id', $this -> id)
+            -> update(
+                [
+                    'masked_pan'        => '---',
+                    'transaction_id'    => '---',
+                    'card_holder'       => '---',
+                    'prrn'              => '---',
+                ]
+            );
     }
 }

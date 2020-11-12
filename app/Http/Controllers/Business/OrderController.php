@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Business;
 
-use Auth;
 use App\Order;
-use Illuminate\Http\Request;
-
 use App\Http\Controllers\Controller;
+use App\Library\Entities\Helper;
+use App\Library\Interactors\Exporter;
+use App\Library\Interactors\Business\Orders;
 
 class OrderController extends Controller
 {
@@ -23,94 +23,43 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function index()
-    {
-        $user = Auth::user();
+    {   
+        $user   = auth() -> user();
+        $orders = Order :: filterBusinessTransactions() -> paginate( $this -> numbersPerPage );
 
-        $orders = Order::whereHas('charger_connector_type.charger', function($query) use ($user) {
-            $query -> where('chargers.company_id', $user -> company_id);
-        }) -> with([
-            'user',
-            'payments',
-            'user_card',
-            'charger_connector_type.charger'
-        ]) -> orderBy(
-            'id', 'DESC'
-        ) -> paginate($this -> numbersPerPage);
-
-        return view('business.orders.index') -> with([
-            'user'           => $user,
-            'orders'         => $orders,
-            'tabTitle'       => 'დატენვები',
-            'activeMenuItem' => 'orders'
-        ]);
+        return view('business.orders.index') -> with(
+            [
+                'orders'                 => $orders,
+                'tabTitle'               => 'ტრანზაქციები',
+                'activeMenuItem'         => 'orders',
+                'user'                   => $user,
+                'contractDownloadPath'   => Helper :: url('/business/order-exports', request() -> input()),
+                'companyName'            => $user -> company -> name,
+            ]
+        );
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Download business transactions report.
+     * 
+     * @return File
      */
-    public function create()
+    public function downloadExcel()
     {
-        //
+        $filteredOrderIds = Order :: filterBusinessTransactions() -> pluck('id') -> toArray();
+        return Exporter :: exportBusinessOrders( $filteredOrderIds );
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Get specific transaction.
+     * 
+     * @return JSON
      */
-    public function store(Request $request)
+    public function show($id) 
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return Orders :: getInfo($id);
     }
 }

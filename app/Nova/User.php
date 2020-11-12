@@ -6,18 +6,22 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use App\Nova\Filters\User\Role;
+use App\Enums\Role as RoleEnum;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Password;
+use Laravel\Nova\Fields\DateTime;
 use App\Nova\Actions\ExportUsers;
+use App\Nova\Filters\EndDateRange;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\User\UserType;
+use App\Nova\Filters\StartDateRange;
+use App\Nova\Actions\DeleteUserData;
 use Laravel\Nova\Fields\BelongsToMany;
-use App\Library\Entities\Nova\Resource\ActionTrait;
+use App\Nova\Actions\ExportUsersStatistics;
 
 class User extends Resource
 {
-    use ActionTrait;
 
     /**
      * The model the resource corresponds to.
@@ -40,7 +44,7 @@ class User extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'first_name', 'last_name', 'email',
+        'id', 'first_name', 'last_name', 'email', 'phone_number',
     ];
 
     /**
@@ -73,12 +77,11 @@ class User extends Resource
      */
     public function fields(Request $request)
     {
-        return [
+        $isBusinessman = $this -> isUserBusinessman();
+
+        $fields = [
             ID::make()
                 ->sortable(),
-
-            BelongsTo::make('Company')
-                ->nullable(),
 
             BelongsTo::make('Role'),
             
@@ -101,28 +104,46 @@ class User extends Resource
 
             Boolean::make('active')
                 ->trueValue(1)
-                ->falseValue(0),
+                ->falseValue(0)
+                ->readonly(),
 
             Boolean::make('verified')
                 ->trueValue(1)
                 ->falseValue(0)
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->readonly(),
 
-            BelongsToMany::make('User Car Model','car_models', 'App\Nova\CarModel'),
+            DateTime::make('Registered At', 'created_at') -> hideFromIndex(),
 
-            HasMany::make('User Charger', 'user_chargers', 'App\Nova\ChargerUser'),
+            DateTime::make('Deactivated At') -> canSee(function() {
+                return !! $this -> deactivated_at;
+            })->hideFromIndex(),
+
+            BelongsToMany::make('User Car Model','car_models', 'App\Nova\CarModel') -> canSee(function() use($isBusinessman) {
+                return ! $isBusinessman;
+            }),
             
             Password::make('Password')
                 ->onlyOnForms()
                 ->creationRules('required', 'string', 'min:8')
                 ->updateRules('nullable', 'string', 'min:8'),
                 
-            HasMany::make('User Cards'),
+            HasMany::make('User Cards') -> canSee(function() use($isBusinessman) {
+                return ! $isBusinessman;
+            }),
 
-            HasMany::make('Orders'),
+            HasMany::make('Orders') -> canSee(function() use($isBusinessman) {
+                return ! $isBusinessman;
+            }),
+            BelongsTo::make('Company') -> canSee(function() use($isBusinessman) {
+                return $isBusinessman;
+            }) -> hideFromIndex(),
         ];
-    }
 
+
+
+        return $fields;
+    }
     /**
      * Get the cards available for the request.
      *
@@ -143,6 +164,8 @@ class User extends Resource
     public function filters(Request $request)
     {
         return [
+            new StartDateRange,
+            new EndDateRange,
             new Role,
             new UserType,
         ];
@@ -168,7 +191,19 @@ class User extends Resource
     public function actions(Request $request)
     {
         return [
-            $this -> createCustomExportableExcelAction(ExportUsers :: class),
+            new ExportUsers,
+            (new DeleteUserData) -> onlyOnDetail(),
+            (new ExportUsersStatistics) -> onlyOnIndex(),
         ];
+    }
+
+    /**
+     * Determine if user is business.
+     * 
+     * @return boolean
+     */
+    private function isUserBusinessman()
+    {
+        return $this -> role && $this -> role -> name == RoleEnum :: BUSINESS;
     }
 }

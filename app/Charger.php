@@ -12,14 +12,31 @@ class Charger extends Model
 {
     use HasTranslations;
 
+    /**
+     * Attribute that tells the model
+     * which fields should be translatable.
+     * 
+     * @var array
+     */
     public $translatable = [
       'description', 
       'location',
       'name'
     ];
 
+    /**
+     * Laravel guarded attribute
+     * for mass assignment protection.
+     * 
+     * @var array
+     */
     protected $guarded = [];
 
+    /**
+     * Laravel casts attribute.
+     * 
+     * @var array
+     */
     protected $casts = [
       'name' => 'array',
       'charger_id' => 'int',
@@ -28,16 +45,32 @@ class Charger extends Model
       'is_paid' => 'int',
     ];
 
+    /**
+     * Relation to companies.
+     * 
+     * @return Company
+     */
     public function company()
    	{
    		return $this -> belongsTo(Company::class);
    	}
 
+    /**
+     * Relation with tags.
+     * 
+     * @return Collection
+     */
     public function tags()
     {
         return $this -> belongsToMany('App\Tag', 'charger_tags');
     }
 
+    /**
+     * Relation with connector types
+     * with active connector types filtered.
+     * 
+     * @return Collection
+     */
     public function connector_types()
     {
         return $this
@@ -45,6 +78,12 @@ class Charger extends Model
                     -> where('status','active');
     }
 
+    /**
+     * Relation with connector types
+     * without filter.
+     * 
+     * @return Collection
+     */
     public function connector_types_all()
     {
         return $this
@@ -59,9 +98,9 @@ class Charger extends Model
     }
 
     /**
-     * Charger hasMany relationship with ChargerConnectorType.
+     * Relationship with charger connector types.
      * 
-     * @return Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function charger_connector_types()
     {
@@ -69,9 +108,39 @@ class Charger extends Model
     }
 
     /**
+     * Relation with business services.
+     * 
+     * @return Collection
+     */
+    public function business_services()
+    {
+        return $this -> belongsToMany(BusinessService :: class, 'charger_business_services');
+    }
+
+    /**
+     * Relation with groups.
+     * 
+     * @return Collection
+     */
+    public function groups()
+    {
+        return $this -> belongsToMany(Group::class);
+    }
+
+    /**
+     * Relation to whitelist.
+     * 
+     * @return Collection
+     */
+    public function whitelist()
+    {
+        return $this -> hasMany(Whitelist :: class);
+    }
+
+    /**
      * Retrieve charger's orders.
      * 
-     * @return Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function orders()
     {
@@ -82,119 +151,12 @@ class Charger extends Model
         return Order :: whereIn( 'charger_connector_type_id', $chargerConnectorTypeIds ) -> get();
     }
 
-    public function groups()
-    {
-        return $this -> belongsToMany(Group::class);
-    }
-
-    public function scopeFilterBy($query, $param, $value)
-    {
-        if (isset($param) && $param && isset($value) && $value)
-        {
-            if (is_array($value))
-            {
-                if ($value[0])
-                {
-                    $query = $query -> whereIn($param, $value);
-                }
-            }
-            else
-            {
-                $query = $query -> where($param, $value);
-            }
-        }
-
-        return $query;
-    }
-
-    public function business_services()
-    {
-        return $this -> belongsToMany('App\BusinessService', 'charger_business_services');
-    }
- 
-    public function scopeFilterByFreeOrNot($query, $free)
-    {
-        return $query;
-    }
-
-    public function scopeFilterByType($query, $type)
-    {
-        $connectorTypeNames = [];
-        if ($type == 'level2')
-        {
-            $connectorTypeNames = ['Type 2'];
-        }
-        else if ($type == 'fast')
-        {
-            $connectorTypeNames = ['Combo 2', 'CHadeMO'];
-        }
-
-        if (empty($connectorTypeNames))
-        {
-            return $query;
-        }
-
-
-        return $query -> whereHas('connector_types', function($query) use($connectorTypeNames) {
-            return $query -> whereIn('connector_types.name', $connectorTypeNames);
-        });
-    }
-
-    public function scopeFilterByPublicOrNot($query, $public)
-    {
-        return $query -> where('public', $public);
-    }
-
-    public function scopeFilterByBusiness($query, $businessID)
-    {
-        return $query -> where('user_id', $businessID);
-    }
-
-    public function scopeFilterByText($query, $text)
-    {
-        return $query -> where(function($q) use ($text) {
-            return $q
-                -> where('code', 'like', '%' . $text . '%')
-                -> orWhereHas('company', function($cq) use ($text) {
-                    return $cq
-                        -> where('name->en', 'like', '%' . $text . '%')
-                        -> orWhere('name->ka', 'like', '%' . $text . '%')
-                        -> orWhere('name->ru', 'like', '%' . $text . '%');
-                })
-                -> orWhere('name->en', 'like', '%' . $text . '%')
-                -> orWhere('name->ka', 'like', '%' . $text . '%')
-                -> orWhere('name->ru', 'like', '%' . $text . '%')
-                -> orWhere('location->en', 'like', '%' . $text . '%')
-                -> orWhere('location->ka', 'like', '%' . $text . '%')
-                -> orWhere('location->ru', 'like', '%' . $text . '%')
-                -> orWhere('description->en', 'like', '%' . $text . '%')
-                -> orWhere('description->ka', 'like', '%' . $text . '%')
-                -> orWhere('description->ru', 'like', '%' . $text . '%');
-        });
-    }
-
-    public function scopeFilterGroupedChargers($query)
-    {
-        return
-            $query
-                -> has('groups')
-                -> with(['groups' => function($q) {
-                    return $q -> withChargers();
-                }]);
-    }
-
-    public function scopeFilterNotGroupedChargers($query)
-    {
-        return $query -> doesntHave('groups');
-    }
-
-    public function scopeGroupedChargersWithSiblingChargers($query)
-    {
-        return $query -> with(['groups' => function($q) {
-            return $q -> withChargers();
-        }]);
-    }
-
+    /**
+     * Set query relations.
+     * 
+     * @param Builder
+     * @return Builder
+     */
     public function scopeWithAllAttributes($query)
     {
         return $query -> with([
@@ -205,7 +167,14 @@ class Charger extends Model
         ]);
     }
 
-    public static function addFilterAttributeToChargers(&$chargers)
+    /**
+     * Add is favorite attribute to
+     * chargers collection.
+     * 
+     * @param Collection $chargers
+     * @return void
+     */
+    public static function addIsFavoriteAttributes(&$chargers)
     { 
         $user = auth('api') -> user();
 
@@ -226,6 +195,12 @@ class Charger extends Model
         }
     }
 
+    /**
+     * Add charging prices to chargers collection.
+     * 
+     * @param Collection $chargers
+     * @return void
+     */
     public static function addChargingPrices(&$chargers)
     {
         $chargingPrices     = ChargingPrice::all() -> groupBy('charger_connector_type_id');
@@ -250,7 +225,7 @@ class Charger extends Model
         }
     }
 
-    public static function addIsFreeAttributeToChargers(&$chargers)
+    public static function addIsFreeAttributes(&$chargers)
     {
         /**
          * get free_charger_ids from our db.
@@ -335,11 +310,6 @@ class Charger extends Model
         }
 
         return $hasChargingConnector;
-    }
-
-    public function chargerConnectorTypeOrders()
-    {
-        return $this -> hasManyThrough(Order::class, ChargerConnectorType::class);
     }
 
     /**

@@ -1,0 +1,2 @@
+export const deleteAllChargingPricesButton    = () => document.querySelector('.delete-group-prices-btn');
+export const storeAllChargersIntoGroupButton  = () => document.querySelector('.select-all-button');

@@ -3,13 +3,11 @@
 namespace App\Nova;
 
 use App\User;
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Fields\BelongsTo;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 
 class Group extends Resource
@@ -34,6 +32,7 @@ class Group extends Resource
      * @var array
      */
     public static $search = [
+        'id',
         'name',
     ];
 

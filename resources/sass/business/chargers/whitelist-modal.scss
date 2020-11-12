@@ -1,0 +1,114 @@
+.whitelist-modal-bg {
+  background-color: rgba(20, 30, 117, 0.774);
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  display: none;
+}
+
+.whitelist-modal-wrapper {
+  background-color: beige;
+  width: 40%;
+  height: 70%;
+  padding-top: 5em;
+  padding-bottom: 3em;
+  padding-left: 2em;
+  padding-right: 2em;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+}
+
+.add-whitelist-button {
+  top: .5em;
+  font-size: 1em;
+}
+
+.whitelist-modal {
+  overflow-y: auto;
+  max-height: calc(100% - 3rem);
+  border-radius: 10px;
+  margin-top: 1em;
+}
+
+.whitelist-modal li {
+  position: relative;
+}
+
+.whitelist-modal li i.material-icons.phone {
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+}
+
+.whitelist-modal li i.material-icons.remove {
+  top: 50%;
+  transform: translateY(-50%);
+  right: 2em;
+  cursor: pointer;
+  position: absolute;
+  color: #d32f2f;
+}
+
+.whitelist-modal li span.phone-number {
+  display: inline-block;
+  margin-left: 3em;
+}
+
+.whitelist-modal-close-btn {
+  position: absolute;
+  width: 2em;
+  right: 1.8em;
+  top: 1em;
+  cursor: pointer;
+}
+
+.whitelist-input-wrapper {
+  position: relative;
+}
+
+.whitelist-input.mistaken {
+  border-bottom: 1px solid red !important;
+}
+
+.whitelist-input-mistake {
+  font-size: .7em;
+  position: absolute;
+  bottom: -.8em;
+  left: 1.5em;
+  color: red;
+  width: 30em;
+}
+
+.hide {
+  display: none;
+}
+
+.no-phone-numbers {
+  text-align: center;
+  color: #4a148c;
+}
+
+@media (max-width: 1733px) {
+  .whitelist-modal-wrapper {
+    width: 50%;
+  }
+}
+
+@media (max-width: 1382px) {
+  .whitelist-modal-wrapper {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1232px) {
+  .whitelist-modal-wrapper {
+    width: 60%;
+    font-size: 11px;
+  }
+}

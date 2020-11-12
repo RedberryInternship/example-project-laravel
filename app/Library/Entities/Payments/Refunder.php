@@ -37,6 +37,8 @@ class Refunder
     PaymentModel         :: create(
       [
         'user_card_id' => $order -> user_card_id,
+        'user_id'      => $order -> user_id,
+        'company_id'   => $order -> company_id,
         'order_id'     => $order -> id,
         'trx_id'       => null, # @ refund doesn't have trx_id
         'price'        => $amount / 100,

@@ -24,6 +24,8 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "firebase": "^7.15.1"
+        "chart.js": "^2.9.3",
+        "firebase": "^7.15.1",
+        "materialize-css": "^1.0.0-rc.2"
     }
 }

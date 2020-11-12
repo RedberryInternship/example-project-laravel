@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Business;
 
-use Auth;
-use Illuminate\Http\Request;
+use App\Http\Requests\Business\Profile\UpdateInfo;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\User;
 
 class ProfileController extends Controller
 {
@@ -19,115 +21,60 @@ class ProfileController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function index()
     {
-        $user = Auth::user();
+        $userId = auth() -> user() -> id;
+        $user   = User :: with( 'company' ) -> find($userId);
 
-        return view('business.profile.index') -> with([
-            'user'           => $user,
-            'tabTitle'       => 'პროფილი',
-            'activeMenuItem' => 'profile'
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return view('business.profile.index') -> with(
+            [
+                'user'           => $user,
+                'company'        => $user -> company,
+                'companyName'    => $user -> company -> companyName,
+                'tabTitle'       => 'პროფილი',
+                'activeMenuItem' => 'profile',
+                'companyName'    => $user -> company -> name,
+            ]
+        );
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return View
      */
-    public function store(Request $request)
+    public function store(UpdateInfo $request)
     {
-        $user = Auth::user();
+        $userId = auth() -> user() -> id;
+        $user   = User :: find($userId);
 
-        $rules = [
-            'first_name'   => 'required',
-            'phone_number' => 'required',
-            'email'        => 'email|required'
-        ];
-
-        if ($request -> get('password'))
-        {
-            $rules['password'] = 'required|confirmed|min:6';
-        }
-
-        $request -> validate($rules);
-
-        $data = $request -> except([
-            '_token',
-            'password',
-            'password_confirmation'
-        ]);
-
-        if ($request -> get('password'))
-        {
-            $data = $request -> merge([
-                'password' => bcrypt($request -> get('password'))
-            ]) -> except([
-                '_token',
-                'password_confirmation'
-            ]);
-        }
+        $data = [];
+        $request -> has( 'first_name'   ) && $data[ 'first_name'    ]= $request -> get('first_name');
+        $request -> has( 'phone_number' ) && $data[ 'phone_number'  ]= $request -> get('phone_number');
+        $request -> has( 'email'        ) && $data[ 'email'         ]= $request -> get('email');
+        $request -> has( 'password'     ) && $data[ 'password'      ]= bcrypt( $request -> get('password') );
 
         $user -> update($data);
-
         return redirect() -> back();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Download contract file.
+     * 
+     * @return File
      */
-    public function show($id)
+    public static function downloadContractFile()
     {
-        //
-    }
+        $userId           = auth() -> user() -> id;
+        $user             = User :: with( 'company' ) -> find( $userId );
+        $contractFilePath = $user -> company -> contract_file;
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+        $ext = explode('.', $contractFilePath);
+        $ext = end($ext);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return Storage :: disk('public') -> download( $contractFilePath, 'contract.' . $ext );
     }
 }

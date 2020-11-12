@@ -54,8 +54,6 @@ class ChargersParser
    */
   private static function transformRealChargerIntoArray( $realCharger )
   {  
-    $isChargerActive = $realCharger -> status == -1 ? false : true;
-
     return [
       'charger_id'  => (int) $realCharger -> id,
       'code'        => $realCharger -> code,
@@ -65,7 +63,6 @@ class ChargersParser
         'ka' => '---',
         'ru' => '---',
       ],
-      'active'      => $isChargerActive,
       'lat'         => $realCharger -> latitude,
       'lng'         => $realCharger -> longitude,
       'connectors'  => $realCharger -> connectors,

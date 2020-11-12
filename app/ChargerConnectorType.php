@@ -76,4 +76,24 @@ class ChargerConnectorType extends Model
         return $this -> belongsTo( Terminal :: class );
     }
     
+    /**
+     * Add scope for filtering active charger_connector_types.
+     * 
+     * @param Builder $query
+     * @return Builder $query
+     */
+    public function scopeActive( $query ) 
+    {
+        $query -> whereStatus( 'active' );
+    }
+
+    /**
+     * Determine if charger connector type is active.
+     * 
+     * @return boolean
+     */
+    public function isActive(): bool
+    {
+        return $this -> status === 'active';
+    }
 }

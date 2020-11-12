@@ -7,12 +7,12 @@ class AppFormType extends Enum
   /**
    * State that corresponds registering user.
    */
-  const REGISTER      = 'registers';
+  const REGISTER              = 'registers';
 
   /**
    * Charger that is offline. and can't charge car.
    */
-  const PASSWORD_RESET    = 'password_reset'; 
+  const PASSWORD_RESET        = 'password_reset'; 
 
   /**
    * Charger that is online but also

@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use App\Library\Entities\ChargingProcess\Timestamp;
 
 class OrdersExporter implements FromArray, WithHeadings, WithStyles, WithColumnWidths
 {
@@ -43,35 +44,41 @@ class OrdersExporter implements FromArray, WithHeadings, WithStyles, WithColumnW
         return !! $order -> charger_connector_type && $order -> charger_connector_type -> charger;
       })
       -> map( function( $order ) {
-
+        $timestamp = Timestamp :: build($order);
         $charger = $order -> charger_connector_type -> charger;
 
         $id                 = $order -> id;
         $chargerCode        = $charger -> code;
-        $chargerDescription = $charger -> description;
+        $chargerDescription = $charger -> getTranslation('location','ka');
         $chargerType        = $order -> charger_connector_type -> determineChargerType();
         $consumedKilowatts  = $order -> kilowatt ? $order -> kilowatt -> consumed : '0';
         $duration           = $order -> duration;
+        $startTime          = $timestamp -> getStartTimestamp();
+        $endTime            = $timestamp -> getOriginalEndTime();
+        $chargeTime         = $timestamp -> getStopChargingTimestamp() ?? $endTime;
         $fullName           = $order -> user ? $order -> user -> fullName() : '';
         $chargePower        = $order -> charge_power ? $order -> charge_power : '0';
         $chargePrice        = $order -> charge_price;
         $penaltyFee         = $order -> penalty_fee ? $order -> penalty_fee : '0' ;
-        $company            = $charger -> company ? $charger -> company -> name : 'No Owner';
+        $company            = $charger -> company ? $charger -> company -> name : 'No Owner';        
 
-        return [
-          'ID'                      => $id,
-          'დამტენის კოდი'           => $chargerCode,
-          'დამტენის აღწერა'         => $chargerDescription,
-          'დამტენის ტიპი'           => $chargerType,
-          'მოხმარებული კვტ.'        => $consumedKilowatts,
-          'დამუხტვის სიმძლავრე'     => $chargePower,
-          'დამუხტვის ხანგრძლივობა'  => $duration,
-          'მომხმარებელი'            => $fullName,
-        # 'სატარიფო ბადე'           => '',
-        # 'ტარიფი წთ.'              => '',
-          'ტრანზაქციის ღირებულება'  => $chargePrice,
-          'საჯარიმო გადასახადი'     => $penaltyFee,
-          'დამტენის მფლობელი'       => $company,
+        return [ 
+          'ID'                       => $id,
+          'დამტენის კოდი'            => $chargerCode,
+          'დამტენის აღწერა'          => $chargerDescription,
+          'დამტენის ტიპი'            => $chargerType,
+          'მოხმარებული კვტ.'         => $consumedKilowatts,
+          'დამუხტვის სიმძლავრე'      => $chargePower,
+          'დამუხტვის ხანგრძლივობა'   => $duration,
+          'დამუხტვის დაწყების დრო'   => $startTime,
+          'დამუხტვის შეჩერების დრო'  => $chargeTime,
+          'დამუხტვის დასრულების დრო' => $endTime,
+          'მომხმარებელი'             => $fullName,
+        # 'სატარიფო ბადე'            => '',
+        # 'ტარიფი წთ.'               => '',
+          'ტრანზაქციის ღირებულება'   => $chargePrice,
+          'საჯარიმო გადასახადი'      => $penaltyFee,
+          'დამტენის მფლობელი'        => $company,
         ];
       })
       -> toArray();
@@ -87,17 +94,20 @@ class OrdersExporter implements FromArray, WithHeadings, WithStyles, WithColumnW
     return [
       'A' => 7,
       'B' => 15,
-      'C' => 25,
+      'C' => 67,
       'D' => 15,
       'E' => 20,
       'F' => 25,
       'G' => 27,
-      'H' => 23,
+      'H' => 25,
     # 'I' => 18,
     # 'J' => 15,
-      'I' => 25,
-      'J' => 22,
-      'K' => 22,
+      'I' => 27,
+      'J' => 28,
+      'K' => 25,
+      'L' => 25,
+      'M' => 22,
+      'N' => 22,
     ];
   }
 

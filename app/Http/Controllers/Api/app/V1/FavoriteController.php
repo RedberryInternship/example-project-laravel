@@ -6,52 +6,63 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Favorite;
 use App\Charger;
+use App\User;
 
 class FavoriteController extends Controller
 {
     public function postAddFavorite(Request $request)
     {
-    	$charger_id = $request -> charger_id;
-    	$user       = auth('api') -> user();
-    	$user_id 	= $user -> id;
-    	$charger    = Charger::where('id', $charger_id) -> first();
+    	$chargerId 	= $request -> charger_id;
+			$user				= User :: find( auth() -> user -> id );
     	$status     = 400;
-    	$favorite   = Favorite::where([['user_id', $user_id],['charger_id', $charger_id]]) -> first();
+			$favorite   = Favorite :: where( 'user_id', $user -> id )
+				-> where( 'charger_id', $chargerId ) 
+				-> first();
 
     	if (is_null($favorite))
     	{
-    		$user -> favorites() -> attach($charger_id);
+    		$user -> favorites() -> attach($chargerId);
     		$status = 200;
     	}
 
     	return response() -> json(['status' => $status], $status);
     }
 
-    public function postRemoveFavotite(Request $request)
+    public function postRemoveFavorite(Request $request)
     {
-    	$user    	= auth('api') -> user();
-    	$user_id 	= $user -> id;
-    	$charger_id = $request -> charger_id;
-    	$favorite   = Favorite::where([['user_id', $user_id],['charger_id', $charger_id]]) -> first();
-    	$status		= 400;
+    	$user    		= User :: find( auth() -> user() -> id );
+    	$chargerId 	= $request -> charger_id;
+			$favorite   = Favorite :: where( 'user_id', $user -> id ) 
+				-> where( 'charger_id', $chargerId ) 
+				-> first();
+
+    	$status			= 400;
 
     	if ($favorite)
     	{
-    		$user -> favorites() -> detach($charger_id);
+    		$user -> favorites() -> detach($chargerId);
     		$status = 200;
     	}
 
-    	return response() -> json(['status' => $status], $status);
+    	return response() -> json(
+				[ 
+					'status' => $status
+				], 
+				$status,
+			);
     }
 
     public function getUserFavorites()
     {
-		$user = auth('api') -> user();
+			$user 						= auth('api') -> user();
+			$favoriteChargers = $user -> favorites;
 
-		$favoriteChargers = $user -> favorites;
-
-		Charger::addIsFreeAttributeToChargers($favoriteChargers);
-		
-		return response() -> json(['user_favorite_chargers' => $favoriteChargers]);
+			Charger::addIsFreeAttributes($favoriteChargers);
+			
+			return response() -> json(
+				[
+					'user_favorite_chargers' => $favoriteChargers, 
+				]
+			);
     }
 }

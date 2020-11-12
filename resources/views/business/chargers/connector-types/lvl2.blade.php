@@ -11,8 +11,8 @@
                                 @endif
                                 <th>დაწყების დრო</th>
                                 <th>დამთავრების დრო</th>
-                                <th>მინიმალური კილოვატები</th>
-                                <th>მაქსიმალური კილოვატები</th>
+                                <th>მინიმალური სიმძლავრე(კვტ/სთ)</th>
+                                <th>მაქსიმალური სიმძლავრე(კვტ/სთ)</th>
                                 <th>ღირებულება</th>
                                 <th>&nbsp;</th>
                             </tr>
@@ -49,6 +49,12 @@
                             <tr>
                                 <form
                                         action="{{ url(isset($group) ? '/business/group-prices/' . $group -> id : '/business/charging-prices') }}"
+                                        class="set-lvl2-charging-price"
+                                        
+                                        @if(isset($group))
+                                        data-group-name="{{ $group -> name }}"
+                                        @endif
+
                                         method="POST">
                                     @csrf
 
@@ -69,32 +75,40 @@
                                     @endif
                                     <td>
                                         <div class="input-field">
-                                            <label for="start_time">00:00</label>
-                                            <input type="text" id="start_time" name="start_time" required>
+                                            <select name="start_time" required class="browser-default">
+                                                @foreach ($dayTimesRange as $time)
+                                                    <option> {{ $time }} </option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-field">
-                                            <label for="end_time">24:00</label>
-                                            <input type="text" id="end_time" name="end_time" required>
+                                            <select name="end_time" required class="browser-default">
+                                                @foreach ($dayTimesRange as $time)
+                                                    <option @if($time === '24:00') selected @endif>
+                                                        {{ $time }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-field">
                                             <label for="min_kwt">0</label>
-                                            <input type="text" id="min_kwt" name="min_kwt">
+                                            <input type="number" id="min_kwt" name="min_kwt" step="0.01" required>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-field">
                                             <label for="max_kwt">5</label>
-                                            <input type="text" id="max_kwt" name="max_kwt">
+                                            <input type="number" id="max_kwt" name="max_kwt" step="0.01" required>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-field">
                                             <label for="price">1</label>
-                                            <input type="text" id="price" name="price">
+                                            <input type="number" id="price" name="price" step="0.01" >
                                         </div>
                                     </td>
                                     <td class="right">

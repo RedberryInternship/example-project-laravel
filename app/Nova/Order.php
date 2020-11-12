@@ -9,16 +9,16 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
 use App\Nova\Actions\ExportOrders;
+use App\Nova\Filters\EndDateRange;
+use App\Nova\Filters\StartDateRange;
 use App\Nova\Filters\Order\OrderType;
 use App\Nova\Filters\Order\ChargerType;
 use App\Nova\Filters\Order\ChargingType;
 use Titasgailius\SearchRelations\SearchesRelations;
-use App\Library\Entities\Nova\Resource\ActionTrait;
 
 class Order extends Resource
 {
-    use SearchesRelations,
-        ActionTrait;
+    use SearchesRelations;
 
     /**
      * The model the resource corresponds to.
@@ -52,6 +52,7 @@ class Order extends Resource
      */
     public static $search = [
         'id',
+        'charger_transaction_id',
     ];
 
     /**
@@ -98,12 +99,12 @@ class Order extends Resource
             BelongsTo::make('Charger Connector Type')
                 -> displayUsing(function($chargerConnectorType) {
                     return $chargerConnectorType -> charger -> name . ' - ' . $chargerConnectorType -> connector_type -> name;
-                }),
+                }) -> onlyOnDetail(),
 
             Text::make('Charging Status')
                 ->readonly(),
 
-            Text::make('Charger Transaction Id'),
+            Text::make('Charger Transaction Id') -> onlyOnDetail(),
 
             Text::make('Charger Name') -> onlyOnDetail(),
 
@@ -114,6 +115,8 @@ class Order extends Resource
             Text::make('Duration'),
             
             Text::make('Charge Power'),
+
+            Text::make('Consumed Kilowatts'),
 
             Text::make('Address') -> onlyOnDetail(),
 
@@ -145,6 +148,8 @@ class Order extends Resource
     public function filters(Request $request)
     {
         return [
+            new StartDateRange,
+            new EndDateRange,
             new ChargingType,
             new ChargerType,
             new OrderType,
@@ -171,7 +176,7 @@ class Order extends Resource
     public function actions(Request $request)
     {
         return [
-            $this -> createCustomExportableExcelAction(ExportOrders :: class),
+            new ExportOrders,
         ];
     }
 

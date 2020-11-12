@@ -1,10 +1,36 @@
-@extends('business.master')
+@extends('business.layouts.master')
+
+@section('meta')
+	<meta name="charger_id" content="{{ $charger -> id }}">
+	<meta name="hidden" content="{{ $charger -> hidden }}">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+@endsection
+
+@section('css')
+	<link rel="stylesheet" href="{{ asset( 'css/business/chargers.css' ) }}" />
+@endsection
+
+@section('js')
+	<script src="{{ asset('js/business/chargers.js') }}"></script>
+@endsection
 
 @section('body')
+
 	<div class="row">
 		<div class="col s12">
 			<div class="card">
 				<div class="card-content">
+
+					<div class="waves-effect waves-teal btn-flat toggle-charger-visibility">
+						{{ $charger -> hidden ? 'დააბრუნე რუკაზე' : 'დამალე რუკიდან' }}
+					</div>
+
+					@if($charger -> hidden)
+						<div class="btn whitelist-button">ვაითლისთი</div>
+					@endif
+					
+					<hr style="margin-top:1em; margin-bottom: 1em">
+					
 					<table class="striped">
 						<tbody>
 							<tr>
@@ -47,12 +73,10 @@
 
 							<tr>
 								<td>
-									აქტიური
+									სტატუსი
 								</td>
-								<td class="users-view-email">
-									<i class="material-icons dp48" style="{{ $charger -> active ? 'color: green' : 'color: red' }}">
-										{{ $charger -> active ? 'check' : 'close' }}
-									</i>
+								<td>
+									{{ $charger -> status }}
 								</td>
 							</tr>
 						</tbody>
@@ -109,7 +133,7 @@
 
 				      		<div class="row">
 					      		<div class="input-field col s12">
-					      			<select id="charger_business_services" name="charger_business_services[]" class="select2 browser-default" multiple="multiple">
+					      			<select id="charger_business_services" name="charger_business_services" class="select2 browser-default" multiple="multiple">
 					      				@foreach ($businessServices as $businessService)
 					      					<option value="{{ $businessService -> id }}" @if(in_array($businessService -> id, $chargerBusinessServices)) selected @endif>
 					      						{{ $businessService -> getTranslation('title', 'ka') }}
@@ -130,8 +154,6 @@
 			</div>
 		</div>
 	</div>
-
 	@include('business.chargers.connector-types.lvl2')
-
 	@include('business.chargers.connector-types.fast')
 @endsection

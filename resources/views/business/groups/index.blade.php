@@ -1,4 +1,12 @@
-@extends('business.master')
+@extends('business.layouts.master')
+
+@section('css')
+<link rel="stylesheet" href="/css/business/groups.css" />
+@endsection
+
+@section('js')
+    <script src="/js/business/groups-listing.js"></script>
+@endsection
 
 @section('body')
 	<div class="row">
@@ -26,6 +34,15 @@
                                 </button>
                             </div>
                         </form>
+
+                        @error('name')
+                            <div class="card col s3 warning-alert" style="padding: 0 0rem">
+                                <div class="card-content red white-text">
+                                    ამ სახელით უკვე არსებობს ჯგუფი! 
+                                    <i class="material-icons right">add_alert</i>
+                                </div>
+                            </div>
+                        @enderror
                     </div>
 
                     @if ($groups -> count())
@@ -55,7 +72,7 @@
                                                         </a>
                                                     </td>
                                                     <td class="center">
-                                                        <form action="{{ url('/business/groups/' . $group -> id) }}" method="POST">
+                                                        <form action="{{ url('/business/groups/' . $group -> id) }}" method="POST" class="removable-groups" data-group-name="{{ $group -> name }}">
                                                             @csrf
                                                             <input type="hidden" name="_method" value="delete">
 

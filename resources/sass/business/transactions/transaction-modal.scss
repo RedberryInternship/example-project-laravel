@@ -1,0 +1,57 @@
+.transaction-modal-bg {
+  background-color: rgba(20, 30, 117, 0.774);
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+}
+
+.transaction-modal-wrapper {
+  background-color: beige;
+  width: 40%;
+  height: 70%;
+  padding-top: 4em;
+  padding-bottom: 3em;
+  padding-left: 3em;
+  padding-right: 2em;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+}
+
+.transaction-modal {
+  overflow-y: auto;
+  max-height: calc(100% - 3rem);
+  border-radius: 10px;
+}
+
+.transaction-modal-close-btn {
+  position: absolute;
+  width: 2em;
+  right: 1.8em;
+  top: 1em;
+  cursor: pointer;
+}
+
+@media (max-width: 1733px) {
+  .transaction-modal-wrapper {
+    width: 50%;
+  }
+}
+
+@media (max-width: 1382px) {
+  .transaction-modal-wrapper {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1232px) {
+  .transaction-modal-wrapper {
+    width: 60%;
+    font-size: 11px;
+  }
+}

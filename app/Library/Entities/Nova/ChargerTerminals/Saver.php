@@ -6,11 +6,12 @@ use App\Library\DataStructures\ChargerTerminals as ChargerTerminalsRequest;
 
 use App\ChargerConnectorType;
 
+//todo Vobi,  დეტალურად ავღწეროთ თუ რისთვის დატომ გამოიყენებ ეს კლასი.
 class Saver
 {
   /**
    * Save terminal id and report on charger.
-   * 
+   *
    * @param  ChargerTerminalsRequest $request
    * @return JSON
    */
@@ -19,7 +20,7 @@ class Saver
     $terminalId = $request -> getTerminalId();
     $chargerId  = $request -> getChargerId();
     $report     = $request -> getReport();
-    
+
     $dataToUpdate = [];
     $report     && $dataToUpdate[ 'report'       ] = $report;
     $terminalId && $dataToUpdate[ 'terminal_id'  ] = $terminalId;

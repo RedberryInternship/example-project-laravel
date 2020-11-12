@@ -6,8 +6,9 @@
 |--------------------------------------------------------------------------
 */
 
+
 use Illuminate\Support\Facades\Route;
-use App\Helpers\App;
+use App\Library\Entities\Helper;
 
 Route::get('/', function () {
     return redirect('http://e-space.ge');
@@ -21,23 +22,31 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     Route::post('/charger-transfer', 'ChargerTransferController');
 
     Route::resource('/orders', 'OrderController');
+    Route::get('/orders/{id}', 'OrderController@show');
+    Route::get('/order-exports', 'OrderController@downloadExcel');
+    Route::get('/profile/download-contract', 'ProfileController@downloadContractFile');
     Route::resource('/profile', 'ProfileController');
     Route::resource('/chargers', 'ChargerController');
+    Route::post('/filter-chargers', 'ChargerController@getFilteredChargers');
     Route::resource('/groups', 'GroupController');
+    Route::delete('/groups/charging-prices/delete', 'GroupController@deleteChargingPrices');
+    Route::post('/groups/store/all', 'GroupController@storeAllChargersToGroup');
     Route::resource('/group-prices', 'GroupPriceController');
     Route::resource('/group-fast-prices', 'GroupFastPriceController');
     Route::resource('/charging-prices', 'ChargingPricesController');
     Route::resource('/fast-charging-prices', 'FastChargingPricesController');
 
-    Route::group(['prefix' => 'analytics', 'namespace' => 'Analytics'], function() {
-        Route::get('/income', 'IncomeController');
-        Route::get('/transactions', 'TransactionsController');
-        Route::get('/active-chargers', 'ActiveChargersController');
-        Route::get('/charger-statuses', 'ChargerStatusesController');
-    });
+    /** Whitelist api */
+    Route::post('/chargers/toggle-visibility', 'WhitelistController@toggleHiddenField');
+    Route::get('/chargers/{charger_id}/whitelist', 'WhitelistController@getWhitelist');
+    Route::post('/chargers/add/whitelist', 'WhitelistController@addToWhitelist');
+    Route::post('/chargers/remove-from/whitelist', 'WhitelistController@removeFromWhitelist');
 
-    Route::group(['prefix' => 'exports', 'namespace' => 'Exports'], function() {
-        Route::get('/orders', 'OrderController');
+    Route::group(['prefix' => 'analytics'], function() {
+        Route::get('/income', 'AnalyticsController@incomeAndExpense');
+        Route::get('/transactions', 'AnalyticsController@businessTransactionsAndWastedEnergy');
+        Route::get('/top-chargers', 'AnalyticsController@topChargers');
+        Route::get('/charger-statuses', 'AnalyticsController@businessChargerStatuses');
     });
 });
 
@@ -47,18 +56,16 @@ Route::group(['namespace' => 'Api\ChargerTransactions\V1', 'prefix' => 'chargers
 });
 
 Route::post('refund', 'TestController@doRefund') -> name('refund');
+Route::get('refund', 'TestController@refundView');
 
 /**
  * Testing routes for development purposes
  */
- if( App :: dev() )
+ if( Helper :: isDev() )
  {
     Route::get('test'   , 'TestController');
     Route::get('/disconnect' , 'TestController@disconnect');
     Route::post('/disconnect', 'TestController@disconnect');
-    
+
     Route::get('/test-twilio', 'Api\app\V1\UserController@testTwilio');
-            
-    Route::get('firebase', 'TestController@firebase');
-    Route::get('refund', 'TestController@refundView');
  }

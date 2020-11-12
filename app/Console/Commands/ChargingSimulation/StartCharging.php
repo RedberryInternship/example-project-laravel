@@ -5,6 +5,7 @@ namespace App\Console\Commands\ChargingSimulation;
 use Illuminate\Console\Command;
 use App\Facades\Charger;
 
+//todo Vobi, please explain that class, Why use it?
 class StartCharging extends Command
 {
     /**
@@ -38,10 +39,10 @@ class StartCharging extends Command
      */
     public function handle()
     {
-        
+
         $charger_id = (int) $this -> ask('Give me charger_id');
         $connector_id = (int) $this -> ask('Give me connector_id');
-                
+
         dump(Charger::start($charger_id, $connector_id));
 
     }

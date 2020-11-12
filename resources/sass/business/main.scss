@@ -1,0 +1,40 @@
+
+h1, h2, h3, h4, h5, h6, span, p {
+  letter-spacing: 1px;
+}
+
+.espace-brand-wrapper {
+  background-color: #0a102d31;
+  padding: 2em 1em 1em 1em;
+  text-align: center;
+  box-shadow: -1px 3px 6px 1px #262b4b;
+  
+  h1 {
+    font-size: 1.5em;
+    color: whitesmoke;
+    margin: .5em 0 0 0;
+
+    &.business-title {
+      font-size: 1.2em;
+      letter-spacing: .5px;
+    }
+    .business-icon {
+      top: .2em;
+      font-size: 1.2em;
+      position: relative;
+    }
+  }
+  
+  .espace-brand {
+    width: 11em;
+    display: inline-block;
+  }
+
+  @media(max-width: 993px) {
+    display: none;
+  }
+}
+
+.sidenav {
+  padding-top: 6em;
+}

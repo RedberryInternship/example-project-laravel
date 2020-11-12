@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Business;
 
-use Auth;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     /**
-     * BusinessController Constructor. 
+     * BusinessController Constructor.
      */
     public function __construct()
     {
@@ -21,7 +21,7 @@ class AuthController extends Controller
 
     /**
      * Login Page.
-     * 
+     *
      * @return view
      */
     public function login()
@@ -35,9 +35,9 @@ class AuthController extends Controller
 
     /**
      * Authenticate Business User.
-     * 
+     *
      * @param Request $request
-     * 
+     *
      * @return redirect
      */
     public function auth(Request $request)
@@ -49,7 +49,7 @@ class AuthController extends Controller
 
         $email    = $request -> get('email');
         $password = $request -> get('password');
-        
+
         $user     = User::where('email', $email) -> first();
 
         if ($user && Hash::check($password, $user -> password))
@@ -59,12 +59,12 @@ class AuthController extends Controller
             return redirect('/business');
         }
 
-        return redirect() -> back() -> withInput();
+        return redirect() -> back() -> withErrors(true) -> withInput();
     }
 
     /**
      * Logout Business User from Admin Panel.
-     * 
+     *
      * @return redirect
      */
     public function logout()
