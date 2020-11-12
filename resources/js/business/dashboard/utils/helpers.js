@@ -60,8 +60,11 @@ const updateIncomeExpenseChart = async () => {
   const result = await fetch(incomeExpenseService + `?year=${year}`)
   const data = await result.json()
 
-  incomeExpenseChartObject.data.datasets[0].data = data.income;
-  incomeExpenseChartObject.data.datasets[1].data = data.expense;
+  console.log(incomeExpenseChartObject);
+
+  incomeExpenseChartObject.data.datasets[0].data = data.income_without_penalty;
+  incomeExpenseChartObject.data.datasets[1].data = data.penalty;
+  incomeExpenseChartObject.data.datasets[2].data = data.expense;
   incomeExpenseChartObject.update();
 }
 

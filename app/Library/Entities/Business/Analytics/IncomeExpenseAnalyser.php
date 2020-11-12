@@ -79,7 +79,7 @@ class IncomeExpenseAnalyser
       $orders -> each(function( $order ) use( &$freshMonthlyData ) {
         $month = $order -> created_at -> month - 1;
 
-        $expense = $order -> consumed_kilowatts * 0.18;
+        $expense = $order -> consumed_kilowatts * 0.1625;
         $freshMonthlyData[$month] += $expense;
       });
 

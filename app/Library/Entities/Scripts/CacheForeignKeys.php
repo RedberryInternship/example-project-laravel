@@ -5,7 +5,6 @@ namespace App\Library\Entities\Scripts;
 use App\Order;
 use App\Payment;
 
-//todo Vobi,  ეს Scripts ფოდლერი ნამვილად Entities ფოლდერში უნდა იყოს?
 class CacheForeignKeys {
   /**
    * Cache orders foreign keys and
