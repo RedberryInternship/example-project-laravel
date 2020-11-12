@@ -95,6 +95,10 @@ class Charger extends Resource
                 ->trueValue(1)
                 ->falseValue(0),
             
+            Boolean::make('Is Penalty Enabled', 'penalty_enabled')
+                ->trueValue(1)
+                ->falseValue(0),
+            
             Text::make('Status') -> readonly(),
 
             Text::make('Lat'),
