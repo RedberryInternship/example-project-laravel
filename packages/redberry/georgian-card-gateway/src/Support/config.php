@@ -1,5 +1,5 @@
 <?php
-//todo Vobi, ეს რა სტილზე არის გასწორებული ??? :))
+
 return [
 	'merchant_id' 		=> env( 'MERCHANT_ID'		 	, ''	),
 	'page_id' 				=> env( 'PAGE_ID'		 		 	, ''	),

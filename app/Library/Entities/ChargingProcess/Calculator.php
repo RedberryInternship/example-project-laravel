@@ -9,6 +9,7 @@ use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 
 use App\Library\Entities\ChargingProcess\Timestamp;
+use App\Library\Entities\Helper;
 
 /**
  * Depends on:
@@ -250,7 +251,7 @@ trait Calculator
     }
     
     $elapsedMinutes         = $penaltyTimestamp -> diffInMinutes( $finishedTimestamp );
-    $penaltyPricePerMinute  = $this -> getPenaltyPricePerMinute();
+    $penaltyPricePerMinute  = Helper :: getPenaltyPricePerMinute();
             
     return ( $elapsedMinutes + 1 ) * $penaltyPricePerMinute;    
   }

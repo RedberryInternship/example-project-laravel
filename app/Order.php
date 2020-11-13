@@ -4,21 +4,31 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Carbon\Carbon;
 use App\Traits\Message;
+use App\Payment as PaymentModel;
 use App\Library\Entities\Helper;
+use App\Library\Interactors\Payment;
+use App\Facades\Charger as RealCharger;
+use App\Enums\PaymentType as PaymentTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
-use App\Library\Entities\Order as OrderEntity;
+use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Library\Entities\ChargingProcess\Hook;
 use App\Library\Entities\ChargingProcess\State;
 use App\Library\Entities\ChargingProcess\Calculator;
-use Carbon\Carbon;
 
 class Order extends Model
 {
     use State;
     use Message;
     use Calculator;
-    use OrderEntity;
+
+    /*************************************************
+     * 
+     * ===!> Orders model attribute definitions <!=== 
+     * 
+     ************************************************
+     */
 
     /**
      * Laravel guarded attribute.
@@ -36,6 +46,13 @@ class Order extends Model
         'charging_status_change_dates' => 'array',
     ];
 
+    /************************************** 
+     * 
+     * ===!> Laravel model hooks <!=== 
+     * 
+     **************************************
+     */
+
     /**
      * override model boot in order to add hooks.
      * 
@@ -48,6 +65,14 @@ class Order extends Model
         static :: creating([ Hook :: class, 'setChargingStatusInitialDates'     ]);
         static :: updating([ Hook :: class, 'updateChargingStatusChangeDates'   ]);
     }
+
+
+    /******************************************
+     * 
+     * ===!> Laravel model Relationships <!=== 
+     * 
+     ******************************************
+     */
 
     /**
      * Order belongsTo relationship with User.
@@ -66,7 +91,7 @@ class Order extends Model
      */
     public function payments()
     {
-        return $this -> hasMany( Payment :: class );
+        return $this -> hasMany( PaymentModel :: class );
     }
 
     /**
@@ -98,6 +123,13 @@ class Order extends Model
     {
         return $this -> hasOne( Kilowatt :: class );
     }
+
+    /********************************************* 
+     * 
+     * ===!> Orders model query scopes <!=== 
+     * 
+     *********************************************
+     */
 
     /**
      * Get orders with confirmed payments.
@@ -293,6 +325,157 @@ class Order extends Model
             -> orderBy( 'id', 'DESC' );
     }
 
+    /********************************************* 
+     * 
+     * ===!> Orders model helper methods <!=== 
+     * 
+     *********************************************
+     */
+
+    /**
+     * Lock payments.
+     * 
+     * @return void
+     */
+    public function lockPayments()
+    {
+        $this -> lock_payments = true;
+        $this -> save();
+    }
+
+    /**
+     * Unlock payments.
+     * 
+     * @return void
+     */
+    public function unlockPayments()
+    {
+        $this -> lock_payments = false;
+        $this -> save();
+    }
+
+    /**
+     * Determine if payments are locked.
+     * 
+     * @return bool
+     */
+    private function isPaymentLocked()
+    {
+        return $this -> lock_payments;
+    }
+
+    /**
+     * Lock payments if necessary.
+     * 
+     * @param  string $paymentType
+     * @return void
+     */
+    private function lockPaymentsIfNecessary( $paymentType )
+    {
+        if( $paymentType != PaymentTypeEnum :: REFUND )
+        {
+            $this -> lockPayments();
+        }
+    }
+
+    /**
+     * Determine if transaction should be continued.
+     * 
+     * @return bool
+     */
+    private function shouldContinueTransaction( $paymentType ): bool
+    {
+        return $this -> isPaymentLocked() && $paymentType != PaymentTypeEnum :: REFUND;
+    }
+
+    /**
+     * Set finished timestamp.
+     * 
+     * @return void
+     */
+    public function updateFinishedTimestamp(): void
+    {
+        $this -> update(
+            [
+                'real_end_date' => $this -> getRealFinishedTimestamp(),
+            ]
+        );
+    }
+
+    /**
+     * Get charging finished timestamp.
+     * 
+     * @return string|null
+     */
+    private function getRealFinishedTimestamp()
+    {
+        return RealCharger :: transactionInfo( $this -> charger_transaction_id ) -> transStop / 1000;
+    }
+
+    /**
+     * Get charging power.
+     * 
+     * @return float
+     */
+    public function getChargingPower()
+    {
+        $chargerInfo   = RealCharger :: transactionInfo( $this -> charger_transaction_id );
+
+        # GLITCH
+        if(Helper :: isDev() && $chargerInfo -> chargePointCode != "0110")
+        {
+            return $chargerInfo -> kiloWattHour / 1000;
+        }
+
+        return $chargerInfo -> kiloWattHour;
+    }
+
+    /**
+     * Update kilowatt charging power.
+     * 
+     * @return void
+     */
+    public function updateChargingPowerIfNotUpdated()
+    {
+        if( ! $this -> kilowatt -> charging_power )
+        {
+            $chargingPower  = $this -> getChargingPower();
+            $this -> kilowatt -> setChargingPower( $chargingPower );
+        }
+    }
+
+    /**
+     * Determine if charging type is BY_AMOUNT.
+     * 
+     * @return bool
+     */
+    public function isByAmount(): bool
+    {
+        return $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT;
+    }
+
+    /**
+     * Determine if order is active
+     * and the status is initiated.
+     * 
+     * @return bool
+     */
+    public function isInitiated(): bool
+    {
+        return $this -> charging_status == OrderStatusEnum :: INITIATED;
+    }
+
+    /**
+     * Determine if order is active
+     * and the status is charging.
+     * 
+     * @return bool
+     */
+    public function isCharging(): bool
+    {
+        return $this -> charging_status == OrderStatusEnum :: CHARGING;
+    }
+
     /**
      * Update order charging status.
      * 
@@ -311,6 +494,34 @@ class Order extends Model
         else if( $chargingStatus == OrderStatusEnum :: FINISHED )
         {
             User :: sendSms($this -> user -> phone_number, $this -> chargingCompleteMessage());
+        }
+    }
+
+    /**
+     * Make transaction.
+     * 
+     * @param string  $paymentType
+     * @param float   $amount
+     */
+    public function pay( $paymentType, $amount )
+    {
+        if(! Helper :: isDev())
+        {
+            $amount = $amount * 100;
+        }
+
+        if( $this -> shouldContinueTransaction( $paymentType ) )
+        {
+            return;
+        }
+
+        $this -> lockPaymentsIfNecessary( $paymentType );
+
+        switch( $paymentType )
+        {
+            case PaymentTypeEnum :: REFUND  : return Payment :: refund ( $this, $amount );
+            case PaymentTypeEnum :: FINE    : return Payment :: charge ( $this, $amount );
+            case PaymentTypeEnum :: CUT     : return Payment :: cut    ( $this, $amount );
         }
     }
 }

@@ -135,7 +135,7 @@ trait State
    * @param string|null
    * @return bool
    */
-  public function canGoToFinishStatus( $chargingStatus )
+  public function canGoToFinishStatus()
   {
     $finishableStatuses = [
       OrderStatusEnum :: INITIATED ,
@@ -146,7 +146,7 @@ trait State
       OrderStatusEnum :: ON_HOLD   ,
     ];
 
-    return in_array( $chargingStatus, $finishableStatuses );
+    return in_array( $this -> charging_status, $finishableStatuses );
   }
 
    /**

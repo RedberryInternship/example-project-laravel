@@ -3,40 +3,27 @@
 namespace App\Http\Controllers\Api\ChargerTransactions\V1;
 
 use App\Library\Interactors\OrdersMiddleware;
+use App\Library\Interactors\ChargingFinisher;
+use App\Library\Interactors\ChargingUpdater;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use App\Order;
 
 class TransactionController extends Controller
 {
+  # TODO Middleware for RealChargersBackEnd
+
   /**
    * Update charging info. what is the
    * current kilowatt value.
    *
-   * @param  string  $transaction_id
+   * @param  string  $transactionId
    * @param  int     $value
    * @return void
    */
-   public function update( $transaction_id, $value )
+   public function update( $transactionId, $value )
   {
-    //todo Vobi, აქ იუზერის გაფილტვრა არის საჭირო, ამ შემთხვეავაში ნებბისმიერ სხვა იუზერს შეუძია სხვისი ტრანქზცია დააბდეითოს.
-    //მხოლოდ თავისი ტრანზაქცია უნდა შეეძლოს რომ დააბდეითოს
-    OrdersMiddleware :: check( $transaction_id );
-
-    $order = Order :: with( 'kilowatt' )
-      -> where( 'charger_transaction_id', $transaction_id )
-      -> first();
-
-    if( $order )
-    {
-      Log :: channel( 'feedback-update' ) -> info( 'Update Happened | Transaction ID - ' . $transaction_id . ' | Value - ' . $value );
-      $order -> kilowatt -> updateConsumedKilowatts( $value );
-      $order -> chargingUpdate();
-    }
-    else
-    {
-      Log :: channel( 'feedback-update' ) -> info( 'Nothing To Update |'. $transaction_id );
-    }
+    ChargingUpdater :: update( $transactionId, $value );
   }
 
   /**
@@ -44,22 +31,11 @@ class TransactionController extends Controller
    * the charging is completed and
    * the cable is disconnected.
    *
-   * @param string $transaction_id
+   * @param string $transactionId
    * @return void
    */
-  public function finish( $transaction_id )
+  public function finish( $transactionId )
   {
-    $order = Order :: where( 'charger_transaction_id', $transaction_id ) -> first();
-
-    if( $order )
-    {
-      $order -> finish();
-
-      Log :: channel( 'feedback-finish' ) -> info( 'FINISHED - Transaction ID - ' . $transaction_id );
-    }
-    else
-    {
-      Log :: channel( 'feedback-finish' ) -> info( 'Nothing To Finish - Transaction ID - ' . $transaction_id );
-    }
+    ChargingFinisher :: finish( $transactionId );
   }
 }
