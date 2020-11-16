@@ -64,7 +64,7 @@ trait State
    * @param   float $kiloWattHour
    * @return  bool
    */
-  private function chargingHasStarted()
+  public function chargingHasStarted()
   {
       $chargingPower    = $this  -> getChargingPower();
       $kiloWattHourLine = $this  -> kiloWattHourLine;
@@ -155,7 +155,7 @@ trait State
    * 
    * @return bool
    */
-  private function shouldPay()
+  public function shouldPay()
   {
       $paidMoney      = $this -> countPaidMoney();
       $consumedMoney  = $this -> countConsumedMoney();
@@ -169,7 +169,7 @@ trait State
    * 
    * @return bool
    */
-  private function shouldRefund()
+  public function shouldRefund()
   {
       $paidMoney      = $this -> countPaidMoney();
       $consumedMoney  = $this -> countConsumedMoney();
