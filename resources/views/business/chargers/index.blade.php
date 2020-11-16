@@ -7,16 +7,16 @@
 				<div class="card-content">
 					<div class="row mb-2">
 						<div class="col s12">
-	                        <h4 class="card-title">დამტენები</h4>
+	                        <h4 class="card-title bpg-arial">დამტენები</h4>
 	                    </div>
                     </div>
 
                     <div class="row">
                         <div class="col s12">
                             @if ($chargers -> count())
-                                <table class="responsive-table">
+                                <table class="responsive-table bpg-arial">
                                     <thead>
-                                        <tr>
+                                        <tr style="color: black">
                                             <th>სახელი</th>
                                             <th>კოდი</th>
                                             <th class="center">საჯარო</th>

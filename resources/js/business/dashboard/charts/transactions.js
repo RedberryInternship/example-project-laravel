@@ -74,9 +74,11 @@ export default async () => {
           legend: {
             labels: {
               fontSize: 14,
+              // fontFamily: 'pbg-arial'
             }
           }
         }
       });
+      console.log(transactionsChartObject)
 }
 

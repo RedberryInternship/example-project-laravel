@@ -76,16 +76,13 @@ input {
     top: 0.5em;
   }
 }
-
 @media (max-height: 650px) {
   .login-title {
     top: 0em;
   }
 }
-
 @media (max-height: 600px) {
   .login-title {
     display: none;
   }
 }
-

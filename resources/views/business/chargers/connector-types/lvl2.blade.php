@@ -3,9 +3,9 @@
         <div class="col s12">
             <div class="card">
                 <div class="card-content">
-                    <table class="striped">
+                    <table class="striped bpg-arial">
                         <thead>
-                            <tr>
+                            <tr style="color: black">
                                 @if (isset($chargerConnectorTypes))
                                     <th>კონექტორის ტიპი</th>
                                 @endif

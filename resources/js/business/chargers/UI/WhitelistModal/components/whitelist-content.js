@@ -22,7 +22,7 @@ export default () => {
 const item = ({ id, phone }) => `
 <li class="collection-item">
  <i class="material-icons phone">contact_phone</i>
- <span class="phone-number">${phone}</span>
+ <span class="phone-number bpg-arial">${phone}</span>
  <i class="material-icons remove text-red remove-phone-${id}">remove_circle</i>
  </li>
 `;

@@ -11,7 +11,7 @@ export const phoneCodesSelect = () => {
   
   return `
   <div class="col s2">
-    <select name="country-code" class="whitelist-modal-select" style="display: block !important">
+    <select name="country-code" class="whitelist-modal-select bpg-arial" style="display: block !important">
       ${options}
     </select>
   </div>
@@ -36,7 +36,7 @@ const selectOptions = () => {
       const isGeorgianCode = el == '+995';
 
       return `
-        <option value="${el}" ${isGeorgianCode && 'selected'}>${el}</option>
+        <option class="bpg-arial" value="${el}" ${isGeorgianCode && 'selected'}>${el}</option>
       `;
     })
     .join(' ');

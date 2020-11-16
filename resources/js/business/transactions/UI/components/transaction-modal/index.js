@@ -25,7 +25,7 @@ export default (data) => {
   const formattedEndTime = new Date(end_time).toGMTString();
   
   return `
-  <div class="transaction-modal-bg">
+  <div class="transaction-modal-bg bpg-arial">
     <div class="transaction-modal-wrapper">
       <img class="transaction-modal-close-btn" src="/images/simulator/close.png" />
       
