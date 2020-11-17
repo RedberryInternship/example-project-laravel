@@ -46,7 +46,7 @@ class MakeLastPayments
   {
       if( ! $order -> isChargingFree() )
       {
-          $order -> cutOrRefund();
+          self :: cutOrRefund( $order );
       }
 
       if( $order -> isOnPenalty() )

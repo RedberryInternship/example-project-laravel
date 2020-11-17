@@ -12,16 +12,15 @@ use App\Library\Interactors\Payment;
 use App\Facades\Charger as RealCharger;
 use App\Enums\PaymentType as PaymentTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
+use App\Enums\ChargerType as ChargerTypeEnum;
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Library\Entities\ChargingProcess\Hook;
-use App\Library\Entities\ChargingProcess\State;
-use App\Library\Entities\ChargingProcess\Calculator;
+use App\Exceptions\NoSuchChargingPriceException;
+use App\Library\Entities\ChargingProcess\Timestamp;
 
 class Order extends Model
 {
-    use State;
     use Message;
-    use Calculator;
 
     /*************************************************
      * 
@@ -333,6 +332,13 @@ class Order extends Model
      */
 
     /**
+     * KiloWattHour line with which we're gonna
+     * determine if charging is officially started
+     * and if charging is officially ended.
+     */
+    private $kiloWattHourLine = .1;
+
+    /**
      * Lock payments.
      * 
      * @return void
@@ -523,5 +529,396 @@ class Order extends Model
             case PaymentTypeEnum :: FINE    : return Payment :: charge ( $this, $amount );
             case PaymentTypeEnum :: CUT     : return Payment :: cut    ( $this, $amount );
         }
+    }
+    
+    /**
+     * Determine if charging is stopped 
+     * due to that the car is charged or ether
+     * user has used up the money and is in penalty
+     * relief mode.
+     * 
+     * @return bool
+     */
+    public function enteredPenaltyReliefMode()
+    {
+        $enteredPenaltyReliefModeTimestamp = Timestamp :: build( $this ) -> getStopChargingTimestamp();
+        return !! $enteredPenaltyReliefModeTimestamp;     
+    }
+
+    /**
+     * Determine if user already used up all the 
+     * money he/she typed when charging with BY_AMOUNT.
+     * 
+     * @return bool
+     */
+    public function hasAlreadyUsedUpMoney()
+    {
+        return !! Timestamp :: build( $this ) -> getChargingStatusTimestamp( OrderStatusEnum :: USED_UP );
+    }
+
+    /**
+     * Determine if user is on penalty.
+     * 
+     * @return bool
+     */
+    public function isOnPenalty()
+    {
+        return !! Timestamp :: build( $this ) -> getPenaltyTimestamp();
+    }
+
+    /**
+     * Determine if charging has officially started.
+     * 
+     * @param   float $kiloWattHour
+     * @return  bool
+     */
+    public function chargingHasStarted()
+    {
+        $chargingPower    = $this  -> getChargingPower();
+        $kiloWattHourLine = $this  -> kiloWattHourLine;
+
+        return $chargingPower > $kiloWattHourLine;
+    }
+
+    /**
+     * Determine if car is charged.
+     * 
+     * @param \App\Order $order
+     * @return bool
+     */
+    public function carHasAlreadyCharged()
+    {
+        $chargingPower    = $this  -> getChargingPower();
+        $kiloWattHourLine = $this  -> kiloWattHourLine;
+
+        return $chargingPower < $kiloWattHourLine;
+    }
+
+    /**
+     * Determine if order is on fine.
+     * 
+     * @param \App\Order $order
+     * @return bool
+     */
+    public function shouldGoToPenalty()
+    {
+        if( $this -> charger_connector_type -> isChargerFast() )
+        {
+        return false;
+        }
+
+        if(  ! $this -> carHasAlreadyStoppedCharging() )
+        {
+            return false;
+        }
+
+        $config               = Config :: first();
+        $penaltyReliefMinutes = $config -> penalty_relief_minutes;
+
+        $chargedTime = Timestamp :: build( $this ) -> getStopChargingTimestamp();
+
+        if( ! $chargedTime )
+        {
+            return false;
+        }
+
+        $elapsedTime         = $chargedTime -> diffInMinutes( now() );
+
+        return $elapsedTime >= $penaltyReliefMinutes;
+    }
+
+    /**
+     * Determine if car has already stopped charging.
+     * 
+     * @return bool
+     */
+    private function carHasAlreadyStoppedCharging()
+    {
+        return in_array( $this -> charging_status, [ OrderStatusEnum :: CHARGED, OrderStatusEnum :: USED_UP ]);
+    }
+
+    /**
+     * Determine if order can go to finish status.
+     * 
+     * @param string|null
+     * @return bool
+     */
+    public function canGoToFinishStatus()
+    {
+        $finishableStatuses = [
+        OrderStatusEnum :: INITIATED ,
+        OrderStatusEnum :: CHARGING  ,
+        OrderStatusEnum :: CHARGED   ,
+        OrderStatusEnum :: USED_UP   ,
+        OrderStatusEnum :: ON_FINE   ,
+        OrderStatusEnum :: ON_HOLD   ,
+        ];
+
+        return in_array( $this -> charging_status, $finishableStatuses );
+    }
+
+    /**
+     * Determine if consumed money is above 
+     * the paid currency.
+     * 
+     * @return bool
+     */
+    public function shouldPay()
+    {
+        $paidMoney      = $this -> countPaidMoney();
+        $consumedMoney  = $this -> countConsumedMoney();
+        
+        return  $consumedMoney > $paidMoney;
+    }
+
+    /**
+     * Determine if paid money is less 
+     * then consumed money.
+     * 
+     * @return bool
+     */
+    public function shouldRefund()
+    {
+        $paidMoney      = $this -> countPaidMoney();
+        $consumedMoney  = $this -> countConsumedMoney();
+        
+        return  $consumedMoney < $paidMoney;
+    }
+
+    /**
+     * Count money the user has already paid.
+     * 
+     * @return  float
+     * @example 10.25
+     */
+    public function countPaidMoney()
+    {
+        if( count( $this -> payments ) == 0 )
+        {
+            return 0.0;
+        }
+    
+        $paidMoney = $this 
+            -> payments 
+            -> where( 'type', PaymentTypeEnum :: CUT ) 
+            -> sum( 'price' );
+
+        $paidMoney = round( $paidMoney, 2 );
+        
+        return $paidMoney;
+    }
+
+    /**
+     * Count the money user has already consumed(Charged).
+     * 
+     * @return float
+     */
+    public function countConsumedMoney()
+    {
+        if( $this -> hasAlreadyUsedUpMoney() )
+        {
+            return $this -> target_price;
+        }
+        
+        if( count( $this -> payments ) == 0 )
+        {
+            return 0.0;
+        }
+        
+        $chargerType = $this -> charger_connector_type -> determineChargerType();
+        
+        $consumedMoney = $chargerType == ChargerTypeEnum :: FAST 
+            ? $this -> countConsumedMoneyByTime()
+            : $this -> countConsumedMoneyByKilowatt();
+        
+        $consumedMoney = round        ( $consumedMoney, 2 );
+
+        return $consumedMoney;
+    }
+
+    /**
+     * Counting consumed money when charger type is FAST.
+     * 
+     * @return float
+     */
+    private function countConsumedMoneyByTime()
+    {
+        $timestamp           = Timestamp :: build( $this );
+        $elapsedMinutes      = $timestamp -> calculateChargingElapsedTimeInMinutes();
+
+        $chargingPriceRanges =  $this 
+            -> charger_connector_type
+            -> collectFastChargingPriceRanges( $elapsedMinutes );
+
+        $consumedMoney = $this -> accumulateFastChargerConsumedMoney( 
+            $chargingPriceRanges, 
+            $elapsedMinutes,
+            );
+        
+        return $consumedMoney;
+    }
+
+    /**
+     * Accumulate fast charger consumed money
+     * based on elapsed minutes.
+     * 
+     * @param Collection $chargingPriceRanges
+     * @param int        $elapsedMinutes
+     */
+    private function accumulateFastChargerConsumedMoney( $chargingPriceRanges, $elapsedMinutes )
+    {
+        $consumedMoney          = 0;
+
+        $chargingPriceRanges -> each( function ( $chargingPriceInstance ) use ( &$consumedMoney, $elapsedMinutes ) {     
+            $startMinutes       = $chargingPriceInstance -> start_minutes;
+            $endMinutes         = $chargingPriceInstance -> end_minutes;
+            $price              = $chargingPriceInstance -> price;
+            $minutesInterval    = $endMinutes - $startMinutes + 1;
+
+            if( $elapsedMinutes > $chargingPriceInstance -> end_minutes)
+            {
+                $consumedMoney += $price * $minutesInterval;
+            }
+            else
+            {
+                $consumedMoney += ( $elapsedMinutes - $startMinutes + 1 ) * $price;
+            }
+        });
+
+        return $consumedMoney;
+    }
+
+    /**
+     * Counting consumed money when charger type is LVL2.
+     * 
+     * @return float
+     */
+    private function countConsumedMoneyByKilowatt()
+    {
+        $timestamp          = Timestamp :: build( $this );
+        $elapsedMinutes     = $timestamp -> calculateChargingElapsedTimeInMinutes();
+        $chargingPrice      = $this -> getCurrentChargingPrice();
+        
+        return $chargingPrice * $elapsedMinutes;
+    }
+
+    /**
+     * Get current charging price.
+     * 
+     * @return float
+     */
+    private function getCurrentChargingPrice()
+    {
+        $timestamp          = Timestamp :: build( $this );
+        $chargingPower      = $this -> kilowatt -> getChargingPower();
+        $startChargingTime  = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
+
+        if( ! $startChargingTime )
+        {
+            return null;
+        }
+
+        $chargingPriceInfo  = $this 
+        -> charger_connector_type 
+        -> getSpecificChargingPrice( $chargingPower, $startChargingTime  -> toTimeString() );
+        
+        if( ! $chargingPriceInfo )
+        {
+            throw new NoSuchChargingPriceException();
+        }
+
+        return $chargingPriceInfo -> price;
+    }
+
+    /**
+     * Determine if charging price is zero a.k.a. free.
+     * 
+     * @return bool
+     */
+    public function isChargingFree()
+    {
+        if( $this -> charger_connector_type -> isChargerFast() )
+        {
+            return false;
+        }
+
+        $currentChargingPrice = $this -> getCurrentChargingPrice();
+
+        if( is_null( $currentChargingPrice ) )
+        {
+            return $currentChargingPrice;
+        }
+        
+        return $currentChargingPrice == 0;
+    }
+
+    /**
+     * Count money to refund the user.
+     * 
+     * @return float
+     */
+    public function countMoneyToRefund()
+    {
+        if( count( $this -> payments ) == 0 )
+        {
+            return 0.0;
+        }
+
+        if( $this -> hasAlreadyUsedUpMoney() )
+        {
+            return null;
+        }
+
+        $moneyToRefund = $this -> countPaidMoney() - $this -> countConsumedMoney();
+        $moneyToRefund = round( $moneyToRefund, 2 );
+    
+        return $moneyToRefund;
+    }
+
+    /**
+     * Count money to cut.
+     * 
+     * @return float
+     */
+    public function countMoneyToCut()
+    {
+        $consumedMoney  = $this -> countConsumedMoney();
+        $alreadyPaid    = $this -> countPaidMoney();
+        $moneyToCut     = $consumedMoney - $alreadyPaid;
+        
+        return $moneyToCut;
+    }
+
+    /**
+     * Count money to refund with penalty fee.
+     * 
+     * @return float
+     */
+    public function countPenaltyFee()
+    {
+        if( $this -> charger_connector_type -> isChargerFast() )
+        {
+            return null;
+        }
+
+        $timestamp              = Timestamp :: build( $this );
+        $penaltyTimestamp       = $timestamp -> getPenaltyTimestamp();
+
+        if( ! $penaltyTimestamp )
+        {
+            return null;
+        }
+
+        $finishedTimestamp      = $timestamp -> getEndTimestamp();
+
+        if( ! $finishedTimestamp )
+        {
+            $finishedTimestamp  = now();
+        }
+        
+        $elapsedMinutes         = $penaltyTimestamp -> diffInMinutes( $finishedTimestamp );
+        $penaltyPricePerMinute  = Helper :: getPenaltyPricePerMinute();
+                
+        return ( $elapsedMinutes + 1 ) * $penaltyPricePerMinute;    
     }
 }
