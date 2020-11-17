@@ -28,8 +28,19 @@ class UpdateLvl2ChargerOrder
     }
     else if( $order -> isCharging() )
     {
+      $charger = $order -> charger_connector_type -> charger;
+      
+      if( ! $charger -> isPaid() || $order -> isChargingFree() )
+      {
+        return;
+      }
+
       self :: handleByAmountChargingProcess( $order );
       self :: handleFullChargeChargingProcess( $order );
+    }
+    else if( $order -> carHasAlreadyCharged() ) 
+    {
+      self :: stopChargingWhenCharged( $order );
     }
   }
 
@@ -41,7 +52,9 @@ class UpdateLvl2ChargerOrder
    */
   private static function makeFirstPayment( Order &$order ): void
   {
-    if( $order -> isChargingFree() )
+    $charger = $order -> charger_connector_type -> charger;
+
+    if( ! $charger -> isPaid() || $order -> isChargingFree() )
     {
       return;
     }
@@ -105,8 +118,6 @@ class UpdateLvl2ChargerOrder
       {
         self :: cutNextChargingPrice( $order );
       }
-      
-      $order -> carHasAlreadyCharged() && self :: stopChargingWhenCharged( $order );
     }
   }
 

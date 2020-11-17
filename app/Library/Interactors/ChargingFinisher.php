@@ -6,7 +6,7 @@ use App\Library\Entities\ChargingProcess\CacheOrderDetails;
 use App\Library\Entities\ChargingFinish\MakeLastPayments;
 use App\Library\Entities\ChargingFinish\FinishAndNotify;
 use App\Library\Entities\ChargingFinish\OrderGetter;
-use Illuminate\Support\Facades\Log;
+use App\Library\Entities\Log;
 
 class ChargingFinisher
 {
@@ -22,7 +22,6 @@ class ChargingFinisher
 
     if(! $order) 
     {
-      Log :: channel( 'feedback-finish' ) -> info( 'FINISHED - Transaction ID - ' . $transactionId );
       return;
     }
   
@@ -31,5 +30,7 @@ class ChargingFinisher
     MakeLastPayments  :: execute( $order );
     CacheOrderDetails :: execute( $order );
     FinishAndNotify   :: execute( $order );
+
+    Log :: orderSuccessfullyFinished( $transactionId );
   }
 }

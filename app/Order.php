@@ -324,21 +324,14 @@ class Order extends Model
             -> orderBy( 'id', 'DESC' );
     }
 
-    /********************************************* 
+    /******************************************************* 
      * 
-     * ===!> Orders model helper methods <!=== 
+     * ===!> Attribute Methods: setters, getters, etc. <!=== 
      * 
-     *********************************************
+     *******************************************************
      */
-
-    /**
-     * KiloWattHour line with which we're gonna
-     * determine if charging is officially started
-     * and if charging is officially ended.
-     */
-    private $kiloWattHourLine = .1;
-
-    /**
+    
+     /**
      * Lock payments.
      * 
      * @return void
@@ -371,6 +364,52 @@ class Order extends Model
     }
 
     /**
+     * Determine if charging type is BY_AMOUNT.
+     * 
+     * @return bool
+     */
+    public function isByAmount(): bool
+    {
+        return $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT;
+    }
+
+    /**
+     * Determine if order is active
+     * and the status is initiated.
+     * 
+     * @return bool
+     */
+    public function isInitiated(): bool
+    {
+        return $this -> charging_status == OrderStatusEnum :: INITIATED;
+    }
+
+    /**
+     * Determine if order is active
+     * and the status is charging.
+     * 
+     * @return bool
+     */
+    public function isCharging(): bool
+    {
+        return $this -> charging_status == OrderStatusEnum :: CHARGING;
+    }
+
+    /********************************************* 
+     * 
+     * ===!> Orders model helper methods <!=== 
+     * 
+     *********************************************
+     */
+
+    /**
+     * KiloWattHour line with which we're gonna
+     * determine if charging is officially started
+     * and if charging is officially ended.
+     */
+    private $kiloWattHourLine = .1;
+
+    /**
      * Lock payments if necessary.
      * 
      * @param  string $paymentType
@@ -382,6 +421,28 @@ class Order extends Model
         {
             $this -> lockPayments();
         }
+    }
+
+    /**
+     * Determine if charging price is zero a.k.a. free.
+     * 
+     * @return bool
+     */
+    public function isChargingFree()
+    {
+        if( $this -> charger_connector_type -> isChargerFast() )
+        {
+            return false;
+        }
+
+        $currentChargingPrice = $this -> getCurrentChargingPrice();
+
+        if( is_null( $currentChargingPrice ) )
+        {
+            return $currentChargingPrice;
+        }
+        
+        return $currentChargingPrice == 0;
     }
 
     /**
@@ -448,38 +509,6 @@ class Order extends Model
             $chargingPower  = $this -> getChargingPower();
             $this -> kilowatt -> setChargingPower( $chargingPower );
         }
-    }
-
-    /**
-     * Determine if charging type is BY_AMOUNT.
-     * 
-     * @return bool
-     */
-    public function isByAmount(): bool
-    {
-        return $this -> charging_type == ChargingTypeEnum :: BY_AMOUNT;
-    }
-
-    /**
-     * Determine if order is active
-     * and the status is initiated.
-     * 
-     * @return bool
-     */
-    public function isInitiated(): bool
-    {
-        return $this -> charging_status == OrderStatusEnum :: INITIATED;
-    }
-
-    /**
-     * Determine if order is active
-     * and the status is charging.
-     * 
-     * @return bool
-     */
-    public function isCharging(): bool
-    {
-        return $this -> charging_status == OrderStatusEnum :: CHARGING;
     }
 
     /**
@@ -767,7 +796,7 @@ class Order extends Model
      */
     private function accumulateFastChargerConsumedMoney( $chargingPriceRanges, $elapsedMinutes )
     {
-        $consumedMoney          = 0;
+        $consumedMoney = 0;
 
         $chargingPriceRanges -> each( function ( $chargingPriceInstance ) use ( &$consumedMoney, $elapsedMinutes ) {     
             $startMinutes       = $chargingPriceInstance -> start_minutes;
@@ -828,28 +857,6 @@ class Order extends Model
         }
 
         return $chargingPriceInfo -> price;
-    }
-
-    /**
-     * Determine if charging price is zero a.k.a. free.
-     * 
-     * @return bool
-     */
-    public function isChargingFree()
-    {
-        if( $this -> charger_connector_type -> isChargerFast() )
-        {
-            return false;
-        }
-
-        $currentChargingPrice = $this -> getCurrentChargingPrice();
-
-        if( is_null( $currentChargingPrice ) )
-        {
-            return $currentChargingPrice;
-        }
-        
-        return $currentChargingPrice == 0;
     }
 
     /**

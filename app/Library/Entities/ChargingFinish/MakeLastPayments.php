@@ -44,16 +44,18 @@ class MakeLastPayments
    */
   private static function makeLastPaymentsForLvl2Charging( Order &$order )
   {
-      if( ! $order -> isChargingFree() )
-      {
-          self :: cutOrRefund( $order );
-      }
+    $charger = $order -> charger_connector_type -> charger;
 
-      if( $order -> isOnPenalty() )
-      {
-          $penaltyFee = $order -> countPenaltyFee();   
-          $order -> pay( PaymentTypeEnum :: FINE, $penaltyFee );
-      }
+    if( $charger->isPaid() && ! $order -> isChargingFree() )
+    {
+      self :: cutOrRefund( $order );
+    }
+
+    if( $charger -> isPenaltyEnabled() && $order -> isOnPenalty() )
+    {
+      $penaltyFee = $order -> countPenaltyFee();   
+      $order -> pay( PaymentTypeEnum :: FINE, $penaltyFee );
+    }
   }
 
   /**

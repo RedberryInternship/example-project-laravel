@@ -31,4 +31,15 @@ class Log
   {
     LaravelLogger :: channel( 'feedback-update' ) -> info( 'Update Happened | Transaction ID - ' . $transactionId . ' | Value - ' . $value );
   }
+
+  /**
+   * Successfully finished order.
+   * 
+   * @param int $transactionId
+   * @return void
+   */
+  public static function orderSuccessfullyFinished( $transactionId ): void
+  {
+    LaravelLogger :: channel( 'feedback-finish' ) -> info( 'FINISHED - Transaction ID - ' . $transactionId );
+  }
 }
