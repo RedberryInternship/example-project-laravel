@@ -37,10 +37,11 @@ class UpdateLvl2ChargerOrder
 
       self :: handleByAmountChargingProcess( $order );
       self :: handleFullChargeChargingProcess( $order );
-    }
-    else if( $order -> carHasAlreadyCharged() ) 
-    {
-      self :: stopChargingWhenCharged( $order );
+
+      if( $order -> carHasAlreadyCharged() ) 
+      {
+        self :: stopChargingWhenCharged( $order );
+      }
     }
   }
 
