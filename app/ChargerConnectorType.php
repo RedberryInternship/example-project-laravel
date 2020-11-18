@@ -2,12 +2,11 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\NoSuchFastChargingPriceException;
 use App\Enums\ConnectorType as ConnectorTypeEnum;
 use App\Enums\ChargerType as ChargerTypeEnum;
+use Illuminate\Database\Eloquent\Model;
 
-use App\Library\Entities\ChargerConnectorType as Entity;
 
 class ChargerConnectorType extends Model
 {

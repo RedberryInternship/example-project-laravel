@@ -5,7 +5,6 @@ namespace App\Library\Presenters;
 use App\Library\Entities\ChargingProcess\Timestamp;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Traits\Message;
-
 use App\Order;
 
 class ChargingProcess
