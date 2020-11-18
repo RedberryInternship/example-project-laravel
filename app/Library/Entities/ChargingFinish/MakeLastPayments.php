@@ -33,7 +33,10 @@ class MakeLastPayments
    */
   private static function makeLastPaymentsForFastCharging( Order &$order )
   {
+    if( $order -> getCharger() -> isPaid() )
+    {
       self :: cutOrRefund( $order );
+    }
   }
 
   /**
@@ -44,7 +47,7 @@ class MakeLastPayments
    */
   private static function makeLastPaymentsForLvl2Charging( Order &$order )
   {
-    $charger = $order -> charger_connector_type -> charger;
+    $charger = $order -> getCharger();
 
     if( $charger->isPaid() && ! $order -> isChargingFree() )
     {

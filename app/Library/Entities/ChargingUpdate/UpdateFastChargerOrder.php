@@ -21,8 +21,9 @@ class UpdateFastChargerOrder
   public static function execute( Order &$order )
   {
     $order -> updateChargingPowerIfNotUpdated();
+    $charger = $order -> getCharger();
 
-    if( $order -> isCharging() )
+    if( $order -> isCharging() && $charger -> isPaid() )
     {
         if( $order -> isByAmount() )
         {
@@ -55,7 +56,7 @@ class UpdateFastChargerOrder
    */
   private static function stopCharging( Order &$order ): void
   {
-    $charger = $order -> charger_connector_type -> charger;
+    $charger = $order -> getCharger();
 
     RealCharger :: stop( 
         $charger -> charger_id, 

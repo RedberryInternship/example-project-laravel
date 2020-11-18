@@ -50,8 +50,8 @@ class ChargingProcess
       'charging_type'                 => $order -> charging_type,
       'charging_status'               => $order -> charging_status,
       'charger_connector_type_id'     => $order -> charger_connector_type -> id, 
-      'charger_id'                    => $order -> charger_connector_type -> charger -> id,
-      'charger_code'                  => $order -> charger_connector_type -> charger -> code,
+      'charger_id'                    => $order -> getCharger() -> id,
+      'charger_code'                  => $order -> getCharger() -> code,
       'connector_type_id'             => $order -> charger_connector_type -> connector_type -> id,
       'user_card_id'                  => $order -> user_card_id,
     ];

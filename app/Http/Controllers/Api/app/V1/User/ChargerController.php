@@ -32,11 +32,11 @@ class ChargerController extends Controller
         $chargerIDs = [];
         foreach ($orders as $order)
         {
-            if ( ! in_array($order -> charger_connector_type -> charger -> id, $chargerIDs))
+            if ( ! in_array($order -> getCharger() -> id, $chargerIDs))
             {
-                $chargers[]   = $order -> charger_connector_type -> charger;
+                $chargers[]   = $order -> getCharger();
 
-                $chargerIDs[] = $order -> charger_connector_type -> charger -> id;
+                $chargerIDs[] = $order -> getCharger() -> id;
             }
         }
 

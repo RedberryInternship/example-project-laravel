@@ -46,7 +46,7 @@ class FailureHandler
    */
   private static function stopCharging( $order )
   {
-    $chargerId     = $order -> charger_connector_type -> charger -> charger_id;
+    $chargerId     = $order -> getCharger() -> charger_id;
     $transactionId = $order -> charger_transaction_id;
 
     Charger :: stop( $chargerId, $transactionId );

@@ -98,8 +98,8 @@
                                         @foreach($orders as $order)
                                             <tr>
                                                 <td>{{ $order -> id }}</td>
-                                                <td>{{ $order -> charger_connector_type -> charger -> code }}</td>
-                                                <td>{{ $order -> charger_connector_type -> charger -> location }}</td>
+                                                <td>{{ $order -> getCharger() -> code }}</td>
+                                                <td>{{ $order -> getCharger() -> location }}</td>
                                                 <td>
                                                     @foreach ($order -> payments as $payment)
                                                         {{ $payment -> type . ': ' . $payment -> price }}

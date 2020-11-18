@@ -28,7 +28,7 @@ class UpdateLvl2ChargerOrder
     }
     else if( $order -> isCharging() )
     {
-      $charger = $order -> charger_connector_type -> charger;
+      $charger = $order -> getCharger();
       
       if( ! $charger -> isPaid() || $order -> isChargingFree() )
       {
@@ -53,7 +53,7 @@ class UpdateLvl2ChargerOrder
    */
   private static function makeFirstPayment( Order &$order ): void
   {
-    $charger = $order -> charger_connector_type -> charger;
+    $charger = $order -> getCharger();
 
     if( ! $charger -> isPaid() || $order -> isChargingFree() )
     {
@@ -94,7 +94,7 @@ class UpdateLvl2ChargerOrder
    */
   private static function stopChargingWhenUsedUp( Order &$order ): void
   {
-    $charger = $order -> charger_connector_type -> charger;
+    $charger = $order -> getCharger();
 
     RealCharger :: stop( 
       $charger -> charger_id, 
@@ -142,7 +142,7 @@ class UpdateLvl2ChargerOrder
    */
   private static function stopChargingWhenCharged( Order &$order ): void
   {
-    $charger = $order -> charger_connector_type -> charger;
+    $charger = $order -> getCharger();
 
     RealCharger :: stop( 
       $charger -> charger_id, 

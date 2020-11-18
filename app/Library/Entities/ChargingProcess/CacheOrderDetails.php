@@ -36,7 +36,7 @@ class CacheOrderDetails
   private function calculate( Order &$order ): void
   { 
     $timestamp    = Timestamp :: build( $order );
-    $charger      = $order -> charger_connector_type -> charger;
+    $charger      = $order -> getCharger();
 
     $this -> details = [
       'charger_name'        => $charger       -> name,

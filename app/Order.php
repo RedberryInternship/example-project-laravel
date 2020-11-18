@@ -410,6 +410,17 @@ class Order extends Model
     private $kiloWattHourLine = .1;
 
     /**
+     * Get order charger through 
+     * charger connector type relationship.
+     * 
+     * @return Charger 
+     */
+    public function getCharger(): Charger
+    {
+        return $this -> charger_connector_type -> charger;
+    }
+
+    /**
      * Lock payments if necessary.
      * 
      * @param  string $paymentType

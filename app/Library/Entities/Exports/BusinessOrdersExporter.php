@@ -53,11 +53,11 @@ class BusinessOrdersExporter implements FromArray, WithHeadings, WithStyles, Wit
     return $query
       -> get()
       -> filter( function( $order ) {
-        return !! $order -> charger_connector_type && $order -> charger_connector_type -> charger;
+        return !! $order -> charger_connector_type && $order -> getCharger();
       })
       -> map( function( $order ) {
         $timestamp = Timestamp :: build($order);
-        $charger = $order -> charger_connector_type -> charger;
+        $charger = $order -> getCharger();
 
         $id                 = $order -> id;
         $chargerCode        = $charger -> code;

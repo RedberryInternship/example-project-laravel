@@ -214,7 +214,7 @@ class Charger extends Base
         #     -> first()
         # if( $order )
         # {
-        #     $charger_id = $order -> charger_connector_type -> charger -> charger_id;
+        #     $charger_id = $order -> getCharger() -> charger_id;
 
         #     if( $charger_id == 27833 )
         #     {
