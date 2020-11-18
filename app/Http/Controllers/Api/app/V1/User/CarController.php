@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api\app\V1\User;
 
-use App\CarModel;
-use App\UserCarModel;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\UserCarModel;
+use App\User;
 
 class CarController extends Controller
 {
@@ -16,10 +16,10 @@ class CarController extends Controller
      */
     public function index()
     {
-        $user = auth('api') -> user();
+        $user = User :: find( auth() -> user() -> id );
 
         return response() -> json([
-            'user_cars' => $user -> getFormatedUserCars()
+            'user_cars' => $user -> getFormattedUserCars()
         ], 200);
     }
 

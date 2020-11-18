@@ -394,6 +394,17 @@ class Order extends Model
     {
         return $this -> charging_status == OrderStatusEnum :: CHARGING;
     }
+    
+    /**
+     * Determine if order is active
+     * and the status is charging.
+     * 
+     * @return bool
+     */
+    public function isFinished(): bool
+    {
+        return $this -> charging_status == OrderStatusEnum :: FINISHED;
+    }
 
     /********************************************* 
      * 

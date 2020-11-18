@@ -58,7 +58,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public static function respondWithToken($token)
     {
-        $user = auth('api') -> user();
+        $user = User :: find( auth() -> user() -> id );
 
         $user -> load('user_cards','user_cars','car_models');
 
@@ -85,10 +85,12 @@ class User extends Authenticatable implements JWTSubject
             return false;
         }
 
-        return SMS::sendSms([
-            'message'     => $message,
-            'phoneNumber' => self::modifyPhoneNumberFormat($phoneNumber)
-        ]);
+        return SMS :: sendSms(
+            [
+                'phoneNumber' => self::modifyPhoneNumberFormat( $phoneNumber ),
+                'message'     => $message,
+            ]
+        );
     }
 
     /**
@@ -103,12 +105,12 @@ class User extends Authenticatable implements JWTSubject
 
     public function company()
     {
-        return $this -> belongsTo(Company::class);
+        return $this -> belongsTo( Company :: class );
     }
 
     public function chargers()
     {
-        return $this -> hasMany(Charger::class);
+        return $this -> hasMany( Charger :: class );
     }
 
     public function car_models()
@@ -118,7 +120,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function user_cards()
     {
-        return $this -> hasMany(UserCard :: class) -> where( 'active', true );
+        return $this -> hasMany( UserCard :: class ) -> where( 'active', true );
     }
 
     public function orders()
@@ -144,10 +146,11 @@ class User extends Authenticatable implements JWTSubject
 
     public function orders_history()
     {
-        return $this
+        return $this -> orders 
             -> hasMany( Order :: class )
             -> where( 'charging_status', OrderStatus :: FINISHED )
             -> whereNotNull( 'charger_name' )
+            -> has('user_card')
             -> orderBy( 'id', 'desc' );
     }
 
@@ -156,7 +159,7 @@ class User extends Authenticatable implements JWTSubject
         return $this -> hasMany('App\UserCarModel');
     }
 
-    public function getFormatedUserCars()
+    public function getFormattedUserCars()
     {
         $userCars = [];
         foreach ($this -> car_models as $userCarModel)
@@ -177,30 +180,32 @@ class User extends Authenticatable implements JWTSubject
 
     public function favorites()
     {
-        return $this -> belongsToMany(Charger::class, 'favorites', 'user_id', 'charger_id') -> withTimeStamps();
+        return $this -> belongsToMany( Charger::class, 'favorites', 'user_id', 'charger_id') -> withTimeStamps();
     }
 
     public function role()
     {
-        return $this -> belongsTo('App\Role');
+        return $this -> belongsTo( Role :: class );
     }
 
     public function business_services()
     {
-        return $this -> hasMany(BusinessService::class);
+        return $this -> hasMany( BusinessService :: class );
     }
 
     public function chargerGroups()
     {
-        return $this -> hasMany(ChargerGroup::class) -> withPivot([
-            'name',
-            'charger_id'
-        ]);
+        return $this -> hasMany( ChargerGroup :: class ) -> withPivot(
+            [
+                'name',
+                'charger_id',
+            ]
+        );
     }
 
     public function scopeAssignableChargerUsers($query)
     {
-        return $query -> whereIn('role_id', [2, 3]);
+        return $query -> whereIn( 'role_id', [ 2, 3 ] );
     }
 
     public static function getAssignableChargerUsers()

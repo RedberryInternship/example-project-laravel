@@ -2,13 +2,13 @@
 
 namespace App\Library\Entities\Exports;
 
-use App\User;
-use App\Order;
-use Maatwebsite\Excel\Concerns\FromArray;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use App\Library\Entities\ChargingProcess\Timestamp;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\FromArray;
+use App\Order;
+use App\User;
 
 class BusinessOrdersExporter implements FromArray, WithHeadings, WithStyles, WithColumnWidths
 {
