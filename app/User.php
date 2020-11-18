@@ -58,7 +58,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public static function respondWithToken($token)
     {
-        $user = User :: find( auth() -> user() -> id );
+        $user = User :: find( auth( 'api' ) -> user() -> id );
 
         $user -> load('user_cards','user_cars','car_models');
 
