@@ -22,7 +22,7 @@ class Timestamp
    * 
    * @param Order $order
    */
-  function __construct( Order $order )
+  function __construct( Order &$order )
   {
     $this -> order = $order;  
   }
@@ -33,7 +33,7 @@ class Timestamp
    * @param   Order $order
    * @return  self
    */
-  public static function build( Order $order ): self
+  public static function build( Order &$order ): self
   {
     return new self( $order );
   }

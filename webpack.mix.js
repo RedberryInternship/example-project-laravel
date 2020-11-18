@@ -26,4 +26,9 @@ mix .js('resources/js/business/dashboard/dashboard.js',             'public/js/b
     .sass('resources/sass/business/login.scss',                     'public/css/business')
     .sass('resources/sass/business/sidebar.scss',                   'public/css/business')
     .sass('resources/sass/business/main.scss',                      'public/css/business')
-    .sass('resources/sass/nova/main.scss',                          'public/css/nova');
+    .sass('resources/sass/nova/main.scss',                          'public/css/nova')
+    .options(
+        {
+            processCssUrls: false,
+        }
+    );

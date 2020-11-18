@@ -2,9 +2,7 @@
 
 namespace App\Library\Entities\ChargingStart;
 
-use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Enums\PaymentType as PaymentTypeEnum;
-
 use App\Config;
 use App\Order;
 
@@ -86,14 +84,11 @@ class FastChargerPayer
    */
   public function pay(): void
   {
-    if( ! $this -> isChargerFast )
+    $charger = $this -> order -> charger_connector_type -> charger;
+
+    if( ! $charger -> isPaid() || ! $this -> isChargerFast || ! $this -> order -> isCharging() )
     {
       return;
-    }
-
-    if( ! $this -> order -> charging_status == OrderStatusEnum :: CHARGING )
-    {
-        return;
     }
 
     if( $this -> isByAmount )

@@ -2,6 +2,11 @@
   cursor: pointer;
 }
 
+.dropdown-content, 
+.select-dropdown {
+  font-family: bpg-arial;
+}
+
 .open-modal-button:hover {
   color: cadetblue;
 }

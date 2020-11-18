@@ -29,7 +29,7 @@ class CacheForeignKeys {
       -> whereNull('old_id')
       -> get()
       -> each(function( $order ) {
-        $order -> company_id         = @$order -> charger_connector_type -> charger -> company_id;
+        $order -> company_id         = @$order -> getCharger() -> company_id;
         $order -> consumed_kilowatts = @round(floatval($order -> kilowatt -> consumed), 2);
         $order -> save();
       });
@@ -45,7 +45,7 @@ class CacheForeignKeys {
     Payment :: with(['order.charger_connector_type.charger', 'user_card.user'])
       -> get()
       -> each( function( $payment ) {
-        $payment -> company_id = @$payment -> order -> charger_connector_type -> charger -> company_id;
+        $payment -> company_id = @$payment -> order -> getCharger() -> company_id;
         $payment -> user_id    = @$payment -> user_card -> user -> id;
         $payment -> save();
       });

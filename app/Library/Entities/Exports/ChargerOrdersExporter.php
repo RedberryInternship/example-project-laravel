@@ -40,10 +40,10 @@ class ChargerOrdersExporter implements FromArray, WithHeadings, WithStyles, With
     -> orderBy( 'id', 'desc' )
     -> get()
     -> filter( function( $order ) {
-      return !! $order -> charger_connector_type && $order -> charger_connector_type -> charger;
+      return !! $order -> charger_connector_type && $order -> getCharger();
     })
     -> map( function( $order ) {
-      $charger = $order -> charger_connector_type -> charger;
+      $charger = $order -> getCharger();
 
       $id                 = $order -> id;
       $chargerCode        = $charger -> code;

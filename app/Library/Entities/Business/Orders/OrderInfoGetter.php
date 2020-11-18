@@ -2,8 +2,8 @@
 
 namespace App\Library\Entities\Business\Orders;
 
-use App\Order;
 use App\Library\Entities\ChargingProcess\Timestamp;
+use App\Order;
 
 class OrderInfoGetter 
 {
@@ -23,7 +23,7 @@ class OrderInfoGetter
     ) -> find($id);
     
     $timestamp  = Timestamp :: build($order);
-    $charger    = $order -> charger_connector_type -> charger;
+    $charger    = $order -> getCharger();
 
     $id                 = $order -> id;
     $chargerCode        = $charger -> code;

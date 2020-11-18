@@ -2,11 +2,11 @@
 
 namespace App\Library\Interactors\Business;
 
-use App\Library\Entities\Business\Analytics\TopChargersAnalyser;
-use App\Library\Entities\Business\Analytics\BusinessOrdersGetter;
-use App\Library\Entities\Business\Analytics\ChargerStatusAnalyser;
-use App\Library\Entities\Business\Analytics\IncomeExpenseAnalyser;
 use App\Library\Entities\Business\Analytics\TransactionsMonthlyDataAnalyser;
+use App\Library\Entities\Business\Analytics\IncomeExpenseAnalyser;
+use App\Library\Entities\Business\Analytics\ChargerStatusAnalyser;
+use App\Library\Entities\Business\Analytics\BusinessOrdersGetter;
+use App\Library\Entities\Business\Analytics\TopChargersAnalyser;
 
 class Analyse
 {

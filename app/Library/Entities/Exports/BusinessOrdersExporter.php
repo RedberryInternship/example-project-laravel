@@ -2,13 +2,13 @@
 
 namespace App\Library\Entities\Exports;
 
-use App\User;
-use App\Order;
-use Maatwebsite\Excel\Concerns\FromArray;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use App\Library\Entities\ChargingProcess\Timestamp;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\FromArray;
+use App\Order;
+use App\User;
 
 class BusinessOrdersExporter implements FromArray, WithHeadings, WithStyles, WithColumnWidths
 {
@@ -53,11 +53,11 @@ class BusinessOrdersExporter implements FromArray, WithHeadings, WithStyles, Wit
     return $query
       -> get()
       -> filter( function( $order ) {
-        return !! $order -> charger_connector_type && $order -> charger_connector_type -> charger;
+        return !! $order -> charger_connector_type && $order -> getCharger();
       })
       -> map( function( $order ) {
         $timestamp = Timestamp :: build($order);
-        $charger = $order -> charger_connector_type -> charger;
+        $charger = $order -> getCharger();
 
         $id                 = $order -> id;
         $chargerCode        = $charger -> code;

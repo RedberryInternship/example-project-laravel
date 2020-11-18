@@ -3,6 +3,7 @@
 namespace App\Library\Entities;
 
 use Carbon\CarbonPeriod;
+use App\Config;
 
 class Helper
 {
@@ -155,5 +156,40 @@ class Helper
         }
 
         return $uri;
+    }
+
+    /**
+     * Get penalty price per minute.
+     * 
+     * @return float
+     */
+    public static function getPenaltyPricePerMinute()
+    {
+        $config                 = Config :: first();
+        $penaltyPricePerMinute  = $config -> penalty_price_per_minute;
+        
+        return $penaltyPricePerMinute; 
+    }
+
+    /**
+     * Get initial charging price for 
+     * charging process.
+     * 
+     * @return float
+     */
+    public static function getInitialChargingPrice()
+    {
+        return Config :: initialChargePrice();
+    }
+
+    /**
+     * Get next charging prices for 
+     * charging process.
+     * 
+     * @return float
+     */
+    public static function getNextChargingPrice()
+    {
+        return Config :: nextChargePrice();
     }
 }

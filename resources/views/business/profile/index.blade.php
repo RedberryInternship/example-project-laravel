@@ -8,43 +8,43 @@
 		<div class="col s12">
             <div class="card">
                 <div class="card-content row">
-                    <table class="col s5">
+                    <table class="col s5 bpg-arial">
                         <tbody>
                             <tr>
-                                <td><b>კომპანია</b></td>
-                                <td>{{ $company -> name }}</td>
+                                <td class="black-text"><b>კომპანია</b></td>
+                                <td>{{ $company -> name ?? '---' }}</td>
                             </tr>
                             <tr>
-                                <td><b>მისამართი</td>
-                                <td>{{ $company -> address }}</td>
+                                <td class="black-text"><b>მისამართი</td>
+                                <td>{{ $company -> address ?? '---' }}</td>
                             </tr>
                             <tr>
-                                <td><b>კონტრაქტის მეთოდი</b></td>
-                                <td>{{ $company -> contract_method }}</td>
+                                <td class="black-text"><b>კონტრაქტის მეთოდი</b></td>
+                                <td>{{ $company -> contract_method ?? '---' }}</td>
                             </tr>
                             <tr>
-                                <td><b>გადასახადი</b></td>
-                                <td>{{ $company -> contract_value }}</td>
+                                <td class="black-text"><b>გადასახადი</b></td>
+                                <td>{{ $company -> contract_value ?? '---' }}</td>
                             </tr>
                         </tbody>
                     </table>
-                    <table class="col s5 push-s1">
+                    <table class="col s5 push-s1 bpg-arial">
                         <tbody>
                             <tr>
-                                <td><b>ბანკის ექაუნთი</b></td>
-                                <td>{{ $company -> bank_account }}</td>
+                                <td class="black-text"><b>ბანკის ექაუნთი</b></td>
+                                <td>{{ $company -> bank_account ?? '---' }}</td>
                             </tr>
                             <tr>
-                                <td><b>საიდენტიფიკაციო კოდი</b></td>
-                                <td>{{ $company -> identification_code }}</td>
+                                <td class="black-text"><b>საიდენტიფიკაციო კოდი</b></td>
+                                <td>{{ $company -> identification_code ?? '---' }}</td>
                             </tr>
                             <tr>
-                                <td><b>კონტრაქტის დასაწყისი</b></td>
-                                <td>{{ $company -> contract_started -> toDateString() }}</td>
+                                <td class="black-text"><b>კონტრაქტის დასაწყისი</b></td>
+                                <td>{{ $company -> contract_started ? $company -> contract_started -> toDateString() : '---' }}</td>
                             </tr>
                             <tr>
-                                <td><b>კონტრაქტის დასასრული</b></td>
-                                <td>{{ $company -> contract_ended -> toDateString() }}</td>
+                                <td class="black-text"><b>კონტრაქტის დასასრული</b></td>
+                                <td>{{ $company -> contract_ended ? $company -> contract_ended -> toDateString() : '---' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -52,7 +52,7 @@
                 
                 @if($company -> contract_file)
                     <div class="card-content">
-                        <a href="/business/profile/download-contract" class="btn">
+                        <a href="/business/profile/download-contract" class="btn bpg-arial">
                             ჩამოტვირთე კონტრაქტის ფაილი
                             <i class="material-icons right">attachment</i>
                         </a>
@@ -68,35 +68,35 @@
 
 					      	<div class="row">
                                 <div class="input-field col s4">
-                                    <input id="first_name" type="text" name="first_name" class="validate"
+                                    <input id="first_name" type="text" name="first_name" class="validate bpg-arial"
                                         value="{{ $user -> first_name }}" required>
-                                    <label for="first_name">სახელი</label>
+                                    <label for="first_name" class="bpg-arial">სახელი</label>
                                 </div>
 
                                 <div class="input-field col s4">
-                                    <input id="email" type="email" name="email" class="validate"
+                                    <input id="email" type="email" name="email" class="validate bpg-arial"
                                         value="{{ $user -> email }}" required>
-                                    <label for="email">ელ. ფოსტა</label>
+                                    <label for="email" class="bpg-arial">ელ. ფოსტა</label>
                                 </div>
 
                                 <div class="input-field col s4">
-                                    <input id="phone_number" type="text" name="phone_number" class="validate"
+                                    <input id="phone_number" type="text" name="phone_number" class="validate bpg-arial"
                                         value="{{ $user -> phone_number }}" required>
-                                    <label for="phone_number">ტელეფონის ნომერი</label>
+                                    <label for="phone_number" class="bpg-arial">ტელეფონის ნომერი</label>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="input-field col s4">
-                                    <input id="password" type="password" name="password" class="validate"
+                                    <input id="password" type="password" name="password" class="validate bpg-arial"
                                         value="">
-                                    <label for="password">პაროლი</label>
+                                    <label for="password" class="bpg-arial">პაროლი</label>
                                 </div>
 
                                 <div class="input-field col s4">
-                                    <input id="password_confirmation" type="password" name="password_confirmation" class="validate"
+                                    <input id="password_confirmation" type="password" name="password_confirmation" class="validate bpg-arial"
                                         value="">
-                                    <label for="password_confirmation">გაიმეორეთ პაროლი</label>
+                                    <label for="password_confirmation" class="bpg-arial">გაიმეორეთ პაროლი</label>
                                 </div>
                             </div>
 

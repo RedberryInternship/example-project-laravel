@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Redberry\GeorgianCardGateway\Refund;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-
 use App\Facades\Simulator;
 use App\Traits\Message;
-
-use Redberry\GeorgianCardGateway\Refund;
-use App\Library\Entities\Helper;
 
 class TestController extends Controller 
 {
@@ -17,8 +14,12 @@ class TestController extends Controller
     
   public function __invoke()
   {
-    [ $allLang, $isDev ] = [ Helper::allLang(), Helper::isDev() ];
-    dd( 'nothingness' );
+    dd( "Nothingness" );
+  }
+
+  public function getMemoryUsage()
+  {
+    return round(memory_get_usage() / 1024 / 1024, 2);
   }
 
   public function refundView()

@@ -16,9 +16,9 @@
                 <div class="card-content">
                     <div class="row">
 						<div class="col s12 flex justify-space-between">
-                            <h4 class="card-title">{{ $tabTitle }}</h4>
+                            <h4 class="card-title bpg-arial">{{ $tabTitle }}</h4>
                             
-                            <a href="{{ $contractDownloadPath }}" class="btn waves-effect waves-light green">
+                            <a href="{{ $contractDownloadPath }}" class="btn waves-effect waves-light green bpg-arial">
                                 რეპორტი
                             </a>
                         </div>
@@ -60,7 +60,7 @@
                                 
                                 <div class="col s6 flex">
                                     <div class="input-field">
-                                        <button type="submit" class="btn teal lighten-2 filter-btn">
+                                        <button type="submit" class="btn teal lighten-2 filter-btn bpg-arial">
                                             <i class="material-icons right">filter_list</i>
                                             გაფილტვრა
                                         </button>
@@ -82,9 +82,9 @@
                     <div class="row mb-2">
                         <div class="col s12">
                             @if ($orders -> count())
-                                <table>
+                                <table class="bpg-arial">
                                     <thead>
-                                        <tr>
+                                        <tr style="font-weight:bold; color:black">
                                             <th>ID</th>
                                             <th>დამტენის კოდი</th>
                                             <th>დამტენი</th>
@@ -98,8 +98,8 @@
                                         @foreach($orders as $order)
                                             <tr>
                                                 <td>{{ $order -> id }}</td>
-                                                <td>{{ $order -> charger_connector_type -> charger -> code }}</td>
-                                                <td>{{ $order -> charger_connector_type -> charger -> location }}</td>
+                                                <td>{{ $order -> getCharger() -> code }}</td>
+                                                <td>{{ $order -> getCharger() -> location }}</td>
                                                 <td>
                                                     @foreach ($order -> payments as $payment)
                                                         {{ $payment -> type . ': ' . $payment -> price }}
