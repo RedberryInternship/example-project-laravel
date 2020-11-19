@@ -31,7 +31,8 @@ class RegistrationRequest extends FormRequest implements ValidatesWhenResolved
             'first_name'   => 'required|string|max:255',
             'last_name'    => 'required|string|max:255',
             'password'     => 'required|string',
-            'phone_number' => 'required|string|unique:users'
+            'phone_number' => 'required|string|unique:users',
+            'email'        => 'nullable|unique:users',
         ];
     }
 
