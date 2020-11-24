@@ -55,15 +55,17 @@ class RegistrationRequest extends FormRequest implements ValidatesWhenResolved
     {
         $request = $this -> all();
 
-        $user = User::create([
-            'active'       => 1,
-            'verified'     => 1,
-            'email'        => $request['email'] ?? null,
-            'last_name'    => $request['last_name'],
-            'first_name'   => $request['first_name'],
-            'phone_number' => $request['phone_number'],
-            'password'     => bcrypt($request['password'])
-        ]);
+        $user = User::create(
+            [
+                'active'       => 1,
+                'verified'     => 1,
+                'email'        => $request['email'] ?? null,
+                'last_name'    => $request['last_name'],
+                'first_name'   => $request['first_name'],
+                'phone_number' => $request['phone_number'],
+                'password'     => bcrypt($request['password']),
+            ]
+        );
 
         return $user;
     }
