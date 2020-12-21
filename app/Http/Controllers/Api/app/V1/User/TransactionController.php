@@ -10,9 +10,9 @@ class TransactionController extends Controller
 {
     public function __invoke()
     {
-        $userId       = auth() -> user() -> id;
-        $transactions = User :: with( 'orders_history' ) -> find( $userId ) -> orders_history;
-
+        $user           = User :: find( auth() -> user() -> id );
+        $transactions   = $user -> ordersHistory();
+        
         return TransactionsHistory :: collection( $transactions );
     }
 }

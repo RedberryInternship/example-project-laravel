@@ -58,7 +58,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public static function respondWithToken($token)
     {
-        $user = User :: find( auth() -> user() -> id );
+        $user = User :: find( auth( 'api' ) -> user() -> id );
 
         $user -> load('user_cards','user_cars','car_models');
 
@@ -115,7 +115,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function car_models()
     {
-        return $this -> belongsToMany('App\CarModel', 'user_car_models','user_id','model_id') -> withPivot('user_id');
+        return $this -> belongsToMany( CarModel :: class, 'user_car_models','user_id','model_id') -> withPivot('user_id');
     }
 
     public function user_cards()
@@ -144,14 +144,14 @@ class User extends Authenticatable implements JWTSubject
             );
     }
 
-    public function orders_history()
+    public function ordersHistory()
     {
-        return $this -> orders 
-            -> hasMany( Order :: class )
-            -> where( 'charging_status', OrderStatus :: FINISHED )
-            -> whereNotNull( 'charger_name' )
+        return Order :: whereUserId( $this -> id )
+            -> finished()
             -> has('user_card')
-            -> orderBy( 'id', 'desc' );
+            -> whereNotNull( 'charger_name' )
+            -> orderBy( 'id', 'desc' )
+            -> get();
     }
 
     public function user_cars()
