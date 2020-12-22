@@ -249,56 +249,6 @@ class Charger extends Model
         }
     }
 
-    /**
-     * Hide chargers from non whitelisted users.
-     * 
-     * @param  Charger $charger
-     * @return Collection
-     */
-    public static function filterChargersForNotWhitelistedUsers( $chargers ) 
-    {
-        $user = auth('api') -> user();
-
-        return $chargers -> filter(function( $charger ) use( $user ) {
-
-            /**
-             * if charger is not hidden show it to the user.
-             */
-            if(! $charger -> hidden) 
-            {
-                return true;
-            }
-
-            /**
-             * If user is not authenticated and 
-             * charger is hidden.
-             */
-            if(! $user )
-            {
-                return false;
-            }
-
-            /**
-             * If user is authenticated and charger is hidden
-             * with user's phone_number in its whitelist, 
-             * in that case show charger.
-             */
-            foreach( $charger -> whitelist as $allowedMember )
-            {
-                if($allowedMember -> phone === $user -> phone_number) 
-                {
-                    return true;
-                }
-            }
-
-            /**
-             * if user is authenticated and his/her phone number is not
-             * in charger's whitelist, then hide charger from that user.
-             */
-            return false;
-        });
-    }
-
     public static function addIsFreeAttributes(&$chargers)
     {
         /**
