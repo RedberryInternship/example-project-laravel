@@ -39,10 +39,11 @@ class Charger extends Model
      */
     protected $casts = [
         'charger_id'  => 'int',
-        'name'        => 'array',
-        'public'      => 'int',
-        'active'      => 'int',
         'is_paid'     => 'int',
+        'public'      => 'int',
+        'hidden'      => 'int',
+        'active'      => 'int',
+        'name'        => 'array',
     ];
 
     /**
