@@ -261,26 +261,26 @@ class Charger extends Model
         return $chargers -> filter(function( $charger ) use( $user ) {
 
             /**
-             * if charger has no whitelist show it to the user.
+             * if charger is not hidden show it to the user.
              */
-            if($charger -> whitelist -> count() === 0) 
+            if(! $charger -> hidden) 
             {
                 return true;
             }
 
             /**
-             * If user is not authenticated and charger 
-             * has whitelist hide charger(filter).
+             * If user is not authenticated and 
+             * charger is hidden.
              */
-            if(! $user ) 
+            if(! $user )
             {
                 return false;
             }
 
             /**
-             * If user is authenticated and charger has whitelist 
-             * with user's phone_number in it, it that case
-             * show charger.
+             * If user is authenticated and charger is hidden
+             * with user's phone_number in its whitelist, 
+             * in that case show charger.
              */
             foreach( $charger -> whitelist as $allowedMember )
             {
