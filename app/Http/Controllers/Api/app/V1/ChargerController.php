@@ -22,9 +22,12 @@ class ChargerController extends Controller
                 -> where('status', '!=', ChargerStatusEnum :: NOT_PRESENT)
                 -> withAllAttributes()
                 -> get();
+        
+        $chargers = Charger :: filterChargersForNotWhitelistedUsers( $chargers );
 
         Charger::addChargingPrices($chargers);
         Charger::addIsFreeAttributes($chargers);
+        Charger::addIsFavoriteAttributes($chargers);
 
         return new ChargerCollection($chargers);
     }
