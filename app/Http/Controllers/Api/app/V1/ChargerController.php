@@ -18,12 +18,10 @@ class ChargerController extends Controller
      */
     public function getChargers()
     {
-        $user = auth('api') -> user();
-
         $chargers = Charger :: OrderBy('id', 'desc')
-                -> where('status', '!=', ChargerStatusEnum :: NOT_PRESENT)
-                -> withAllAttributes()
-                -> get();
+            -> where('status', '!=', ChargerStatusEnum :: NOT_PRESENT)
+            -> withAllAttributes()
+            -> get();
 
         Charger::addChargingPrices($chargers);
         Charger::addIsFreeAttributes($chargers);
