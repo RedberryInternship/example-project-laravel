@@ -46,7 +46,7 @@ trait Message
     'charger_transaction_already_stopped' => [
       'en' => 'Charger ransaction is already finished!',
       'ru' => 'Зарядное устройство уже завершено!',
-      'ka' => 'დატენვის ტრანზაქცია უკვე დასრულებულია.',
+      'ka' => 'დამუხტვის ტრანზაქცია უკვე დასრულებულია.',
     ],
     'charging_successfully_finished'      => [
       'en' => 'Charging successfully finished!',
