@@ -45,6 +45,7 @@ class ChargingProcess
       'already_paid'                  => $order -> countPaidMoney(),
       'consumed_money'                => $order -> countConsumedMoney(),
       'refund_money'                  => $order -> countMoneyToRefund(),
+      'consumed_kilowatts'            => $order -> consumed_kilowatts ?? 0,
       'charger_type'                  => $order -> charger_connector_type -> determineChargerType(),
       'start_charging_time'           => $startChargingTime,
       'charging_type'                 => $order -> charging_type,

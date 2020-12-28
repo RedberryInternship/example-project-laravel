@@ -13,7 +13,7 @@ class FavoriteController extends Controller
     public function postAddFavorite(Request $request)
     {
     	$chargerId 	= $request -> charger_id;
-			$user				= User :: find( auth() -> user -> id );
+			$user				= User :: find( auth() -> user() -> id );
     	$status     = 400;
 			$favorite   = Favorite :: where( 'user_id', $user -> id )
 				-> where( 'charger_id', $chargerId ) 

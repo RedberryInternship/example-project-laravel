@@ -19,12 +19,13 @@ class ChargerController extends Controller
     public function getChargers()
     {
         $chargers = Charger :: OrderBy('id', 'desc')
-                -> where('status', '!=', ChargerStatusEnum :: NOT_PRESENT)
-                -> withAllAttributes()
-                -> get();
+            -> where('status', '!=', ChargerStatusEnum :: NOT_PRESENT)
+            -> withAllAttributes()
+            -> get();
 
         Charger::addChargingPrices($chargers);
         Charger::addIsFreeAttributes($chargers);
+        Charger::addIsFavoriteAttributes($chargers);
 
         return new ChargerCollection($chargers);
     }

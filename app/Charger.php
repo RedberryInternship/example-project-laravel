@@ -39,10 +39,11 @@ class Charger extends Model
      */
     protected $casts = [
         'charger_id'  => 'int',
-        'name'        => 'array',
-        'public'      => 'int',
-        'active'      => 'int',
         'is_paid'     => 'int',
+        'public'      => 'int',
+        'hidden'      => 'int',
+        'active'      => 'int',
+        'name'        => 'array',
     ];
 
     /**
@@ -159,12 +160,14 @@ class Charger extends Model
      */
     public function scopeWithAllAttributes($query)
     {
-        return $query -> with([
-            'tags',
-            'company',
-            'connector_types',
-            'business_services'
-        ]);
+        return $query -> with(
+            [
+                'business_services',
+                'connector_types',
+                'whitelist',
+                'company',
+            ]
+        );
     }
 
     /**
