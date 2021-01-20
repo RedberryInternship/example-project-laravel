@@ -211,6 +211,17 @@ class Timestamp
   }
 
   /**
+   * Get raw timestamp in unix seconds.
+   * 
+   * @param string $status
+   * @return integer|float
+   */
+  private function getRawTimestamp(string $status) 
+  {
+    return @ $this -> order -> charging_status_change_dates [ $status ];
+  }
+
+  /**
    * Calculate penalty start time.
    * 
    * @return milliseconds
@@ -225,6 +236,45 @@ class Timestamp
     $penaltyStartTime     = $penaltyStartTime -> timestamp * 1000;
 
     return $penaltyStartTime;
+  }
+
+  /**
+   * Get penalty time in seconds.
+   * 
+   * @return integer
+   */
+  public function getPenaltyTimeInSeconds() 
+  {
+    $penaltyStartTime = $this -> getRawTimestamp( OrderStatusEnum :: ON_FINE );
+
+    if($penaltyStartTime === null) 
+    {
+      return 0;
+    }
+
+
+    $finishedTime = $this -> getRawTimestamp( OrderStatusEnum :: FINISHED ) ?? microtime(true);
+
+    return $finishedTime - $penaltyStartTime;
+  }
+
+  /**
+   * Calculate penalty in minutes.
+   * 
+   * @return int
+   */
+  public function penaltyTimeInMinutes()
+  {
+    $penaltyTimeInSeconds = $this -> getPenaltyTimeInSeconds();
+
+    $penaltyTimeInMinutes = intdiv($penaltyTimeInSeconds, 60);
+
+    if($penaltyTimeInSeconds % 60) 
+    {
+      $penaltyTimeInMinutes++;
+    }
+
+    return $penaltyTimeInMinutes;
   }
 
   /**

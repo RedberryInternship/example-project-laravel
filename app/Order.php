@@ -931,23 +931,9 @@ class Order extends Model
         }
 
         $timestamp              = Timestamp :: build( $this );
-        $penaltyTimestamp       = $timestamp -> getPenaltyTimestamp();
-
-        if( ! $penaltyTimestamp )
-        {
-            return null;
-        }
-
-        $finishedTimestamp      = $timestamp -> getEndTimestamp();
-
-        if( ! $finishedTimestamp )
-        {
-            $finishedTimestamp  = now();
-        }
-        
-        $elapsedMinutes         = $penaltyTimestamp -> diffInMinutes( $finishedTimestamp );
+        $penaltyTimeInMinutes   = $timestamp -> penaltyTimeInMinutes();
         $penaltyPricePerMinute  = Helper :: getPenaltyPricePerMinute();
                 
-        return ( $elapsedMinutes + 1 ) * $penaltyPricePerMinute;    
+        return $penaltyTimeInMinutes * $penaltyPricePerMinute;    
     }
 }

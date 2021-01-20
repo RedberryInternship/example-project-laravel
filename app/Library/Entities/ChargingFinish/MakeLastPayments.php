@@ -49,7 +49,7 @@ class MakeLastPayments
   {
     $charger = $order -> getCharger();
 
-    if( $charger->isPaid() && ! $order -> isChargingFree() )
+    if( $charger -> isPaid() && ! $order -> isChargingFree() )
     {
       self :: cutOrRefund( $order );
     }
