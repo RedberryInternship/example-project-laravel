@@ -33,8 +33,8 @@ class StoreCarRequest extends FormRequest implements ValidatesWhenResolved
                     $user = auth('api') -> user();
                     $car = UserCarModel :: where(
                         [
-                            'user_id' => $user -> id,
-                            'user_car_model' => $value,
+                            'user_id'  => $user -> id,
+                            'model_id' => $value,
                         ]
                     ) -> first();
 
