@@ -14,6 +14,7 @@ use App\Nova\Actions\ExportChargerOrders;
 use App\Nova\Filters\Charger\ChargerType;
 use Spatie\NovaTranslatable\Translatable;
 use App\Nova\Filters\Charger\ChargerStatus;
+use Laravel\Nova\Fields\Number;
 
 class Charger extends Resource
 {
@@ -98,6 +99,9 @@ class Charger extends Resource
             Boolean::make('Is Penalty Enabled', 'penalty_enabled')
                 ->trueValue(1)
                 ->falseValue(0),
+            
+            Number::make('Kilowatt Price', 'kilowatt_price')
+                -> step(0.01),
             
             Text::make('Status') -> readonly(),
 

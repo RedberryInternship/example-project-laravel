@@ -78,8 +78,9 @@ class IncomeExpenseAnalyser
 
       $orders -> each(function( $order ) use( &$freshMonthlyData ) {
         $month = $order -> created_at -> month - 1;
+        $kilowattPrice = $order -> charger_connector_type -> charger -> kilowatt_price;
 
-        $expense = $order -> consumed_kilowatts * 0.1625;
+        $expense = $order -> consumed_kilowatts * $kilowattPrice;
         $freshMonthlyData[$month] += $expense;
       });
 
