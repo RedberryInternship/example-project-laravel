@@ -14,6 +14,7 @@ use App\Nova\Actions\ExportChargerOrders;
 use App\Nova\Filters\Charger\ChargerType;
 use Spatie\NovaTranslatable\Translatable;
 use App\Nova\Filters\Charger\ChargerStatus;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
 
 class Charger extends Resource
@@ -101,7 +102,8 @@ class Charger extends Resource
                 ->falseValue(0),
             
             Number::make('Kilowatt Price', 'kilowatt_price')
-                -> step(0.01),
+                -> step(0.01)
+                -> hideFromIndex(),
             
             Text::make('Status') -> readonly(),
 
@@ -112,6 +114,8 @@ class Charger extends Resource
             HasMany::make('Charger Connector Types'),
             
             BelongsTo::make('Company'),
+            
+            Image::make('Image'),
 
             BelongsToMany::make('Business Services')
                 -> nullable()
