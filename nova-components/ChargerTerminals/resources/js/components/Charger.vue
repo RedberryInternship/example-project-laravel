@@ -77,7 +77,6 @@ export default {
     },
     save(e) {
       e.preventDefault();
-      console.log([ 'body', this.updateChargerTerminal ]);
       fetch( '/nova-vendor/charger-terminals/save', {
         method: 'POST',
         headers: {

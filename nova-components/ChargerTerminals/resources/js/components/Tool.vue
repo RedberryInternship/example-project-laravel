@@ -23,7 +23,9 @@ export default {
         fetch( '/nova-vendor/charger-terminals/chargers' )
             .then( response => response.json())
             .then( data => {
-                this.chargers = data.map(el => {
+                this.chargers = data
+                .filter((el) => el.name !== null && el.code !== null)
+                .map(el => {
                     const location = JSON.parse( el.location ).ka;
                     return {
                         ...el,
