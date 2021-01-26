@@ -20,7 +20,7 @@
 <script>
 import validation from '../helpers/validation';
 
-const { isBackspace, isEnter, shouldPrevent, isAlreadyFilled } = validation;
+const { shouldPrevent, isAlreadyFilled } = validation;
 
 export default {
   data() {
@@ -28,7 +28,7 @@ export default {
       chargerCode: ''
     }
   },
-  props:['chargers' ],
+  props:[ 'chargers' ],
   methods: {
     filterSearchKeys( e ) {
       if( shouldPrevent( e ) || isAlreadyFilled( this.chargerCode, e))

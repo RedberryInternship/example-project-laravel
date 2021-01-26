@@ -15,8 +15,7 @@ use App\Library\DataStructures\ChargerTerminals as ChargerTerminalsRequest;
 |
 */
 
-//todo Vobi, ნოვაში კიდევ რატომ გვაქვს დამატებით ეს routes. api.php? რა პრინციპით ვყოფთ ამას?
-// და რატომ არ დავწერეთ ეს მაგალითად root route ფოლდერში?
+
 Route :: get( 'chargers' , function() { return ChargerTerminals :: getChargers();  });
 Route :: get( 'terminals', function() { return ChargerTerminals :: getTerminals(); });
 
