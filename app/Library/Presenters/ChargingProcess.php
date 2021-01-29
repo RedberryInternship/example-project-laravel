@@ -53,6 +53,8 @@ class ChargingProcess
       'charger_connector_type_id'     => $order -> charger_connector_type -> id, 
       'charger_id'                    => $order -> getCharger() -> id,
       'charger_code'                  => $order -> getCharger() -> code,
+      'is_paid'                       => $order -> getCharger() -> is_paid,
+      'penalty_enabled'               => $order -> getCharger() -> penalty_enabled,
       'connector_type_id'             => $order -> charger_connector_type -> connector_type -> id,
       'user_card_id'                  => $order -> user_card_id,
     ];
