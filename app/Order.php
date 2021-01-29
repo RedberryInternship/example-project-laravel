@@ -655,10 +655,15 @@ class Order extends Model
     {
         if( $this -> charger_connector_type -> isChargerFast() )
         {
-        return false;
+            return false;
         }
 
-        if(  ! $this -> carHasAlreadyStoppedCharging() )
+        if( ! $this -> carHasAlreadyStoppedCharging() )
+        {
+            return false;
+        }
+
+        if( ! $this -> getCharger() -> penalty_enabled ) 
         {
             return false;
         }
