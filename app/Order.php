@@ -546,7 +546,10 @@ class Order extends Model
 
         if( $chargingStatus == OrderStatusEnum :: USED_UP || $chargingStatus == OrderStatusEnum :: CHARGED )
         {
-            Helper :: isDev() && User :: sendSms($this -> user -> phone_number, $this -> onPenaltyMessage());
+            if($this -> getCharger() -> isPenaltyEnabled()) 
+            {
+                User :: sendSms($this -> user -> phone_number, $this -> onPenaltyMessage());
+            }
         }
         else if( $chargingStatus == OrderStatusEnum :: FINISHED )
         {
