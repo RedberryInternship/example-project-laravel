@@ -39,13 +39,15 @@ class ChargingProcess
     $this -> addPenaltyFeeIfOnPenalty         ( $order );
     $this -> setFinishedMessageWhenFinished   ( $order );
     $this -> setIsChargingFreeAttribute       ( $order );
+    $this -> setConsumedKilowatts             ( $order );
+
+
         
     $mainResourceData = [
       'order_id'                      => $order -> id,
       'already_paid'                  => $order -> countPaidMoney(),
       'consumed_money'                => $order -> countConsumedMoney(),
       'refund_money'                  => $order -> countMoneyToRefund(),
-      'consumed_kilowatts'            => $order -> consumed_kilowatts ?? 0,
       'charger_type'                  => $order -> charger_connector_type -> determineChargerType(),
       'start_charging_time'           => $startChargingTime,
       'charging_type'                 => $order -> charging_type,
@@ -206,5 +208,24 @@ class ChargingProcess
         ]
       );
     }
+  }
+ 
+  /**
+   * Set isChargingFree attribute.
+   * 
+   * @param  Order $order
+   * @return void
+   */
+  private function setConsumedKilowatts( Order $order )
+  {
+    $consumedKilowatts = $order -> charging_status === OrderStatusEnum :: INITIATED
+      ? 0
+      : $order -> consumed_kilowatts ?? 0;
+    
+    $this -> setAdditionalData(
+      [
+        'consumed_kilowatts' => $consumedKilowatts,
+      ]
+    );
   }
 }
