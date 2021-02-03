@@ -58,6 +58,7 @@ class OrderFinder
           $query -> where( 'charger_id', $chargerId );
         });
       })
+      -> latest()
       -> first();
   }
 
@@ -74,6 +75,7 @@ class OrderFinder
       OrderStatusEnum :: PAYMENT_FAILED,
       OrderStatusEnum :: CANCELED,
       OrderStatusEnum :: UNPLUGGED,
+      OrderStatusEnum :: NON_APP_MODE,
     ];
   }
 }
