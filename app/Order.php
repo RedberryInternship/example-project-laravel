@@ -94,6 +94,16 @@ class Order extends Model
     }
 
     /**
+     * Order hasMany relationship with OrderChargingPower;
+     * 
+     * @return Illuminate\Support\Collection
+     */
+    public function charging_powers() 
+    {
+        return $this -> hasMany(ChargingPower :: class);
+    }
+
+    /**
      * Order belongsTo relationship with UserCard.
      * 
      * @return UserCard 
@@ -531,6 +541,22 @@ class Order extends Model
             $chargingPower  = $this -> getChargingPower();
             $this -> kilowatt -> setChargingPower( $chargingPower );
         }
+
+        $currentChargingPower = $this -> getChargingPower();
+        $chargingPrice = $this -> getChargingPrice( $currentChargingPower );
+
+        $this 
+            -> charging_powers()
+            -> create(
+                [
+                    "charging_power"        => $currentChargingPower, 
+                    "tariffs_power_range"   => $chargingPrice -> min_kwt    . ' - ' . $chargingPrice -> max_kwt,
+                    "tariffs_daytime_range" => $chargingPrice -> start_time . ' - ' . $chargingPrice -> end_time,  
+                    "tariff_price"          => $chargingPrice -> price,   
+                    "start_at"              => now() -> timestamp,       
+                    "end_at"                => null,
+                ]
+            );
     }
 
     /**
@@ -864,6 +890,8 @@ class Order extends Model
     /**
      * Get current charging price.
      * 
+     * #### Deprecated
+     * 
      * @return float
      */
     private function getCurrentChargingPrice()
@@ -887,6 +915,28 @@ class Order extends Model
         }
 
         return $chargingPriceInfo -> price;
+    }
+
+    /**
+     * Get charging price according to charging 
+     * power and current time.
+     * 
+     * @return ChargingPrice
+     */
+    private function getChargingPrice($chargingPower)
+    {
+        $currentTime  = now() -> toTimeString();
+
+        $chargingPriceInfo  = $this 
+        -> charger_connector_type 
+        -> getSpecificChargingPrice( $chargingPower, $currentTime);
+        
+        if( ! $chargingPriceInfo )
+        {
+            throw new NoSuchChargingPriceException();
+        }
+
+        return $chargingPriceInfo;
     }
 
     /**

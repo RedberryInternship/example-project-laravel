@@ -3,25 +3,27 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
-class CarModel extends Resource
+class ChargingPower extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\CarModel';
+    public static $model = 'App\ChargingPower';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'id';
 
     /**
      * The columns that should be searched.
@@ -33,13 +35,6 @@ class CarModel extends Resource
     ];
 
     /**
-     * Eager Loading.
-     *
-     * @var string
-     */
-    public static $with = ['mark'];
-
-    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -49,8 +44,20 @@ class CarModel extends Resource
     {
         return [
             ID::make()->sortable(),
-            Text::make('name'),
-            BelongsTo::make('Mark'),
+
+            Number :: make( 'charging_power' ) -> step( 0.01 ) -> readonly(),
+
+            Text :: make( 'tariffs_power_range' ) -> readonly(),
+
+            Text :: make( 'tariffs_daytime_range' ) -> readonly(),
+
+            Number :: make( 'tariff_price' ) -> step( 0.01 ) -> readonly(),
+
+            Text :: make( 'start_at' ) -> readonly(),
+
+            Text :: make( 'end_at' ) -> readonly(),
+            
+            BelongsTo :: make('Order'),
         ];
     }
 

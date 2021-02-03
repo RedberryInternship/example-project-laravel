@@ -95,6 +95,8 @@ class Order extends Resource
             BelongsTo::make('User'),
             
             HasMany::make('Payments'),
+            
+            HasMany::make('ChargingPower'),
 
             BelongsTo::make('Charger Connector Type')
                 -> displayUsing(function($chargerConnectorType) {
