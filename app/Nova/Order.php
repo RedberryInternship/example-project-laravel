@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\ChargerConnectorType;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
@@ -88,7 +89,9 @@ class Order extends Resource
      */
     public function fields(Request $request)
     {
-        $isLVL2 = ! $this -> charger_connector_type -> isChargerFast();
+        $chargerConnectorTypeId = $this -> charger_connector_type_id;
+        $chargerConnectorType   = ChargerConnectorType :: where( 'id', $chargerConnectorTypeId ) -> first();
+        $isLVL2                 = ! $chargerConnectorType -> isChargerFast();
 
         return [
             ID::make()
