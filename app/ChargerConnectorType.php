@@ -141,9 +141,10 @@ class ChargerConnectorType extends Model
     $rawSql         = $this -> getTimeBetweenSqlQuery( $startChargingTime );
 
     $chargingPrice  = $this 
-      -> charging_prices() 
-      -> where( 'min_kwt', '<=', intval($chargingPower) )
-      -> where( 'max_kwt', '>=', intval($chargingPower) )
+      -> charging_prices()
+      -> where( 'charger_connector_type_id', $this -> id)
+      -> where( 'min_kwt', '<=', $chargingPower )
+      -> where( 'max_kwt', '>' , $chargingPower )
       -> whereRaw( $rawSql )
       -> first();
 

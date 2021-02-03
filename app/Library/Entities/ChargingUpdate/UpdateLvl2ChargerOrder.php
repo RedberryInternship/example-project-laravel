@@ -19,9 +19,10 @@ class UpdateLvl2ChargerOrder
    */
   public static function execute( Order &$order ): void
   {
+    $order -> updateChargingPowerIfNotUpdated();
+    
     if( $order -> isInitiated() && $order -> chargingHasStarted() )
     {
-      $order -> updateChargingPowerIfNotUpdated();
       $order -> updateChargingStatus( OrderStatusEnum :: CHARGING );   
       
       self :: makeFirstPayment( $order );
