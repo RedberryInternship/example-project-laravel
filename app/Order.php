@@ -542,6 +542,17 @@ class Order extends Model
             $this -> kilowatt -> setChargingPower( $chargingPower );
         }
 
+        $latestChargingPower = $this 
+            -> charging_powers()
+            -> where( 'order_id', $this -> id )
+            -> latest()
+            -> first();
+        
+        if( $latestChargingPower ) 
+        {
+            $latestChargingPower -> update([ 'end_at' => now() -> timestamp ]);
+        }
+
         $currentChargingPower = $this -> getChargingPower();
         $chargingPrice = $this -> getChargingPrice( $currentChargingPower );
 
