@@ -56,7 +56,7 @@ class ChargingPower extends Resource
             Text :: make( 'start_at' ) -> readonly(),
 
             Text :: make( 'end_at' ) -> readonly(),
-            
+
             BelongsTo :: make('Order'),
         ];
     }
@@ -103,5 +103,38 @@ class ChargingPower extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * Create policy.
+     * 
+     * @param Request $request
+     * @return mixed
+     */
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
+
+    /**
+     * Delete policy.
+     * 
+     * @param Request $request
+     * @return mixed
+     */
+    public function authorizedToDelete(Request $request)
+    {
+        return false;
+    }
+
+    /**
+     * Update policy.
+     * 
+     * @param Request $request
+     * @return mixed
+     */
+    public function authorizedToUpdate(Request $request)
+    {
+        return false;
     }
 }
