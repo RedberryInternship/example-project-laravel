@@ -554,7 +554,7 @@ class Order extends Model
         }
 
         $currentChargingPower = $this -> getChargingPower();
-        $chargingPrice = $this -> getChargingPrice( $currentChargingPower );
+        $chargingPrice        = $this -> getChargingPrice( $currentChargingPower );
 
         $this 
             -> charging_powers()
@@ -568,6 +568,28 @@ class Order extends Model
                     "end_at"                => null,
                 ]
             );
+    }
+
+    /**
+     * Set last charging power record end 
+     * timestamp with current time if not
+     * set already.
+     * 
+     * @return void
+     */
+    public function stampLastChargingPowerRecord()
+    {
+        $lastRecord = $this 
+            -> charging_powers()
+            -> where( 'order_id', $this -> id )
+            -> orderBy( 'id', 'desc' )
+            -> first();
+        
+        if( $lastRecord -> end_at === null )
+        {
+            $lastRecord -> end_at = now() -> timestamp;
+            $lastRecord -> save();
+        }
     }
 
     /**
@@ -591,6 +613,20 @@ class Order extends Model
         else if( $chargingStatus == OrderStatusEnum :: FINISHED )
         {
             User :: sendSms($this -> user -> phone_number, $this -> chargingCompleteMessage());
+        }
+
+        $shouldChargingPowerRecordBeStamped = in_array(
+            $chargingStatus, 
+            [
+                OrderStatusEnum :: FINISHED, 
+                OrderStatusEnum :: USED_UP, 
+                OrderStatusEnum :: CHARGED
+            ],
+        );
+
+        if( $shouldChargingPowerRecordBeStamped )
+        {
+            $this -> stampLastChargingPowerRecord();
         }
     }
 

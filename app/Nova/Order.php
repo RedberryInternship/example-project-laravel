@@ -88,6 +88,8 @@ class Order extends Resource
      */
     public function fields(Request $request)
     {
+        $isLVL2 = ! $this -> charger_connector_type -> isChargerFast();
+
         return [
             ID::make()
                 ->sortable(),
@@ -96,7 +98,9 @@ class Order extends Resource
             
             HasMany::make('Payments'),
 
-            HasMany::make('Charging Powers'),
+            HasMany::make('Charging Powers') -> canSee(function() use( $isLVL2 ) {
+                return $isLVL2;
+            }),
 
             BelongsTo::make('Charger Connector Type')
                 -> displayUsing(function($chargerConnectorType) {
