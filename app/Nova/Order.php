@@ -89,9 +89,7 @@ class Order extends Resource
      */
     public function fields(Request $request)
     {
-        $chargerConnectorTypeId = $this -> charger_connector_type_id;
-        $chargerConnectorType   = ChargerConnectorType :: where( 'id', $chargerConnectorTypeId ) -> first();
-        $isLVL2                 = ! $chargerConnectorType -> isChargerFast();
+        $isLVL2 = $this -> isLVL2();
 
         return [
             ID::make()
@@ -220,5 +218,23 @@ class Order extends Resource
     public function authorizedToUpdate(Request $request)
     {
         return false;
+    }
+
+    /**
+     * Determine if order's charger is LVL 2 charger.
+     * 
+     * @return bool
+     */
+    public function isLVL2() 
+    {
+        $chargerConnectorTypeId = $this -> charger_connector_type_id;
+        if(! $chargerConnectorTypeId )
+        {
+            return false;
+        }
+
+        $chargerConnectorType   = ChargerConnectorType :: where( 'id', $chargerConnectorTypeId ) -> first();
+        
+        return ! $chargerConnectorType -> isChargerFast();
     }
 }
