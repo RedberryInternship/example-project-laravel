@@ -21,7 +21,7 @@ class OrderChargingPowers extends Migration
             $table -> string('tariffs_daytime_range') -> nullable();
             $table -> float('tariff_price');
             $table -> string('start_at');
-            $table -> string('end_at');
+            $table -> string('end_at') -> nullable();
         });
     }
 
