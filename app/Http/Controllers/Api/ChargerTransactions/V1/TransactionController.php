@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\Api\ChargerTransactions\V1;
 
-use App\Library\Interactors\OrdersMiddleware;
 use App\Library\Interactors\ChargingFinisher;
 use App\Library\Interactors\ChargingUpdater;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Log;
-use App\Order;
 
 class TransactionController extends Controller
 {
