@@ -545,7 +545,7 @@ class Order extends Model
         $latestChargingPower = $this 
             -> charging_powers()
             -> where( 'order_id', $this -> id )
-            -> latest()
+            -> orderBy('id', 'desc')
             -> first();
         
         if( $latestChargingPower ) 
