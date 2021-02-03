@@ -18,6 +18,7 @@ class OrderChargingPowers extends Migration
             $table -> bigInteger('order_id') -> nullable();
             $table -> float('charging_power') -> default(0);
             $table -> string('tariffs_power_range') -> nullable();
+            $table -> string('tariffs_daytime_range') -> nullable();
             $table -> float('tariff_price');
             $table -> string('start_at');
             $table -> string('end_at');
