@@ -618,7 +618,7 @@ class Order extends Model
             $startedAt = (int) $chargingPower -> start_at;
             $endedAt = (int) $chargingPower -> end_at;
             
-            $diff = $endedAt - $startedAt;
+            $diff = ($endedAt - $startedAt) / 60;
 
             return $carry + $diff * $chargingPower -> tariff_price;
         });
