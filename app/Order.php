@@ -560,7 +560,7 @@ class Order extends Model
      * 
      * @return void
      */
-    public function updateChargingPowerIfNotUpdated()
+    public function updateChargingPowerRecords()
     {
         if( ! $this -> kilowatt -> charging_power )
         {

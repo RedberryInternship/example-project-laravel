@@ -20,7 +20,7 @@ class UpdateFastChargerOrder
    */
   public static function execute( Order &$order )
   {
-    $order -> updateChargingPowerIfNotUpdated();
+    $order -> updateChargingPowerRecords();
     $charger = $order -> getCharger();
 
     if( $order -> isCharging() && $charger -> isPaid() )
