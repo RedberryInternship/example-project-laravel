@@ -7,7 +7,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
+use Carbon\Carbon;
 
 class ChargingPower extends Resource
 {
@@ -53,9 +53,13 @@ class ChargingPower extends Resource
 
             Number :: make( 'tariff_price' ) -> step( 0.01 ) -> readonly(),
 
-            Text :: make( 'start_at' ) -> readonly(),
+            Text :: make( 'start_at' ) -> displayUsing(function($startTimestamp) {
+                return Carbon :: createFromTimestamp($startTimestamp) -> toDateTimeString();
+            }) -> readonly(),
 
-            Text :: make( 'end_at' ) -> readonly(),
+            Text :: make( 'end_at' ) -> displayUsing(function($endTimestamp) {
+                return $endTimestamp !== null ? Carbon :: createFromTimestamp($endTimestamp) -> toDateTimeString() : null;
+            }) -> readonly(),
 
             BelongsTo :: make('Order'),
         ];
