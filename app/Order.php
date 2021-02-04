@@ -985,7 +985,8 @@ class Order extends Model
         // return $chargingPrice * $elapsedMinutes;
 
         $latestChargingPowerRecord = $this 
-            -> charger_powers()
+            -> charging_powers()
+            -> whereOrderId( $this -> id )
             -> orderBy( 'id', 'desc' )
             -> first();
         
