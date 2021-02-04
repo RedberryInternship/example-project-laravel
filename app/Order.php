@@ -576,6 +576,8 @@ class Order extends Model
             }
 
             $latestChargingPower -> update([ 'end_at' => now() -> timestamp ]);
+            $estimatedMoney = $this -> countChargingPricesSum();
+            $this -> update([ 'charge_price' => $estimatedMoney]);
         }
 
         $currentChargingPower = $this -> getChargingPower();
@@ -593,6 +595,30 @@ class Order extends Model
                     "end_at"                => null,
                 ]
             );
+    }
+
+    /**
+     * Count sum of charging prices.
+     * 
+     * @return float
+     */
+    public function countChargingPricesSum()
+    {
+        $chargingPricesSum = $this 
+            -> charging_prices 
+            -> filter(function($chargingPower) {
+                return $chargingPower -> end_at !== null;
+            })
+            -> reduce(function($carry, $chargingPower) {
+            $startedAt = (int) $chargingPower -> start_at;
+            $endedAt = (int) $chargingPower -> end_at;
+            
+            $diff = $endedAt - $startedAt;
+
+            return $carry + $diff * $chargingPower -> tariff_price;
+        });
+
+        return $chargingPricesSum;
     }
 
     /**
@@ -952,11 +978,23 @@ class Order extends Model
      */
     private function countConsumedMoneyByKilowatt()
     {
-        $timestamp          = Timestamp :: build( $this );
-        $elapsedMinutes     = $timestamp -> calculateChargingElapsedTimeInMinutes();
-        $chargingPrice      = $this -> getCurrentChargingPrice();
+        // $timestamp          = Timestamp :: build( $this );
+        // $elapsedMinutes     = $timestamp -> calculateChargingElapsedTimeInMinutes();
+        // $chargingPrice      = $this -> getCurrentChargingPrice();
         
-        return $chargingPrice * $elapsedMinutes;
+        // return $chargingPrice * $elapsedMinutes;
+
+        $latestChargingPowerRecord = $this 
+            -> charger_powers()
+            -> orderBy( 'id', 'desc' )
+            -> first();
+        
+        if($latestChargingPowerRecord -> end_at === null)
+        {
+            return $this -> countChargingPricesSum();
+        }
+
+        return $this -> charging_power;
     }
 
     /**
