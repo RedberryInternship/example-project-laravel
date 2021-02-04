@@ -550,6 +550,14 @@ class Order extends Model
         
         if( $latestChargingPower ) 
         {
+            $startedAt = (int) $latestChargingPower -> start_at;
+            $diff = now() -> timestamp - $startedAt;
+
+            if( $diff < 60 * 5 )
+            {
+                return;
+            }
+
             $latestChargingPower -> update([ 'end_at' => now() -> timestamp ]);
         }
 
