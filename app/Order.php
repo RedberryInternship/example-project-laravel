@@ -598,35 +598,6 @@ class Order extends Model
     }
 
     /**
-     * Count sum of charging prices.
-     * 
-     * @return float
-     */
-    public function countChargingPricesSum()
-    {
-        if( $this -> charging_powers === null )
-        {
-            return 0;
-        }
-
-        $chargingPricesSum = $this 
-            -> charging_powers
-            -> filter(function($chargingPower) {
-                return $chargingPower -> end_at !== null;
-            })
-            -> reduce(function($carry, $chargingPower) {
-            $startedAt = (int) $chargingPower -> start_at;
-            $endedAt = (int) $chargingPower -> end_at;
-            
-            $diff = ($endedAt - $startedAt) / 60;
-
-            return $carry + $diff * $chargingPower -> tariff_price;
-        });
-
-        return $chargingPricesSum;
-    }
-
-    /**
      * Set last charging power record end 
      * timestamp with current time if not
      * set already.
@@ -989,23 +960,18 @@ class Order extends Model
         
         // return $chargingPrice * $elapsedMinutes;
 
-        $latestChargingPowerRecord = $this 
-            -> charging_powers()
-            -> whereOrderId( $this -> id )
-            -> orderBy( 'id', 'desc' )
-            -> first();
-
-        if( $latestChargingPowerRecord === null ) 
+        if( $this -> charging_powers === null )
         {
             return 0;
         }
-        
-        if($latestChargingPowerRecord -> end_at === null)
-        {
-            return $this -> countChargingPricesSum();
-        }
 
-        return $this -> charge_price;
+        $chargingPricesSum = $this 
+            -> charging_powers
+            -> reduce(function($carry, $chargingPower) {
+                return $carry + $chargingPower -> getIntervalPrice();
+            });
+
+        return $chargingPricesSum;
     }
 
     /**

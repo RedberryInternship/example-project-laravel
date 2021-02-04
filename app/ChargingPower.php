@@ -32,4 +32,22 @@ class ChargingPower extends Model
     {
         return $this -> belongsTo( Order :: class );
     }
+
+    /**
+     * Get charging power interval price.
+     * 
+     * @return float
+     */
+    public function getIntervalPrice()
+    {
+        $startedAt = (int) $this -> start_at;
+        $endedAt = $this -> end_at !== null
+            ? (int) $this -> end_at
+            : now() -> timestamp;
+
+
+        $diffMinutes = ($endedAt - $startedAt) / 60;
+
+        return $diffMinutes * $this -> tariff_price;
+    }
 }
