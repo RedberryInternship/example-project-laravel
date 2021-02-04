@@ -576,8 +576,6 @@ class Order extends Model
             }
 
             $latestChargingPower -> update([ 'end_at' => now() -> timestamp ]);
-            $estimatedMoney = $this -> countChargingPricesSum();
-            $this -> update([ 'charge_price' => $estimatedMoney]);
         }
 
         $currentChargingPower = $this -> getChargingPower();
