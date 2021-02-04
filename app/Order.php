@@ -989,13 +989,18 @@ class Order extends Model
             -> whereOrderId( $this -> id )
             -> orderBy( 'id', 'desc' )
             -> first();
+
+        if( $latestChargingPowerRecord === null ) 
+        {
+            return 0;
+        }
         
         if($latestChargingPowerRecord -> end_at === null)
         {
             return $this -> countChargingPricesSum();
         }
 
-        return $this -> charging_power;
+        return $this -> charge_price;
     }
 
     /**
