@@ -393,6 +393,18 @@ class Order extends Model
     {
         return $this -> charging_status == OrderStatusEnum :: INITIATED;
     }
+    
+    /**
+     * Determine if order has already initiated.
+     * 
+     * @return bool
+     */
+    public function hasInitiated(): bool
+    {
+        $initiatedTimestamp = @$this -> charging_status_change_dates[OrderStatusEnum :: INITIATED];
+        
+        return $initiatedTimestamp !== null && !$this ->isInitiated();
+    }
 
     /**
      * Determine if order is active
@@ -540,6 +552,11 @@ class Order extends Model
         {
             $chargingPower  = $this -> getChargingPower();
             $this -> kilowatt -> setChargingPower( $chargingPower );
+        }
+
+        if( ! $this -> hasInitiated() )
+        {
+            return;
         }
 
         $latestChargingPower = $this 
