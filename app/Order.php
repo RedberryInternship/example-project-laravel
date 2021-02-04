@@ -604,13 +604,13 @@ class Order extends Model
      */
     public function countChargingPricesSum()
     {
-        if( $this -> charging_prices === null )
+        if( $this -> charging_powers === null )
         {
             return 0;
         }
-        
+
         $chargingPricesSum = $this 
-            -> charging_prices
+            -> charging_powers
             -> filter(function($chargingPower) {
                 return $chargingPower -> end_at !== null;
             })
