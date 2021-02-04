@@ -468,6 +468,20 @@ class Order extends Model
     }
 
     /**
+     * Latest charging power.
+     * 
+     * @return ChargingPower|null
+     */
+    public function latestChargingPower()
+    {
+        return $this 
+        -> charging_powers()
+        -> whereOrderId( $this -> id )
+        -> orderBy( 'id', 'desc' )
+        -> first();
+    }
+
+    /**
      * Determine if charging price is zero a.k.a. free.
      * 
      * @return bool
@@ -479,14 +493,14 @@ class Order extends Model
             return false;
         }
 
-        $currentChargingPrice = $this -> getCurrentChargingPrice();
+        $currentChargingPower = $this -> latestChargingPower();
 
-        if( is_null( $currentChargingPrice ) )
+        if( is_null( $currentChargingPower ) )
         {
-            return $currentChargingPrice;
+            return $currentChargingPower;
         }
         
-        return $currentChargingPrice == 0;
+        return $currentChargingPower -> tariff_price == 0;
     }
 
     /**
@@ -559,11 +573,7 @@ class Order extends Model
             return;
         }
 
-        $latestChargingPower = $this 
-            -> charging_powers()
-            -> where( 'order_id', $this -> id )
-            -> orderBy('id', 'desc')
-            -> first();
+        $latestChargingPower = $this -> latestChargingPower();
         
         if( $latestChargingPower ) 
         {
@@ -604,11 +614,7 @@ class Order extends Model
      */
     public function stampLastChargingPowerRecord()
     {
-        $lastRecord = $this 
-            -> charging_powers()
-            -> where( 'order_id', $this -> id )
-            -> orderBy( 'id', 'desc' )
-            -> first();
+        $lastRecord = $this -> latestChargingPower();
         
         if( $lastRecord -> end_at === null )
         {
@@ -952,12 +958,6 @@ class Order extends Model
      */
     private function countConsumedMoneyByKilowatt()
     {
-        // $timestamp          = Timestamp :: build( $this );
-        // $elapsedMinutes     = $timestamp -> calculateChargingElapsedTimeInMinutes();
-        // $chargingPrice      = $this -> getCurrentChargingPrice();
-        
-        // return $chargingPrice * $elapsedMinutes;
-
         if( $this -> charging_powers === null )
         {
             return 0;
@@ -970,36 +970,6 @@ class Order extends Model
             });
 
         return $chargingPricesSum;
-    }
-
-    /**
-     * Get current charging price.
-     * 
-     * #### Deprecated
-     * 
-     * @return float
-     */
-    private function getCurrentChargingPrice()
-    {
-        $timestamp          = Timestamp :: build( $this );
-        $chargingPower      = $this -> kilowatt -> getChargingPower();
-        $startChargingTime  = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
-
-        if( ! $startChargingTime )
-        {
-            return null;
-        }
-
-        $chargingPriceInfo  = $this 
-        -> charger_connector_type 
-        -> getSpecificChargingPrice( $chargingPower, $startChargingTime  -> toTimeString() );
-        
-        if( ! $chargingPriceInfo )
-        {
-            throw new NoSuchChargingPriceException();
-        }
-
-        return $chargingPriceInfo -> price;
     }
 
     /**
