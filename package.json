@@ -10,8 +10,6 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "build-charger-terminals": "cd nova-components/ChargerTerminals && npm run dev",
         "build-charger-terminals-prod": "cd nova-components/ChargerTerminals && npm run prod",
-        "create-chargers-tunnel": ". ./scripts/create-chargers-tunnel.sh",
-        "create-sql-tunnel": ". ./scripts/create-sql-tunnel.sh"
     },
     "devDependencies": {
         "axios": "^0.19",

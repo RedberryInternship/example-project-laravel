@@ -7,19 +7,15 @@ use App\ChargerConnectorType;
 use App\Charger;
 use App\ConnectorType;
 
-
-if( ConnectorType :: count() == 0 )
+$factory->define(ChargerConnectorType::class, function (Faker $faker) {
+    if( ConnectorType :: count() == 0 )
     {
       factory( ConnectorType :: class ) -> create([ 'name' => 'Type 2' ]);
       factory( ConnectorType :: class ) -> create([ 'name' => 'Combo 2' ]);
       factory( ConnectorType :: class ) -> create([ 'name' => 'CHAdeMO' ]);
     }
-
+    
     $connectorType = ConnectorType :: inRandomOrder() -> first();
-
-
-
-$factory->define(ChargerConnectorType::class, function (Faker $faker) use ( $connectorType ) {
 
     return [
       'charger_id'          => 0,
