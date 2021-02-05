@@ -42,7 +42,8 @@ class ChargerController extends Controller
             -> withAllAttributes()
             -> find( $charger_id );
 
-        Charger :: addIsFreeAttributes([ $charger ]);
+        $wrapper = [ $charger ];
+        Charger :: addIsFreeAttributes($wrapper);
 
         return new ChargerResource( $charger );
     }
