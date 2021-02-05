@@ -17,7 +17,7 @@ class ContactInformation extends TestCase {
   }
   
   /** @test */
-  public function ok(): void 
+  public function is_ok(): void 
   {
     factory(AppContact :: class) -> create();
 
@@ -25,7 +25,7 @@ class ContactInformation extends TestCase {
   }
   
   /** @test */
-  public function isNotOk(): void 
+  public function is_not_ok(): void 
   {
     $this -> get($this -> url) -> assertStatus(404);
   }
