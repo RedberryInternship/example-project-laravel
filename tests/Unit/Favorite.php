@@ -7,7 +7,8 @@ use Tests\TestCase;
 use App\Favorite as AppFavorite;
 
 
-class Favorite extends TestCase {
+class Favorite extends TestCase 
+{
   protected function setUp(): void
   {
     parent :: setUp();

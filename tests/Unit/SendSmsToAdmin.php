@@ -7,7 +7,8 @@ use App\Contact;
 use Tests\TestCase;
 use App\ContactMessage;
 
-class SendSmsToAdmin extends TestCase {
+class SendSmsToAdmin extends TestCase 
+{
   protected function setUp(): void
   {
     parent :: setUp();

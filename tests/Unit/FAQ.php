@@ -5,7 +5,8 @@ namespace Tests\Unit;
 use App\FAQ as AppFAQ;
 use Tests\TestCase;
 
-class FAQ extends TestCase {
+class FAQ extends TestCase 
+{
   protected function setUp(): void
   {
     parent :: setUp();

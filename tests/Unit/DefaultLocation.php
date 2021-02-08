@@ -4,7 +4,8 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 
-class DefaultLocation extends TestCase {
+class DefaultLocation extends TestCase 
+{
   protected function setUp(): void
   {
     parent :: setUp();

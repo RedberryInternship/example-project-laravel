@@ -5,7 +5,8 @@ namespace Tests\Unit;
 use App\Contact as AppContact;
 use Tests\TestCase;
 
-class ContactInformation extends TestCase {
+class ContactInformation extends TestCase 
+{
   /**
    * Setup sample.
    */

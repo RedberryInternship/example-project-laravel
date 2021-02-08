@@ -9,7 +9,8 @@ use App\Library\Entities\DataImports\ImportBeforeBoxwood\ImportCarModels;
 use App\UserCarModel;
 use App\CarModel;
 
-class UserCar extends TestCase {
+class UserCar extends TestCase 
+{
   protected function setUp(): void
   {
     parent :: setUp();

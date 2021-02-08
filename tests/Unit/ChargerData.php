@@ -5,7 +5,8 @@ namespace Tests\Unit;
 use App\Charger;
 use Tests\TestCase;
 
-class ChargerData extends TestCase {
+class ChargerData extends TestCase 
+{
   protected function setUp(): void
   {
     parent :: setUp();

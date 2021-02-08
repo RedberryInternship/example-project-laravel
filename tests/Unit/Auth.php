@@ -4,7 +4,8 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 
-class Auth extends TestCase {
+class Auth extends TestCase 
+{
   protected function setUp(): void
   {
     parent :: setUp();

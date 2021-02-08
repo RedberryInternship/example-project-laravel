@@ -6,7 +6,8 @@ use Tests\TestCase;
 use App\Library\Entities\DataImports\ImportBeforeBoxwood\ImportMarks;
 use App\Library\Entities\DataImports\ImportBeforeBoxwood\ImportCarModels;
 
-class MarksAndModels extends TestCase {
+class MarksAndModels extends TestCase 
+{
   protected function setUp(): void
   {
     parent :: setUp();
