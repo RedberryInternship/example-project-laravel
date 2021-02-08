@@ -24,18 +24,24 @@ Route::group(['prefix' => 'app/V1'], function () {
 	/* User Authenticated use functionality */
 	Route::group(['middleware' => ['jwt.verify', 'check.user.existence']], function () {
 		Route::group(['namespace' => 'Api\app\V1'], function () {
+
+			/** User Data */
+			Route::get('/me', 'UserController@getMe');
+			
+			/** User Cars */
 			Route::get('/get-user-cars', 'User\CarController@index');
 			Route::post('/add-user-car', 'User\CarController@store');
 			Route::post('/delete-user-car', 'User\CarController@destroy'); //todo Vobi, რესტის სტანდართით ეს delete უნდა იყოს
 
+			/** User Favorite Chargers */
 			Route::post('/add-favorite', 'FavoriteController@postAddFavorite');
 			Route::post('/remove-favorite', 'FavoriteController@postRemoveFavorite');
 			Route::get('/user-favorites', 'FavoriteController@getUserFavorites');
+			
 			Route::get('/transactions-history', 'User\TransactionController');
 			Route::get('/user-chargers/{quantity?}', 'User\ChargerController');
 			Route::post('/update-user-info', 'UserController@postUpdateUserInfo'); //todo Vobi, რესტის სტანდართით ეს put უნდა იყოს
 			Route::post('/update-firebase-token', 'User\FirebaseTokenController@update'); //todo Vobi, რესტის სტანდართით ეს put უნდა იყოს
-			Route::get('/me', 'UserController@getMe');
 
 			/** Charging */
 			Route::post('/charging/start', 'ChargingController@start');
