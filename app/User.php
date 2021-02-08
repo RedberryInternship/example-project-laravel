@@ -13,11 +13,30 @@ class User extends Authenticatable implements JWTSubject
     use Notifiable;
 
     /**
-     * The attributes that aren't mass assignable.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $guarded = [];
+    public $fillable = [
+        'id',
+        'old_id',
+        'role_id',
+        'phone_number',
+        'first_name',
+        'last_name',
+        'email',
+        'active',
+        'verified',
+        'firebase_token',
+        'email_verified_at',
+        'password',
+        'temp_password',
+        'remember_token',
+        'created_at',
+        'updated_at',
+        'deactivated_at',
+        'company_id',
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
