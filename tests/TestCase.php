@@ -2,8 +2,11 @@
 
 namespace Tests;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use App\Role;
+use App\User;
+use App\Enums\Role as RoleEnum;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 use App\Library\Testing\MishasCharger;
 use App\Library\Testing\Simulator;
@@ -41,4 +44,29 @@ abstract class TestCase extends BaseTestCase
        return $this;
     }
 
+    /**
+     * Create regular user.
+     * 
+     * @param array $userAttributes
+     * @return \App\User
+     */
+    public function createUser($userAttributes = [])
+    {
+        $role = factory(Role :: class) -> create(
+            [
+              'name' => RoleEnum :: REGULAR,
+            ]
+        );
+
+        $userDefaultAttributes = [
+                'phone_number' => '+995598317829',
+                'password'     => bcrypt('datvianisebrta'),
+                'role_id'      => $role -> id,
+        ];
+
+
+        return factory( User :: class ) -> create(
+            array_merge($userDefaultAttributes, $userAttributes),
+        );
+    }
 }

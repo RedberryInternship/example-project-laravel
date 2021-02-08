@@ -2,9 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Enums\Role as RoleEnum;
-use App\Role;
-use App\User;
 use Tests\TestCase;
 
 class Auth extends TestCase {
@@ -15,17 +12,10 @@ class Auth extends TestCase {
     $this -> url  = $this -> uri . 'login';
     $this -> meUrl = $this -> uri . 'me';
 
-    $role = factory(Role :: class) -> create(
-      [
-        'name' => RoleEnum :: REGULAR,
-      ]
-    );
-
-    $this -> user = factory( User :: class ) -> create(
+    $this -> user = $this -> createUser(
       [
         'phone_number' => '+995598317829',
         'password'     => bcrypt('datvianisebrta'),
-        'role_id'      => $role -> id,
       ]
     );
   }

@@ -2,12 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\Role;
-use App\User;
 use App\Charger;
-use App\Favorite as AppFavorite;
 use Tests\TestCase;
-use App\Enums\Role as RoleEnum;
+use App\Favorite as AppFavorite;
 
 
 class Favorite extends TestCase {
@@ -18,7 +15,13 @@ class Favorite extends TestCase {
     $this -> addUrl     = $this -> uri . 'add-favorite';
     $this -> removeUrl  = $this -> uri . 'remove-favorite';
 
-    $this -> user = $this -> createUser();
+    $this -> user = $this -> createUser(
+      [
+        'phone_number' => '+995591215163',
+        'password'     => bcrypt('gangeba_movide'),
+      ]
+    );
+
     $this -> createUserChargers( $this -> user -> id );
 
     $this -> nonFavoriteCharger = $this -> createNonFavoriteCharger();
@@ -71,23 +74,6 @@ class Favorite extends TestCase {
 
 
   /** --- > helper functions < --- ** */
-
-  private function createUser()
-  {
-    $role = factory( Role :: class ) -> create(
-      [
-        'name' => RoleEnum :: REGULAR,
-      ]
-    );
-
-    return factory( User :: class ) -> create(
-      [
-        'phone_number' => '+995591215163',
-        'password'     => bcrypt('gangeba_movide'),
-        'role_id'      => $role -> id,
-      ]
-    );
-  }
 
   private function createUserChargers($userId)
   {
