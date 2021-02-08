@@ -31,7 +31,7 @@ abstract class TestCase extends BaseTestCase
      * Custom actingAs implementation for jwt.
      *
      * @param   \App\User $user
-     * @return  object
+     * @return  self
      */
     public function actAs( $user )
     {

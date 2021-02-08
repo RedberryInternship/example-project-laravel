@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\app\V1\User;
 
-use JWTAuth;
 use App\TempSmsCode;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\RegistrationRequest;
 

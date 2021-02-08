@@ -1,0 +1,110 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Role;
+use App\User;
+use App\Charger;
+use App\Favorite as AppFavorite;
+use Tests\TestCase;
+use App\Enums\Role as RoleEnum;
+
+
+class Favorite extends TestCase {
+  protected function setUp(): void
+  {
+    parent :: setUp();
+    $this -> getUrl     = $this -> uri . 'user-favorites';
+    $this -> addUrl     = $this -> uri . 'add-favorite';
+    $this -> removeUrl  = $this -> uri . 'remove-favorite';
+
+    $this -> user = $this -> createUser();
+    $this -> createUserChargers( $this -> user -> id );
+
+    $this -> nonFavoriteCharger = $this -> createNonFavoriteCharger();
+  }
+
+  /** @test */
+  public function retrieve_favorites_is_ok(): void
+  {
+    $this 
+      -> actAs($this -> user) 
+      -> get( $this -> getUrl )
+      -> assertOk();
+  }
+
+  /** @test */
+  public function add_favorite_charger_gives_ok(): void
+  {
+    $this 
+      -> actAs( $this -> user )
+      -> post( $this -> addUrl, [
+        'charger_id' => $this -> nonFavoriteCharger -> id,
+      ])
+      -> assertOk();
+
+    $response = $this
+      -> actAs( $this -> user )
+      -> get( $this -> getUrl ) 
+      -> decodeResponseJson( 'user_favorite_chargers' );
+
+    $this -> assertCount( 4, $response );
+  }
+
+  /** @test */
+  public function remove_favorite_charger_gives_ok(): void
+  {
+    $this 
+      -> actAs( $this -> user )
+      -> post( $this -> removeUrl, [
+        'charger_id' => $this -> user -> favorites -> first() -> id,
+      ])
+      -> assertOk();
+
+    $response = $this
+      -> actAs( $this -> user )
+      -> get( $this -> getUrl )
+      -> decodeResponseJson( 'user_favorite_chargers' );
+
+    $this -> assertCount( 2, $response );
+  }
+
+
+  /** --- > helper functions < --- ** */
+
+  private function createUser()
+  {
+    $role = factory( Role :: class ) -> create(
+      [
+        'name' => RoleEnum :: REGULAR,
+      ]
+    );
+
+    return factory( User :: class ) -> create(
+      [
+        'phone_number' => '+995591215163',
+        'password'     => bcrypt('gangeba_movide'),
+        'role_id'      => $role -> id,
+      ]
+    );
+  }
+
+  private function createUserChargers($userId)
+  {
+    $chargers = factory( Charger :: class, 3 ) -> create();
+
+    $chargers -> each( function ( $charger ) use( $userId ) {
+      AppFavorite :: create(
+        [
+          'user_id'     => $userId,
+          'charger_id'  => $charger -> id,
+        ]
+      );
+    });
+  }
+
+  private function createNonFavoriteCharger()
+  {
+    return factory( Charger :: class ) -> create();
+  }
+}
