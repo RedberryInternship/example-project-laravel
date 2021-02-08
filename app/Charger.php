@@ -12,6 +12,30 @@ class Charger extends Model
 {
     use HasTranslations;
 
+    public $fillable = [
+        'id',
+        'old_id',
+        'name',
+        'charger_id',
+        'code',
+        'description',
+        'location',
+        'image',
+        'public',
+        'hidden',
+        'is_paid',
+        'penalty_enabled',
+        'kilowatt_price',
+        'lat',
+        'lng',
+        'iban',
+        'status',
+        'last_update',
+        'created_at',
+        'updated_at',
+        'company_id',
+    ];
+
     /**
      * Attribute that tells the model
      * which fields should be translatable.

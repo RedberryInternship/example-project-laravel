@@ -36,7 +36,7 @@ class MarksAndModels extends TestCase {
                 'id',
                 'mark_id',
                 'name',
-              ]
+              ],
             ],
           ]
         ]

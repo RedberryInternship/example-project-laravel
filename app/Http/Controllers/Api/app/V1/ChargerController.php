@@ -40,7 +40,7 @@ class ChargerController extends Controller
     {
         $charger = $charger
             -> withAllAttributes()
-            -> find( $charger_id );
+            -> findOrFail( $charger_id );
 
         $wrapper = [ $charger ];
         Charger :: addIsFreeAttributes($wrapper);

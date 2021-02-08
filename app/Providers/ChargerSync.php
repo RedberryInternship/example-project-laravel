@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Library\Chargers\Sync\Charger;
-use App\Library\Chargers\Sync\Mocker;
+use App\Library\Testing\MishasCharger;
+use App\Library\Testing\ChargerMocker;
 
 class ChargerSync extends ServiceProvider
 {
@@ -15,8 +15,8 @@ class ChargerSync extends ServiceProvider
      */
     public function register()
     {
-        $this -> app -> bind( 'chargerSyncer', Charger :: class );
-        $this -> app -> bind( 'mockSyncer'   , Mocker  :: class );
+        $this -> app -> bind( 'chargerSyncer', MishasCharger :: class );
+        $this -> app -> bind( 'mockSyncer'   , ChargerMocker :: class );
     }
 
     /**

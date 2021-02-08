@@ -23,6 +23,10 @@ class MishasMockCharger
           $connectors,
           $enabled;
 
+  /**
+   * Faker instance.
+   */
+  private $faker;
   
   public function __construct(Faker $faker)
   {

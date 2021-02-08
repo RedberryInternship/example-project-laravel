@@ -5,8 +5,8 @@ namespace Tests;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-use App\Library\Chargers\Testing\MishasCharger;
-use App\Library\Chargers\Testing\Simulator;
+use App\Library\Testing\MishasCharger;
+use App\Library\Testing\Simulator;
 
 abstract class TestCase extends BaseTestCase
 {
