@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Order;
+use App\Config;
 use App\Charger;
 use App\UserCard;
 use Tests\TestCase;
@@ -33,6 +34,8 @@ class Charging extends TestCase
         'user_id' => $this -> user -> id,
       ]
     );
+
+    factory( Config :: class ) -> create();
   }
 
   /** @test */
@@ -76,5 +79,32 @@ class Charging extends TestCase
     $currentOrders = Order :: all();
 
     $this -> assertCount($oldOrderCount + 1, $currentOrders);
+  }
+
+  /** @test */
+  public function finishes_order(): void
+  {
+    $order = factory( Order :: class ) -> create(
+        [
+          'charging_status' => OrderStatus :: CHARGING,
+          'charger_connector_type_id' => $this -> chargerConnectorType -> id,
+          'user_card_id' => $this -> userCard -> id,
+          'user_id' => $this -> user -> id,
+        ]
+      );
+
+    $this
+      -> actAs( $this -> user )
+      -> post( $this -> stopChargingURL ,
+        [
+          'order_id' => $order -> id,
+        ]
+      ) 
+      -> assertOk()
+      -> assertJsonFragment(
+        [
+          'charging_status' => OrderStatus :: CHARGED,
+        ]
+      );
   }
 }

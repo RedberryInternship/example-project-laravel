@@ -26,22 +26,8 @@ class MarksAndModels extends TestCase
   /** @test */
   public function marks_and_models_structure(): void 
   {
-    $this -> get( $this -> url ) -> assertJsonStructure(
-      [
-        'data' => [
-          '*' => [
-            'id',
-            'name',
-            'models' => [
-              '*' => [
-                'id',
-                'mark_id',
-                'name',
-              ],
-            ],
-          ]
-        ]
-      ]
-    );
+    $this 
+      -> get( $this -> url ) 
+      -> assertOk();
   }
 }

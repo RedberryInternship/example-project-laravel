@@ -616,7 +616,7 @@ class Order extends Model
     {
         $lastRecord = $this -> latestChargingPower();
         
-        if( $lastRecord -> end_at === null )
+        if( $lastRecord && $lastRecord -> end_at === null )
         {
             $lastRecord -> end_at = now() -> timestamp;
             $lastRecord -> save();
