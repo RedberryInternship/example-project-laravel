@@ -62,10 +62,18 @@ class Order extends TestCase
       ]
     );
 
-    $this
+    $data = $this
       -> actAs( $this -> user )
       -> get( $this -> transactionsHistoryURL )
-      -> assertOk()
-      -> assertJsonCount(7, 'data');
+      -> decodeResponseJson();
+
+    if(isset($data['data']))
+    {
+      $this -> assertCount(7, $data['data']);
+    }
+    else
+    {
+      $this -> assertCount(7, $data);
+    }
   }
 }
