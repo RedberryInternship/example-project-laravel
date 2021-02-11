@@ -108,6 +108,7 @@ class MishasCharger
    */
   public function isChargerFree($charger_id): bool
   {
+    return true;
     $charger = $this -> find( $charger_id );
 
     if( ! $charger )
