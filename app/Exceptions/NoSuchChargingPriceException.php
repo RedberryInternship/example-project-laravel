@@ -3,9 +3,12 @@
 namespace App\Exceptions;
 
 use Exception;
+use App\Traits\Message;
 
 class NoSuchChargingPriceException extends Exception
 {
+    use Message;
+
     /**
      * Render the exception as an HTTP response.
      *
