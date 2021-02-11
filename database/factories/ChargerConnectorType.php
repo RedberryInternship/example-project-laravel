@@ -4,8 +4,8 @@
 
 use Faker\Generator as Faker;
 use App\ChargerConnectorType;
-use App\Charger;
 use App\ConnectorType;
+use App\Charger;
 
 $factory->define(ChargerConnectorType::class, function (Faker $faker) {
     if( ConnectorType :: count() == 0 )

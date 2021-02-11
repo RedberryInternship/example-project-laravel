@@ -8,7 +8,7 @@ use App\Order;
 use App\ChargerConnectorType;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Enums\ChargingType as ChargingTypeEnum;
-
+use App\UserCard;
 
 $factory->define( Order :: class, function (Faker $faker) {
 return [
@@ -20,6 +20,7 @@ return [
         'target_price'                  => $faker -> randomFloat(),
         'charging_status'               => OrderStatusEnum :: INITIATED,
         'charging_status_change_dates'  => [],
+        'charger_name'                  => $faker -> userName,
         'comment'                       => $faker -> sentence(),
     ];
 });
@@ -32,4 +33,11 @@ $factory -> afterCreating( Order :: class, function( $order, $faker){
         $order -> charger_connector_type_id = factory( ChargerConnectorType :: class ) -> create() -> id;
         $order -> save();
     }
+
+    $order -> user_card_id = factory( UserCard :: class ) -> create(
+        [
+            'user_id' => $order -> user -> id,
+        ]
+    ) -> id;
+    $order -> save();
 });

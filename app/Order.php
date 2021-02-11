@@ -30,7 +30,7 @@ class Order extends Model
      */
 
     /**
-     * Laravel guarded attribute.
+     * Laravel fillable attribute.
      * 
      * @var array $guarded
      */
