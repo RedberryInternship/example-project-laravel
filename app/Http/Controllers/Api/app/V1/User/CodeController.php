@@ -63,8 +63,10 @@ class CodeController extends Controller
             return response() -> json(['error' => ['verified' => false]], 403);
         }
 
-        return response() -> json([
-            'phone_number' => $request -> get('phone_number')
-        ]);
+        return response() -> json(
+            [
+                'phone_number' => $request -> get('phone_number')
+            ]
+        );
     }
 }

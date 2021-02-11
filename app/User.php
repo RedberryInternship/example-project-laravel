@@ -98,7 +98,7 @@ class User extends Authenticatable implements JWTSubject
      * @return boolean
      */
     public static function sendSms($phoneNumber, $message)
-    {
+    {   
         if ( ! $phoneNumber)
         {
             return false;

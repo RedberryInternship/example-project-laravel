@@ -11,7 +11,6 @@ use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
 class SendCodeRequest extends FormRequest implements ValidatesWhenResolved
 {
-
     const USER_ALREADY_EXISTS   = 'USER_ALREADY_EXISTS';
     const USER_DOES_NOT_EXISTS  = 'USER_DOES_NOT_EXISTS';
 
@@ -33,8 +32,8 @@ class SendCodeRequest extends FormRequest implements ValidatesWhenResolved
     public function rules()
     {
         return [
-            'type'     => 'required|string',
-            'phone_number' => 'required|string'
+            'type'          => 'required|string',
+            'phone_number'  => 'required|string'
         ];
     }
 
@@ -140,7 +139,7 @@ class SendCodeRequest extends FormRequest implements ValidatesWhenResolved
      */
     public function pullUser()
     {
-        return User::findBy('phone_number', request()->get('phone_number'));
+        return User :: findBy( 'phone_number', request() -> get( 'phone_number' ) );
     }
 
     /**

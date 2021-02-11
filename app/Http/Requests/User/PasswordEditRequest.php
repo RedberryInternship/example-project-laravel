@@ -5,8 +5,6 @@ namespace App\Http\Requests\User;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
 class PasswordEditRequest extends FormRequest implements ValidatesWhenResolved

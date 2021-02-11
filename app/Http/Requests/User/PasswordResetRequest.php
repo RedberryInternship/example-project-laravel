@@ -53,9 +53,13 @@ class PasswordResetRequest extends FormRequest implements ValidatesWhenResolved
     public function changePassword()
     {
         User::where(
-            'phone_number', $this -> get('phone_number')
-        ) -> update([
-            'password' => bcrypt($this -> get('password'))
-        ]);
+                'phone_number', 
+                $this -> get('phone_number'),
+            ) 
+            -> update(
+                [
+                    'password' => bcrypt($this -> get('password'))
+                ]
+            );
     }
 }
