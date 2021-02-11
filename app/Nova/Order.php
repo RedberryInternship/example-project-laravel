@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\ChargerConnectorType;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
@@ -88,6 +89,8 @@ class Order extends Resource
      */
     public function fields(Request $request)
     {
+        $isLVL2 = $this -> isLVL2();
+
         return [
             ID::make()
                 ->sortable(),
@@ -95,6 +98,10 @@ class Order extends Resource
             BelongsTo::make('User'),
             
             HasMany::make('Payments'),
+
+            HasMany::make('Charging Powers') -> canSee(function() use( $isLVL2 ) {
+                return $isLVL2;
+            }),
 
             BelongsTo::make('Charger Connector Type')
                 -> displayUsing(function($chargerConnectorType) {
@@ -211,5 +218,23 @@ class Order extends Resource
     public function authorizedToUpdate(Request $request)
     {
         return false;
+    }
+
+    /**
+     * Determine if order's charger is LVL 2 charger.
+     * 
+     * @return bool
+     */
+    public function isLVL2() 
+    {
+        $chargerConnectorTypeId = $this -> charger_connector_type_id;
+        if(! $chargerConnectorTypeId )
+        {
+            return false;
+        }
+
+        $chargerConnectorType   = ChargerConnectorType :: where( 'id', $chargerConnectorTypeId ) -> first();
+        
+        return ! $chargerConnectorType -> isChargerFast();
     }
 }

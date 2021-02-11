@@ -94,6 +94,16 @@ class Order extends Model
     }
 
     /**
+     * Order hasMany relationship with OrderChargingPower;
+     * 
+     * @return Illuminate\Support\Collection
+     */
+    public function charging_powers() 
+    {
+        return $this -> hasMany(ChargingPower :: class);
+    }
+
+    /**
      * Order belongsTo relationship with UserCard.
      * 
      * @return UserCard 
@@ -383,6 +393,18 @@ class Order extends Model
     {
         return $this -> charging_status == OrderStatusEnum :: INITIATED;
     }
+    
+    /**
+     * Determine if order has already initiated.
+     * 
+     * @return bool
+     */
+    public function hasInitiated(): bool
+    {
+        $initiatedTimestamp = @$this -> charging_status_change_dates[OrderStatusEnum :: INITIATED];
+        
+        return $initiatedTimestamp !== null && !$this ->isInitiated();
+    }
 
     /**
      * Determine if order is active
@@ -446,6 +468,20 @@ class Order extends Model
     }
 
     /**
+     * Latest charging power.
+     * 
+     * @return ChargingPower|null
+     */
+    public function latestChargingPower()
+    {
+        return $this 
+        -> charging_powers()
+        -> whereOrderId( $this -> id )
+        -> orderBy( 'id', 'desc' )
+        -> first();
+    }
+
+    /**
      * Determine if charging price is zero a.k.a. free.
      * 
      * @return bool
@@ -457,14 +493,14 @@ class Order extends Model
             return false;
         }
 
-        $currentChargingPrice = $this -> getCurrentChargingPrice();
+        $currentChargingPower = $this -> latestChargingPower();
 
-        if( is_null( $currentChargingPrice ) )
+        if( is_null( $currentChargingPower ) )
         {
-            return $currentChargingPrice;
+            return $currentChargingPower;
         }
         
-        return $currentChargingPrice == 0;
+        return $currentChargingPower -> tariff_price == 0;
     }
 
     /**
@@ -524,12 +560,66 @@ class Order extends Model
      * 
      * @return void
      */
-    public function updateChargingPowerIfNotUpdated()
+    public function updateChargingPowerRecords()
     {
         if( ! $this -> kilowatt -> charging_power )
         {
             $chargingPower  = $this -> getChargingPower();
             $this -> kilowatt -> setChargingPower( $chargingPower );
+        }
+
+        if( ! $this -> hasInitiated() )
+        {
+            return;
+        }
+
+        $latestChargingPower = $this -> latestChargingPower();
+        
+        if( $latestChargingPower ) 
+        {
+            $startedAt = (int) $latestChargingPower -> start_at;
+            $diff = now() -> timestamp - $startedAt;
+
+            if( $diff < 60 * 5 )
+            {
+                return;
+            }
+
+            $latestChargingPower -> update([ 'end_at' => now() -> timestamp ]);
+        }
+
+        $currentChargingPower = $this -> getChargingPower();
+        $chargingPrice        = $this -> getChargingPrice( $currentChargingPower );
+
+        $this 
+            -> charging_powers()
+            -> create(
+                [
+                    "charging_power"        => $currentChargingPower, 
+                    "tariffs_power_range"   => $chargingPrice -> min_kwt    . ' - ' . $chargingPrice -> max_kwt,
+                    "tariffs_daytime_range" => $chargingPrice -> start_time . ' - ' . $chargingPrice -> end_time,  
+                    "tariff_price"          => $chargingPrice -> price,   
+                    "start_at"              => now() -> timestamp,       
+                    "end_at"                => null,
+                ]
+            );
+    }
+
+    /**
+     * Set last charging power record end 
+     * timestamp with current time if not
+     * set already.
+     * 
+     * @return void
+     */
+    public function stampLastChargingPowerRecord()
+    {
+        $lastRecord = $this -> latestChargingPower();
+        
+        if( $lastRecord -> end_at === null )
+        {
+            $lastRecord -> end_at = now() -> timestamp;
+            $lastRecord -> save();
         }
     }
 
@@ -554,6 +644,20 @@ class Order extends Model
         else if( $chargingStatus == OrderStatusEnum :: FINISHED )
         {
             User :: sendSms($this -> user -> phone_number, $this -> chargingCompleteMessage());
+        }
+
+        $shouldChargingPowerRecordBeStamped = in_array(
+            $chargingStatus, 
+            [
+                OrderStatusEnum :: FINISHED, 
+                OrderStatusEnum :: USED_UP, 
+                OrderStatusEnum :: CHARGED
+            ],
+        );
+
+        if( $shouldChargingPowerRecordBeStamped )
+        {
+            $this -> stampLastChargingPowerRecord();
         }
     }
 
@@ -854,39 +958,40 @@ class Order extends Model
      */
     private function countConsumedMoneyByKilowatt()
     {
-        $timestamp          = Timestamp :: build( $this );
-        $elapsedMinutes     = $timestamp -> calculateChargingElapsedTimeInMinutes();
-        $chargingPrice      = $this -> getCurrentChargingPrice();
-        
-        return $chargingPrice * $elapsedMinutes;
+        if( $this -> charging_powers === null )
+        {
+            return 0;
+        }
+
+        $chargingPricesSum = $this 
+            -> charging_powers
+            -> reduce(function($carry, $chargingPower) {
+                return $carry + $chargingPower -> getIntervalPrice();
+            });
+
+        return $chargingPricesSum;
     }
 
     /**
-     * Get current charging price.
+     * Get charging price according to charging 
+     * power and current time.
      * 
-     * @return float
+     * @return ChargingPrice
      */
-    private function getCurrentChargingPrice()
+    private function getChargingPrice($chargingPower)
     {
-        $timestamp          = Timestamp :: build( $this );
-        $chargingPower      = $this -> kilowatt -> getChargingPower();
-        $startChargingTime  = $timestamp -> getChargingStatusTimestamp( OrderStatusEnum :: CHARGING );
-
-        if( ! $startChargingTime )
-        {
-            return null;
-        }
+        $currentTime  = now() -> toTimeString();
 
         $chargingPriceInfo  = $this 
         -> charger_connector_type 
-        -> getSpecificChargingPrice( $chargingPower, $startChargingTime  -> toTimeString() );
+        -> getSpecificChargingPrice( $chargingPower, $currentTime);
         
         if( ! $chargingPriceInfo )
         {
             throw new NoSuchChargingPriceException();
         }
 
-        return $chargingPriceInfo -> price;
+        return $chargingPriceInfo;
     }
 
     /**

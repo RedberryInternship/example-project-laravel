@@ -8,10 +8,8 @@
         "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
         "prod": "npm run production",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "build-charger-prices": "cd nova-components/ChargerPrices && npm run dev",
-        "build-charger-prices-prod": "cd nova-components/ChargerPrices && npm run prod",
         "build-charger-terminals": "cd nova-components/ChargerTerminals && npm run dev",
-        "build-charger-terminals-prod": "cd nova-components/ChargerTerminals && npm run prod"
+        "build-charger-terminals-prod": "cd nova-components/ChargerTerminals && npm run prod",
     },
     "devDependencies": {
         "axios": "^0.19",

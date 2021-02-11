@@ -88,6 +88,10 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "create-chargers-tunnel": ". ./scripts/create-chargers-tunnel.sh",
+        "create-sql-tunnel": ". ./scripts/create-sql-tunnel.sh",
+        "test": "./vendor/bin/phpunit --colors=always",
+        "testing": "./vendor/bin/phpunit --debug"
     }
 }

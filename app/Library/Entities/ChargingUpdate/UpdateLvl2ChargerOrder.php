@@ -21,13 +21,13 @@ class UpdateLvl2ChargerOrder
   {
     if( $order -> isInitiated() && $order -> chargingHasStarted() )
     {
-      $order -> updateChargingPowerIfNotUpdated();
       $order -> updateChargingStatus( OrderStatusEnum :: CHARGING );   
-      
       self :: makeFirstPayment( $order );
+      $order -> updateChargingPowerRecords();
     }
     else if( $order -> isCharging() )
     {
+      $order -> updateChargingPowerRecords();
       $charger = $order -> getCharger();
       
       if( ! $charger -> isPaid() || $order -> isChargingFree() )

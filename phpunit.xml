@@ -11,28 +11,9 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="old">
-            <directory suffix=".php">./tests/Unit/V1/Chargers</directory>
-            <directory suffix=".php">./tests/Unit/V1/Orders</directory>
-            <directory suffix=".php">./tests/Unit/V1/ChargerConnectorTypes</directory>
-            <directory suffix=".php">./tests/Unit/V1/Users</directory>
-            <directory suffix=".php">./tests/Unit/V1/Kilowatts</directory>
-            <directory suffix=".php">./tests/Unit/V1/ChargingPrices</directory>
-            <directory suffix=".php">./tests/Unit/V1/ChargingFeedback</directory>
-            <directory suffix=".php">./tests/Unit/V1/ChargingApi</directory>
-        </testsuite>
-
         <testsuite name="current">
-            <directory suffix=".php">./tests/Feature/V2</directory>
-            <directory suffix=".php">./tests/Unit/V2/BillingCalculator</directory>
-            <directory suffix=".php">./tests/Unit/V2/ChargingFeedback</directory>
-            <directory suffix=".php">./tests/Unit/V2/Repositories</directory>
-            <directory suffix=".php">./tests/Unit/V2/Validators</directory>
-            <directory suffix=".php">./tests/Unit/V2/ChargingApi</directory>
-            <directory suffix=".php">./tests/Unit/V2/RealChargers</directory>
-
+            <directory suffix=".php">./tests/Unit</directory>
         </testsuite>
-
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

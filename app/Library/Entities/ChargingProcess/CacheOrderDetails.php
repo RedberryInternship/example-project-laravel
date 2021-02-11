@@ -41,7 +41,7 @@ class CacheOrderDetails
     $this -> details = [
       'charger_name'        => $charger       -> name,
       'start_date'          => $timestamp     -> getStartTimestamp(),
-      'charge_price'        => $order         -> countConsumedMoney(),  
+      'charge_price'        => $order         -> countConsumedMoney(),
       'penalty_fee'         => $order         -> countPenaltyFee(),
       'duration'            => $timestamp     -> getChargingDuration(),
       'charge_power'        => $order         -> kilowatt -> charging_power,

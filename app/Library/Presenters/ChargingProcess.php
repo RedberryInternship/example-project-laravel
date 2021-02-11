@@ -41,8 +41,6 @@ class ChargingProcess
     $this -> setIsChargingFreeAttribute       ( $order );
     $this -> setConsumedKilowatts             ( $order );
 
-
-        
     $mainResourceData = [
       'order_id'                      => $order -> id,
       'already_paid'                  => $order -> countPaidMoney(),

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Facades\Simulator;
 use App\Traits\Message;
+use App\Order;
 
 class TestController extends Controller 
 {

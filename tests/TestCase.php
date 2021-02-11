@@ -15,9 +15,16 @@ abstract class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent :: setUp();
+        $this -> uri = config('app')['uri'];
 
         app() -> singleton( 'charger'   , MishasCharger :: class );
         app() -> singleton( 'simulator' , Simulator     :: class );
+
+        $this -> artisan('config:clear');
+        $this -> artisan('route:clear');
+        $this -> artisan('cache:clear');
+        $this -> artisan('view:clear');
+        $this -> artisan('migrate:fresh');
     }
 
     /**
