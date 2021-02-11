@@ -11,13 +11,14 @@ class PasswordChange extends TestCase
   {
     parent :: setUp();
 
-    $this -> resetPasswordURL = $this -> uri . 'reset-password';
-    $this -> updatePasswordURL = $this -> uri . 'edit-password';
+    $this -> resetPasswordURL   = $this -> uri . 'reset-password';
+    $this -> updatePasswordURL  = $this -> uri . 'edit-password';
 
-    $this -> currentPassword = 'shaifrtxiala';
+    $this -> currentPassword    = 'shaifrtxiala';
+    $this -> phoneNumber        = '+995591935080';
     $this -> user = $this -> createUser(
       [
-        'phone_number' => '+995591935080',
+        'phone_number' => $this -> phoneNumber,
         'password'     => bcrypt( $this -> currentPassword ),
       ]
     );
@@ -26,12 +27,12 @@ class PasswordChange extends TestCase
   /** @test */
   public function reset_password_gives_ok(): void
   {
-    $NEW_PASSWORD = 'giabarabanshki';
+    $NEW_PASSWORD = 'giabarabanshiki';
 
     $this 
       -> post( $this -> resetPasswordURL, 
       [
-        'phone_number' => '+995591935080',
+        'phone_number' => $this -> phoneNumber,
         'password'     => $NEW_PASSWORD,
       ])
       -> assertOk();
@@ -45,8 +46,17 @@ class PasswordChange extends TestCase
   /** @test */
   public function update_password_gives_ok(): void
   {
-    $NEW_PASSWORD = 'giabarabanshki';
+    $NEW_PASSWORD = 'giabarabanshiki';
 
-    // $this -> 
+    $this 
+      -> actAs( $this -> user ) 
+      -> post( $this -> updatePasswordURL, 
+        [
+          'phone_number' => $this -> phoneNumber,
+          'new_password' => $NEW_PASSWORD,
+          'old_password' => $this -> currentPassword,
+        ]
+      ) 
+      -> assertOk();
   }
 }
