@@ -21,7 +21,7 @@ class ChargingUpdater
   public static function update( $transactionId, $value ): void
   {
     $order = OrderGetter :: get( $transactionId );
-    
+
     if( ! $order )
     {
       Log :: noOrderToUpdate( $transactionId );
@@ -29,6 +29,7 @@ class ChargingUpdater
     }
 
     OrdersMiddleware :: check( $transactionId );
+    
     $order -> kilowatt -> updateConsumedKilowatts( $value );
     $isChargerFast = $order -> charger_connector_type -> isChargerFast();
 

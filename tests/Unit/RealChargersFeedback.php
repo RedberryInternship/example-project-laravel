@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Order;
+use App\Config;
 use App\Charger;
 use App\Company;
 use App\Kilowatt;
@@ -10,7 +11,7 @@ use App\UserCard;
 use Tests\TestCase;
 use App\Enums\OrderStatus;
 use App\ChargerConnectorType;
-use App\Config;
+use App\ChargingPrice;
 
 class RealChargersFeedback extends TestCase
 {
@@ -21,12 +22,12 @@ class RealChargersFeedback extends TestCase
     $this -> updateURL = 'chargers/transactions/update';
     $this -> finishURL = 'chargers/transactions/finish';
 
-
     $this -> user                 = $this -> createUser();
     $this -> company              = factory( Company :: class ) -> create();
     $this -> charger              = factory( Charger :: class ) -> create(
       [
         'company_id'  => $this -> company -> id,
+        'code'        => '0028',
       ]
     );
     
@@ -36,6 +37,17 @@ class RealChargersFeedback extends TestCase
         'connector_type_id' => 1,
       ]
     );
+
+    factory( ChargingPrice :: class ) -> create(
+      [
+        'charger_connector_type_id' => $this -> chargerConnectorType -> id,
+        'min_kwt'  => 0,
+        'max_kwt'  => 10000,
+        'start_time'  => '00:00',
+        'end_time'    => '24:00',
+      ]
+    );
+
     $this -> userCard             = factory( UserCard :: class ) -> create(
       [
         'user_id' => $this -> user -> id,
@@ -44,9 +56,10 @@ class RealChargersFeedback extends TestCase
     
     $this -> order = factory( Order :: class ) -> create(
       [
-        'charger_connector_type_id' => OrderStatus :: CHARGING,
+        'charger_connector_type_id' => $this -> chargerConnectorType -> id,
         'user_card_id'              => $this -> userCard -> id,
         'user_id'                   => $this -> user -> id,
+        'charging_status'           => OrderStatus :: CHARGING,
       ]
     );
 
@@ -63,10 +76,24 @@ class RealChargersFeedback extends TestCase
   public function order_gets_finished_when_disconnected(): void
   {
     $this
-      -> get( $this -> finishURL . '/' . $this -> order -> charger_transaction_id );
+      -> get( $this -> finishURL . '/' . $this -> order -> charger_transaction_id )
+      -> assertOk();
 
     $this -> order -> refresh();
+    $this -> assertEquals( OrderStatus :: FINISHED, $this -> order -> charging_status );
+  }
+
+  /** @test */
+  public function order_gets_updated(): void
+  {
+    $this 
+      -> get($this -> updateURL . '/' . $this -> order -> charger_transaction_id . '/' . 7)
+      -> assertOk();
+  
     
-    $this -> assertEquals(OrderStatus :: FINISHED, $this -> order -> charging_status);
+    $kilowatt = $this -> order -> kilowatt -> refresh();
+    $consumedKilowatt = $kilowatt -> consumed * 1000;
+    
+    $this -> assertEquals($consumedKilowatt, 7);
   }
 }

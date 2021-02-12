@@ -988,6 +988,8 @@ class Order extends Model
         
         if( ! $chargingPriceInfo )
         {
+            dump($this -> charger_connector_type -> charging_prices -> toArray());
+            dump($chargingPower, $currentTime);
             throw new NoSuchChargingPriceException();
         }
 
