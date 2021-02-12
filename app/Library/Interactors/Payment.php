@@ -5,7 +5,6 @@ namespace App\Library\Interactors;
 use App\Library\Entities\Payments\Refunder;
 use App\Library\Entities\Payments\Cutter;
 use App\Library\Entities\Payments\Finer;
-
 use App\Order;
 
 class Payment
