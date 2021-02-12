@@ -36,7 +36,7 @@ $factory -> afterCreating( Order :: class, function( $order, $faker){
 
     $order -> user_card_id = factory( UserCard :: class ) -> create(
         [
-            'user_id' => $order -> user -> id,
+            'user_id' => $order -> user ? $order -> user -> id : null,
         ]
     ) -> id;
     $order -> save();

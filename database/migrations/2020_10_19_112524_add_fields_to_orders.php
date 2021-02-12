@@ -16,8 +16,12 @@ class AddFieldsToOrders extends Migration
         Schema::table('orders', function (Blueprint $table) {
             $table -> unsignedBigInteger( 'company_id' ) -> nullable( true ) -> after( 'user_card_id' );
             $table -> float( 'consumed_kilowatts' ) -> nullable( true ) -> after( 'charge_power' );
+        });
+        
+        Schema::table('orders', function (Blueprint $table) {
             $table -> dropColumn( 'expense' );
         });
+        
     }
 
     /**

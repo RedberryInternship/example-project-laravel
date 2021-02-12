@@ -13,10 +13,15 @@ class AttachChargerToCompanyNotUser extends Migration
      */
     public function up()
     {
+
         Schema::table('chargers', function (Blueprint $table) {
             $table->dropColumn('user_id');
+        });
+        
+        Schema::table('chargers', function (Blueprint $table) {
             $table->unsignedInteger('company_id')->nullable();
         });
+    
     }
 
     /**
