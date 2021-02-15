@@ -21,7 +21,7 @@ class TransactionsHistory extends JsonResource
             'charge_price'  => $this -> charge_price,  
             'penalty_fee'   => $this -> penalty_fee,
             'duration'      => $this -> duration,
-            'charge_power'  => $this -> charge_power,
+            'charge_power'  => null, // $this -> charge_power,
             'address'       => $this -> address,
             'user_card_pan' => $this -> user_card -> masked_pan
         ];
