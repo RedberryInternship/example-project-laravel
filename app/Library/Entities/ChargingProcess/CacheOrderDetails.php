@@ -48,6 +48,7 @@ class CacheOrderDetails
       'address'             => $charger       -> location,
       'company_id'          => $charger       -> company_id,
       'consumed_kilowatts'  => @round($order  -> kilowatt -> consumed, 2),
+      'penalty_duration'    => $timestamp     -> penaltyTimeInMinutes(),
     ];
   }
 
