@@ -103,3 +103,8 @@ php artisan migrate
 
 #
 ### Running Unit tests
+Running unit tests also is very simple process, just type in following command:
+
+```sh
+composer test
+```
