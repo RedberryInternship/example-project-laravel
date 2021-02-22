@@ -14,8 +14,8 @@ class AddContractMethodFieldsToCompanies extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table -> float('contract_value')->nullable(false)->after('contract_file');
-            $table -> string('contract_method')->nullable(false)->after('contract_file');
+            $table -> float('contract_value')->nullable(false)->default(0)->after('contract_file');
+            $table -> string('contract_method')->nullable(false)->default("")->after('contract_file');
         });
     }
 

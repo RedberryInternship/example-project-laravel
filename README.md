@@ -101,3 +101,5 @@ if you've completed getting started section, then migrating database if fairly s
 php artisan migrate
 ```
 
+#
+### Running Unit tests

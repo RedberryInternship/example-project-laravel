@@ -14,8 +14,8 @@ class AddPaymentFieldsOnChargerConnectorTypes extends Migration
     public function up()
     {
         Schema :: table( 'charger_connector_types', function ( Blueprint $table ) {
-            $table -> bigInteger( 'terminal_id' );
-            $table -> string    ( 'report'      );
+            $table -> bigInteger( 'terminal_id' )->nullable();
+            $table -> string    ( 'report'      )->default("");
         });
     }
 
