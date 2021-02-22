@@ -79,8 +79,16 @@ And now you should provide **.env** file all the necessary environment variables
 >FCM_SERVER_KEY=******
 >FCM_SENDER_ID=******
 
+after setting up **.env** file, execute:
+```sh
+php artisan config:cache
+```
+in order to cache environment variables.
+
 4\. Now execute in the root of you project following:
 ```sh
   php artisan key:generate
 ```
 Which generates auth key.
+
+##### Now, you should be good to go!
