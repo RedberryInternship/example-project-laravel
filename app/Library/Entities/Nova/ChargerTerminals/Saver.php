@@ -6,7 +6,14 @@ use App\Library\DataStructures\ChargerTerminals as ChargerTerminalsRequest;
 
 use App\ChargerConnectorType;
 
-//todo Vobi,  დეტალურად ავღწეროთ თუ რისთვის დატომ გამოიყენებ ეს კლასი.
+/**
+ * We need to indicate each charger which POS Terminal
+ * it should use and preferably some additional(report)
+ * information for the espace to identify from which charger 
+ * transaction happened.
+ * 
+ * report information appears in Bank Records.
+ */
 class Saver
 {
   /**

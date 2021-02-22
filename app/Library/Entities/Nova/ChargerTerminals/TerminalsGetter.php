@@ -4,7 +4,9 @@ namespace App\Library\Entities\Nova\ChargerTerminals;
 
 use Illuminate\Support\Facades\DB;
 
-//todo Vobi,  დეტალურად ავღწეროთ თუ რისთვის დატომ გამოიყენებ ეს კლასი.
+/**
+ * Get all the POS Terminals from database.
+ */
 class TerminalsGetter
 {
   /**

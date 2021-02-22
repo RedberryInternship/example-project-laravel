@@ -5,7 +5,11 @@ namespace App\Console\Commands\CronJobs;
 use App\Library\Interactors\CronJobs\OrdersOnPenaltyChecker as PenaltyChecker;
 use Illuminate\Console\Command;
 
-//todo Vobi, please explain that class, Why use it? when does it run? and how?
+/**
+ * Cron Job for checking charging process, if their penalty
+ * relief period is up, and if so, we need to make those
+ * kind of charging process charging status tag as "ON_FINE".
+ */
 class OrdersOnPenaltyChecker extends Command
 {
     /**

@@ -5,7 +5,12 @@ namespace App\Console\Commands\ChargingSimulation;
 use Illuminate\Console\Command;
 use App\Facades\Charger;
 
-//todo Vobi, please explain that class, Why use it?
+
+/**
+ * Simulator class for getting information about charging process.
+ * 
+ * command: php artisan simulate:get-transaction-info
+ */
 class GetTransactionInfo extends Command
 {
     /**

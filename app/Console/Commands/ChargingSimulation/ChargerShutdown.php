@@ -5,7 +5,15 @@ namespace App\Console\Commands\ChargingSimulation;
 use Illuminate\Console\Command;
 use App\Facades\Simulator;
 
-//todo Vobi, please explain that class, Why use it?
+/**
+ * Simulator class for shutting down charger simulator in order 
+ * to test charger functionalities.
+ * 
+ * command: php artisan simulate:charger-shutdown
+ * 
+ * which means charger has been turned off from the power and 
+ * won't be able to charge e-car anymore.
+ */
 class ChargerShutdown extends Command
 {
     /**

@@ -6,7 +6,10 @@ use Illuminate\Console\Command;
 
 use App\Library\Interactors\CronJobs\NotConfirmedOrdersChecker as NotConfirmedChecker;
 
-//todo Vobi, please explain that class, Why use it? when does it run? and how?
+/**
+ * Cron Job for identifying charging process whose transaction ID we
+ * couldn't get, and retrieve those transaction IDs.
+ */
 class NotConfirmedOrdersChecker extends Command
 {
     /**

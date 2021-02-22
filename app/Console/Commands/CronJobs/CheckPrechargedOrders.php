@@ -6,7 +6,13 @@ use Illuminate\Console\Command;
 
 use App\Library\Interactors\CronJobs\PreChargedOrdersChecker;
 
-//todo Vobi, please explain that class, Why use it? when does it run? and how?
+/**
+ * Cron Job which take cares off the situation in which
+ * already charged car could be plugged into charger
+ * and start charging.
+ * In that case we have to identify those kind of cases
+ * and stop those charging processes.
+ */
 class CheckPrechargedOrders extends Command
 {
     /**

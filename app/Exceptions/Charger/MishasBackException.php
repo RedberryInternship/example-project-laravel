@@ -12,16 +12,6 @@ class MishasBackException extends Exception
     use Message;
 
     /**
-     * Report the exception.
-     *
-     * @return void
-     */
-     public function report()
-     {
-        //
-    }
-
-    /**
      * Render the exception as an JSON response.
      *
      * @param  \Illuminate\Http\Request  $request

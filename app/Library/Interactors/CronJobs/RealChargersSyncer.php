@@ -9,7 +9,11 @@ use App\Library\Entities\CronJobs\RealChargersSync\ChargersEditor;
 
 use App\Library\DataStructures\RealChargersSync as Data;
 
-//todo Vobi,  დეტალურად ავღწეროთ თუ რისთვის დატომ გამოიყენებ ეს კლასი.
+/**
+ * Cron Job class for retrieving real chargers from
+ * chargers back-end and synchronizing it with
+ * our database.
+ */
 class RealChargersSyncer
 {
   /**

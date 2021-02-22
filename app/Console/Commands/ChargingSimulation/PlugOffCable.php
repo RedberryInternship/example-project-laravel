@@ -5,7 +5,12 @@ namespace App\Console\Commands\ChargingSimulation;
 use Illuminate\Console\Command;
 use App\Facades\Simulator;
 
-//todo Vobi, please explain that class, Why use it?
+/**
+ * Simulator class for simulating plugging of connector from
+ * the charging car or the charger itself.
+ * 
+ * command: php artisan simulate:plug-off-cable
+ */
 class PlugOffCable extends Command
 {
     /**

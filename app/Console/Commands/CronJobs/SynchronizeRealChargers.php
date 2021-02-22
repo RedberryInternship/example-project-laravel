@@ -5,7 +5,11 @@ namespace App\Console\Commands\CronJobs;
 use App\Library\Interactors\CronJobs\RealChargersSyncer;
 use Illuminate\Console\Command;
 
-//todo Vobi, please explain that class, Why use it? when does it run? and how?
+/**
+ * Cron Job for synchronizing all the chargers from the Real Chargers Back
+ * into our db. It includes chargers statuses: active, inactve, charging,
+ * not working, latitude, longitude and so on... 
+ */
 class SynchronizeRealChargers extends Command
 {
     /**

@@ -6,7 +6,12 @@ use App\Library\Interactors\CronJobs\OnHoldSwitcher;
 use Illuminate\Console\Command;
 
 
-//todo Vobi, please explain that class, Why use it? when does it run? and how?
+/**
+ * Cron Job for the charging process on which we don't 
+ * receive information anymore. 
+ * So, we need to change charging status of those into "ON_HOLD",
+ * so that we can notify user that there is some problem going on...
+ */
 class HoldSilentOrders extends Command
 {
     /**

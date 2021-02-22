@@ -5,7 +5,15 @@ namespace App\Console\Commands\ChargingSimulation;
 use Illuminate\Console\Command;
 use App\Facades\Simulator;
 
-//todo Vobi, please explain that class
+/**
+ * Simulator class for activating charger simulator in order 
+ * to test charger functionalities.
+ * 
+ * command: php artisan simulate:activate-charger
+ * 
+ * which means charger in plugged is to the power and is 
+ * ready to charger the e-car.
+ */
 class ActivateCharger extends Command
 {
     /**

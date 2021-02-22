@@ -5,7 +5,9 @@ namespace App\Library\Entities\Payments;
 use App\Library\Adapters\Payments\Cutter as GeorgianCardCutter;
 use App\Order;
 
-//todo Vobi,  დეტალურად ავღწეროთ თუ რისთვის დატომ გამოიყენებ ეს კლასი.
+/**
+ * Make simle CUT transaction on charging process.
+ */
 class Cutter
 {
   /**

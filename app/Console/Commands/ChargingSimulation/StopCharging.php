@@ -5,7 +5,11 @@ namespace App\Console\Commands\ChargingSimulation;
 use Illuminate\Console\Command;
 use App\Facades\Charger;
 
-//todo Vobi, please explain that class, Why use it?
+/**
+ * Simulator class for simulating stop charging process.
+ * 
+ * command: php artisan simulate:stop-charging
+ */
 class StopCharging extends Command
 {
     /**

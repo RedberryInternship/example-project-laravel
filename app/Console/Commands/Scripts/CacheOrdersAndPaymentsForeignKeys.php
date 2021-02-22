@@ -6,7 +6,10 @@ use Illuminate\Console\Command;
 
 use App\Library\Interactors\Scripts\UpdateData;
 
-//todo Vobi, please explain that class, Why use it? when does it run? and how?
+/**
+ * One time script that caches newly created relationships
+ * in the old records.
+ */
 class CacheOrdersAndPaymentsForeignKeys extends Command
 {
     /**
