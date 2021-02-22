@@ -92,3 +92,12 @@ in order to cache environment variables.
 Which generates auth key.
 
 ##### Now, you should be good to go!
+
+
+#
+### Migration
+if you've completed getting started section, then migrating database if fairly simple process, just execute:
+```sh
+php artisan migrate
+```
+
