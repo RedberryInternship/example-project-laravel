@@ -3,10 +3,10 @@
 namespace App\Library\Adapters\RealChargers;
 
 use Illuminate\Support\Facades\Log;
-use App\Exceptions\Charger\MishasBackException;
 use App\Exceptions\Charger\FindChargerException;
 use App\Exceptions\Charger\StopChargingException;
 use App\Exceptions\Charger\StartChargingException;
+use App\Exceptions\Charger\RealChargersBackException;
 use App\Exceptions\Charger\ChargerTransactionInfoException;
 use App\Exceptions\Charger\TransactionAlreadyFinishedException;
 
@@ -160,7 +160,7 @@ class Charger extends Base
             case 0:
                 return $result -> data;
             default:
-                throw new MishasBackException();
+                throw new RealChargersBackException();
         }
     }
     
@@ -269,7 +269,7 @@ class Charger extends Base
         }
         else
         {
-            throw new MishasBackException();
+            throw new RealChargersBackException();
         }
 
         return $this -> response;

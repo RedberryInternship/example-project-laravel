@@ -82,8 +82,7 @@ class ContactMessageRequest extends FormRequest implements ValidatesWhenResolved
         $user     = auth('api') -> user();
 
         $to       = $this -> mailAddresses();
-        //todo Vobi, პრამეტრები კარგი იქნება enviroment ცვლადებში თუ გავიტანთ და არ იქნება პირდაპირ კოდში გაჰარკდოებული, მგ: unknown@example.com'
-        $from     = $user && $user -> email && filter_var($user -> email, FILTER_VALIDATE_EMAIL) ? $user -> email : 'unknown@example.com'; //todo Vobi, enviroment
+        $from     = $user && $user -> email && filter_var($user -> email, FILTER_VALIDATE_EMAIL) ? $user -> email : config('espace')['default_email'];
         $fromName = $user ? $user -> first_name . ' ' . $user -> last_name : 'unknown sender';
 
         $content  =
@@ -94,7 +93,7 @@ class ContactMessageRequest extends FormRequest implements ValidatesWhenResolved
             Mail::send([], [], function ($message) use ($to, $from, $content) {
                 $message
                     -> to($to)
-                    -> from($from, 'E-space App') //todo Vobi, enviroment
+                    -> from($from, config('app')['name'])
                     -> subject('Contact Form')
                     -> setBody($content, 'text/html; charset=utf-8');
             });

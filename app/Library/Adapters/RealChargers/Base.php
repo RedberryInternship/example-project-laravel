@@ -2,7 +2,7 @@
 
 namespace App\Library\Adapters\RealChargers;
 
-use App\Exceptions\Charger\MishasBackException;
+use App\Exceptions\Charger\RealChargersBackException;
 use Exception;
 
 class Base 
@@ -62,7 +62,7 @@ class Base
         }
         catch( Exception $e )
         {
-            throw new MishasBackException();
+            throw new RealChargersBackException();
         }
 
         return $this -> parseResponse( $response );

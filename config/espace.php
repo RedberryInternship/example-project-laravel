@@ -12,4 +12,5 @@ return [
     'mishas_back_ip'       => env( 'MISHAS_BACK_IP'      ,  '13.92.63.164' ),
     'mishas_back_port'     => env( 'MISHAS_BACK_PORT'    ,  '80'           ),
 
+    'default_email'        => 'unknown@example.com',
 ];
