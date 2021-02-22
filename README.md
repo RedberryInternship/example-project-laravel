@@ -44,39 +44,62 @@ cp .env.example .env
 ```
 And now you should provide **.env** file all the necessary environment variables:
 
+#
 **MYSQL:**
 >DB_CONNECTION=mysql
+
 >DB_HOST=127.0.0.1
+
 >DB_PORT=3306
+
 >DB_DATABASE=*****
+
 >DB_USERNAME=*****
+
 >DB_PASSWORD=*****
 
+#
 **MAILGUN:**
 >MAILGUN_DOMAIN=******
+
 >MAILGUN_SECRET=******
 
+#
 **Georgian Card:**
 >MERCHANT_ID=******
+
 >PAGE_ID=******
+
 >ACCOUNT_ID=******
+
 >BACK_URL_S=******
+
 >BACK_URL_F=******
+
 >REFUND_API_PASS=******
+
 >CCY=******
 
+#
 **Twilio:**
 >TWILIO_SID=******
+
 >TWILIO_TOKEN=******
+
 >TWILIO_FROM=******
 
+#
 **Maradit:**
 >MARADIT_HTTPS=true
+
 >MARADIT_USERNAME=******
+
 >MARADIT_PASSWORD=******
 
+#
 **Google Cloud Messaging:**
 >FCM_SERVER_KEY=******
+
 >FCM_SENDER_ID=******
 
 after setting up **.env** file, execute:
