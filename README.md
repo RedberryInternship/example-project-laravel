@@ -256,6 +256,10 @@ Also:
 * **app/Library/Presenters** - Presenters are often used response objects
 * **app/Library/Testing** - In testing folder we have custom mockers
 
+[Database Design Diagram](./readme/uml/uml.md "Draw.io")
+
+[Swagger API endpoints](https://app.swaggerhub.com/apis-docs/E-space/EspaceAPI/1.0.3 "API")
+
 #
 ### Server Infrastructure
 
