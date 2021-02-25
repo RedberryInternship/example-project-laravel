@@ -255,3 +255,16 @@ Also:
 * **app/Library/DataStructures** - help controller/interactor/entity to communicate with data
 * **app/Library/Presenters** - Presenters are often used response objects
 * **app/Library/Testing** - In testing folder we have custom mockers
+
+#
+### Server Infrastructure
+
+##### Development Server
+For dev server we are using [Laravel Forge](https://forge.laravel.com/docs/1.0/introduction.html#what-is-forge) server management system, which under the hood uses Amazon **EC2** *t2.micro* instance with 20 GiB storage.
+
+##### Production Server
+For production server we are using directly **AWS EC2** 
+* *t2.medium* instance
+* *elastic IP*
+* 20 GiB Storage
+* RDS - mysql
