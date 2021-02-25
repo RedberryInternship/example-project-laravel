@@ -142,6 +142,7 @@ Running unit tests also is very simple process, just type in following command:
 composer test
 ```
 
+#
 ### Development
 
 You can run Laravel's built-in development server by executing:
@@ -164,6 +165,7 @@ If you want to watch files during development, execute instead:
 it will watch JS files and on change it'll rebuild them, so you don't have to manually build them.
 
 
+#
 ### Deployment
 
 Once you pull changes to production server from github, there are several steps you have to keep in mind.
@@ -186,9 +188,70 @@ if you have updated JS dependencies, then execute following:
   npm install
 ```
 
-to updated build JS, execute following:
+to update build JS, execute following:
 ```sh
   npm run build
 ```
 
 Then everything should be OK :pray:
+
+#
+### Project Structure
+
+```bash
+├─── app
+│   ├─── Console
+│   ├─── Enums
+│   ├─── Exceptions
+│   ├─── Facades
+│   ├─── Http
+│   ├─── Library
+│   │   ├─── Adapters
+│   │   ├─── DataStructures
+│   │   ├─── Entities
+│   │   ├─── Interactors
+│   │   ├─── Presenters
+│   │   │___ Testing
+│   ├─── Nova
+│   ├─── Providers
+│   ├─── Traits
+│   │___ Rules
+│   │... Models
+├─── bootstrap
+├─── config
+├─── database
+├─── nova-components
+├─── nova
+├─── packages
+├─── public
+├─── resources
+├─── routes
+├─── scripts
+├─── storage
+├─── tests
+- .env
+- artisan
+- composer.json
+- package.json
+- phpunit.xml
+```
+
+Project structure is fairly straitforward(at least for laravel developers)...
+
+For more information about project standards, take a look at these docs:
+* [Laravel](https://laravel.com/docs/6.x)
+* [Nova](https://nova.laravel.com/)
+
+Aside from laravel/nova specific structure here are some of the key points that worth pointing out.
+
+In *app/Library* we have isolated the core project(E Space) functionality concerning heavy calculation, cron jobs and most of the complex procedures that happen on daily bases.
+
+When request hits controller, controller speaks to the one of the **Interactor** in the **app/Library/Interactor** folder, which understand the task and with the help of *Entities* in the **app/Library/Entities** this task is decomposed into several small tasks and each of them is assigned to the entity to take care of.
+
+As a result entities solve decomposed tasks and speak back to the interactor and interactor himself responds to the controller and then controller sends back an appropriate response to the user.
+
+Also:
+* **app/Library/Adapters** - wraps third party services(such as Georgian Card Package)
+* **app/Library/DataStructures** - help controller/interactor/entity to communicate with data
+* **app/Library/Presenters** - Presenters are often used response objects
+* **app/Library/Testing** - In testing folder we have custom mockers
