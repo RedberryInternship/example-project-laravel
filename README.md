@@ -15,6 +15,16 @@ E Space also gives opportunity to business with giving them **Business Module** 
 * <img src="readme/assets/npm.png" width="35" style="position: relative; top: 4px" /> *npm@6 and up*
 * <img src="readme/assets/composer.png" width="35" style="position: relative; top: 6px" /> *composer@2 and up*
 
+
+#
+### Tech Stack
+
+* <img src="readme/assets/laravel.png" height="18" style="position: relative; top: 4px" /> [Laravel](https://laravel.com/) - back-end framework
+* <img src="readme/assets/nova.png"  height="17" style="position: relative; top: 4px" /> [Laravel Nova](https://nova.laravel.com/) - flexible Admin Panel as espace "Super Admin"
+* <img src="readme/assets/mix.png" height="18" style="position: relative; top: 4px" /> [Laravel Mix](https://laravel-mix.com/) - is a webpack wrapper which makes an ease for a developer to start working on JS files and compile them with such simplicity...
+* <img src="readme/assets/jwt.png" height="18" style="position: relative; top: 4px" /> [JWT Auth](https://jwt-auth.readthedocs.io/en/develop/) - Authentication system for mobile users
+* <img src="readme/assets/spatie.png" height="19" style="position: relative; top: 4px" /> [Spatie Translatable](https://github.com/spatie/laravel-translatable) - package for translation
+
 #
 ### Getting Started
 1\. First of all you need to clone E Space repository from github:
@@ -131,3 +141,54 @@ Running unit tests also is very simple process, just type in following command:
 ```sh
 composer test
 ```
+
+### Development
+
+You can run Laravel's built-in development server by executing:
+
+```sh
+  php artisan serve
+```
+
+when working on JS you may run:
+
+```sh
+  npm run dev
+```
+it builds your js files into executable scripts.
+If you want to watch files during development, execute instead:
+
+```sh
+  npm run watch
+```
+it will watch JS files and on change it'll rebuild them, so you don't have to manually build them.
+
+
+### Deployment
+
+Once you pull changes to production server from github, there are several steps you have to keep in mind.
+
+if you have made database update, you should execute:
+
+```sh
+  php artisan migrate
+```
+
+if you have updated php dependencies, the execute following:
+
+```sh
+  composer install
+```
+
+if you have updated JS dependencies, then execute following:
+
+```sh
+  npm install
+```
+
+to updated build JS, execute following:
+```sh
+  npm run build
+```
+
+Then everything should be OK :pray:
