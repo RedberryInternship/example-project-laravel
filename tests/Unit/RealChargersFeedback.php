@@ -9,9 +9,9 @@ use App\Company;
 use App\Kilowatt;
 use App\UserCard;
 use Tests\TestCase;
+use App\ChargingPrice;
 use App\Enums\OrderStatus;
 use App\ChargerConnectorType;
-use App\ChargingPrice;
 
 class RealChargersFeedback extends TestCase
 {
@@ -77,6 +77,7 @@ class RealChargersFeedback extends TestCase
   {
     $this
       -> get( $this -> finishURL . '/' . $this -> order -> charger_transaction_id )
+      -> dump()
       -> assertOk();
 
     $this -> order -> refresh();
@@ -88,6 +89,7 @@ class RealChargersFeedback extends TestCase
   {
     $this 
       -> get($this -> updateURL . '/' . $this -> order -> charger_transaction_id . '/' . 7)
+      -> dump()
       -> assertOk();
   
     
