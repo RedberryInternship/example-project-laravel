@@ -20,6 +20,10 @@ class FCM
     $payload    = new PayloadDataBuilder();
     $payload    -> setData( $data );
     $data       = $payload -> build();
-    FCMPackage :: sendTo( $token, null, null, $data );
+
+    if(! app() -> runningUnitTests()) 
+    {
+      FCMPackage :: sendTo( $token, null, null, $data );
+    }
   }
 }
