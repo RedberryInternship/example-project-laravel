@@ -38,6 +38,7 @@ jobs:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
           APP_ENV: testing
+        run: vendor/bin/phpunit
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
         with:
@@ -47,4 +48,3 @@ jobs:
           script: |
             whoami
             ls -al
-        run: vendor/bin/phpunit
