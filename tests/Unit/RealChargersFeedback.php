@@ -77,7 +77,6 @@ class RealChargersFeedback extends TestCase
   {
     $this
       -> get( $this -> finishURL . '/' . $this -> order -> charger_transaction_id )
-      -> dump()
       -> assertOk();
 
     $this -> order -> refresh();
@@ -89,7 +88,6 @@ class RealChargersFeedback extends TestCase
   {
     $this 
       -> get($this -> updateURL . '/' . $this -> order -> charger_transaction_id . '/' . 7)
-      -> dump()
       -> assertOk();
   
     

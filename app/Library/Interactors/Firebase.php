@@ -16,7 +16,10 @@ class Firebase
    */
   public static function sendActiveOrders( $userId ): void
   {
-    ActiveOrdersSender :: send( $userId );
+    if(! app() -> runningUnitTests() )
+    {
+      ActiveOrdersSender :: send( $userId );
+    }
   }
 
   /**
