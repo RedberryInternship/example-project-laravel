@@ -40,6 +40,7 @@ jobs:
           APP_ENV: testing
         run: vendor/bin/phpunit
       - name: Deploy to Server
+        if: ${{ success() }}
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEV_HOST }}
@@ -47,5 +48,5 @@ jobs:
           key: ${{ secrets.DEV_PRIVATE_KEY }}
           passphrase: ${{ secrets.DEV_PASSPHRASE }}
           script: |
-            whoami
-            ls -al
+            cd api-dev.e-space.ge
+            git pull origin development
