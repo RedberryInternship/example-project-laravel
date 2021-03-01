@@ -54,5 +54,8 @@ class Auth extends TestCase
     $this 
       -> withHeader('Authorization', 'Bearer ' . $JWToken )
       -> get( $this -> meUrl) -> assertOk();
+
+    $this
+      -> assertTrue(false);
   }
 }
