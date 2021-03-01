@@ -49,4 +49,4 @@ jobs:
           passphrase: ${{ secrets.PROD_PASSPHRASE }}
           script: |
             git pull origin master
-            php artisan migrate
+            php artisan migrate --force
