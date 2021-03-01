@@ -13,8 +13,8 @@ use App\Facades\Charger as RealCharger;
 use App\Enums\PaymentType as PaymentTypeEnum;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Enums\ChargerType as ChargerTypeEnum;
-use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Library\Entities\ChargingProcess\Hook;
+use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Exceptions\NoSuchChargingPriceException;
 use App\Library\Entities\ChargingProcess\Timestamp;
 

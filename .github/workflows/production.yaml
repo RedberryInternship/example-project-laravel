@@ -1,15 +1,15 @@
-name: Development
+name: Production
 
 on: 
   push:
     branches:
-      - "development"
+      - "master"
   pull_request:
     branches:
-      - "development"
+      - "master"
 
 jobs:
-  test-and-deploy-to-dev-server:
+  test-and-deploy-to-production:
     runs-on: ubuntu-20.04
     
     steps:
@@ -43,11 +43,10 @@ jobs:
         if: ${{ success() }}
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DEV_HOST }}
-          username: ${{ secrets.DEV_USERNAME }}
-          key: ${{ secrets.DEV_PRIVATE_KEY }}
-          passphrase: ${{ secrets.DEV_PASSPHRASE }}
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USERNAME }}
+          key: ${{ secrets.PROD_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PROD_PASSPHRASE }}
           script: |
-            cd api-dev.e-space.ge
-            git pull origin development
+            git pull origin master
             php artisan migrate
