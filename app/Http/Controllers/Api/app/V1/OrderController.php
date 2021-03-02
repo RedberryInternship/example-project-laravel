@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\app\V1;
 use App\Http\Controllers\Controller;
 
 use App\Http\Resources\Order as OrderResource;
-
+use App\Library\Interactors\ChargingUpdater;
 use App\Order;
 use App\User;
 
@@ -33,6 +33,10 @@ class OrderController extends Controller
       'active_orders.charger_connector_type.charger',
       'active_orders.charger_connector_type.connector_type',
     ]) -> find( $userId );
+
+    $user -> active_orders -> each(function( $order ) {
+      ChargingUpdater :: updateAndCacheOrder($order);
+    });
     
     return OrderResource :: collection( $user -> active_orders );
   }
@@ -51,6 +55,8 @@ class OrderController extends Controller
           'charger_connector_type.connector_type',
         ]
       ) -> find( $order_id );
+
+    ChargingUpdater :: updateAndCacheOrder($order);
 
     return new OrderResource( $order );
   }

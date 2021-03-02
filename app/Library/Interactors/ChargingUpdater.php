@@ -7,6 +7,7 @@ use App\Library\Entities\ChargingUpdate\UpdateLvl2ChargerOrder;
 use App\Library\Entities\ChargingProcess\CacheOrderDetails;
 use App\Library\Entities\ChargingUpdate\OrderGetter;
 use App\Library\Entities\Log;
+use App\Order;
 
 class ChargingUpdater
 {
@@ -31,14 +32,26 @@ class ChargingUpdater
     OrdersMiddleware :: check( $transactionId );
     
     $order -> kilowatt -> updateConsumedKilowatts( $value );
-    $isChargerFast = $order -> charger_connector_type -> isChargerFast();
+    
+    self :: updateAndCacheOrder($order);
 
+    Firebase :: sendActiveOrders( $order -> user_id );
+    Log :: orderSuccessfullyUpdated( $transactionId, $value );
+  }
+
+  /**
+   * Update and Cache orders.
+   * 
+   * @param Order $order
+   * @return void
+   */
+  public static function updateAndCacheOrder(Order &$order)
+  {
+    $isChargerFast = $order -> charger_connector_type -> isChargerFast();
     $isChargerFast
       ? UpdateFastChargerOrder :: execute( $order )
       : UpdateLvl2ChargerOrder :: execute( $order );
-
-    Firebase :: sendActiveOrders( $order -> user_id );
+    
     CacheOrderDetails :: execute( $order );
-    Log :: orderSuccessfullyUpdated( $transactionId, $value );
   }
 }
