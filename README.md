@@ -18,6 +18,7 @@ E Space also gives opportunity to business with giving them **Business Module** 
 * [Project Structure](#project-structure)
 * [Service Interaction Map](#service-interaction-map)
 * [Server Infrastructure](#server-infrastructure)
+* [Database Backups](#database-backups)
 
 #
 ### Prerequisites
@@ -279,7 +280,7 @@ Also:
 <img src="./readme/assets/services.svg">
 
 #
-As Stated above E Space Application consists of several parties which are closely connected with each other.
+As stated above E Space Application consists of several parties which are closely connected with each other.
 Application is hosted in AWS Cloud, which consists of several services:
 * **ECS Server** which holds E-Space Codebase, that itself consists of several modules: 
   * ***Super Admin Nova*** - gives ability to the E-Space HQ to have control over everything. 
@@ -294,11 +295,18 @@ Application is hosted in AWS Cloud, which consists of several services:
 ### Server Infrastructure
 
 ##### Development Server
-For dev server we are using [Laravel Forge](https://forge.laravel.com/docs/1.0/introduction.html#what-is-forge) server management system, which under the hood uses Amazon **EC2** *t2.micro* instance with 20 GiB storage.
+For dev server we are using [Laravel Forge](https://forge.laravel.com/docs/1.0/introduction.html#what-is-forge) server management system, which under the hood uses Amazon **EC2** *t2.micro* instance with 20 GiB EBS storage.
 
 ##### Production Server
 For production server we are using directly **AWS EC2** 
 * *t2.medium* instance
 * *elastic IP*
-* 20 GiB Storage
+* 20 GiB EBS Storage
 * RDS - mysql
+
+#
+### Database Backups
+AWS gives us possibility to automate saving backups. As of now it is configured to save Database Backup for 3 consecutive days. restoring backup is fairly simple.
+For more information about RDS Backups, visit official documentation:
+
+[Getting Started with RDS Backups](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html)
