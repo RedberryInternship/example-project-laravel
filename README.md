@@ -279,6 +279,18 @@ Also:
 <img src="./readme/assets/services.svg">
 
 #
+As Stated above E Space Application consists of several parties which are closely connected with each other.
+Application is hosted in AWS Cloud, which consists of several services:
+* **ECS Server** which holds E-Space Codebase, that itself consists of several modules: 
+  * ***Super Admin Nova*** - gives ability to the E-Space HQ to have control over everything. 
+  * ***Business Module*** - is created for people who would like to purchase charger or/and services from E-Space and with Business Module one can control, watch and have analytical reports about his/her own chargers. Also ability to create/remove tariffs and to have transactions listing.
+  * ***Mobile Application Back-End & API*** - is means to utilize mobile app. within this module all the charging calculation and heavy lifting is done, including talking to ***Charger Device Server***
+* ***AWS EBS***
+* ***AWS RDS***
+* ***AWS Elastic IP***
+* ***Charger Device Server*** - is another party acting as middleware between Application Back-End and Charger Devices.
+
+#
 ### Server Infrastructure
 
 ##### Development Server
