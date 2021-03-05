@@ -14,7 +14,7 @@ E Space also gives opportunity to business with giving them **Business Module** 
 * [Getting Started](#getting-started)
 * [Migrations](#migration)
 * [Development](#development)
-* [Deployment](#deployment)
+* [Deployment with CI / CD](#deployment-with-ci-\-cd)
 * [Project Structure](#project-structure)
 * [Service Interaction Map](#service-interaction-map)
 * [Server Infrastructure](#server-infrastructure)
@@ -179,32 +179,17 @@ it will watch JS files and on change it'll rebuild them, so you don't have to ma
 
 
 #
-### Deployment
-
-Once you pull changes to production server from github, there are several steps you have to keep in mind.
-
-if you have made database update, you should execute:
-
-```sh
-  php artisan migrate
-```
-
-if you have updated php dependencies, the execute following:
-
-```sh
-  composer install
-```
-
-if you have updated JS dependencies, then execute following:
-
-```sh
-  npm install
-```
-
-to update build JS, execute following:
-```sh
-  npm run build
-```
+### Deployment with CI \ CD
+#
+!["CI / CD"](./readme/assets/cicd.png)
+#
+Continues Development / Continues Integration & Deployment steps:
+* CI \ CD process first step is of course is development.
+* After some time of development when you are ready to integrate and deploy your feature/fix/work you make a commit or pull request to gihub branch.
+* That triggers github action which listens to pull requests and commits on development and master branch. Github actions will set up configure project, run unit tests.
+* If unit tests fail, you go a head and do some fixing and aftermath try again.
+* If unit tests succeed then github actions will deploy your code to development or production server according to the branch you are making commit to.
+* After deploying, github actions script will build your code and run migrations all to be up to date.
 
 Then everything should be OK :pray:
 
