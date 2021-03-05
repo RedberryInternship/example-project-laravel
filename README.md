@@ -8,6 +8,17 @@ E Space Mobile App helps people to find e-car charger nearby and charge their el
 E Space also gives opportunity to business with giving them **Business Module** that gives people opportunity to have their own chargers and to make use of **Business Module** service to manage those chargers: create tariffs, monitor them, have analytical dashboard and more...
 
 #
+### Table of Contents
+* [Prerequisites](#prerequisites)
+* [Tech Stack](#tech-stack)
+* [Getting Started](#getting-started)
+* [Migrations](#migration)
+* [Development](#development)
+* [Deployment](#deployment)
+* [Project Structure](#project-structure)
+* [Server Infrastructure](#server-infrastructure)
+
+#
 ### Prerequisites
 
 * <img src="readme/assets/php.svg" width="35" style="position: relative; top: 4px" /> *PHP@7.2 and up*
@@ -244,7 +255,9 @@ For more information about project standards, take a look at these docs:
 
 Aside from laravel/nova specific structure here are some of the key points that worth pointing out.
 
-In *app/Library* we have isolated the core project(E Space) functionality concerning heavy calculation, cron jobs and most of the complex procedures that happen on daily bases.
+In **app/Library** we have isolated the core project(E Space) functionality concerning heavy calculation, cron jobs and most of the complex procedures that happen on daily bases. 
+For more information about task scheduling in Laravel, please take a look:
+[Laravel - Task Scheduling](https://laravel.com/docs/6.x/scheduling)
 
 When request hits controller, controller speaks to the one of the **Interactor** in the **app/Library/Interactor** folder, which understand the task and with the help of *Entities* in the **app/Library/Entities** this task is decomposed into several small tasks and each of them is assigned to the entity to take care of.
 
