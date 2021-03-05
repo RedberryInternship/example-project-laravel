@@ -16,6 +16,7 @@ E Space also gives opportunity to business with giving them **Business Module** 
 * [Development](#development)
 * [Deployment](#deployment)
 * [Project Structure](#project-structure)
+* [Service Interaction Map](#service-interaction-map)
 * [Server Infrastructure](#server-infrastructure)
 
 #
@@ -272,6 +273,10 @@ Also:
 [Database Design Diagram](./readme/uml/uml.md "Draw.io")
 
 [Swagger API endpoints](https://app.swaggerhub.com/apis-docs/E-space/EspaceAPI/1.0.3 "API")
+
+#
+### Service Interaction Map
+<img src="./readme/assets/services.svg">
 
 #
 ### Server Infrastructure
