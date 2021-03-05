@@ -182,7 +182,8 @@ it will watch JS files and on change it'll rebuild them, so you don't have to ma
 ### Deployment with CI \ CD
 #
 !["CI / CD"](./readme/assets/cicd.png)
-#
+<br />
+
 Continues Development / Continues Integration & Deployment steps:
 * CI \ CD process first step is of course is development.
 * After some time of development when you are ready to integrate and deploy your feature/fix/work you make a commit or pull request to gihub branch.
@@ -262,9 +263,9 @@ Also:
 
 #
 ### Service Interaction Map
-<img src="./readme/assets/services.svg">
+![Service Integration](./readme/assets/services.svg) 
+<br />
 
-#
 As stated above E Space Application consists of several parties which are closely connected with each other.
 Application is hosted in AWS Cloud, which consists of several services:
 * **ECS Server** which holds E-Space Codebase, that itself consists of several modules: 
