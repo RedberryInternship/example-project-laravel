@@ -32,7 +32,7 @@ E Space also gives opportunity to business with giving them **Business Module** 
 #
 ### Tech Stack
 
-* <img src="readme/assets/laravel.png" height="18" style="position: relative; top: 4px" /> [Laravel](https://laravel.com/) - back-end framework
+* <img src="readme/assets/laravel.png" height="18" style="position: relative; top: 4px" /> [Laravel@6.x](https://laravel.com/docs/6.x) - back-end framework
 * <img src="readme/assets/nova.png"  height="17" style="position: relative; top: 4px" /> [Laravel Nova](https://nova.laravel.com/) - flexible Admin Panel as espace "Super Admin"
 * <img src="readme/assets/mix.png" height="18" style="position: relative; top: 4px" /> [Laravel Mix](https://laravel-mix.com/) - is a webpack wrapper which makes an ease for a developer to start working on JS files and compile them with such simplicity...
 * <img src="readme/assets/jwt.png" height="18" style="position: relative; top: 4px" /> [JWT Auth](https://jwt-auth.readthedocs.io/en/develop/) - Authentication system for mobile users
@@ -180,8 +180,10 @@ it will watch JS files and on change it'll rebuild them, so you don't have to ma
 
 #
 ### Deployment with CI \ CD
-#
+<br/>
+
 !["CI / CD"](./readme/assets/cicd.png)
+
 <br />
 
 Continues Development / Continues Integration & Deployment steps:
