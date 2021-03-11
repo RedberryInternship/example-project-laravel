@@ -283,10 +283,12 @@ Application is hosted in AWS Cloud, which consists of several services:
 ### Server Infrastructure
 
 ##### Development Server
-For dev server we are using [Laravel Forge](https://forge.laravel.com/docs/1.0/introduction.html#what-is-forge) server management system, which under the hood uses Amazon **EC2** *t2.micro* instance with 20 GiB EBS storage.
+For development server we are using **AWS EC2** 
+* *t2.micro* instance
+* 20 GiB EBS Storage
 
 ##### Production Server
-For production server we are using directly **AWS EC2** 
+For production server we are using **AWS EC2** 
 * *t2.medium* instance
 * *elastic IP*
 * 20 GiB EBS Storage
