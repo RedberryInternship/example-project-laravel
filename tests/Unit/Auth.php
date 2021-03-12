@@ -42,7 +42,7 @@ class Auth extends TestCase
   }
 
   /** @test */
-  public function retrieved_token_gives_me(): void
+  public function retrieved_response_gives_access_token(): void
   {
     $JWToken = $this -> post( $this -> url, [ 
       'phone_number' => '+995598317829',
