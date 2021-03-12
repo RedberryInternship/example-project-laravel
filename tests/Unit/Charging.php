@@ -58,6 +58,20 @@ class Charging extends TestCase
         ]
       );
   }
+
+  /** @test */
+  public function start_charging_has_validation_errors(): void
+  {
+    $this
+      -> actAs( $this -> user )
+      -> post( $this -> startChargingURL,
+        [
+          'charging_type' => ChargingType :: FULL_CHARGE,
+          'user_card_id'  => $this -> userCard -> id,
+        ]
+      )
+      -> assertJsonValidationErrors(['charger_connector_type_id']);
+  }
  
   /** @test */
   public function creates_new_order(): void
@@ -106,5 +120,26 @@ class Charging extends TestCase
           'charging_status' => OrderStatus :: CHARGED,
         ]
       );
+  }
+
+  /** @test */
+  public function finish_charging_has_validation_errors(): void
+  {
+    $order = factory( Order :: class ) -> create(
+        [
+          'charging_status' => OrderStatus :: CHARGING,
+          'charger_connector_type_id' => $this -> chargerConnectorType -> id,
+          'user_card_id' => $this -> userCard -> id,
+          'user_id' => $this -> user -> id,
+        ]
+      );
+
+    $this
+      -> actAs( $this -> user )
+      -> post( 
+        $this -> stopChargingURL ,
+        [],
+      ) 
+      -> assertJsonValidationErrors(['order_id']);
   }
 }
