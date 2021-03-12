@@ -12,6 +12,12 @@ class FavoriteController extends Controller
 {
     public function postAddFavorite(Request $request)
     {
+			$request->validate(
+				[
+					'charger_id' => 'required'
+				]
+			);
+
     	$chargerId 	= $request -> charger_id;
 			$user				= User :: find( auth() -> user() -> id );
     	$status     = 400;
@@ -30,6 +36,12 @@ class FavoriteController extends Controller
 
     public function postRemoveFavorite(Request $request)
     {
+			$request->validate(
+				[
+					'charger_id' => 'required'
+				]
+			);
+			
     	$user    		= User :: find( auth() -> user() -> id );
     	$chargerId 	= $request -> charger_id;
 			$favorite   = Favorite :: where( 'user_id', $user -> id ) 
