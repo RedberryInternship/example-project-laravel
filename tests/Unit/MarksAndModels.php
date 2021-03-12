@@ -22,12 +22,4 @@ class MarksAndModels extends TestCase
   {
     $this -> get( $this -> url ) -> assertOk();
   }
-  
-  /** @test */
-  public function marks_and_models_structure(): void 
-  {
-    $this 
-      -> get( $this -> url ) 
-      -> assertOk();
-  }
 }
