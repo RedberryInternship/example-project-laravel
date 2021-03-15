@@ -82,15 +82,6 @@ class RealChargersFeedback extends TestCase
     $this -> order -> refresh();
     $this -> assertEquals( OrderStatus :: FINISHED, $this -> order -> charging_status );
   }
-  
-  /** @test */
-  public function order_gets_finished_when_disconnected_has_validation_errors(): void
-  {
-    $this
-      -> get( $this -> finishURL )
-      -> assertOk();
-  }
-
 
   /** @test */
   public function order_gets_updated(): void
