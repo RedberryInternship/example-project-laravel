@@ -2,7 +2,6 @@
 
 namespace Test\Unit;
 
-use App\Whitelist as AppWhitelist;
 use Tests\TestCase;
 use App\Charger;
 use Closure;

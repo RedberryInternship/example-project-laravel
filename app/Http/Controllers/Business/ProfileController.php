@@ -48,7 +48,7 @@ class ProfileController extends Controller
      */
     public function store(UpdateInfo $request)
     {
-        $userId = auth() -> user() -> id;
+        $userId = auth() -> id();
         $user   = User :: find($userId);
 
         $data = [];
@@ -66,7 +66,7 @@ class ProfileController extends Controller
      * 
      * @return File
      */
-    public static function downloadContractFile()
+    public function downloadContractFile()
     {
         $userId           = auth() -> user() -> id;
         $user             = User :: with( 'company' ) -> find( $userId );

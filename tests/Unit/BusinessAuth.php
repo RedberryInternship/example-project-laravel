@@ -2,9 +2,9 @@
 
 namespace Test\Unit;
 
-use App\Company;
 use App\Enums\Role as EnumsRole;
 use Tests\TestCase;
+use App\Company;
 use App\Role;
 
 class BusinessAuth extends TestCase
@@ -12,8 +12,8 @@ class BusinessAuth extends TestCase
   /**
    * API routes.
    */
-  private $loginURL = 'business/login';
   private $authURL = 'business/auth';
+  private $loginURL = 'business/login';
   private $logoutURL = 'business/logout';
   private $dashboardURL = 'business';
 
