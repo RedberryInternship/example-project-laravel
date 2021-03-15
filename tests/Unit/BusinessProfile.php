@@ -13,7 +13,7 @@ class BusinessProfile extends TestCase
    * Api routes.
    */
   private $profileURL = 'business/profile';
-  private $downloadContract = 'business/profile/download-contract';
+  private $downloadContractURL = 'business/profile/download-contract';
 
   /**
    * Company.
@@ -100,12 +100,16 @@ class BusinessProfile extends TestCase
      */
     $fileName = 'contract.pdf';
     $content = 'contract content';
-    $path =  '/storage/app/public' . $fileName;
+    $path =  '/storage/app/public/' . $fileName;
     $fullPath = base_path($path);
-
     file_put_contents($fullPath, $content);
-
-
+    
+    $this -> company -> update(['contract_file' => $fileName]);
+    
+    $this
+      -> actingAs($this->user)
+      -> get($this->downloadContractURL)
+      -> assertOk();
     
     /**
      * Remove contract file.
