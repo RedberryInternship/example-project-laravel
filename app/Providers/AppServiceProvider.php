@@ -7,6 +7,7 @@ use App\Library\Interactors\SMS;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use App\Library\Interactors\GeorgianCard;
+use Spatie\NovaTranslatable\Translatable;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,10 +18,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        \Spatie\NovaTranslatable\Translatable::defaultLocales(['en', 'ru','ka']);
-
+        Translatable :: defaultLocales([ 'en', 'ru','ka' ]);
         $this -> app -> bind( 'redberry.georgian-card.handler', GeorgianCard :: class );
-
         $this -> app -> bind( 'SMSProvider', SMS :: class );
     }
 

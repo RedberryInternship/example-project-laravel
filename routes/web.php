@@ -6,13 +6,10 @@
 |--------------------------------------------------------------------------
 */
 
-
 use Illuminate\Support\Facades\Route;
 use App\Library\Entities\Helper;
 
-Route::get('/', function () {
-    return redirect('http://e-space.ge');
-});
+Route::redirect('/', 'http://app.e-space.ge/nova');
 
 Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     Route::get('/', 'DashboardController');

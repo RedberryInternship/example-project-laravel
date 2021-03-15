@@ -62,7 +62,7 @@ class CarController extends Controller
         $request->validate(
             [
                 'car_model_id' => 'required',
-            ]
+            ],
         );
 
         $user = auth('api') -> user();
