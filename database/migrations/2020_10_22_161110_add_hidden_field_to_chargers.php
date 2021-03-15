@@ -15,6 +15,9 @@ class AddHiddenFieldToChargers extends Migration
     {
         Schema::table('chargers', function (Blueprint $table) {
             $table -> boolean( 'hidden' ) -> default( false ) -> after( 'active' );
+        });
+        
+        Schema::table('chargers', function (Blueprint $table) {
             $table -> dropColumn('active');
         });
     }
