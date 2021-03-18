@@ -127,7 +127,7 @@ class GroupController extends Controller
      * @param int $groupId
      * @return void
      */
-    public static function storeAllChargersToGroup(StoreAllChargersIntoGroup $request)
+    public function storeAllChargersToGroup(StoreAllChargersIntoGroup $request)
     {
         Groups :: storeAllCompanyChargersIntoGroup($request -> group_id);
     }

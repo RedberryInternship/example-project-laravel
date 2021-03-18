@@ -49,11 +49,12 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
         /**
          * Groups.
          */
-        Route::resource('/groups', 'GroupController');
-        Route::delete('/groups/charging-prices/delete', 'GroupController@deleteChargingPrices');
-        Route::post('/groups/store/all', 'GroupController@storeAllChargersToGroup');
-        Route::resource('/group-prices', 'GroupPriceController');
-        Route::resource('/group-fast-prices', 'GroupFastPriceController');
+        Route::resource('/groups', 'GroupController')->only(['index', 'store', 'edit', 'destroy']);
+        Route::delete('/groups/charging-prices/delete', 'GroupController@deleteChargingPrices')->name('groups.delete-all-charging-prices');
+        Route::post('/groups/store/all', 'GroupController@storeAllChargersToGroup')->name('groups.store-all-charging-prices');
+        
+        Route::resource('/group-prices', 'GroupPriceController')->only(['show', 'update']);
+        Route::resource('/group-fast-prices', 'GroupFastPriceController')->only(['show', 'update']);
         
         /**
          * Charging Prices.

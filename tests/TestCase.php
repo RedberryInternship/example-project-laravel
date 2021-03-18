@@ -69,4 +69,18 @@ abstract class TestCase extends BaseTestCase
             array_merge($userDefaultAttributes, $userAttributes),
         );
     }
+
+    /**
+     * Create business role.
+     * 
+     * @return Role
+     */
+    public function createBusinessRole(): Role
+    {
+        return factory(Role::class)->create(
+            [
+                'name' => RoleEnum::BUSINESS,
+            ]
+        );
+    }
 }
