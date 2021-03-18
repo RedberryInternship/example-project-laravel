@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Business;
 
 use App\Order;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 use App\Library\Entities\Helper;
+use App\Http\Controllers\Controller;
 use App\Library\Interactors\Exporter;
 use App\Library\Interactors\Business\Orders;
 
@@ -60,6 +61,21 @@ class OrderController extends Controller
      */
     public function show($id) 
     {
+        $this->showGate($id);
         return Orders :: getInfo($id);
+    }
+
+    /**
+     * Check if user is permitted to be here.
+     * 
+     * @param int $id
+     * @return void
+     */
+    public function showGate($id)
+    {
+        $order = Order::findOrFail($id);
+        $charger = $order->getCharger();
+        
+        abort_if($charger -> company_id !== auth() -> user() -> company_id, Response::HTTP_FORBIDDEN);
     }
 }

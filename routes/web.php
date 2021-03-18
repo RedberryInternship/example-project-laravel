@@ -30,9 +30,9 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     /**
      * Orders.
      */
-    Route::resource('/orders', 'OrderController');
-    Route::get('/orders/{id}', 'OrderController@show');
-    Route::get('/order-exports', 'OrderController@downloadExcel');
+    Route::get('/orders', 'OrderController@index')->name('business-orders.index');
+    Route::get('/orders/{id}', 'OrderController@show')->name('business-orders.show');
+    Route::get('/order-exports', 'OrderController@downloadExcel')->name('business-orders.downloadExcel');
     
     /**
      * Chargers.

@@ -66,7 +66,7 @@
                                         </button>
                                     </div>
                                     <div class="input-field left-2-em filter-btn">
-                                        <a href="{{ route('orders.index') }}" class="btn white grey-text">
+                                        <a href="{{ route('business-orders.index') }}" class="btn white grey-text">
                                             <i class="material-icons">remove</i>
                                         </a>
                                     </div>
