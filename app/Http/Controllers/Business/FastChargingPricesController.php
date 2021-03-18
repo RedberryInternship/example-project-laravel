@@ -10,16 +10,6 @@ use App\Http\Requests\Business\Chargers\AddFastPrice;
 class FastChargingPricesController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {
-        $this -> middleware('business.auth');
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @return Response

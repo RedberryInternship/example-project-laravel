@@ -10,13 +10,6 @@ use App\User;
 
 class ProfileController extends Controller
 {
-    /**
-     * ProfileController Constructor. 
-     */
-    public function __construct()
-    {
-        $this -> middleware('business.auth');
-    }
 
     /**
      * Display a listing of the resource.

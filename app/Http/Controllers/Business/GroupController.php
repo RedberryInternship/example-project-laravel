@@ -14,14 +14,6 @@ use App\User;
 class GroupController extends Controller
 {
     /**
-     * ChargerController Constructor. 
-     */
-    public function __construct()
-    {
-        $this -> middleware('business.auth');
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return View

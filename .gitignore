@@ -7,6 +7,7 @@
 /public/phpmyadmin
 /public/firebase-messaging-sw.js
 /storage/*.key
+/storage/laravel-excel-*.xlsx
 /vendor
 /code/espace/database/database.sqlite
 .env

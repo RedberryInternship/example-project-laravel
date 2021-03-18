@@ -10,14 +10,6 @@ use App\Http\Requests\Business\Chargers\AddLvl2Price;
 class ChargingPricesController extends Controller
 {
     /**
-     * ChargingPricesController Constructor. 
-     */
-    public function __construct()
-    {
-        $this -> middleware('business.auth');
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  Request  $request

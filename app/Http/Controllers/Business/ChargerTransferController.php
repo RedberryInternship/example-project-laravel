@@ -11,14 +11,6 @@ use Illuminate\Support\Facades\Auth;
 class ChargerTransferController extends Controller
 {
     /**
-     * ChargerTransferController Constructor.
-     */
-    public function __construct()
-    {
-        $this -> middleware('business.auth');
-    }
-
-    /**
      * Transfer Charger to Group.
      *
      * @param $request

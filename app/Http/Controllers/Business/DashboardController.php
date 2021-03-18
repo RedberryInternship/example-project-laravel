@@ -8,14 +8,6 @@ use App\Order;
 class DashboardController extends Controller
 {
     /**
-     * DashboardController Constructor.
-     */
-    public function __construct()
-    {
-        $this -> middleware('business.auth');
-    }
-
-    /**
      * Dashboard page.
      */
     public function __invoke()

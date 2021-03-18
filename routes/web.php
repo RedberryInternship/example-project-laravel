@@ -12,65 +12,72 @@ use App\Library\Entities\Helper;
 Route::redirect('/', 'http://app.e-space.ge/nova');
 
 Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
-    /**
-     * Auth.
-     */
-    Route::get('/', 'DashboardController');
+    
     Route::get('/login', 'AuthController@login');
     Route::post('/auth', 'AuthController@auth');
-    Route::get('/logout', 'AuthController@logout');
-    
-    /**
-     * Profile.
-     */
-    Route::get('/profile', 'ProfileController@index');
-    Route::post('/profile', 'ProfileController@store');
-    Route::get('/profile/download-contract', 'ProfileController@downloadContractFile');
-    
-    /**
-     * Orders.
-     */
-    Route::get('/orders', 'OrderController@index')->name('business-orders.index');
-    Route::get('/orders/{id}', 'OrderController@show')->name('business-orders.show');
-    Route::get('/order-exports', 'OrderController@downloadExcel')->name('business-orders.downloadExcel');
-    
-    /**
-     * Chargers.
-     */
-    Route::resource('/chargers', 'ChargerController');
-    Route::post('/filter-chargers', 'ChargerController@getFilteredChargers');
-    Route::post('/charger-transfer', 'ChargerTransferController');
-    
-    /**
-     * Groups.
-     */
-    Route::resource('/groups', 'GroupController');
-    Route::delete('/groups/charging-prices/delete', 'GroupController@deleteChargingPrices');
-    Route::post('/groups/store/all', 'GroupController@storeAllChargersToGroup');
-    Route::resource('/group-prices', 'GroupPriceController');
-    Route::resource('/group-fast-prices', 'GroupFastPriceController');
-    
-    /**
-     * Charging Prices.
-     */
-    Route::resource('/charging-prices', 'ChargingPricesController');
-    Route::resource('/fast-charging-prices', 'FastChargingPricesController');
 
-    /** Whitelist api */
-    Route::post('/chargers/toggle-visibility', 'WhitelistController@toggleHiddenField');
-    Route::get('/chargers/{charger_id}/whitelist', 'WhitelistController@getWhitelist');
-    Route::post('/chargers/add/whitelist', 'WhitelistController@addToWhitelist');
-    Route::post('/chargers/remove-from/whitelist', 'WhitelistController@removeFromWhitelist');
-
-    /**
-     * Analytics.
-     */
-    Route::group(['prefix' => 'analytics'], function() {
-        Route::get('/income', 'AnalyticsController@incomeAndExpense');
-        Route::get('/transactions', 'AnalyticsController@businessTransactionsAndWastedEnergy');
-        Route::get('/top-chargers', 'AnalyticsController@topChargers');
-        Route::get('/charger-statuses', 'AnalyticsController@businessChargerStatuses');
+    Route::middleware('business.auth')->group(function() {
+        /**
+         * Auth.
+         */
+        Route::get('/', 'DashboardController');
+        Route::get('/logout', 'AuthController@logout');
+        
+        /**
+         * Profile.
+         */
+        Route::get('/profile', 'ProfileController@index');
+        Route::post('/profile', 'ProfileController@store');
+        Route::get('/profile/download-contract', 'ProfileController@downloadContractFile');
+        
+        /**
+         * Orders.
+         */
+        Route::get('/orders', 'OrderController@index')->name('business-orders.index');
+        Route::get('/orders/{id}', 'OrderController@show')->name('business-orders.show');
+        Route::get('/order-exports', 'OrderController@downloadExcel')->name('business-orders.downloadExcel');
+        
+        /**
+         * Chargers.
+         */
+        Route::get('/chargers', 'ChargerController@index');
+        Route::get('/chargers/{id}/edit', 'ChargerController@edit');
+        Route::post('/chargers/{id}/update', 'ChargerController@update');
+        Route::post('/filter-chargers', 'ChargerController@getFilteredChargers');
+        Route::post('/charger-transfer', 'ChargerTransferController');
+        
+        /**
+         * Groups.
+         */
+        Route::resource('/groups', 'GroupController');
+        Route::delete('/groups/charging-prices/delete', 'GroupController@deleteChargingPrices');
+        Route::post('/groups/store/all', 'GroupController@storeAllChargersToGroup');
+        Route::resource('/group-prices', 'GroupPriceController');
+        Route::resource('/group-fast-prices', 'GroupFastPriceController');
+        
+        /**
+         * Charging Prices.
+         */
+        Route::resource('/charging-prices', 'ChargingPricesController');
+        Route::resource('/fast-charging-prices', 'FastChargingPricesController');
+    
+        /** Whitelist api */
+        Route::post('/chargers/toggle-visibility', 'WhitelistController@toggleHiddenField');
+        Route::get('/chargers/{charger_id}/whitelist', 'WhitelistController@getWhitelist');
+        Route::post('/chargers/add/whitelist', 'WhitelistController@addToWhitelist');
+        Route::post('/chargers/remove-from/whitelist', 'WhitelistController@removeFromWhitelist');
+    
+        /**
+         * Analytics.
+         */
+        Route::group(['prefix' => 'analytics'], function() {
+            Route::get('/income', 'AnalyticsController@incomeAndExpense');
+            Route::get('/transactions', 'AnalyticsController@businessTransactionsAndWastedEnergy');
+            Route::get('/top-chargers', 'AnalyticsController@topChargers');
+            Route::get('/charger-statuses', 'AnalyticsController@businessChargerStatuses');
+        });
     });
+
 });
 
 /**

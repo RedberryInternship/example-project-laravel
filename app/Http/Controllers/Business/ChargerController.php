@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Business;
 use App\User;
 use App\Charger;
 use App\BusinessService;
-use App\ChargerConnectorType;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\ChargerConnectorType;
 use App\Library\Entities\Helper;
 use App\Http\Controllers\Controller;
 use App\Enums\ChargerType as ChargerTypeEnum;
@@ -15,30 +16,9 @@ use App\Enums\ConnectorType as ConnectorTypeEnum;
 class ChargerController extends Controller
 {
     /**
-     * User instance.
-     * 
-     * @var $user
-     */
-    private $user;
-
-    /**
-     * Company name.
-     * 
-     * @var string $companyName
-     */
-
-    /**
-     * ChargerController Constructor. 
-     */
-    public function __construct()
-    {
-        $this -> middleware('business.auth');
-    }
-
-    /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -64,7 +44,7 @@ class ChargerController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
@@ -110,9 +90,9 @@ class ChargerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Charger $charger)
     {
@@ -136,7 +116,7 @@ class ChargerController extends Controller
     /**
      * Get filtered chargers for modal on dashboards.
      * 
-     * @return \JSON
+     * @return JSON
      */
     public function getFilteredChargers()
     {

@@ -13,6 +13,7 @@ export const curl = (api, config) => {
   if( mergedConfigs.method === 'POST')
   {
     mergedConfigs.body._token = getCSRF();
+    mergedConfigs.headers['X-CSRF-TOKEN'] = getCSRF();
     mergedConfigs.body = JSON.stringify(mergedConfigs.body);
   }
 

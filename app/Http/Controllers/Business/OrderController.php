@@ -14,14 +14,6 @@ class OrderController extends Controller
     private $numbersPerPage = 200;
 
     /**
-     * OrderController Constructor. 
-     */
-    public function __construct()
-    {
-        $this -> middleware('business.auth');
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return View

@@ -13,15 +13,6 @@ use App\Enums\Role as RoleEnum;
 class AuthController extends Controller
 {
     /**
-     * BusinessController Constructor.
-     */
-    public function __construct()
-    {
-        $this -> middleware('business.auth')
-              -> except(['login', 'auth']);
-    }
-
-    /**
      * Login Page.
      *
      * @return view

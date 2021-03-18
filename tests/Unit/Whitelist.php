@@ -2,8 +2,10 @@
 
 namespace Test\Unit;
 
+use App\Enums\Role as RoleEnum;
 use Tests\TestCase;
 use App\Charger;
+use App\Role;
 use Closure;
 
 class Whitelist extends TestCase
@@ -50,6 +52,18 @@ class Whitelist extends TestCase
         ['phone' => '+995591935082'],
       ]
     );
+
+    $businessRole = factory(Role::class) -> create(
+      [ 
+        'name' => RoleEnum::BUSINESS,
+      ]
+    );
+
+    $this -> user = $this->createUser(
+      [
+        'role_id' => $businessRole->id,
+      ]
+    );
   }
 
   /** @test */
@@ -58,6 +72,7 @@ class Whitelist extends TestCase
     $this -> charger -> update(['hidden' => false]);
 
     $this
+      -> actingAs($this->user)
       -> post(
         $this -> toggleChargerVisibilityURL,
         [
@@ -72,8 +87,9 @@ class Whitelist extends TestCase
   public function toggle_charger_visibility_has_validation_errors(): void
   {
     $this -> charger -> update(['hidden' => false]);
-
+  
     $this
+      -> actingAs($this->user)
       -> post(
         $this -> toggleChargerVisibilityURL,
         [
@@ -90,6 +106,7 @@ class Whitelist extends TestCase
     $getChargerWhitelistURL = $this -> getChargerWhitelistURL( $this -> charger -> id );
 
     $this 
+      -> actingAs($this->user)
       -> get( $getChargerWhitelistURL )
       -> assertJsonCount(3);
   }
@@ -100,6 +117,7 @@ class Whitelist extends TestCase
     $phone = '+995591000000';
 
     $this
+      -> actingAs($this->user)
       -> post(
         $this -> addToWhitelistURL,
         [
@@ -116,6 +134,7 @@ class Whitelist extends TestCase
     $phone = '+995591000000';
 
     $this
+      -> actingAs($this->user)
       -> post(
         $this -> addToWhitelistURL,
         [
@@ -132,6 +151,7 @@ class Whitelist extends TestCase
     $whitelistedId = $this -> charger -> whitelist -> first() -> id;
 
     $this
+      -> actingAs($this->user)
       -> post(
         $this -> removeFromWhitelistURL,
         [
@@ -153,6 +173,7 @@ class Whitelist extends TestCase
     $whitelistedId = $this -> charger -> whitelist -> first() -> id;
 
     $this
+      -> actingAs($this->user)
       -> post(
         $this -> removeFromWhitelistURL,
         [
