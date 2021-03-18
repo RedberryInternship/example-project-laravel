@@ -56,7 +56,7 @@ class ChargerController extends Controller
                     'groups',
                 ]
             ) 
-            -> first();
+            -> firstOrFail();
 
         $chargerBusinessServices = $charger -> business_services -> pluck('id') -> toArray();
         $chargerConnectorTypes   = ChargerConnectorType :: active()
@@ -102,7 +102,6 @@ class ChargerController extends Controller
         {
             return redirect() -> back();
         }
-
         $charger -> setTranslations('name', $request -> get('names'))
                  -> setTranslations('description', $request -> get('descriptions'))
                  -> setTranslations('location', $request -> get('locations'))
