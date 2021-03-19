@@ -21,11 +21,7 @@ class BusinessGroup extends TestCase
   private function editGroupsURL($id) { return "business/groups/$id/edit"; }
   private function destroyGroupsURL($id) { return "business/groups/$id"; }
   private $deleteAllGroupPricesURL = 'business/groups/charging-prices/delete';
-  private $storeAllChargersIntoGroupURL = 'business/groups/store/all';
-  private function showGroupLVL2PricesURL($id) { return "business/group-prices/$id"; }
-  private function updateGroupLVL2PricesURL($id) { return "business/group-prices/$id"; } 
-  private function showGroupFASTPricesURL($id) { return "business/group-fast-prices/$id"; }
-  private function updateGroupFASTPricesURL($id) { return "business/group-fast-prices/$id"; } 
+  private $storeAllChargersIntoGroupURL = 'business/groups/store/all'; 
 
   /**
    * Business user.

@@ -18,7 +18,7 @@ class GroupPriceController extends Controller
      */
     public function show($groupID)
     {
-        $group  = Group :: with('chargers.charger_connector_types.charging_prices') -> find( $groupID );
+        $group  = Group :: with('chargers.charger_connector_types.charging_prices') -> findOrFail( $groupID );
         $user   = auth() -> user();
 
         return view('business.groups.lvl2-prices.edit') 

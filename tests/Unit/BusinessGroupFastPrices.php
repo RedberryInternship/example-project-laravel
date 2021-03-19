@@ -12,12 +12,12 @@ use App\Company;
 use App\Group;
 use App\User;
 
-class BusinessGroupLVL2Prices extends TestCase
+class BusinessGroupFastPrices extends TestCase
 {
   /**
    * Route URLs.
    */
-  private function groupLVL2PricesURL($id) { return "business/group-prices/$id"; }
+  private function groupFASTPricesURL($id) { return "business/group-fast-prices/$id"; }
 
   /**
    * Business user.
@@ -74,56 +74,52 @@ class BusinessGroupLVL2Prices extends TestCase
         ->create(
           [
             'charger_id' => $charger->id,
-            'connector_type_id' => ConnectorType::whereName(EnumsConnectorType::TYPE_2)->first()->id,
+            'connector_type_id' => ConnectorType::whereName(EnumsConnectorType::COMBO_2)->first()->id,
           ],
         ),
       );
   }
 
   /** @test */
-  public function show_group_with_lvl_2_prices_is_ok()
+  public function show_group_with_fast_prices_is_ok()
   {
     $group = $this->groups->random();
 
     $this
       ->actingAs($this->user)
-      ->get($this->groupLVL2PricesURL($group->id))
+      ->get($this->groupFASTPricesURL($group->id))
       ->assertOk();
   }
   
   /** @test */
-  public function show_group_with_lvl_2_prices_not_found()
+  public function show_group_with_fast_prices_not_found()
   {
     $groupId = 1232112;
 
     $this
       ->actingAs($this->user)
-      ->get($this->groupLVL2PricesURL($groupId))
+      ->get($this->groupFASTPricesURL($groupId))
       ->assertNotFound();
   }
     
   /** @test */
-  public function create_lvl_2_charging_price_for_group_is_ok(): void
+  public function create_fast_charging_price_for_group_is_ok(): void
   {
     $brandNewGroup = factory(Group::class)->create([ 'user_id' => $this->user->id ]);
     $this->chargers->each(fn(Charger $charger) => $brandNewGroup->chargers()->attach($charger));
 
-    $startTime = '00:00';
-    $endTime = '00:00';
-    $minKWT = 0;
-    $maxKWT = 10;
+    $startMinutes = 0;
+    $endMinutes = 10;
     $price = 1;
 
     $this
       ->actingAs($this->user)
       ->put(
-        $this->groupLVL2PricesURL($brandNewGroup->id),
+        $this->groupFASTPricesURL($brandNewGroup->id),
         [
-          'start_time' => $startTime,
-          'end_time'   => $endTime,
-          'min_kwt'    => $minKWT,
-          'max_kwt'    => $maxKWT,
-          'price'      => $price,
+          'start_minutes' => $startMinutes,
+          'end_minutes'   => $endMinutes,
+          'price'         => $price,
         ],
       )
       ->assertSessionHasNoErrors();
@@ -138,15 +134,13 @@ class BusinessGroupLVL2Prices extends TestCase
     $this
       ->actingAs($this->user)
       ->put(
-        $this->groupLVL2PricesURL($brandNewGroup->id),
+        $this->groupFASTPricesURL($brandNewGroup->id),
         [
-          // 'start_time' => $startTime,
-          // 'end_time'   => $endTime,
-          // 'min_kwt'    => $minKWT,
-          // 'max_kwt'    => $maxKWT,
-          // 'price'      => $price,
+          // 'start_minutes' => $startMinutes,
+          // 'end_minutes'   => $endMinutes,
+          // 'price'         => $price,
         ],
       )
-      ->assertSessionHasErrors(['start_time', 'end_time', 'max_kwt', 'min_kwt', 'price']);
+      ->assertSessionHasErrors(['start_minutes', 'end_minutes', 'price']);
   }
 }
