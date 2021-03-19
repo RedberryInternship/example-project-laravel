@@ -100,7 +100,8 @@ class GroupController extends Controller
         $group -> chargers() -> detach();
         $group -> delete();
 
-        return redirect() -> back();
+
+        return redirect() -> back(201);
     }
 
     /**

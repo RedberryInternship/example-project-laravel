@@ -16,20 +16,24 @@ class GroupChargersChargingPricesDestroyer
   {
     $group = Group :: with(
       [
-          'chargers.charger_connector_types.charging_prices',
-          'chargers.charger_connector_types.fast_charging_prices',
+        'chargers.charger_connector_types.fast_charging_prices',
+        'chargers.charger_connector_types.charging_prices',
       ]
-    ) -> find($groupId);
+    ) -> findOrFail($groupId);
 
-    $group -> chargers -> each(function( $charger ) {
-        $charger -> charger_connector_types -> each( function( $chargerConnectorType ) {
-            $chargerConnectorType -> charging_prices -> each(function( $chargingPrice) {
-                $chargingPrice -> delete();
-            });
+    $group 
+      -> chargers 
+      -> each(function( $charger ) {
+        $charger 
+          -> charger_connector_types 
+          -> each( function( $chargerConnectorType ) {
+            $chargerConnectorType 
+              -> charging_prices 
+              -> each(fn( $chargingPrice) => $chargingPrice -> delete());
             
-            $chargerConnectorType -> fast_charging_prices -> each(function( $fastChargingPrice) {
-                $fastChargingPrice -> delete();
-            });
+            $chargerConnectorType 
+              -> fast_charging_prices 
+              -> each(fn( $fastChargingPrice) => $fastChargingPrice -> delete());
         }); 
     });
   }
