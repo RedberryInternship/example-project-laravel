@@ -2,6 +2,7 @@
 
 namespace App\Library\Entities;
 
+use Illuminate\Support\Facades\File;
 use Carbon\CarbonPeriod;
 use App\Config;
 
@@ -216,5 +217,27 @@ class Helper
         }
 
         return $hours . ':' . $minutes;
+    }
+
+    /**
+     * Remove tmp excel files.
+     * 
+     * @return void
+     */
+    public static function removeTmpExcelFiles(): void
+    {
+        $files = File::allFiles(base_path('storage'));
+        $filenames = array_map(fn($file) => $file->getFilename(), $files);
+        $pattern = "/^laravel-excel-.*\.xlsx$/";
+
+        foreach($filenames as $filename)
+        {
+           $matched = preg_match($pattern, $filename);
+           if($matched)
+           {
+               $file = base_path('storage/'. $filename);
+               unlink($file);
+           }
+        }
     }
 }

@@ -8,10 +8,11 @@ use App\Library\Testing\MishasCharger;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Library\Testing\Simulator;
+use App\Library\Entities\Helper;
 use App\Enums\Role as RoleEnum;
 use App\Role;
 use App\User;
-use Illuminate\Support\Facades\File;
+
 
 abstract class TestCase extends BaseTestCase
 {
@@ -40,10 +41,8 @@ abstract class TestCase extends BaseTestCase
      */
     protected function tearDown(): void
     {
+        Helper :: removeTmpExcelFiles();
         parent :: tearDown();
-
-        $files = File::allFiles(base_path('storage'));
-        dd($files);
     }
 
     /**
