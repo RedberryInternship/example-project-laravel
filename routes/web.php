@@ -59,8 +59,8 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
         /**
          * Charging Prices.
          */
-        Route::resource('/charging-prices', 'ChargingPricesController');
-        Route::resource('/fast-charging-prices', 'FastChargingPricesController');
+        Route::resource('/charging-prices', 'ChargingPricesController')->only(['store', 'destroy']);
+        Route::resource('/fast-charging-prices', 'FastChargingPricesController')->only(['store', 'destroy']);
     
         /** Whitelist api */
         Route::post('/chargers/toggle-visibility', 'WhitelistController@toggleHiddenField');
