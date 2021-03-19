@@ -159,7 +159,6 @@ class BusinessFastChargingPrices extends TestCase
         ]
       )->assertSessionHasErrors(
         [
-          'charger_connector_type_id', 
           'start_minutes', 
           'end_minutes', 
           'price',

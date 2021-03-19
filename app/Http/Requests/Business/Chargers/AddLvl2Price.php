@@ -25,7 +25,7 @@ class AddLvl2Price extends FormRequest implements ValidatesWhenResolved
   public function rules()
   {
     return [
-      'charger_connector_type_id' => 'required',
+      'charger_connector_type_id' => 'nullable',
       'start_time'                => 'required',
       'end_time'                  => 'required',
       'min_kwt'                   => 'required',

@@ -173,7 +173,6 @@ class BusinessLVL2ChargingPrices extends TestCase
         ]
       )->assertSessionHasErrors(
         [
-          'charger_connector_type_id', 
           'start_time', 
           'end_time', 
           'min_kwt',

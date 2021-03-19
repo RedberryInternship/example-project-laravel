@@ -25,7 +25,7 @@ class AddFastPrice extends FormRequest implements ValidatesWhenResolved
   public function rules()
   {
     return [
-        'charger_connector_type_id' => 'required|numeric',
+        'charger_connector_type_id' => 'nullable|numeric',
         'start_minutes'             => 'required|numeric',
         'end_minutes'               => 'required|numeric',
         'price'                     => 'required|numeric',
