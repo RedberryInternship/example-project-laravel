@@ -119,4 +119,23 @@ class BusinessGroup extends TestCase
       ->assertSessionHasErrors(['name']);
   }
 
+  /** @test */
+  public function edit_group_is_ok(): void
+  {
+    $group = $this->groups->random();
+
+    $this
+      ->actingAs($this->user)
+      ->get($this->editGroupsURL($group->id))
+      ->assertOk();
+  }
+
+  /** @test */
+  public function edit_group_is_not_found(): void
+  {
+    $this
+      ->actingAs($this->user)
+      ->get($this->editGroupsURL(10001))
+      ->assertNotFound();
+  }
 }
