@@ -8,14 +8,6 @@ use App\Library\Interactors\Business\Analyse;
 class AnalyticsController extends Controller
 {
     /**
-     * Constructor for business auth middleware.
-     */
-    public function __construct()
-    {
-        $this -> middleware('business.auth');
-    }
-
-    /**
      * Get Business Charger Statuses.
      * 
      * @return \JSON
