@@ -38,7 +38,7 @@ jobs:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
           APP_ENV: testing
-        run: vendor/bin/phpunit --teamdox
+        run: vendor/bin/phpunit --testdox
       - name: Deploy to Server
         if: ${{ success() }}
         uses: appleboy/ssh-action@master
