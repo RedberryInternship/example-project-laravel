@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Library\Adapters\Payments\SaveCardInitiator;
 use App\Http\Requests\SetDefaultUserCardRequest;
 use App\Http\Requests\DeleteUserCardRequest;
-
 use App\User;
 
 class UserCardController extends Controller

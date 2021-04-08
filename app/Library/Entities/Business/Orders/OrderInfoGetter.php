@@ -20,11 +20,10 @@ class OrderInfoGetter
         'charger_connector_type.charger',
         'kilowatt',
       ]
-    ) -> find($id);
+    ) -> findOrFail($id);
     
-    $timestamp  = Timestamp :: build($order);
-    $charger    = $order -> getCharger();
-
+    $charger            = $order -> getCharger();
+    $timestamp          = Timestamp :: build($order);
     $id                 = $order -> id;
     $chargerCode        = $charger -> code;
     $chargerDescription = $charger -> getTranslation('location','ka');

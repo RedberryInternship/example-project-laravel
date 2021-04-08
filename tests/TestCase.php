@@ -2,19 +2,25 @@
 
 namespace Tests;
 
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use App\Enums\ConnectorType as EnumsConnectorType;
+use App\Library\Testing\MishasCharger;
+use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Library\Testing\Simulator;
+use App\Library\Entities\Helper;
+use App\Enums\Role as RoleEnum;
 use App\Role;
 use App\User;
-use App\Enums\Role as RoleEnum;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
-use App\Library\Testing\MishasCharger;
-use App\Library\Testing\Simulator;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
+    /**
+     * Set up...
+     */
     protected function setUp(): void
     {
         parent :: setUp();
@@ -28,6 +34,15 @@ abstract class TestCase extends BaseTestCase
         $this -> artisan('cache:clear');
         $this -> artisan('view:clear');
         $this -> artisan('migrate:fresh');
+    }
+
+    /**
+     * Tear down...
+     */
+    protected function tearDown(): void
+    {
+        Helper :: removeTmpExcelFiles();
+        parent :: tearDown();
     }
 
     /**
@@ -67,6 +82,42 @@ abstract class TestCase extends BaseTestCase
 
         return factory( User :: class ) -> create(
             array_merge($userDefaultAttributes, $userAttributes),
+        );
+    }
+
+    /**
+     * Create business role.
+     * 
+     * @return Role
+     */
+    public function createBusinessRole(): Role
+    {
+        return factory(Role::class)->create(
+            [
+                'name' => RoleEnum::BUSINESS,
+            ]
+        );
+    }
+
+    /**
+     * Create connector types.
+     * 
+     * @return void
+     */
+    public function createConnectorTypes(): void
+    {
+        DB::table('connector_types')->insert(
+            [
+                [
+                    'name' => EnumsConnectorType::CHADEMO,
+                ],
+                [
+                    'name' => EnumsConnectorType::COMBO_2,
+                ],
+                [
+                    'name' => EnumsConnectorType::TYPE_2,
+                ],
+            ],
         );
     }
 }

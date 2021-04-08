@@ -16,17 +16,23 @@ class StoreAllCompanyChargersIntoGroup
   public static function execute( $groupId )
   {
     $userId = auth() -> user() -> id;
-    $user   = User :: with( 'company.chargers' ) -> find( $userId );
-    $group  = Group :: with( 'chargers' ) -> find( $groupId );
+    $user   = User :: with( 'company.chargers' ) -> findOrFail( $userId );
+    $group  = Group :: with( 'chargers' ) -> findOrFail( $groupId );
     
+    $companyChargerIds = $user 
+      -> company 
+      -> chargers 
+      -> map(function($charger) {
+        return $charger -> id;
+      })
+      -> toArray();
 
-    $companyChargerIds = $user -> company -> chargers -> map(function( $charger ) {
-      return $charger -> id;
-    }) -> toArray();
-
-    $groupChargerIds = $group -> chargers -> map(function( $charger ) {
-      return $charger -> id;
-    }) -> toArray();
+    $groupChargerIds = $group 
+      -> chargers 
+      -> map(function($charger) {
+        return $charger -> id;
+      }) 
+      -> toArray();
 
     $assignableChargerIds = array_diff( $companyChargerIds, $groupChargerIds );
 

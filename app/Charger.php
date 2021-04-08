@@ -69,6 +69,7 @@ class Charger extends Model
         'hidden'            => 'int',
         'active'            => 'int',
         'name'              => 'array',
+        'company_id'        => 'int',
     ];
 
     /**

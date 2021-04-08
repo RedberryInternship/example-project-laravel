@@ -8,6 +8,19 @@ E Space Mobile App helps people to find e-car charger nearby and charge their el
 E Space also gives opportunity to business with giving them **Business Module** that gives people opportunity to have their own chargers and to make use of **Business Module** service to manage those chargers: create tariffs, monitor them, have analytical dashboard and more...
 
 #
+### Table of Contents
+* [Prerequisites](#prerequisites)
+* [Tech Stack](#tech-stack)
+* [Getting Started](#getting-started)
+* [Migrations](#migration)
+* [Development](#development)
+* [Deployment with CI / CD](#deployment-with-ci-\-cd)
+* [Project Structure](#project-structure)
+* [Service Interaction Map](#service-interaction-map)
+* [Server Infrastructure](#server-infrastructure)
+* [Database Backups](#database-backups)
+
+#
 ### Prerequisites
 
 * <img src="readme/assets/php.svg" width="35" style="position: relative; top: 4px" /> *PHP@7.2 and up*
@@ -19,7 +32,7 @@ E Space also gives opportunity to business with giving them **Business Module** 
 #
 ### Tech Stack
 
-* <img src="readme/assets/laravel.png" height="18" style="position: relative; top: 4px" /> [Laravel](https://laravel.com/) - back-end framework
+* <img src="readme/assets/laravel.png" height="18" style="position: relative; top: 4px" /> [Laravel@6.x](https://laravel.com/docs/6.x) - back-end framework
 * <img src="readme/assets/nova.png"  height="17" style="position: relative; top: 4px" /> [Laravel Nova](https://nova.laravel.com/) - flexible Admin Panel as espace "Super Admin"
 * <img src="readme/assets/mix.png" height="18" style="position: relative; top: 4px" /> [Laravel Mix](https://laravel-mix.com/) - is a webpack wrapper which makes an ease for a developer to start working on JS files and compile them with such simplicity...
 * <img src="readme/assets/jwt.png" height="18" style="position: relative; top: 4px" /> [JWT Auth](https://jwt-auth.readthedocs.io/en/develop/) - Authentication system for mobile users
@@ -29,7 +42,7 @@ E Space also gives opportunity to business with giving them **Business Module** 
 ### Getting Started
 1\. First of all you need to clone E Space repository from github:
 ```sh
-git clone https://github.com/Chkhikvadze/espace-back.git
+git clone https://github.com/e-space1/espace-back.git
 ```
 
 2\. Next step requires you to run *composer install* in order to install all the dependencies.
@@ -166,32 +179,20 @@ it will watch JS files and on change it'll rebuild them, so you don't have to ma
 
 
 #
-### Deployment
+### Deployment with CI \ CD
+<br/>
 
-Once you pull changes to production server from github, there are several steps you have to keep in mind.
+!["CI / CD"](./readme/assets/cicd.png)
 
-if you have made database update, you should execute:
+<br />
 
-```sh
-  php artisan migrate
-```
-
-if you have updated php dependencies, the execute following:
-
-```sh
-  composer install
-```
-
-if you have updated JS dependencies, then execute following:
-
-```sh
-  npm install
-```
-
-to update build JS, execute following:
-```sh
-  npm run build
-```
+Continues Development / Continues Integration & Deployment steps:
+* CI \ CD process first step is of course is development.
+* After some time of development when you are ready to integrate and deploy your feature/fix/work you make a commit or pull request to gihub branch.
+* That triggers github action which listens to pull requests and commits on development and master branch. Github actions will set up configure project, run unit tests.
+* If unit tests fail, you go a head and do some fixing and aftermath try again.
+* If unit tests succeed then github actions will deploy your code to development or production server according to the branch you are making commit to.
+* After deploying, github actions script will build your code and run migrations all to be up to date.
 
 Then everything should be OK :pray:
 
@@ -244,7 +245,9 @@ For more information about project standards, take a look at these docs:
 
 Aside from laravel/nova specific structure here are some of the key points that worth pointing out.
 
-In *app/Library* we have isolated the core project(E Space) functionality concerning heavy calculation, cron jobs and most of the complex procedures that happen on daily bases.
+In **app/Library** we have isolated the core project(E Space) functionality concerning heavy calculation, cron jobs and most of the complex procedures that happen on daily bases. 
+For more information about task scheduling in Laravel, please take a look:
+[Laravel - Task Scheduling](https://laravel.com/docs/6.x/scheduling)
 
 When request hits controller, controller speaks to the one of the **Interactor** in the **app/Library/Interactor** folder, which understand the task and with the help of *Entities* in the **app/Library/Entities** this task is decomposed into several small tasks and each of them is assigned to the entity to take care of.
 
@@ -261,14 +264,39 @@ Also:
 [Swagger API endpoints](https://app.swaggerhub.com/apis-docs/E-space/EspaceAPI/1.0.3 "API")
 
 #
+### Service Interaction Map
+![Service Integration](./readme/assets/services.svg) 
+<br />
+
+As stated above E Space Application consists of several parties which are closely connected with each other.
+Application is hosted in AWS Cloud, which consists of several services:
+* **ECS Server** which holds E-Space Codebase, that itself consists of several modules: 
+  * ***Super Admin Nova*** - gives ability to the E-Space HQ to have control over everything. 
+  * ***Business Module*** - is created for people who would like to purchase charger or/and services from E-Space and with Business Module one can control, watch and have analytical reports about his/her own chargers. Also ability to create/remove tariffs and to have transactions listing.
+  * ***Mobile Application Back-End & API*** - is means to utilize mobile app. within this module all the charging calculation and heavy lifting is done, including talking to ***Charger Device Server***
+* ***AWS EBS***
+* ***AWS RDS***
+* ***AWS Elastic IP***
+* ***Charger Device Server*** - is another party acting as middleware between Application Back-End and Charger Devices.
+
+#
 ### Server Infrastructure
 
 ##### Development Server
-For dev server we are using [Laravel Forge](https://forge.laravel.com/docs/1.0/introduction.html#what-is-forge) server management system, which under the hood uses Amazon **EC2** *t2.micro* instance with 20 GiB storage.
+For development server we are using **AWS EC2** 
+* *t2.micro* instance
+* 20 GiB EBS Storage
 
 ##### Production Server
-For production server we are using directly **AWS EC2** 
+For production server we are using **AWS EC2** 
 * *t2.medium* instance
 * *elastic IP*
-* 20 GiB Storage
+* 20 GiB EBS Storage
 * RDS - mysql
+
+#
+### Database Backups
+AWS gives us possibility to automate saving backups. As of now it is configured to save Database Backup for 3 consecutive days. restoring backup is fairly simple.
+For more information about RDS Backups, visit official documentation:
+
+[Getting Started with RDS Backups](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html)

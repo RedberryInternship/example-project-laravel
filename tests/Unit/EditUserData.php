@@ -79,7 +79,6 @@ class EditUserData extends TestCase
       -> assertOk();
   
     $this -> user -> refresh();
-
     $this -> assertEquals( 'ilia@sinodi.ru', $this -> user -> email ); 
   }
 

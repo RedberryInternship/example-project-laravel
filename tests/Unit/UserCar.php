@@ -66,6 +66,15 @@ class UserCar extends TestCase
   }
 
   /** @test */
+  public function add_user_car_has_validation_errors(): void
+  {
+    $this 
+      -> actAs( $this -> user )
+      -> post( $this -> addUrl, [], ['Accept' => 'application/json']) 
+      -> assertJsonValidationErrors(['car_model_id']);
+  }
+
+  /** @test */
   public function remove_user_car_gives_ok(): void
   {
     $this 
@@ -79,6 +88,15 @@ class UserCar extends TestCase
       -> actAs( $this -> user )
       -> get( $this -> getUrl )
       -> assertJsonCount(2, 'user_cars');
+  }
+  
+  /** @test */
+  public function remove_user_car_has_validation_errors(): void
+  {
+    $this 
+      -> actAs( $this -> user )
+      -> post( $this -> removeUrl, [], ['Accept' => 'application/json'])
+      -> assertJsonValidationErrors(['car_model_id']);
   }
 
   private function addCarsToUser( $userId )

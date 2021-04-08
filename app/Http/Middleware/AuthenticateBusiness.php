@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Enums\Role as RoleEnum;
 
 class AuthenticateBusiness
 {
@@ -15,7 +16,9 @@ class AuthenticateBusiness
      */
     public function handle($request, Closure $next)
     {
-        if ( ! $request -> user() || $request -> user() -> role_id != 3)
+        $user = $request -> user(); 
+
+        if ( !$user || $user->role->name != RoleEnum :: BUSINESS)
         {
             return redirect('/business/login');
         }

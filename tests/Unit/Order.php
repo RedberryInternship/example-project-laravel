@@ -91,6 +91,15 @@ class Order extends TestCase
       -> get( $this -> getSingleOrder . '/' . $this -> orders -> first() -> id )
       -> assertOk();
   }
+  
+  /** @test */
+  public function get_specific_order_has_validation_errors(): void
+  {
+    $this
+      -> actAs( $this -> user )
+      -> get( 1011 )
+      -> assertStatus(404);
+  }
 
   /** @test */
   public function get_user_transactions_history_gives_ok(): void

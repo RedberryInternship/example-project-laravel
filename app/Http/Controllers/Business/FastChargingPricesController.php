@@ -4,21 +4,12 @@ namespace App\Http\Controllers\Business;
 
 use App\FastChargingPrice;
 use App\ChargerConnectorType;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Business\Chargers\AddFastPrice;
 
 class FastChargingPricesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {
-        $this -> middleware('business.auth');
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -28,14 +19,18 @@ class FastChargingPricesController extends Controller
     {
         $user = auth() -> user();
 
-        $chargerConnectorType = ChargerConnectorType::with('charger') -> find($request -> get('charger_connector_type_id'));
+        $chargerConnectorType = ChargerConnectorType::with('charger') -> findOrFail($request -> get('charger_connector_type_id'));
 
         if ($chargerConnectorType -> charger -> company_id == $user -> company_id)
         {
             FastChargingPrice::create($request -> all());
         }
+        else
+        {
+            abort(Response::HTTP_FORBIDDEN);
+        }
 
-        return redirect() -> back();
+        return redirect() -> back(Response::HTTP_CREATED);
     }
 
     /**
@@ -53,6 +48,10 @@ class FastChargingPricesController extends Controller
         if ($fastChargingPrice -> charger_connector_type -> charger -> company_id == $user -> company_id)
         {
             $fastChargingPrice -> delete();
+        }
+        else
+        {
+            abort(Response::HTTP_FORBIDDEN);
         }
 
         return redirect() -> back();

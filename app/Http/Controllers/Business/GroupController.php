@@ -14,14 +14,6 @@ use App\User;
 class GroupController extends Controller
 {
     /**
-     * ChargerController Constructor. 
-     */
-    public function __construct()
-    {
-        $this -> middleware('business.auth');
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return View
@@ -72,19 +64,14 @@ class GroupController extends Controller
         $userId = auth() -> user() -> id;
         $user   = User :: with( 'company.chargers' ) -> find( $userId );
         $companyChargers = $user -> company -> chargers;
+        
+        $sortChargers = function($query) { $query -> orderBy('id', 'DESC'); };
+        $sortGroups = function($query) {
+            $query -> with('groups') -> orderBy('id', 'DESC');
+        };
 
-        $group -> load([
-            'chargers' => function($query) {
-                $query -> orderBy('id', 'DESC');
-            }
-        ]);
-
-        $user -> load([
-            'company.chargers' => function($query) {
-                $query -> with('groups')
-                       -> orderBy('id', 'DESC');
-            }
-        ]);
+        $group -> load([ 'chargers' => $sortChargers ]);
+        $user -> load([ 'company.chargers' => $sortGroups ]);
 
         $groupChargerIds = [];
         foreach ($group -> chargers as $charger)
@@ -115,7 +102,8 @@ class GroupController extends Controller
         $group -> chargers() -> detach();
         $group -> delete();
 
-        return redirect() -> back();
+
+        return redirect() -> back(201);
     }
 
     /**
@@ -135,7 +123,7 @@ class GroupController extends Controller
      * @param int $groupId
      * @return void
      */
-    public static function storeAllChargersToGroup(StoreAllChargersIntoGroup $request)
+    public function storeAllChargersToGroup(StoreAllChargersIntoGroup $request)
     {
         Groups :: storeAllCompanyChargersIntoGroup($request -> group_id);
     }

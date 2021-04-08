@@ -12,6 +12,7 @@ use Tests\TestCase;
 use App\ChargingPrice;
 use App\Enums\OrderStatus;
 use App\ChargerConnectorType;
+use Carbon\Carbon;
 
 class RealChargersFeedback extends TestCase
 {
@@ -86,6 +87,8 @@ class RealChargersFeedback extends TestCase
   /** @test */
   public function order_gets_updated(): void
   {
+    Carbon::setTestNow(now()->addMinute());
+
     $this 
       -> get($this -> updateURL . '/' . $this -> order -> charger_transaction_id . '/' . 7)
       -> assertOk();

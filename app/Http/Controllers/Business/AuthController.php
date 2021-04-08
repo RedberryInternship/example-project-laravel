@@ -5,20 +5,13 @@ namespace App\Http\Controllers\Business;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Enums\Role as RoleEnum;
 
 class AuthController extends Controller
 {
-    /**
-     * BusinessController Constructor.
-     */
-    public function __construct()
-    {
-        $this -> middleware('business.auth')
-              -> except(['login', 'auth']);
-    }
-
     /**
      * Login Page.
      *
@@ -49,17 +42,21 @@ class AuthController extends Controller
 
         $email    = $request -> get('email');
         $password = $request -> get('password');
-
         $user     = User::where('email', $email) -> first();
 
-        if ($user && Hash::check($password, $user -> password))
+        if(!$user || $user->role->name !== RoleEnum::BUSINESS)
         {
-            Auth::login($user);
-
-            return redirect('/business');
+            abort(Response::HTTP_UNAUTHORIZED);
         }
 
-        return redirect() -> back() -> withErrors(true) -> withInput();
+        if(!Hash::check($password, $user -> password))
+        {
+            abort(Response::HTTP_UNAUTHORIZED);
+        }
+
+        Auth::login($user);
+        return redirect('/business');
+
     }
 
     /**
@@ -70,7 +67,6 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-
         return redirect('/business/login');
     }
 }

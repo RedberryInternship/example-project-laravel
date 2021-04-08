@@ -5,19 +5,11 @@ namespace App\Http\Controllers\Business;
 use App\Group;
 use App\Charger;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 
 class ChargerTransferController extends Controller
 {
-    /**
-     * ChargerTransferController Constructor.
-     */
-    public function __construct()
-    {
-        $this -> middleware('business.auth');
-    }
-
     /**
      * Transfer Charger to Group.
      *
@@ -25,17 +17,20 @@ class ChargerTransferController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $user    = Auth::user();
+        $request->validate(
+            [
+                'remove'=> 'nullable',
+                'group-id' => 'required',
+                'charger-id' => 'required',
+            ]
+        );
 
+        
         $remove  = $request -> get('remove');
+        $group   = Group::with('user')->findOrFail($request -> get('group-id'));
+        $charger = Charger::findOrFail($request -> get('charger-id'));
 
-        $group   = Group::find($request -> get('group-id'));
-        $charger = Charger::find($request -> get('charger-id'));
-
-        if ($charger -> company_id != $user -> company_id || $group -> user_id != $user -> id)
-        {
-            return redirect() -> back();
-        }
+        $this->transferGate($group, $charger);
 
         if ($remove)
         {
@@ -47,5 +42,20 @@ class ChargerTransferController extends Controller
         }
 
         return redirect() -> back();
+    }
+
+    /**
+     * Transfer gate.
+     * 
+     * @param Group $groupId
+     * @param Charger $chargerId
+     * @return void
+     */
+    private function transferGate(Group &$group,Charger &$charger)
+    {
+        $invalidGroup = auth()->id() !== $group->user->id;
+        $invalidCharger = auth()->user()->company_id !== $charger->company_id;
+
+        abort_if($invalidGroup || $invalidCharger, Response::HTTP_FORBIDDEN);
     }
 }

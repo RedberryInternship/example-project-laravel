@@ -56,6 +56,15 @@ class Favorite extends TestCase
   }
 
   /** @test */
+  public function add_favorite_charger_has_validation_errors(): void
+  {
+    $this 
+      -> actAs( $this -> user )
+      -> post( $this -> addUrl, [])
+      -> assertSessionHasErrors(['charger_id']);
+  }
+
+  /** @test */
   public function remove_favorite_charger_gives_ok(): void
   {
     $this 
@@ -71,6 +80,15 @@ class Favorite extends TestCase
       -> decodeResponseJson( 'user_favorite_chargers' );
 
     $this -> assertCount( 2, $response );
+  }
+
+  /** @test */
+  public function remove_favorite_charger_has_validation_errors(): void
+  {
+    $this 
+      -> actAs( $this -> user )
+      -> post( $this -> removeUrl, [], ['Accept' => 'application/json'])
+      -> assertJsonValidationErrors(['charger_id']);
   }
 
 

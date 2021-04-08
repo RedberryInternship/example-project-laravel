@@ -19,7 +19,7 @@ class GroupFastPriceController extends Controller
     public function show($groupID)
     {
         $user   = auth() -> user();
-        $group  = Group :: with('chargers.charger_connector_types.fast_charging_prices') -> find( $groupID );
+        $group  = Group :: with('chargers.charger_connector_types.fast_charging_prices') -> findOrFail( $groupID );
         
         return view('business.groups.fast-prices.edit')
             -> with(

@@ -59,6 +59,12 @@ class CarController extends Controller
      */
     public function destroy(Request $request)
     {
+        $request->validate(
+            [
+                'car_model_id' => 'required',
+            ],
+        );
+
         $user = auth('api') -> user();
 
         UserCarModel::where(

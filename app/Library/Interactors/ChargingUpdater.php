@@ -31,7 +31,7 @@ class ChargingUpdater
 
     OrdersMiddleware :: check( $transactionId );
     
-    $order -> kilowatt -> updateConsumedKilowatts( $value );
+    $order -> updateKilowattRecordAndChargingPower( $value );
     
     self :: updateAndCacheOrder($order);
 
