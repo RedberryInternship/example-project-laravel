@@ -544,15 +544,7 @@ class Order extends Model
      */
     public function getChargingPower()
     {
-        $chargerInfo   = RealCharger :: transactionInfo( $this -> charger_transaction_id );
-
-        # GLITCH
-        if(Helper :: isDev() && $chargerInfo -> chargePointCode != "0110")
-        {
-            return $chargerInfo -> kiloWattHour / 1000;
-        }
-
-        return $chargerInfo -> kiloWattHour;
+       $this->kilowatt->getChargingPower();
     }
 
     /**
@@ -562,12 +554,6 @@ class Order extends Model
      */
     public function updateChargingPowerRecords()
     {
-        if( ! $this -> kilowatt -> charging_power )
-        {
-            $chargingPower  = $this -> getChargingPower();
-            $this -> kilowatt -> setChargingPower( $chargingPower );
-        }
-
         if( ! $this -> hasInitiated() )
         {
             return;
@@ -603,6 +589,46 @@ class Order extends Model
                     "end_at"                => null,
                 ]
             );
+    }
+
+    /**
+     * Update kilowatts record and charging power.
+     * 
+     * @return void
+     */
+    public function updateKilowattRecordAndChargingPower($watts): void
+    {      
+        $currentKilowattValue = $watts / 1000;
+        $this->load('kilowatt');
+
+        if(!$this->kilowatt) 
+        {
+            
+            $this->kilowatt()->create(
+                [
+                    'consumed' => $currentKilowattValue,
+                    'charging_power' => 0,
+                ]
+            );
+        } 
+        else 
+        {
+            $previousKilowattValue = $this->kilowatt->consumed;
+            $kilowattValueDifference = $currentKilowattValue - $previousKilowattValue;
+
+            $previousUpdateDatetime = $this->kilowatt->updated_at;
+            $diffInSeconds = now()->diffInSeconds($previousUpdateDatetime);
+            $diffInHours = $diffInSeconds / 3600;
+
+            $currentChargingPower = $kilowattValueDifference / $diffInHours;
+
+            $this->kilowatt->update(
+                [
+                    'consumed' => $currentKilowattValue,
+                    'charging_power' => $currentChargingPower,
+                ]
+            );
+        }
     }
 
     /**
