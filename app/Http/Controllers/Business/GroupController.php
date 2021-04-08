@@ -65,8 +65,10 @@ class GroupController extends Controller
         $user   = User :: with( 'company.chargers' ) -> find( $userId );
         $companyChargers = $user -> company -> chargers;
         
-        $sortChargers = fn($query) => $query -> orderBy('id', 'DESC');
-        $sortGroups = fn($query) => $query -> with('groups') -> orderBy('id', 'DESC');
+        $sortChargers = function($query) { $query -> orderBy('id', 'DESC'); };
+        $sortGroups = function($query) {
+            $query -> with('groups') -> orderBy('id', 'DESC');
+        };
 
         $group -> load([ 'chargers' => $sortChargers ]);
         $user -> load([ 'company.chargers' => $sortGroups ]);

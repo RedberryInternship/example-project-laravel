@@ -168,13 +168,15 @@ class BusinessAnalytics extends TestCase
         'charging_status' => OrderStatus::FINISHED,
         'consumed_kilowatts' => $usedWatts,
       ]
-    )->each(fn($order) => factory(Payment::class)
+    )->each(function($order){
+      factory(Payment::class)
         ->create(
           [
             'type' => PaymentType::CUT,
             'order_id' => $order->id,
           ]
-        )
+        );
+      }
       );
 
     $data = $this
@@ -261,13 +263,14 @@ class BusinessAnalytics extends TestCase
         'status' => ChargerStatus::ACTIVE,
         'company_id' => $this->company->id,
       ],
-    )->each(fn($charger) => factory(ChargerConnectorType::class)->create(
+    )->each(function($charger)  {
+      factory(ChargerConnectorType::class)->create(
         [
           'charger_id' => $charger->id,
           'connector_type_id' => $this->fastConnectorType->id,
         ],
-      )
-    );
+      );
+    });
     
     /**
      * 12 fast charger currently charging.
@@ -277,12 +280,14 @@ class BusinessAnalytics extends TestCase
         'status' => ChargerStatus::CHARGING,
         'company_id' => $this->company->id,
       ],
-    )->each(fn($charger) => factory(ChargerConnectorType::class)->create(
+    )->each(function($charger) {
+      factory(ChargerConnectorType::class)->create(
         [
           'charger_id' => $charger->id,
           'connector_type_id' => $this->fastConnectorType->id,
         ],
-      )
+      );
+    }
     );
     
     /**
@@ -293,12 +298,14 @@ class BusinessAnalytics extends TestCase
         'status' => ChargerStatus::INACTIVE,
         'company_id' => $this->company->id,
       ],
-    )->each(fn($charger) => factory(ChargerConnectorType::class)->create(
+    )->each(function($charger) {
+      factory(ChargerConnectorType::class)->create(
         [
           'charger_id' => $charger->id,
           'connector_type_id' => $this->fastConnectorType->id,
         ],
-      )
+      );
+    }
     );
     
     /**
@@ -309,12 +316,14 @@ class BusinessAnalytics extends TestCase
         'status' => ChargerStatus::ACTIVE,
         'company_id' => $this->company->id,
       ],
-    )->each(fn($charger) => factory(ChargerConnectorType::class)->create(
+    )->each(function($charger) {
+      factory(ChargerConnectorType::class)->create(
         [
           'charger_id' => $charger->id,
           'connector_type_id' => $this->lvl2ConnectorType->id,
         ],
-      )
+      );
+    }
     );
     
     /**
@@ -325,12 +334,14 @@ class BusinessAnalytics extends TestCase
         'status' => ChargerStatus::CHARGING,
         'company_id' => $this->company->id,
       ],
-    )->each(fn($charger) => factory(ChargerConnectorType::class)->create(
+    )->each(function($charger) {
+      factory(ChargerConnectorType::class)->create(
         [
           'charger_id' => $charger->id,
           'connector_type_id' => $this->lvl2ConnectorType->id,
         ],
-      )
+      );
+    }
     );
     
     /**
@@ -341,12 +352,14 @@ class BusinessAnalytics extends TestCase
         'status' => ChargerStatus::INACTIVE,
         'company_id' => $this->company->id,
       ],
-    )->each(fn($charger) => factory(ChargerConnectorType::class)->create(
+    )->each(function($charger) {
+      factory(ChargerConnectorType::class)->create(
         [
           'charger_id' => $charger->id,
           'connector_type_id' => $this->lvl2ConnectorType->id,
         ],
-      )
+      );
+    }
     );
 
 

@@ -22,12 +22,16 @@ class StoreAllCompanyChargersIntoGroup
     $companyChargerIds = $user 
       -> company 
       -> chargers 
-      -> map(fn($charger) => $charger -> id) 
+      -> map(function($charger) {
+        return $charger -> id;
+      })
       -> toArray();
 
     $groupChargerIds = $group 
       -> chargers 
-      -> map(fn($charger) => $charger -> id) 
+      -> map(function($charger) {
+        return $charger -> id;
+      }) 
       -> toArray();
 
     $assignableChargerIds = array_diff( $companyChargerIds, $groupChargerIds );

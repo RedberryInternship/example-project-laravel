@@ -149,11 +149,11 @@ class BusinessGroup extends TestCase
   /** @test */
   public function destroy_group_is_ok(): void
   {
-    $this->groups->each(fn(Group &$group) => $group->load('chargers'));
+    $this->groups->each(function(Group &$group) {$group->load('chargers');});
 
     $group = $this
       ->groups
-      ->filter(fn(Group $group) => $group->chargers->count() > 0)
+      ->filter(function(Group $group) { return $group->chargers->count() > 0; })
       ->first();
     
     $this
@@ -205,11 +205,13 @@ class BusinessGroup extends TestCase
   /** @test */
   public function delete_all_charger_prices_in_the_group(): void
   {
-    $this->groups->each(fn(Group &$group) => $group->load('chargers'));
+    $this->groups->each(function(Group &$group) { $group->load('chargers'); });
 
     $group = $this
       ->groups
-      ->filter(fn(Group $group) => $group->chargers->count() > 0)
+      ->filter(function(Group $group) {
+        return $group->chargers->count() > 0; 
+      })
       ->first();
     
     $this
@@ -233,8 +235,8 @@ class BusinessGroup extends TestCase
         ]
       );
 
-      $charger->charger_connector_types->each(fn($cct) => $chargingPricesCount += $cct->charging_prices->count());
-      $charger->charger_connector_types->each(fn($cct) => $chargingPricesCount += $cct->fast_charging_prices->count());
+      $charger->charger_connector_types->each(function($cct) use(&$chargingPricesCount) { $chargingPricesCount += $cct->charging_prices->count(); });
+      $charger->charger_connector_types->each(function($cct) use(&$chargingPricesCount) { $chargingPricesCount += $cct->fast_charging_prices->count(); });
     });
 
     $this->assertTrue($chargingPricesCount === 0);

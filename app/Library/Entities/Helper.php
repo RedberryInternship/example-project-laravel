@@ -227,7 +227,7 @@ class Helper
     public static function removeTmpExcelFiles(): void
     {
         $files = File::allFiles(base_path('storage'));
-        $filenames = array_map(fn($file) => $file->getFilename(), $files);
+        $filenames = array_map(function($file) { return $file->getFilename(); }, $files);
         $pattern = "/^laravel-excel-.*\.xlsx$/";
 
         foreach($filenames as $filename)

@@ -66,18 +66,22 @@ class BusinessGroupFastPrices extends TestCase
     $this->groups = factory(Group::class, 5)->create(['user_id' => $this->user->id]);
     $this->chargers = factory(Charger::class, 20)
       ->create(['company_id' => $this->company->id])
-      ->each(fn($charger) => $this->groups->random()->chargers()->attach($charger));
+      ->each(function($charger) { 
+        return $this->groups->random()->chargers()->attach($charger);
+       });
     
     $this
       ->chargers
-      ->each(fn($charger) => factory(ChargerConnectorType::class)
-        ->create(
+      ->each(function($charger) {
+        factory(ChargerConnectorType::class)
+          ->create(
           [
             'charger_id' => $charger->id,
             'connector_type_id' => ConnectorType::whereName(EnumsConnectorType::COMBO_2)->first()->id,
           ],
-        ),
-      );
+        );
+      }
+    );
   }
 
   /** @test */
@@ -106,7 +110,9 @@ class BusinessGroupFastPrices extends TestCase
   public function create_fast_charging_price_for_group_is_ok(): void
   {
     $brandNewGroup = factory(Group::class)->create([ 'user_id' => $this->user->id ]);
-    $this->chargers->each(fn(Charger $charger) => $brandNewGroup->chargers()->attach($charger));
+    $this->chargers->each(function(Charger $charger) use(&$brandNewGroup) {
+      $brandNewGroup->chargers()->attach($charger);
+    });
 
     $startMinutes = 0;
     $endMinutes = 10;
@@ -129,7 +135,9 @@ class BusinessGroupFastPrices extends TestCase
   public function create_lvl_2_charging_price_for_group_has_validation_errors(): void
   {
     $brandNewGroup = factory(Group::class)->create([ 'user_id' => $this->user->id ]);
-    $this->chargers->each(fn(Charger $charger) => $brandNewGroup->chargers()->attach($charger));
+    $this->chargers->each(function(Charger $charger) use(&$brandNewGroup) {
+      $brandNewGroup->chargers()->attach($charger);
+    });
 
     $this
       ->actingAs($this->user)

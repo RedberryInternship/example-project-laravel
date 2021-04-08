@@ -29,11 +29,15 @@ class GroupChargersChargingPricesDestroyer
           -> each( function( $chargerConnectorType ) {
             $chargerConnectorType 
               -> charging_prices 
-              -> each(fn( $chargingPrice) => $chargingPrice -> delete());
+              -> each(function( $chargingPrice) {
+                $chargingPrice -> delete();
+              });
             
             $chargerConnectorType 
               -> fast_charging_prices 
-              -> each(fn( $fastChargingPrice) => $fastChargingPrice -> delete());
+              -> each(function( $fastChargingPrice) {
+                $fastChargingPrice -> delete();
+              });
         }); 
     });
   }
