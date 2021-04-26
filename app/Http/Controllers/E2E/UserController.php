@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\TempSmsCode;
 use App\User;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -32,15 +33,14 @@ class UserController extends Controller
    */
   public function getUserOTP(Request $request)
   {
-    $data = $request->validate(
-      [
-        'phone_number' => 'string',
-      ]
-    );
+    if(!$request->phone_number) 
+    {
+      abort(Response::HTTP_BAD_REQUEST);
+    }
 
-    extract($data);
-
-    $tempCode = TempSmsCode::wherePhoneNumber($phone_number)->first();
+    $tempCode = TempSmsCode::query()
+      ->wherePhoneNumber($request->phone_number)
+      ->firstOrFail();
     
     return response()->json(
       [
