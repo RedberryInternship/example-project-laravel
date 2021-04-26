@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
         'business.auth' => \App\Http\Middleware\AuthenticateBusiness::class,
         'check.user.existence' => \App\Http\Middleware\CheckUserExistence::class,
+        'e2e' => \App\Http\Middleware\E2E::class,
     ];
 
     /**
