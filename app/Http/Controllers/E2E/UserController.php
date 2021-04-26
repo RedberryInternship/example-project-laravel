@@ -15,16 +15,11 @@ class UserController extends Controller
    */
   public function destroy(Request $request) 
   {
-    $data = $request->validate(
-      [
-        'phone_number' => 'string',
-      ]
-    );
-
-    extract($data);
-
-    $user = User::wherePhoneNumber($phone_number)->first();
-    $user->delete();
+    if($request->has('phone_number'))
+    {
+      $user = User::wherePhoneNumber($request->phone_number)->firstOrFail();
+      $user->delete();
+    }
   }
 
 
