@@ -43,4 +43,19 @@ class UserController extends Controller
       ]
     );
   }
+
+  /**
+   * Reset user password.
+   */
+  public function resetPassword(Request $request)
+  {
+    if(!$request->phone_number || !$request->previous_password) 
+    {
+      abort(Response::HTTP_BAD_REQUEST);
+    }
+
+    $user = User::wherePhoneNumber($request->phone_number)->firstOrFail();
+    $user->password = bcrypt($request->previous_password);
+    $user->save();
+  }
 }
