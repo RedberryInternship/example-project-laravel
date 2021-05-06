@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\E2E;
 
+use App\Favorite;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\TempSmsCode;
@@ -57,5 +58,18 @@ class UserController extends Controller
     $user = User::wherePhoneNumber($request->phone_number)->firstOrFail();
     $user->password = bcrypt($request->previous_password);
     $user->save();
+  }
+
+  /**
+   * Remove user favorite chargers.
+   */
+  public function clearFavorites(Request $request)
+  {
+    if(!$request->phone_number) 
+    {
+      abort(Response::HTTP_BAD_REQUEST);
+    }
+
+    Favorite::wherePhoneNumber($request->phone_number)->delete();
   }
 }

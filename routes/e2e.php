@@ -7,5 +7,6 @@ Route::group(['namespace' => 'E2E', 'prefix' => 'e2e'], function () {
     Route::delete('/', 'UserController@destroy');
     Route::patch('/reset-password', 'UserController@resetPassword');
     Route::get('/otp', 'UserController@getUserOTP');
+    Route::get('/clear-favorites', 'UserController@clearFavorites');
   });
 });
