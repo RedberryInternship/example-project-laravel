@@ -70,6 +70,8 @@ class UserController extends Controller
       abort(Response::HTTP_BAD_REQUEST);
     }
 
-    Favorite::wherePhoneNumber($request->phone_number)->delete();
+    $user = User::wherePhoneNumber($request->phone_number)->firstOrFail();
+
+    Favorite::whereUserId($user->id)->delete();
   }
 }
