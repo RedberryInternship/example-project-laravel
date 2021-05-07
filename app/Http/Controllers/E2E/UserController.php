@@ -18,8 +18,12 @@ class UserController extends Controller
   {
     if($request->has('phone_number'))
     {
-      $user = User::wherePhoneNumber($request->phone_number)->firstOrFail();
-      $user->delete();
+      $user = User::wherePhoneNumber($request->phone_number)->first();
+      
+      if($user)
+      {
+        $user->delete();
+      }
     }
   }
 
