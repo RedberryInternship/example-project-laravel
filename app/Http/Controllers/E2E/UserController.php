@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\E2E;
 
-use App\Favorite;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\TempSmsCode;
 use App\User;
+use App\Favorite;
+use App\TempSmsCode;
+use App\UserCarModel;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
@@ -77,5 +78,18 @@ class UserController extends Controller
     $user = User::wherePhoneNumber($request->phone_number)->firstOrFail();
 
     Favorite::whereUserId($user->id)->delete();
+  }
+
+  /**
+   * Remove cars from user.
+   */
+  public function clearCars(Request $request)
+  {
+    if(!$request->phone_number) 
+    {
+      abort(Response::HTTP_BAD_REQUEST);
+    }
+    $user = User::wherePhoneNumber($request->phone_number)->firstOrFail();
+    UserCarModel::whereUserId($user->id)->delete();
   }
 }
