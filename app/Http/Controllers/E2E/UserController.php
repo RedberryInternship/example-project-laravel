@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\E2E;
 
 use App\User;
-use App\Favorite;
 use App\TempSmsCode;
-use App\UserCarModel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -66,9 +65,9 @@ class UserController extends Controller
   }
 
   /**
-   * Remove user favorite chargers.
+   * Reset user information.
    */
-  public function clearFavorites(Request $request)
+  public function resetData(Request $request)
   {
     if(!$request->phone_number) 
     {
@@ -76,20 +75,21 @@ class UserController extends Controller
     }
 
     $user = User::wherePhoneNumber($request->phone_number)->firstOrFail();
+    $data = $request->all(
+      [
+        'phone_number',
+        'first_name',
+        'last_name',
+        'email',
+        'password',
+      ]
+    );
 
-    Favorite::whereUserId($user->id)->delete();
-  }
-
-  /**
-   * Remove cars from user.
-   */
-  public function clearCars(Request $request)
-  {
-    if(!$request->phone_number) 
+    if(isset($data['password']))
     {
-      abort(Response::HTTP_BAD_REQUEST);
+      $data['password'] = Hash::make($data['password']);
     }
-    $user = User::wherePhoneNumber($request->phone_number)->firstOrFail();
-    UserCarModel::whereUserId($user->id)->delete();
+
+    $user->update($data);
   }
 }
