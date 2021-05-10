@@ -69,7 +69,7 @@ class MakeLastPayments
    */
   private static function cutOrRefund( Order &$order )
   {
-      if( $order -> shouldPay() )
+      if( $order -> shouldPay() && !$order->isByAmount())
       {
           $shouldCutMoney = $order -> countMoneyToCut();
           $order -> pay( PaymentTypeEnum :: CUT, $shouldCutMoney );
