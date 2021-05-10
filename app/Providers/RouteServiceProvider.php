@@ -35,6 +35,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->mapApiRoutes();
         $this->mapWebRoutes();
+        $this->mapE2ERoutes();
     }
 
     /**
@@ -64,5 +65,17 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * Map e2e detox routes.
+     * 
+     * @return void
+     */
+    protected function mapE2ERoutes() 
+    {
+        Route::middleware('e2e')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/e2e.php'));
     }
 }
