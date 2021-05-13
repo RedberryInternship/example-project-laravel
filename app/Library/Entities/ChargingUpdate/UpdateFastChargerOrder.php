@@ -60,7 +60,7 @@ class UpdateFastChargerOrder
 
     RealCharger :: stop( 
         $charger -> charger_id, 
-        $order -> charger_transaction_id 
+        $order -> charger_transaction_id,
     );
 
     $order -> updateChargingStatus( OrderStatusEnum :: USED_UP );
