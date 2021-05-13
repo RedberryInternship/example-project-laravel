@@ -68,6 +68,9 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
         $charger = $order->getCharger();
         
-        abort_if($charger -> company_id !== auth() -> user() -> company_id, Response::HTTP_FORBIDDEN);
+        $chargerCompanyID = (int) $charger -> company_id;
+        $userCompanyID = (int) auth() -> user() -> company_id;
+
+        abort_if($chargerCompanyID !== $userCompanyID, Response::HTTP_FORBIDDEN);
     }
 }

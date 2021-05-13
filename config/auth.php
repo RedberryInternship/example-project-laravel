@@ -45,7 +45,6 @@ return [
             'driver' => 'jwt',
             'provider' => 'users',
             'hash' => false,
-
         ],
     ],
 
