@@ -23,16 +23,21 @@ class UpdateFastChargerOrder
     $order -> updateChargingPowerRecords();
     $charger = $order -> getCharger();
 
-    if( $order -> isCharging() && $charger -> isPaid() )
+    if($order -> isCharging() || $order->isOnHold() )
     {
-        if( $order -> isByAmount() )
-        {
-          $order -> shouldPay() && self :: stopCharging( $order );
-        }
-        else
-        {
-          $order -> shouldPay() && self :: cutNextChargingPrice( $order );
-        }
+      if(!$charger -> isPaid())
+      {
+        return;
+      }
+
+      if( $order -> isByAmount() )
+      {
+        $order -> shouldPay() && self :: stopCharging( $order );
+      }
+      else
+      {
+        $order -> shouldPay() && self :: cutNextChargingPrice( $order );
+      }
     }
   }
 

@@ -384,6 +384,16 @@ class Order extends Model
     }
 
     /**
+     * Determine if order is ON_HOLD.
+     * 
+     * @return bool
+     */
+    public function isOnHold(): bool
+    {
+        return $this -> charging_status == OrderStatusEnum :: ON_HOLD;
+    }
+
+    /**
      * Determine if order is active
      * and the status is initiated.
      * 
