@@ -384,6 +384,16 @@ class Order extends Model
     }
 
     /**
+     * Determine if order is ON_HOLD.
+     * 
+     * @return bool
+     */
+    public function isOnHold(): bool
+    {
+        return $this -> charging_status == OrderStatusEnum :: ON_HOLD;
+    }
+
+    /**
      * Determine if order is active
      * and the status is initiated.
      * 
@@ -1014,8 +1024,6 @@ class Order extends Model
         
         if( ! $chargingPriceInfo )
         {
-            dump($this -> charger_connector_type -> charging_prices -> toArray());
-            dump($chargingPower, $currentTime);
             throw new NoSuchChargingPriceException();
         }
 

@@ -25,7 +25,7 @@ class UpdateLvl2ChargerOrder
       self :: makeFirstPayment( $order );
       $order -> updateChargingPowerRecords();
     }
-    else if( $order -> isCharging() )
+    else if( $order -> isCharging() || $order->isOnHold() )
     {
       $order -> updateChargingPowerRecords();
       $charger = $order -> getCharger();
