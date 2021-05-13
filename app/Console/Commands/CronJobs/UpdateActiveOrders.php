@@ -4,6 +4,7 @@ namespace App\Console\Commands\CronJobs;
 
 use App\Order;
 use Illuminate\Console\Command;
+use App\Library\Interactors\Firebase;
 use App\Library\Interactors\ChargingUpdater;
 
 /**
@@ -47,6 +48,7 @@ class UpdateActiveOrders extends Command
 
         $orders->each(function($order) {
             ChargingUpdater::updateAndCacheOrder($order);
+            Firebase :: sendActiveOrders( $order -> user_id );
         });
     }
 }
