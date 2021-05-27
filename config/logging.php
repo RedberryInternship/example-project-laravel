@@ -39,91 +39,91 @@ return [
             'driver' => 'stack',
             'channels' => ['daily'],
             'ignore_exceptions' => false,
-            'permissions' => 0660,
+            'permissions' => 660,
         ],
 
         'pay' => [
             'driver' => 'daily',
             'path' => storage_path('logs/payments/pay.log'),
             'level' => 'debug',
-            'permissions' => 0660,
+            'permissions' => 660,
         ],
         
         'start-charging' => [
             'driver' => 'daily',
             'path' => storage_path('logs/charging/starts.log'),
             'level' => 'debug',
-            'permissions' => 0660,
+            'permissions' => 660,
         ],
 
         'pre-charged' => [
             'driver' => 'daily',
             'path' => storage_path('logs/charging/pre-charged.log'),
             'level' => 'debug',
-            'permissions' => 0660,
+            'permissions' => 660,
         ],
 
         'payment-result' => [
             'driver' => 'daily',
             'path' => storage_path('logs/payments/georgian-card-results.log'),
             'level' => 'debug',
-            'permissions' => 0660,
+            'permissions' => 660,
         ],
         
         'payment-responses' => [
             'driver' => 'daily',
             'path' => storage_path('logs/payments/georgian-card-responses.log'),
             'level' => 'debug',
-            'permissions' => 0660,
+            'permissions' => 660,
         ],
 
         'firebase-update' => [
             'driver' => 'daily',
             'path' => storage_path('logs/firebase/update.log'),
             'level' => 'debug',
-            'permissions' => 0660,
+            'permissions' => 660,
         ],
         
         'firebase-finish' => [
             'driver' => 'daily',
             'path' => storage_path('logs/firebase/finish.log'),
             'level' => 'debug',
-            'permissions' => 0660,
+            'permissions' => 660,
         ],
        
         'firebase-payment-failed' => [
             'driver' => 'daily',
             'path' => storage_path('logs/firebase/payment-failed.log'),
             'level' => 'debug',
-            'permissions' => 0660,
+            'permissions' => 660,
         ],
 
         'orders-check' => [
             'driver' => 'daily',
             'path' => storage_path('logs/orders-check/orders-check.log'),
             'level' => 'debug',
-            'permissions' => 0660,
+            'permissions' => 660,
         ],
        
         'feedback-update' => [
             'driver' => 'daily',
             'path' => storage_path('logs/feedback/update.log'),
             'level' => 'debug',
-            'permissions' => 0660,
+            'permissions' => 660,
         ],
 
         'feedback-finish' => [
             'driver' => 'daily',
             'path' => storage_path('logs/feedback/finish.log'),
             'level' => 'debug',
-            'permissions' => 0660,
+            'permissions' => 660,
         ],
 
         'request-charger' => [
             'driver' => 'daily',
             'path' => storage_path('logs/request/charger.log'),
             'level' => 'debug',
-            'permissions' => 0660,
+            'permissions' => 660,
         ],
 
         'single' => [
