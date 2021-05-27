@@ -39,91 +39,78 @@ return [
             'driver' => 'stack',
             'channels' => ['daily'],
             'ignore_exceptions' => false,
-            'permissions' => '0777',
         ],
 
         'pay' => [
             'driver' => 'daily',
             'path' => storage_path('logs/payments/pay.log'),
             'level' => 'debug',
-            'permissions' => '0777',
         ],
         
         'start-charging' => [
             'driver' => 'daily',
             'path' => storage_path('logs/charging/starts.log'),
             'level' => 'debug',
-            'permissions' => '0777',
         ],
 
         'pre-charged' => [
             'driver' => 'daily',
             'path' => storage_path('logs/charging/pre-charged.log'),
             'level' => 'debug',
-            'permissions' => '0777',
         ],
 
         'payment-result' => [
             'driver' => 'daily',
             'path' => storage_path('logs/payments/georgian-card-results.log'),
             'level' => 'debug',
-            'permissions' => '0777',
         ],
         
         'payment-responses' => [
             'driver' => 'daily',
             'path' => storage_path('logs/payments/georgian-card-responses.log'),
             'level' => 'debug',
-            'permissions' => '0777',
         ],
 
         'firebase-update' => [
             'driver' => 'daily',
             'path' => storage_path('logs/firebase/update.log'),
             'level' => 'debug',
-            'permissions' => '0777',
         ],
         
         'firebase-finish' => [
             'driver' => 'daily',
             'path' => storage_path('logs/firebase/finish.log'),
             'level' => 'debug',
-            'permissions' => '0777',
         ],
        
         'firebase-payment-failed' => [
             'driver' => 'daily',
             'path' => storage_path('logs/firebase/payment-failed.log'),
             'level' => 'debug',
-            'permissions' => '0777',
         ],
 
         'orders-check' => [
             'driver' => 'daily',
             'path' => storage_path('logs/orders-check/orders-check.log'),
             'level' => 'debug',
-            'permissions' => '0777',
         ],
        
         'feedback-update' => [
             'driver' => 'daily',
             'path' => storage_path('logs/feedback/update.log'),
             'level' => 'debug',
-            'permissions' => '0777',
         ],
 
         'feedback-finish' => [
             'driver' => 'daily',
             'path' => storage_path('logs/feedback/finish.log'),
             'level' => 'debug',
-            'permissions' => '0777',
         ],
 
         'request-charger' => [
             'driver' => 'daily',
             'path' => storage_path('logs/request/charger.log'),
             'level' => 'debug',
-            'permissions' => '0777',
         ],
 
         'single' => [
