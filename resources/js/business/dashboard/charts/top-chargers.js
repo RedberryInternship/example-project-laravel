@@ -31,7 +31,7 @@ export default async () => {
 
     generateTopChart({
         chart: TOP_BY_DURATION,
-        title: 'ხანგრძივიბა',
+        title: 'ხანგრძლივობა',
         rawData: topByDuration,
         column: 'duration',
         color: '#FFC107',

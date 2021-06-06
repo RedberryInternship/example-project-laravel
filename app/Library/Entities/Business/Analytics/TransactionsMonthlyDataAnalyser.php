@@ -15,6 +15,19 @@ class TransactionsMonthlyDataAnalyser
    */
   public static function analyse($orders): array
   {
+      return cache() -> remember('business.transactions-data-with-energy-waste', 60 * 60, function () use( $orders ) {
+        return self :: calculateTransactionsDataWithEnergyWaste( $orders );
+      });
+  }
+
+  /**
+   * Calculate monthly transactions 
+   * and energy waste data.
+   *
+   * @return array
+   */
+  private static function calculateTransactionsDataWithEnergyWaste( $orders ): array
+  {
     $transactionsMonthlyData = Helper :: getFreshMonthlyData();
     $usedEnergyMonthlyData   = Helper :: getFreshMonthlyData();
 

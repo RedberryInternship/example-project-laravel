@@ -240,4 +240,14 @@ class Helper
            }
         }
     }
+
+    /**
+     * Get nova url.
+     *
+     * @return string
+     */
+    public static function novaURL()
+    {
+       return config('app')['url'] . '/nova'; 
+    }
 }

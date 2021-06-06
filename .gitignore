@@ -32,3 +32,5 @@ smthing
 .idea
 .project_files
 .git-credentials
+*.swp
+*.swo

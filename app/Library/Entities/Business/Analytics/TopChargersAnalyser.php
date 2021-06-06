@@ -14,6 +14,18 @@ class TopChargersAnalyser
    */
   public static function analyse(): array
   {
+      return cache()->remember('business.top-chargers', 60 * 60, function() {
+          return self :: calculateTopChargersData();
+      });
+  }
+
+  /**
+   * Calculate top chargers data.
+   *
+   * @return array
+   */
+  private static function calculateTopChargersData(): array
+  {
     $companyId = auth() -> user() -> company_id;
 
     $byOrders       = DB :: select(self :: ordersFrequencyQuery( $companyId ));

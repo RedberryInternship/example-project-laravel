@@ -13,6 +13,7 @@
                                 <th>წუთები (მდე)</th>
                                 <th>ღირებულება</th>
                                 <th>&nbsp;</th>
+                                <th>&nbsp;</th>
                             </tr>
                         </thead>
 
@@ -26,6 +27,13 @@
                                                 <td>{{ $chargingPrice -> start_minutes }}</td>
                                                 <td>{{ $chargingPrice -> end_minutes }}</td>
                                                 <td>{{ $chargingPrice -> price }}</td>
+                                                <td>
+                                                    <a href="{{ route('fast-charging-prices.edit', $chargingPrice -> id) }}">
+                                                        <button type="submit" class="btn waves-effect waves-light btn-small primary">
+                                                            <i class="material-icons">edit</i>
+                                                        </button>
+                                                    </a>
+                                                </td>
                                                 <td class="right">
                                                     
                                                     <form action="{{ url('/business/fast-charging-prices/' . $chargingPrice -> id) }}" method="POST">
@@ -88,13 +96,14 @@
                                             <input type="number" step="0.01" id="price" name="price">
                                         </div>
                                     </td>
-                                    <td class="right">
+                                    <td>
                                         <div class="input-field">
                                             <button type="submit" class="btn waves-effect waves-light btn-small green">
                                                 <i class="material-icons">check</i>
                                             </button>
                                         </div>
                                     </td>
+                                    <td class="right"></td>
                                 </form>
                             </tr>
                         </tbody>

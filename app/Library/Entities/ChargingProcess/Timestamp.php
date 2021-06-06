@@ -178,6 +178,16 @@ class Timestamp
   }
 
   /**
+   * Get local finished timestamp. 
+   * 
+   * @return Carbon|string
+   */
+  public function getLocalFinishedTimestamp()
+  {
+      return $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
+  }
+
+  /**
    * Get microtime in milliseconds.
    * 
    * @return float

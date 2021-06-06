@@ -21,7 +21,7 @@ class OrderInfoGetter
         'kilowatt',
       ]
     ) -> findOrFail($id);
-    
+
     $charger            = $order -> getCharger();
     $timestamp          = Timestamp :: build($order);
     $id                 = $order -> id;
@@ -36,6 +36,8 @@ class OrderInfoGetter
     $chargePower        = $order -> charge_power ? $order -> charge_power : '0';
     $chargePrice        = $order -> charge_price;
     $penaltyFee         = $order -> penalty_fee ? $order -> penalty_fee : '0' ;
+    $refundedMoney      = $order -> countRefunded();
+    $localEndTimestamp  = $timestamp -> getLocalFinishedTimestamp();
 
     return [ 
       'ID'                  => $id,
@@ -50,6 +52,8 @@ class OrderInfoGetter
       'end_time'            => $endTime,
       'charge_price'        => $chargePrice,
       'penalty_fee'         => $penaltyFee,
+      'refunded_money'      => $refundedMoney,
+      'local_end_timestamp' => $localEndTimestamp,
     ];
   }
 }

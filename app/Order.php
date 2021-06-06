@@ -282,6 +282,7 @@ class Order extends Model
     public function scopeFilterBySearchWord( $query )
     {
         $word = request() -> get( 'search' );
+        $word = strtolower($word);
 
         if( $word )
         {
@@ -290,16 +291,15 @@ class Order extends Model
                 -> orWhereHas( 'charger_connector_type.charger', function( $q ) use( $word ) {
                     $q 
                         -> where( 'code', 'like', '%'. $word .'%')
-                        -> orWhere( 'location->ka', 'like', '%'. $word .'%' )
-                        -> orWhere( 'location->ka', 'like', '%'. $word .'%' )
-                        -> orWhere( 'location->ru', 'like', '%'. $word .'%' )
-                        -> orWhere( 'location->en', 'like', '%'. $word .'%' );
+                        -> orWhereRaw("lower(location->>'$.ka') like '%{$word}%'")
+                        -> orWhereRaw("lower(location->>'$.en') like '%{$word}%'")
+                        -> orWhereRaw("lower(location->>'$.ru') like '%{$word}%'");
                 })
                 -> orWhereHas( 'user', function( $q ) use( $word ) {
                     $q 
-                        -> where( 'first_name', 'like', '%'. $word .'%' )
-                        -> orWhere( 'last_name', 'like', '%'. $word .'%' )
-                        -> orWhere( 'phone_number', 'like', '%'. $word .'%' );
+                        -> whereRaw("lower(first_name) like '%{$word}%'")
+                        -> orWhereRaw("lower(first_name) like '%{$word}%'")
+                        -> orWhereRaw("lower(first_name) like '%{$word}%'");
                 });
 
         }
@@ -402,6 +402,21 @@ class Order extends Model
     public function isInitiated(): bool
     {
         return $this -> charging_status == OrderStatusEnum :: INITIATED;
+    }
+
+    /**
+     * Count refunded money.
+     *
+     * @return int|float
+     */
+    public function countRefunded(): float
+    {
+        if( ! $this -> payments )
+        {
+            return 0;
+        }
+
+        return $this -> payments -> where('type', PaymentTypeEnum :: REFUND) -> sum('price');
     }
     
     /**
