@@ -139,12 +139,12 @@ class Timestamp
 
     if( (!! $startTimestamp) && (!! $endTimestamp) )
     {
-      return $startTimestamp -> diffInMinutes( $endTimestamp );
+      return $startTimestamp -> diffInMinutes( $endTimestamp ) + 1;
     }
     
     if( (!! $startTimestamp) && ! $endTimestamp )
     {
-      return $startTimestamp -> diffInMinutes(now());
+      return $startTimestamp -> diffInMinutes(now()) + 1;
     }
 
     return 0;
@@ -175,6 +175,16 @@ class Timestamp
       $penaltyTimestamp = $this -> getChargingStatusTimestamp( OrderStatusEnum :: ON_FINE );
       
       return $penaltyTimestamp;
+  }
+
+  /**
+   * Get local finished timestamp. 
+   * 
+   * @return Carbon|string
+   */
+  public function getLocalFinishedTimestamp()
+  {
+      return $this -> getChargingStatusTimestamp( OrderStatusEnum :: FINISHED );
   }
 
   /**

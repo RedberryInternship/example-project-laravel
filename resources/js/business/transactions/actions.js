@@ -9,15 +9,26 @@ import { registerCloseModalEvent } from './listeners'
 import { parseIntoHTML } from './utils/helpers'
 
 /**
+ * Transactions state.
+ */
+const transactions = {}; 
+
+/**
  * Open transaction modal on click.
  * 
  * @returns {void}
  */
 export const openTransactionsModal = async function() {
   const transactionId = +this.dataset.transactionId;
-
-  const result = await getTransactionInfo(transactionId);
-  const data = await result.json();
+  let data = null;
+  if(!transactions[transactionId]) {
+      const result = await getTransactionInfo(transactionId);
+      data = await result.json();
+      transactions[transactionId] = data;
+  }
+  else {
+      data = transactions[transactionId];
+  }
 
   const transactionModalString = generateTransactionModal(data);
   const transactionModalHTML = parseIntoHTML(transactionModalString);

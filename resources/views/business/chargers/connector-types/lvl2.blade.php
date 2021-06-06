@@ -15,6 +15,7 @@
                                 <th>მაქსიმალური სიმძლავრე(კვტ/სთ)</th>
                                 <th>ღირებულება</th>
                                 <th>&nbsp;</th>
+                                <th>&nbsp;</th>
                             </tr>
                         </thead>
 
@@ -30,6 +31,13 @@
                                                 <td>{{ $chargingPrice -> min_kwt }}</td>
                                                 <td>{{ $chargingPrice -> max_kwt }}</td>
                                                 <td>{{ $chargingPrice -> price }}</td>
+                                                <td>
+                                                    <a href="{{ route('charging-prices.edit', $chargingPrice -> id) }}">
+                                                        <button type="submit" class="btn waves-effect waves-light btn-small primary">
+                                                            <i class="material-icons">edit</i>
+                                                        </button>
+                                                    </a>
+                                                </td>
                                                 <td class="right">
                                                     <form action="{{ url('/business/charging-prices/' . $chargingPrice -> id) }}" method="POST">
                                                         @csrf
@@ -118,6 +126,7 @@
                                             </button>
                                         </div>
                                     </td>
+                                    <td></td>
                                 </form>
                             </tr>
                         </tbody>

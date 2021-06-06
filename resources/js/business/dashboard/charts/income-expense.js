@@ -11,7 +11,7 @@ export default async () => {
   const result = await fetch(incomeExpenseService);
   const data = await result.json();
 
-  const headings = ['შემოსავალი ჯარიმის გარეშე', 'ჯარიმის შემოსავალი', 'ხარჯი' ];
+  const headings = ['დამუხტვიდან შემოსავალი', 'ჯარიმის შემოსავალი', 'ხარჯი' ];
 
   incomeExpenseChartObject = new Chart(INCOME_EXPENSE, {
     type: 'bar',

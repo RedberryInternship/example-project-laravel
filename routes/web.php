@@ -9,7 +9,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Library\Entities\Helper;
 
-Route::redirect('/', 'http://app.e-space.ge/nova');
+
+Route::redirect('/', Helper::novaURL());
 
 Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
     
@@ -41,7 +42,7 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
          * Chargers.
          */
         Route::get('/chargers', 'ChargerController@index');
-        Route::get('/chargers/{id}/edit', 'ChargerController@edit');
+        Route::get('/chargers/{id}/edit', 'ChargerController@edit')->name('business-chargers.edit');
         Route::post('/chargers/{id}/update', 'ChargerController@update');
         Route::post('/filter-chargers', 'ChargerController@getFilteredChargers');
         Route::post('/charger-transfer', 'ChargerTransferController');
@@ -59,8 +60,8 @@ Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {
         /**
          * Charging Prices.
          */
-        Route::resource('/charging-prices', 'ChargingPricesController')->only(['store', 'destroy']);
-        Route::resource('/fast-charging-prices', 'FastChargingPricesController')->only(['store', 'destroy']);
+        Route::resource('/charging-prices', 'ChargingPricesController')->only(['store', 'destroy', 'edit', 'update']);
+        Route::resource('/fast-charging-prices', 'FastChargingPricesController')->only(['store', 'destroy', 'edit', 'update']);
     
         /** Whitelist api */
         Route::post('/chargers/toggle-visibility', 'WhitelistController@toggleHiddenField');

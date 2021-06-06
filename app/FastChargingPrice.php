@@ -22,5 +22,22 @@ class FastChargingPrice extends Model
     {
     	return $this -> belongsTo( ChargerConnectorType :: class );
     }
+
+    /**
+     * Get charger connector type name.
+     *
+     * @return string
+     */
+    public function connectorType()
+    {
+        $connector = $this->charger_connector_type;
+
+        if($connector && $connector -> connector_type)
+        {
+            return $connector -> connector_type -> name;
+        }
+
+        return null;
+    }
 }
 

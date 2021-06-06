@@ -23,6 +23,12 @@
   border-radius: 10px;
 }
 
+.transactions-content-container {
+ overflow-y: auto;
+ height: 100%;
+ padding-right: 1rem;
+}
+
 .transaction-modal {
   overflow-y: auto;
   max-height: calc(100% - 3rem);

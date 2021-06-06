@@ -13,6 +13,25 @@ class IncomeExpenseAnalyser
    */
   public static function analyse( $orders ): array
   {
+      $year = request() -> year ?? now() -> year;
+
+      return cache()
+          -> remember(
+              "business.income-expense.{$year}", 
+              60 * 60, /* 1 Hour */
+              function() use( $orders ) {
+                return self :: calculateIncomeExpense( $orders );
+              },
+      );
+  }
+
+  /**
+   * Calculate income expense data.
+   *
+   * @return array
+   */
+  private static function calculateIncomeExpense( $orders ): array
+  {
     return [
       'income_without_penalty'  => self :: countIncomeWithoutPenalty( $orders ),
       'penalty'                 => self :: countPenalty( $orders ),
