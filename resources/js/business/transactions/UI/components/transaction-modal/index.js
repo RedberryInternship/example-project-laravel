@@ -19,14 +19,11 @@ export default (data) => {
     end_time,
     penalty_fee, 
     refunded_money,
-    local_end_timestamp,
   } = data;
 
   const formattedStartTime = new Date(start_time).toLocaleString();
   const formattedChargeTime = new Date(charge_time).toLocaleString();
-  const formattedEndTime = end_time 
-        ? new Date(end_time).toLocaleString() 
-        : new Date(local_end_timestamp).toLocaleString();
+  const formattedEndTime = new Date(end_time).toLocaleString() 
 
 
   return `

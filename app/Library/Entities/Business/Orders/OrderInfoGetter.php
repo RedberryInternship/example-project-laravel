@@ -31,13 +31,13 @@ class OrderInfoGetter
     $consumedKilowatts  = $order -> kilowatt ? $order -> kilowatt -> consumed : '0';
     $duration           = $order -> duration;
     $startTime          = $timestamp -> getStartTimestamp();
-    $endTime            = $timestamp -> getOriginalEndTime();
+    $localEndTimestamp  = $timestamp -> getLocalFinishedTimestamp();
+    $endTime            = $timestamp -> getOriginalEndTime() ?? $localEndTimestamp;
     $chargeTime         = $timestamp -> getStopChargingTimestamp() ?? $endTime;
     $chargePower        = $order -> charge_power ? $order -> charge_power : '0';
     $chargePrice        = $order -> charge_price;
     $penaltyFee         = $order -> penalty_fee ? $order -> penalty_fee : '0' ;
     $refundedMoney      = $order -> countRefunded();
-    $localEndTimestamp  = $timestamp -> getLocalFinishedTimestamp();
 
     return [ 
       'ID'                  => $id,
@@ -53,7 +53,6 @@ class OrderInfoGetter
       'charge_price'        => $chargePrice,
       'penalty_fee'         => $penaltyFee,
       'refunded_money'      => $refundedMoney,
-      'local_end_timestamp' => $localEndTimestamp,
     ];
   }
 }
