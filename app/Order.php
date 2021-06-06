@@ -967,7 +967,7 @@ class Order extends Model
         $consumedMoney = $this -> accumulateFastChargerConsumedMoney( 
             $chargingPriceRanges, 
             $elapsedMinutes,
-            );
+        );
         
         return $consumedMoney;
     }
@@ -987,7 +987,7 @@ class Order extends Model
             $startMinutes       = $chargingPriceInstance -> start_minutes;
             $endMinutes         = $chargingPriceInstance -> end_minutes;
             $price              = $chargingPriceInstance -> price;
-            $minutesInterval    = $endMinutes - $startMinutes + 1;
+            $minutesInterval    = $endMinutes - $startMinutes;
 
             if( $elapsedMinutes > $chargingPriceInstance -> end_minutes)
             {
@@ -995,7 +995,7 @@ class Order extends Model
             }
             else
             {
-                $consumedMoney += ( $elapsedMinutes - $startMinutes + 1 ) * $price;
+                $consumedMoney += ( $elapsedMinutes - $startMinutes ) * $price;
             }
         });
 
