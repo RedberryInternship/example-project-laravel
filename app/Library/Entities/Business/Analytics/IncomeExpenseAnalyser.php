@@ -13,9 +13,16 @@ class IncomeExpenseAnalyser
    */
   public static function analyse( $orders ): array
   {
-      return cache()->remember('business.income-expense', 60 * 60, function() use( $orders ) {
-        return self :: calculateIncomeExpense( $orders );
-      });
+      $year = request() -> year ?? now() -> year;
+
+      return cache()
+          -> remember(
+              "business.income-expense.{$year}", 
+              60 * 60, /* 1 Hour */
+              function() use( $orders ) {
+                return self :: calculateIncomeExpense( $orders );
+              },
+      );
   }
 
   /**
