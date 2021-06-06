@@ -139,12 +139,12 @@ class Timestamp
 
     if( (!! $startTimestamp) && (!! $endTimestamp) )
     {
-      return $startTimestamp -> diffInMinutes( $endTimestamp );
+      return $startTimestamp -> diffInMinutes( $endTimestamp ) + 1;
     }
     
     if( (!! $startTimestamp) && ! $endTimestamp )
     {
-      return $startTimestamp -> diffInMinutes(now());
+      return $startTimestamp -> diffInMinutes(now()) + 1;
     }
 
     return 0;

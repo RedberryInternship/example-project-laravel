@@ -34,3 +34,5 @@ smthing
 .git-credentials
 *.swp
 *.swo
+tags
+build-tags.sh
