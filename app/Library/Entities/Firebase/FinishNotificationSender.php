@@ -23,9 +23,6 @@ class FinishNotificationSender
     $user          = User  :: find( $finishedOrder -> user_id );
 
     if( ! $user -> firebase_token ) {
-      Log :: info(
-        "User {$user -> id} doesn't have firebase token."
-      );
       return;
     }
 
