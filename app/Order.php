@@ -569,7 +569,7 @@ class Order extends Model
      */
     public function getChargingPower()
     {
-       return $this->kilowatt->getChargingPower();
+       return $this->kilowatt->getChargingPower() ?? 0;
     }
 
     /**
