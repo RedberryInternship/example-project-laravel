@@ -22,11 +22,15 @@
 				<div class="card-content">
 
 					<div class="waves-effect waves-teal btn-flat toggle-charger-visibility bpg-arial">
-						{{ $charger -> hidden ? 'დააბრუნე რუკაზე' : 'დამალე რუკიდან' }}
+						@if($charger -> hidden)
+							@lang('business.chargers.whitelist.unhide-charger')
+						@else 
+							@lang('business.chargers.whitelist.hide-charger')
+						@endif
 					</div>
 
 					@if($charger -> hidden)
-						<div class="btn whitelist-button bpg-arial">ვაითლისთი</div>
+						<div class="btn whitelist-button bpg-arial">@lang('business.chargers.whitelist.title')</div>
 					@endif
 					
 					<hr style="margin-top:1em; margin-bottom: 1em">
@@ -35,7 +39,7 @@
 						<tbody>
 							<tr>
 								<td>
-									კოდი
+									@lang('business.chargers.charger-code')
 								</td>
 								<td class="users-view-username">
 									{{ $charger -> code }}
@@ -44,7 +48,7 @@
 
 							<tr>
 								<td>
-									განედი (lat)
+									@lang('business.chargers.lat')
 								</td>
 								<td class="users-view-username">
 									{{ $charger -> lat }}
@@ -53,16 +57,15 @@
 
 							<tr>
 								<td>
-									გრძედი (lng)
+									@lang('business.chargers.lng')
 								</td>
 								<td class="users-view-name">
 									{{ $charger -> lng }}
 								</td>
 							</tr>
-
 							<tr>
 								<td>
-									საჯარო
+									@lang('business.chargers.public')
 								</td>
 								<td class="users-view-email">
 									<i class="material-icons dp48" style="{{ $charger -> public ? 'color: green' : 'color: red' }}">
@@ -73,7 +76,7 @@
 
 							<tr>
 								<td>
-									სტატუსი
+									@lang('business.chargers.status')
 								</td>
 								<td>
 									{{ $charger -> status }}
@@ -94,7 +97,6 @@
 					    <form class="col s12" action="{{ url('/business/chargers/' . $charger -> id) }}" method="POST">
 					    	@csrf
 					    	<input type="hidden" name="_method" value="PUT">
-
 					      	<div class="row">
 					      		@foreach ($languages as $language)
 							        <div class="input-field col s4">
@@ -109,7 +111,7 @@
 											for="{{ 'charger_name_' . $language }}" 
 											class="bpg-arial"
 										>
-											{{ 'დამტენის სახელი (' . $language . ')' }}
+										@lang('business.chargers.charger-name') {{ "($language)" }}
 										</label>
 									</div>
 								@endforeach
@@ -126,7 +128,7 @@
 											type="text" 
 										>
 										<label for="{{ 'charger_desription_' . $language }}">
-											{{ 'დამტენის აღწერა (' . $language . ')' }}
+											@lang('business.chargers.charger-description') {{ "($language)" }}
 										</label>
 									</div>
 								@endforeach
@@ -142,7 +144,7 @@
 											class="validate bpg-arial"
 											>
 										<label for="{{ 'charger_location_' . $language }}" class="bpg-arial">
-											{{ 'დამტენის მდებარეობა (' . $language . ')' }}
+											@lang('business.chargers.charger-location') {{ "($language)" }}
 										</label>
 									</div>
 								@endforeach
@@ -150,7 +152,7 @@
 
 					      	<div class="row" style="margin-bottom: 1rem;">
 					      		<div class="input-field col s12">
-					      			<label for="charger_business_services" class="bpg-arial">ბიზნეს სერვისები</label>
+					      			<label for="charger_business_services" class="bpg-arial">@lang('business.chargers.business-services')</label>
 					      		</div>
 				      		</div>
 
@@ -168,7 +170,7 @@
 
 					      	<div class="row">
 					      		<div class="input-field col s12" style="display: flex; justify-content: flex-end;">
-					      			<button type="submit" class="btn waves-effect waves-light green bpg-arial">დამახსოვრება</button>
+					      			<button type="submit" class="btn waves-effect waves-light green bpg-arial">@lang('business.chargers.save')</button>
 					      		</div>
 					      	</div>
 					    </form>

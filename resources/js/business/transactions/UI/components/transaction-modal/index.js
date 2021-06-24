@@ -6,7 +6,6 @@
  */
 export default (data) => {
   const {
-    ID, 
     charge_duration, 
     charge_power, 
     charge_price, 
@@ -34,54 +33,54 @@ export default (data) => {
           <table class="responsive-table transaction-modal">
           <thead>
             <tr>
-                <th>დამტენის კოდი</th>
+                <th>${__('transactions.charger-code')}</th>
                 <th>${charger_code}</th>
             </tr>
           </thead>
 
           <tbody>
             <tr>
-              <td>მისამართი</td>
+              <td>${__('transactions.address')}</td>
               <td>${charger_description}</td>
             </tr>
             <tr>
-              <td>დამტენის ტიპი</td>
+              <td>${__('transactions.charger-type')}</td>
               <td>${charger_type}</td>
             </tr>
             <tr>
-              <td>დამუხტვის სიმძლავრე</td>
+              <td>${__('transactions.charge-power')}</td>
               <td>${charge_power}</td>
             </tr>
             <tr>
-              <td>მოხმარებული კილოვატები</td>
+              <td>${__('transactions.consumed-kilowatts')}</td>
               <td>${consumed_kilowatts}</td>
             </tr>
             <tr>
-              <td>დამუხტვის ხანგრძლივობა</td>
+              <td>${__('transactions.duration')}</td>
               <td>${charge_duration}</td>
             </tr>
             <tr>
-              <td>დამუხტვის ფასი</td>
+              <td>${__('transactions.price')}</td>
               <td>${charge_price}</td>
             </tr>
             <tr>
-              <td>ჯარიმა</td>
+              <td>${__('transactions.fine')}</td>
               <td>${penalty_fee}</td>
             </tr>
             <tr>
-              <td>დაბრუნებული თანხა</td>
+              <td>${__('transactions.refunded-money')}</td>
               <td>${refunded_money}</td>
             </tr>
             <tr>
-              <td>დამუხტვის დაწყება</td>
+              <td>${__('transactions.charge-start-time')}</td>
               <td>${formattedStartTime}</td>
             </tr>
             <tr>
-              <td>დამუხტვის შეჩერება</td>
+              <td>${__('transactions.charge-stop-time')}</td>
               <td>${formattedChargeTime}</td>
             </tr>
             <tr style="border-bottom:0">
-              <td>დამუხტვის დასრულება</td>
+              <td>${__('transactions.charge-end-time')}</td>
               <td>${formattedEndTime}</td>
             </tr>
           </tbody>

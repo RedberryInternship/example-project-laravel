@@ -1,12 +1,13 @@
 import { state } from '../../../data/state'
 import { removePhoneFromWhitelist } from '../../../listeners/actions'
 import noContent from '../../components/no-phone-numbers'
+
 /**
  * Create whitelist content HTML.
  */
 export default () => {
   let content = state.whitelist.map(el => item(el)).join(' ');
-  
+
   if( content == '' ) {
     return noContent;
   }
@@ -16,8 +17,8 @@ export default () => {
 
 /**
  * Create whitelist record HTML.
- * 
- * @param {obj} whitelistRecord 
+ *
+ * @param {obj} whitelistRecord
  */
 const item = ({ id, phone }) => `
 <li class="collection-item">
@@ -29,7 +30,7 @@ const item = ({ id, phone }) => `
 
 /**
  * Add event listeners to removing items.
- * 
+ *
  * @returns {void}
  */
 export const listenToRemoveClicks = () => {

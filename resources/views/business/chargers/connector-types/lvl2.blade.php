@@ -7,13 +7,13 @@
                         <thead>
                             <tr style="color: black">
                                 @if (isset($chargerConnectorTypes))
-                                    <th>კონექტორის ტიპი</th>
+                                    <th>@lang('business.chargers.connector-type')</th>
                                 @endif
-                                <th>დაწყების დრო</th>
-                                <th>დამთავრების დრო</th>
-                                <th>მინიმალური სიმძლავრე(კვტ/სთ)</th>
-                                <th>მაქსიმალური სიმძლავრე(კვტ/სთ)</th>
-                                <th>ღირებულება</th>
+                                <th>@lang('business.chargers.start-time')</th>
+                                <th>@lang('business.chargers.end-time')</th>
+                                <th>@lang('business.chargers.min-kwt')</th>
+                                <th>@lang('business.chargers.max-kwt')</th>
+                                <th>@lang('business.chargers.price')</th>
                                 <th>&nbsp;</th>
                                 <th>&nbsp;</th>
                             </tr>

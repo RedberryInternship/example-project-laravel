@@ -9,7 +9,7 @@ export let transactionsChartObject = null;
 export default async () => {
     const response = await fetch(transactionsService);
     const data = await response.json();
-    
+
     const transactions = data.transactions;
     const energy = data.energy;
     const monthLabels = data.month_labels;
@@ -21,13 +21,13 @@ export default async () => {
           datasets: [
             {
               data: transactions,
-              label: 'ტრანზაქციების სიხშირე',
+              label: __('dashboard.transactions.transaction-density'),
               yAxisID: 'A',
               backgroundColor: '#f443367d',
             },
             {
               data: energy,
-              label: 'მოხმარებული ელ. ენერგია',
+              label: __('dashboard.transactions.used-power'),
               yAxisID: 'B',
               backgroundColor: '#3f51b57a'
             }
@@ -42,20 +42,20 @@ export default async () => {
               position: 'left',
               scaleLabel: {
                 display: true,
-                labelString: "დამუხტვების სიხშირე",
+                labelString: __('dashboard.transactions.charge-count'),
                 fontSize: 14,
               },
               ticks: {
                 fontSize: 14,
               }
-            }, 
+            },
             {
               id: 'B',
               type: 'linear',
               position: 'right',
               scaleLabel: {
                 display: true,
-                labelString: "მოხმარებული ელ. ენერგია",
+                labelString: __('dashboard.transactions.used-power'),
                 fontSize: 14,
               },
               ticks: {
@@ -68,17 +68,14 @@ export default async () => {
               ticks: {
                 fontSize: 14,
               }
-            }    
+            }
           ]
           },
           legend: {
             labels: {
               fontSize: 14,
-              // fontFamily: 'pbg-arial'
             }
           }
         }
       });
-      console.log(transactionsChartObject)
 }
-

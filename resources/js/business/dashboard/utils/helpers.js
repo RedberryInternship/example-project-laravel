@@ -1,10 +1,10 @@
 import { transactionsChartObject } from '../charts/transactions'
 import { incomeExpenseChartObject } from '../charts/income-expense'
-import { 
-  transactionsService, 
-  incomeExpenseService, 
+import {
+  transactionsService,
+  incomeExpenseService,
   filterChargersService,
-  logout, 
+  logout,
 } from './services';
 
 export const registerTransactionsSelectAndEventListener = () => {
@@ -22,8 +22,7 @@ export const registerChargersModalBgCloseEventListener = () => {
 
 export const registerLogoutEventListener = () => {
   document.querySelector('.logout-from-business-admin').addEventListener('click', () => {
-    const shouldLogout = confirm('ნამდვილად გსურთ Business ადმინ პანელიდან გასვლა?');
-
+    const shouldLogout = confirm(__('logout'));
     shouldLogout && (window.location = logout);
   });
 }
@@ -31,12 +30,12 @@ export const registerLogoutEventListener = () => {
 /**
  * Update transactions chart when changing
  * year from select.
- * 
+ *
  * @returns {void}
  */
 const updateTransactionsChart = async () => {
   const year = document.querySelector('#transactions-select').value;
-  
+
   const result = await fetch(transactionsService + `?year=${year}`)
   const data = await result.json()
 
@@ -51,12 +50,12 @@ const updateTransactionsChart = async () => {
 /**
  * Update income/expense chart when changing
  * year from select.
- * 
+ *
  * @returns {void}
  */
 const updateIncomeExpenseChart = async () => {
   const year = document.querySelector('#income-expense-select').value;
-  
+
   const result = await fetch(incomeExpenseService + `?year=${year}`)
   const data = await result.json()
 
@@ -68,7 +67,7 @@ const updateIncomeExpenseChart = async () => {
 
 /**
  * Display chargers modal on chargers statues section.
- * 
+ *
  * @param {string} chargersType
  * @param {string} chargersStatus
  * @returns {void}
@@ -87,7 +86,7 @@ export const displayChargersModal = async (chargersType, chargerStatus) => {
       'Accept': 'application/json',
     },
     method: 'POST',
-    body: body, 
+    body: body,
   });
 
   const data = await result.json();
@@ -98,7 +97,7 @@ export const displayChargersModal = async (chargersType, chargerStatus) => {
 
 /**
  * Open chargers modal.
- * 
+ *
  * @returns {void}
  */
 const openChargersModal = (modalContent) => {
@@ -108,7 +107,7 @@ const openChargersModal = (modalContent) => {
 
 /**
  * Close chargers modal.
- * 
+ *
  * @returns {void}
  */
 const closeChargersModal = (byForce, e) => {
@@ -122,7 +121,7 @@ const closeChargersModal = (byForce, e) => {
 
 /**
  * Wrap charger modal nodes.
- * 
+ *
  * @param {string} nodes
  * @returns {string}
  */
@@ -131,11 +130,11 @@ const wrapChargerModalNodes = ( nodes ) => {
   <table class="responsive-table">
     <thead>
         <tr>
-            <th>სახელი</th>
-            <th>კოდი</th>
-            <th class="center">საჯარო</th>
-            <th class="center">სტატუსი</th>
-            <th class="center">რედაქტირება</th>
+            <th>${__('dashboard.charger-statuses.charger.name')}</th>
+            <th>${__('dashboard.charger-statuses.charger.code')}</th>
+            <th class="center">${__('dashboard.charger-statuses.charger.public')}</th>
+            <th class="center">${__('dashboard.charger-statuses.charger.status')}</th>
+            <th class="center">${__('dashboard.charger-statuses.charger.update')}</th>
         </tr>
     </thead>
 
@@ -148,7 +147,7 @@ const wrapChargerModalNodes = ( nodes ) => {
 
 /**
  * Create charger modal node.
- * 
+ *
  * @returns {string}
  */
 const createChargerModalNode = (data) => {
@@ -156,7 +155,7 @@ const createChargerModalNode = (data) => {
 
   return `
   <tr>
-    <td>${name.ka}</td>
+    <td>${name[locale]}</td>
     <td>${code}</td>
     <td class="center">
         <i class="material-icons dp48" style="${ data.public ? 'color: green' : 'color: red' }">${ data.public ? 'check' : 'close' }</i>

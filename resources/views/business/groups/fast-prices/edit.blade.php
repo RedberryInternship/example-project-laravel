@@ -15,7 +15,7 @@
                 {{ $group -> name }}
             </h4>
 
-            <h5>&nbsp; - leve2 დამტენის ფასები</h5>
+            <h5>&nbsp; - @lang('business.groups.fast-prices')</h5>
         </div>
     </div>
 

@@ -6,7 +6,23 @@
         </div>
     </div>
 </footer>
-
+<script>
+    /**
+     * Set language functionality for js.
+     */
+    window.lang = @json(trans('business'));
+    window.locale = '{{ app()->getLocale() }}';
+    window.__ = function __(key) {
+        const keys = key.split('.');
+        try {
+            return keys.reduce(function (reducedValue, currentValue) {
+                return reducedValue[currentValue];
+            }, lang);
+        } catch (e) {
+            return key;
+        }
+    };
+</script>
 <script src="/app-assets/js/vendors.min.js"></script>
 <script src="/app-assets/vendors/select2/select2.full.min.js"></script>
 <script src="/app-assets/vendors/chartjs/chart.min.js"></script>

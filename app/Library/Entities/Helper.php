@@ -10,7 +10,7 @@ class Helper
 {
     /**
      * Determine if application is in development mode.
-     * 
+     *
      * @return bool
      */
     public static function isDev(): bool
@@ -20,17 +20,17 @@ class Helper
 
     /**
      * Get all available languages.
-     * 
+     *
      * @return array
      */
     public static function allLang(): array
 	{
 		return ['ka', 'en', 'ru'];
     }
-  
+
     /**
      * Old month list helper.
-     * 
+     *
      * @return array
      */
     public static function getMonthList($start, $end)
@@ -46,10 +46,10 @@ class Helper
 
     /**
      * Get monthly fresh data.
-     * 
+     *
      * @return array
      */
-    public static function getFreshMonthlyData(): array 
+    public static function getFreshMonthlyData(): array
     {
         return [
             0 => 0,  # January
@@ -69,12 +69,12 @@ class Helper
 
     /**
      * Get month names.
-     * 
+     *
      * @return array
      */
     public static function getMonthNames(): array
     {
-        return [
+        return app()->getLocale() === 'ka' ? [
             'იანვარი',
             'თებერვალი',
             'მარტი',
@@ -87,12 +87,25 @@ class Helper
             'ოქტომბერი',
             'ნოემბერი',
             'დეკემბერი',
+        ] : [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'Jule',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
         ];
     }
 
     /**
      * Convert watts to kilowatts.
-     * 
+     *
      * @param array $watts
      * @return array
      */
@@ -103,7 +116,7 @@ class Helper
 
     /**
      * Cast lists into desirable type.
-     * 
+     *
      * @return mixed
      */
     public static function castListInto(&$list, $column, $type )
@@ -126,10 +139,10 @@ class Helper
 
     /**
      * Day time range.
-     * 
+     *
      * @return array
      */
-    public static function dayTimesRange(): array 
+    public static function dayTimesRange(): array
     {
         $ranges = [];
 
@@ -144,13 +157,13 @@ class Helper
 
     /**
      * Create url with query parameters.
-     * 
+     *
      * @return string
      */
     public static function url( $uri, $params ): string
-    {   
+    {
         $uri .= '?';
-        
+
         foreach( $params as $key => $value )
         {
             $uri .= '&' . $key . '=' .$value;
@@ -161,21 +174,21 @@ class Helper
 
     /**
      * Get penalty price per minute.
-     * 
+     *
      * @return float
      */
     public static function getPenaltyPricePerMinute()
     {
         $config                 = Config :: first();
         $penaltyPricePerMinute  = $config -> penalty_price_per_minute;
-        
-        return $penaltyPricePerMinute; 
+
+        return $penaltyPricePerMinute;
     }
 
     /**
-     * Get initial charging price for 
+     * Get initial charging price for
      * charging process.
-     * 
+     *
      * @return float
      */
     public static function getInitialChargingPrice()
@@ -184,9 +197,9 @@ class Helper
     }
 
     /**
-     * Get next charging prices for 
+     * Get next charging prices for
      * charging process.
-     * 
+     *
      * @return float
      */
     public static function getNextChargingPrice()
@@ -196,7 +209,7 @@ class Helper
 
     /**
      * Convert minutes into hh-mm.
-     * 
+     *
      * @param int $minutes
      * @return string
      */
@@ -221,7 +234,7 @@ class Helper
 
     /**
      * Remove tmp excel files.
-     * 
+     *
      * @return void
      */
     public static function removeTmpExcelFiles(): void
@@ -248,6 +261,6 @@ class Helper
      */
     public static function novaURL()
     {
-       return config('app')['url'] . '/nova'; 
+       return config('app')['url'] . '/nova';
     }
 }

@@ -7,11 +7,15 @@ const { INCOME_EXPENSE } = charts;
 export let incomeExpenseChartObject = null;
 
 export default async () => {
-  
+
   const result = await fetch(incomeExpenseService);
   const data = await result.json();
 
-  const headings = ['დამუხტვიდან შემოსავალი', 'ჯარიმის შემოსავალი', 'ხარჯი' ];
+  const headings = [
+      __('dashboard.income.charging-income'),
+      __('dashboard.income.fine-income'),
+      __('dashboard.income.waste'),
+  ];
 
   incomeExpenseChartObject = new Chart(INCOME_EXPENSE, {
     type: 'bar',
@@ -29,7 +33,7 @@ export default async () => {
           backgroundColor: '#6a1b9a',
           data: data.penalty,
           stack: 'A',
-          
+
         },
         {
           label: headings[2],
@@ -61,7 +65,7 @@ export default async () => {
 
       tooltips: {
         callbacks: {
-          label: (item) => { 
+          label: (item) => {
             const { datasetIndex, value } = item;
             const heading = headings[datasetIndex];
             return `${heading}: ${value} GEL`;

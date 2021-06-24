@@ -1,7 +1,7 @@
 import { state } from '../data/state'
 import * as Service from '../utils/service'
 import { isHidden, getChargerId } from '../utils/meta'
-import { 
+import {
   whitelistModalCloseButton,
   whitelistModalSelect,
   whitelistModalBG,
@@ -35,13 +35,13 @@ const { generalMistakeText, georgianMistakeText } = mistakeMsg;
 
 /**
  * Toggle charger visibility.
- * 
+ *
  * @returns {void}
  */
 export const toggleChargerVisibility = async () => {
   try {
     const params = {
-      charger_id: getChargerId(), 
+      charger_id: getChargerId(),
       hidden: isHidden(),
     };
 
@@ -49,14 +49,12 @@ export const toggleChargerVisibility = async () => {
     window.location.reload();
   }
   catch(e)
-  {
-    console.log(e);
-  }
+  {}
 }
 
 /**
  * Open whitelist modal.
- * 
+ *
  * @returns {void}
  */
 export const openWhitelistModal = () => {
@@ -66,7 +64,7 @@ export const openWhitelistModal = () => {
 
 /**
  * Close whitelist modal.
- * 
+ *
  * @param {Event} e
  * @returns {void}
  */
@@ -79,9 +77,9 @@ export const closeWhitelistModal = (e) => {
 }
 
 /**
- * On phone code change, update 
+ * On phone code change, update
  * phone input.
- * 
+ *
  * @param {Event} e
  * @returns {void}
  */
@@ -89,15 +87,15 @@ export const changePhoneCode = (e) => {
   state.isPhoneCodeGeorgian = whitelistModalSelect().value == '+995';
   const whitelistInputElem = whitelistInput();
   whitelistInputElem.setAttribute('placeholder', state.isPhoneCodeGeorgian ? '5XX XX XX XX' : 'Phone Number');
-  
+
   let phoneNumber = generateInputTextArray(whitelistInputElem.value);
-  
+
   if( state.isPhoneCodeGeorgian) {
     formatPhoneNumber(phoneNumber);
     phoneNumber = phoneNumber.join('');
   } else {
     phoneNumber = removeSpacesFromPhoneNumber(phoneNumber);
-  } 
+  }
 
   whitelistInputElem.value = phoneNumber;
 }
@@ -105,7 +103,7 @@ export const changePhoneCode = (e) => {
 /**
  * Watch for phone number input
  * changes and behave accordingly.
- * 
+ *
  * @param {Event} e
  * @returns {void}
  */
@@ -115,7 +113,7 @@ export const watchPhoneNumber = (e) => {
 
   if(isDigit(e) || isBackspace(e)) {
     const whitelistInputValue = generateInputTextArray(e);
-    
+
     if(isBackspace(e)) {
       whitelistInputValue.splice(whitelistInputValue.length - 1, 1);
       assignInput(whitelistInputValue);
@@ -139,7 +137,7 @@ export const watchPhoneNumber = (e) => {
 
 /**
  * Add phone number to whitelists.
- * 
+ *
  * @param {Event} e
  * @returns {void}
  */
@@ -168,8 +166,8 @@ export const addPhoneNumber = () => {
 /**
  * Add phone number and re-fetch whitelist
  * and re-render the page.
- * 
- * @returns {Promise<void>} 
+ *
+ * @returns {Promise<void>}
  */
 const addNewPhoneNumber = async () => {
   const phoneNumber = assemblePhoneNumber();
@@ -191,14 +189,12 @@ const addNewPhoneNumber = async () => {
     renderWhitelistRecords();
     clearPhoneInput();
   }
-  catch(e) {
-    console.log(e);
-  }
+  catch(e) {}
 }
 
 /**
  * Remove phone number from whitelist.
- * 
+ *
  * @param {chargerId}
  * @param {id}
  * @returns {void}
@@ -214,9 +210,5 @@ export const removePhoneFromWhitelist = async (chargerId, id, phone ) => {
     alert(copy.successfullyDeleted);
     renderWhitelistRecords();
   }
-  catch(e) {
-    console.log(e);
-  }
+  catch(e) {}
 }
-
-

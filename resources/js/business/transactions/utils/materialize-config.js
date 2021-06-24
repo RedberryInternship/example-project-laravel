@@ -3,7 +3,10 @@ export const datePickerConfig = {
   showClearBtn: true,
   format: 'yyyy-mm-d',
   firstDay: 1,
-  i18n: {
+};
+
+if(locale === 'ka') {
+  datePickerConfig.i18n = {
     cancel: 'უკან',
     done: 'ოკ',
     clear: 'გასუფთავება',
@@ -14,5 +17,5 @@ export const datePickerConfig = {
     weekdays: ['კვირა', 'ორშაბათი', 'სამშაბათი', 'ოთხშაბათი, ხუთშაბათი', 'პარასკევი', 'შაბათი'],
     weekdaysShort: ['კვ', 'ორშ', 'სამ', 'ოთხ, ხუთ', 'პარ', 'შაბ'],
     weekdaysAbbrev: ['კ', 'ო', 'ს', 'ო', 'ხ', 'პ', 'შ'],
-  }
-};
+  };
+}

@@ -7,10 +7,10 @@
                     <table class="striped bpg-arial">
                         <thead>
                             <tr style="color: black">
-                                <th>კონექტორის ტიპი</th>
-                                <th>წუთები (დან)</th>
-                                <th>წუთები (მდე)</th>
-                                <th>ღირებულება</th>
+                                <th>@lang('business.chargers.connector-type')</th>
+                                <th>@lang('business.chargers.minutes-from')</th>
+                                <th>@lang('business.chargers.minutes-to')</th>
+                                <th>@lang('business.chargers.price')</th>
                                 <th>&nbsp;</th>
                                 <th>&nbsp;</th>
                             </tr>

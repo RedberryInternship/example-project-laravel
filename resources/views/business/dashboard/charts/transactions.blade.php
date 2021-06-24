@@ -12,7 +12,7 @@
         <div class="charts-select-filter">
             <select id="transactions-select">
                 @for($y = now() -> year; $y >= $firstYear; $y--)
-                    <option value="{{ $y }}">{{ $y }} წელი</option>
+                    <option value="{{ $y }}">{{ $y }} @lang('date.year')</option>
                 @endfor
             </select>
         </div>

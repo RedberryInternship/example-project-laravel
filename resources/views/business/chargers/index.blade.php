@@ -7,7 +7,7 @@
 				<div class="card-content">
 					<div class="row mb-2">
 						<div class="col s12">
-	                        <h4 class="card-title bpg-arial">დამტენები</h4>
+	                        <h4 class="card-title bpg-arial">@lang('business.chargers.chargers')</h4>
 	                    </div>
                     </div>
 
@@ -17,11 +17,11 @@
                                 <table class="responsive-table bpg-arial">
                                     <thead>
                                         <tr style="color: black">
-                                            <th>სახელი</th>
-                                            <th>კოდი</th>
-                                            <th class="center">საჯარო</th>
-                                            <th class="center">სტატუსი</th>
-                                            <th class="center">რედაქტირება</th>
+                                            <th>@lang('business.chargers.charger-name')</th>
+                                            <th>@lang('business.chargers.charger-code')</th>
+                                            <th class="center">@lang('business.chargers.public')</th>
+                                            <th class="center">@lang('business.chargers.status')</th>
+                                            <th class="center">@lang('business.chargers.edit')</th>
                                         </tr>
                                     </thead>
 
@@ -48,7 +48,7 @@
                             @else
                                 <div class="mt-4 flex">
                                     <i class="material-icons red color-white round mr-1">priority_high</i>
-                                    <p>დამტენები არ მოიძებნა</p>
+                                    <p>@lang('business.chargers.chargers-not-found')</p>
                                 </div>
                             @endif
                         </div>

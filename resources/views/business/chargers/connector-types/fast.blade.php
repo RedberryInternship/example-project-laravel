@@ -7,11 +7,11 @@
                         <thead>
                             <tr style="color: black">
                                 @if (isset($chargerConnectorTypes))
-                                    <th>კონექტორის ტიპი</th>
+                                    <th>@lang('business.chargers.connector-type')</th>
                                 @endif
-                                <th>წუთები (დან)</th>
-                                <th>წუთები (მდე)</th>
-                                <th>ღირებულება</th>
+                                <th>@lang('business.chargers.minutes-from')</th>
+                                <th>@lang('business.chargers.minutes-to')</th>
+                                <th>@lang('business.chargers.price')</th>
                                 <th>&nbsp;</th>
                                 <th>&nbsp;</th>
                             </tr>

@@ -46,12 +46,20 @@ class AuthController extends Controller
 
         if(!$user || $user->role->name !== RoleEnum::BUSINESS)
         {
-            abort(Response::HTTP_UNAUTHORIZED);
+            return back()->withErrors(
+                [
+                    __('business.login.login-error-bussiness-user'),
+                ]
+            );
         }
 
         if(!Hash::check($password, $user -> password))
         {
-            abort(Response::HTTP_UNAUTHORIZED);
+            return back()->withErrors(
+                [
+                    __('business.login.login-error-incorrect-credentials'),
+                ]
+            );
         }
 
         Auth::login($user);

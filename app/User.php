@@ -4,12 +4,13 @@ namespace App;
 
 use App\Facades\SMS;
 use App\Enums\OrderStatus;
+use http\Exception\InvalidArgumentException;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements JWTSubject
-{  
+{
     use Notifiable;
 
     /**
@@ -72,7 +73,7 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Build User's response array.
-     * 
+     *
      * @param $token
      */
     public static function respondWithToken($token)
@@ -91,14 +92,14 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Send SMS.
-     * 
+     *
      * @param $phoneNumber
      * @param $message
-     * 
+     *
      * @return boolean
      */
     public static function sendSms($phoneNumber, $message)
-    {   
+    {
         if ( ! $phoneNumber)
         {
             return false;
@@ -114,7 +115,7 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Get full name of the user.
-     * 
+     *
      * @return string
      */
     public function fullName()
@@ -149,8 +150,8 @@ class User extends Authenticatable implements JWTSubject
 
     public function active_orders()
     {
-        return $this 
-            -> hasMany('App\Order') 
+        return $this
+            -> hasMany('App\Order')
             -> where(
                 [
                     [ 'charging_status', '!=' , OrderStatus :: FINISHED       ],
@@ -240,7 +241,7 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Find User By Field Name.
-     * 
+     *
      * @param $field
      * @param $value
      */
@@ -266,7 +267,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Deactivate user by deleting every personal info,
      * that exists in db.
-     * 
+     *
      * @return void
      */
     public function deactivate()
@@ -289,5 +290,27 @@ class User extends Authenticatable implements JWTSubject
                     'prrn'              => '---',
                 ]
             );
+    }
+
+    /**
+     * Get user lang.
+     */
+    public function lang()
+    {
+       return cache()->get("selectedlang.{$this->id}") ?? 'ka';
+    }
+
+    /**
+     * Set user lang.
+     */
+    public function setLang(string $lang)
+    {
+        if(! in_array($lang, ['ka', 'en']))
+        {
+            throw new InvalidArgumentException();
+        }
+
+        $userId = auth()->id();
+        cache()->put("selectedlang.{$userId}", $lang);
     }
 }

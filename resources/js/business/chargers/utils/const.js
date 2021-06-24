@@ -15,6 +15,6 @@ export const curlDefaultConfig = {
  * @var {object} mistakeMsg
  */
 export const mistakeMsg = {
-  georgianMistakeText: '* არასწორი ფორმატი',
-  generalMistakeText: '* მინიმუმ 9 სიმბოლოს უნდა შეიცავდეს...'
+  georgianMistakeText: __('chargers.whitelist.format-error'),
+  generalMistakeText: __('chargers.whitelist.georgian-phone-error'),
 }

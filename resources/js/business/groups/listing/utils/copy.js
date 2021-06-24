@@ -1,3 +1,3 @@
 export default {
-  confirmDeletingGroup: (name) => `ნამდვილად გსურთ "${name}" ჯგუფის წაშლა`
+  confirmDeletingGroup: (name) => `${__('groups.do-u-really')}"${name}"${__('groups.want-to-delete')}`
 };

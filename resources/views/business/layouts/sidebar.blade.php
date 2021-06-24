@@ -6,7 +6,6 @@
             <h1>Business Admin</h1>
             <hr>
             <h1 class="business-title">
-
                 <img class="espace-icon" src="{{ asset('images/business/icons/business.png') }}" />
                 {{ $companyName }}
             </h1>
@@ -16,7 +15,7 @@
         <li class="bold" style="margin-top: 5rem;">
             <a class="waves-effect waves-cyan {{ isset($activeMenuItem) && $activeMenuItem == 'dashboard' ? 'active' : NULL }}" href="/business">
                 <img class="espace-icon" src="{{ asset('images/business/icons/dashboard.png') }}" />
-                <span class="menu-title bpg-arial" data-i18n="Chat">მთავარი</span>
+                <span class="menu-title bpg-arial" data-i18n="Chat">@lang('business.sidebar.main')</span>
             </a>
         </li>
 
@@ -24,7 +23,7 @@
             <a class="waves-effect waves-cyan {{ isset($activeMenuItem) && $activeMenuItem == 'orders' ? 'active' : NULL }}" href="/business/orders">
                 <img class="espace-icon" src="{{ asset('images/business/icons/transactions.png') }}" />
 
-                <span class="menu-title bpg-arial" data-i18n="Chat">ტრანზაქციები</span>
+                <span class="menu-title bpg-arial" data-i18n="Chat">@lang('business.sidebar.transactions')</span>
             </a>
         </li>
 
@@ -32,29 +31,42 @@
             <a class="waves-effect waves-cyan {{ isset($activeMenuItem) && $activeMenuItem == 'groups' ? 'active' : NULL }}" href="/business/groups">
                 <img class="espace-icon" src="{{ asset('images/business/icons/groups.png') }}" />
 
-                <span class="menu-title bpg-arial" data-i18n="Chat">დამტენების ჯგუფები</span>
+                <span class="menu-title bpg-arial" data-i18n="Chat">@lang('business.sidebar.charger-groups')</span>
             </a>
         </li>
 
         <li class="bold">
             <a class="waves-effect waves-cyan {{ isset($activeMenuItem) && $activeMenuItem == 'chargers' ? 'active' : NULL }}" href="/business/chargers">
                 <img class="espace-icon" src="{{ asset('images/business/icons/chargers.png') }}" />
-                <span class="menu-title bpg-arial" data-i18n="Chat">დამტენები</span>
+                <span class="menu-title bpg-arial" data-i18n="Chat">@lang('business.sidebar.chargers')</span>
             </a>
         </li>
 
         <li class="bold">
             <a class="waves-effect waves-cyan {{ isset($activeMenuItem) && $activeMenuItem == 'profile' ? 'active' : NULL }}" href="/business/profile">
                 <img class="espace-icon" src="{{ asset('images/business/icons/profile.png') }}" />
-                <span class="menu-title bpg-arial" data-i18n="Chat">პროფილი</span>
+                <span class="menu-title bpg-arial" data-i18n="Chat">@lang('business.sidebar.profile')</span>
             </a>
         </li>
 
+        <li class="bold lang-switcher-container">
+        </li>
+
+
         <li class="bold sidebar-logout-menu-item">
+            <div class="lang-wrapper">
+                <a href="{{ route('business.change-language', [ 'lang' => 'ka']) }}">
+                    <span class="lang-item @selectedlang('ka') active @endselectedlang">Ka</span>
+                </a>
+
+                <a href="{{ route('business.change-language', [ 'lang' => 'en']) }}">
+                    <span class="lang-item @selectedlang('en') active @endselectedlang">En</span>
+                </a>
+            </div>
             <a class="waves-effect waves-cyan logout-from-business-admin">
                 <img class="espace-icon" src="{{ asset('images/business/icons/logout.png') }}" />
 
-                <span class="menu-title bpg-arial" data-i18n="Chat">გამოსვლა</span>
+                <span class="menu-title bpg-arial" data-i18n="Chat">@lang('business.sidebar.logout')</span>
             </a>
         </li>
     </ul>

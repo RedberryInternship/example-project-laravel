@@ -10,7 +10,7 @@ class ChargerStatusAnalyser
 {
   /**
    * Analyse charger statuses.
-   * 
+   *
    * @return array
    */
   public static function analyse(): array
@@ -21,14 +21,18 @@ class ChargerStatusAnalyser
     return [
       'lvl2'     => self :: businessChargerStatuses($lvl2Connectors),
       'fast'     => self :: businessChargerStatuses($fastConnectors),
-      'labels'   => [ 'თავისუფალი', 'ამჟამად მუხტავს', 'არ მუშაობს' ],
+      'labels'   => [
+          __('business.dashboard.charger-statuses.charger.free'),
+          __('business.dashboard.charger-statuses.charger.charging'),
+          __('business.dashboard.charger-statuses.charger.not-working'),
+      ],
       'statuses' => [ ChargerStatusEnum::ACTIVE, ChargerStatusEnum::CHARGING, ChargerStatusEnum::INACTIVE ],
     ];
   }
 
   /**
    * Get data depending on connector types.
-   * 
+   *
    * @return array
    */
   public static function businessChargerStatuses($connectorTypes = null): array

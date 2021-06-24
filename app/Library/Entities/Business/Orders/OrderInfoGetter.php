@@ -26,7 +26,7 @@ class OrderInfoGetter
     $timestamp          = Timestamp :: build($order);
     $id                 = $order -> id;
     $chargerCode        = $charger -> code;
-    $chargerDescription = $charger -> getTranslation('location','ka');
+    $chargerDescription = $charger -> location;
     $chargerType        = $order -> charger_connector_type -> determineChargerType();
     $consumedKilowatts  = $order -> kilowatt ? $order -> kilowatt -> consumed : '0';
     $duration           = $order -> duration;

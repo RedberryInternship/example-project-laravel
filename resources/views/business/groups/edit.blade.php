@@ -23,35 +23,34 @@
         <div class="col s10 flex align-center justify-flex-end buttons-wrapper">
             <a class="delete-group-prices-btn">
                 <button type="submit" class="btn red darken-4 waves-effect waves-light col pull-s3 bpg-arial">
-                    ჯგუფის ტარიფების წაშლა
+                    @lang('business.groups.delete-group-prices')
                 </button>
             </a>
             
             <a href="{{ url('/business/group-prices/' . $group -> id) }}">
                 <button type="submit" class="btn waves-effect waves-light btn-small col pull-s1 bpg-arial">
-                    level2 დამტენების ფასების დამატება
+                    @lang('business.groups.add-lvl2-prices')
                 </button>
             </a>
 
             <a href="{{ url('/business/group-fast-prices/' . $group -> id) }}">
                 <button type="submit" class="btn waves-effect waves-light btn-small bpg-arial">
-                    სწრაფი დამტენების ფასების დამატება
+                    @lang('business.groups.add-fast-prices')
                 </button>
             </a>
         </div>
     </div>
-
     @if ($group -> chargers -> count())
         <div class="row">
             <div class="col s12 blue-grey">
                 <table class="responsive-table white-text bpg-arial">
                     <thead>
                         <tr>
-                            <th>ჩარჯერის ჯგუფის დამტენები</th>
+                            <th>@lang('business.groups.group-chargers')</th>
                             
-                            <th style="text-align: center; width: 200px;">რედაქტირება</th>
+                            <th style="text-align: center; width: 200px;">@lang('business.groups.edit')</th>
                             <th style="text-align: center; width: 300px;">
-                                {{ $group -> name . ' ჯგუფიდან ამოშლა' }}
+                                {{ $group -> name }} @lang('business.groups.delete-from-group') 
                             </th>
                         </tr>
                     </thead>
@@ -91,7 +90,7 @@
             <div class="col s12">
                 <div class="btn right orange darken-4 select-all-button bpg-arial">
                     <i class="material-icons right">keyboard_capslock</i>
-                    ყველა დამტენის ჯგუფში დამატება
+                    @lang('business.groups.add-all')
                 </div>
             </div>
         </div>
@@ -103,10 +102,10 @@
                     <thead>
                         <tr>
                             <th>
-                                სხვა დამტენები
+                                @lang('business.groups.other-chargers')
                             </th>
-                            <th style="text-align: center; width: 200px;">რედაქტირება</th>
-                            <th style="text-align: center; width: 300px;">{{ $group -> name . '-ში დამატება' }}</th>
+                            <th style="text-align: center; width: 200px;">@lang('business.groups.edit')</th>
+                            <th style="text-align: center; width: 300px;">{{ $group -> name }}@lang('business.groups.add-in')</th>
                         </tr>
                     </thead>
 

@@ -1,5 +1,5 @@
 export default {
-  confirmRemovingGroupPrices: 'ნამდვილად გსურთ ამ ჯგუფის ყველა დამტენის ტარიფების წაშლა?',
-  successfullyRemovedGroupPrices: 'ჯგუფის ტარიფები წარმატებით წაიშალა!',
-  confirmStoringAllChargersIntoGroup: 'ნამდვილად გსურთ კომპანიის ყველა დამტენის ამ ჯგუფში გაწევრიანება?',
+  confirmRemovingGroupPrices: __('groups.remove-group-prices'),
+  successfullyRemovedGroupPrices: __('groups.group-prices-removed'),
+  confirmStoringAllChargersIntoGroup: __('groups.store-all-in-group'),
 }

@@ -1,3 +1,3 @@
 export default {
-  confirmSavingProfile: 'ნამდვილად გსურთ ინფორმაციის განახლება?',
+  confirmSavingProfile: __('profile.want-to-update'),
 };

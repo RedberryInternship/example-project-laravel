@@ -17,7 +17,7 @@ class TransactionsMonthlyDataAnalyser
   {
       $year = request() -> year ?? now() -> year;
 
-      return cache()
+      $data = cache()
           -> remember(
               "business.transactions-data-with-energy-waste.{$year}", 
               60 * 60, /* 1 Hour */
@@ -25,6 +25,10 @@ class TransactionsMonthlyDataAnalyser
                 return self :: calculateTransactionsDataWithEnergyWaste( $orders );
               },
       );
+
+      $data['month_labels'] = Helper :: getMonthNames();
+
+      return $data;
   }
 
   /**
@@ -52,7 +56,6 @@ class TransactionsMonthlyDataAnalyser
     return [
         'transactions' => $transactionsMonthlyData,
         'energy'       => $usedEnergyMonthlyData,
-        'month_labels' => Helper :: getMonthNames(),
     ];
   }
 }

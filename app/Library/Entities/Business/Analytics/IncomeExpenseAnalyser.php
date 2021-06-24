@@ -8,21 +8,24 @@ class IncomeExpenseAnalyser
 {
   /**
    * Analyse business expense and income.
-   * 
+   *
    * @return array
    */
   public static function analyse( $orders ): array
   {
       $year = request() -> year ?? now() -> year;
 
-      return cache()
+      $data = cache()
           -> remember(
-              "business.income-expense.{$year}", 
+              "business.income-expense.{$year}",
               60 * 60, /* 1 Hour */
               function() use( $orders ) {
                 return self :: calculateIncomeExpense( $orders );
               },
       );
+      $data['month_labels'] = Helper :: getMonthNames();
+
+      return $data;
   }
 
   /**
@@ -36,23 +39,22 @@ class IncomeExpenseAnalyser
       'income_without_penalty'  => self :: countIncomeWithoutPenalty( $orders ),
       'penalty'                 => self :: countPenalty( $orders ),
       'expense'                 => self :: countExpense( $orders ),
-      'month_labels'            => Helper :: getMonthNames(),
     ];
   }
 
   /**
    * Count income without penalty prices.
-   * 
+   *
    * @return array
    */
-  private static function countIncomeWithoutPenalty( $orders ): array 
+  private static function countIncomeWithoutPenalty( $orders ): array
   {
       $freshMonthlyData = Helper :: getFreshMonthlyData();
 
       $orders -> each(function( $order ) use( &$freshMonthlyData ) {
         $month        = $order -> created_at -> month - 1;
         $chargePrice  = $order -> charge_price ?? 0;
-        
+
         $freshMonthlyData[$month] += $chargePrice;
       });
 
@@ -62,13 +64,13 @@ class IncomeExpenseAnalyser
 
       return $freshMonthlyData;
   }
-  
+
   /**
    * Count penalty prices.
-   * 
+   *
    * @return array
    */
-  private static function countPenalty( $orders ): array 
+  private static function countPenalty( $orders ): array
   {
       $freshMonthlyData = Helper :: getFreshMonthlyData();
 
@@ -85,13 +87,13 @@ class IncomeExpenseAnalyser
 
       return $freshMonthlyData;
   }
-    
+
   /**
    * Count income.
-   * 
+   *
    * @return array
    */
-  private static function countExpense( $orders ): array 
+  private static function countExpense( $orders ): array
   {
       $freshMonthlyData = Helper :: getFreshMonthlyData();
 

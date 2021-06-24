@@ -13,29 +13,29 @@ export default async () => {
 
     generateTopChart({
         chart: TOP_BY_ORDERS,
-        title: 'დამუხტვების რაოდენობა',
+        title: __('dashboard.top-chargers.charge-count'),
         rawData: topByOrders,
         column: 'charge_count',
         color: 'yellowgreen',
         unit: '',
     });
-    
+
     generateTopChart({
         chart: TOP_BY_KILOWATTS,
-        title: 'მოხმარებული კილოვატები',
+        title: __('dashboard.top-chargers.used-kilowatts'),
         rawData: topByKilowatts,
         column: 'kilowatts',
         color: '#1976D2',
-        unit: 'კვტ.'
+        unit: __('dashboard.top-chargers.kwt'),
     });
 
     generateTopChart({
         chart: TOP_BY_DURATION,
-        title: 'ხანგრძლივობა',
+        title: __('dashboard.top-chargers.duration'),
         rawData: topByDuration,
         column: 'duration',
         color: '#FFC107',
-        unit: 'წუთი',
+        unit: __('dashboard.top-chargers.minute'),
     });
 }
 
@@ -65,7 +65,7 @@ const generateTopChart = ({ chart, title, rawData, column, color, unit }) => {
                 callbacks: {
                     title: (item) => {
                         const descriptionJSON = rawData[item[0].index].location;
-                        return JSON.parse(descriptionJSON).ka;
+                        return JSON.parse(descriptionJSON)[locale];
                     },
                     label: (item) => `${title}: ${item.value} ${unit}`,
                 }
@@ -93,48 +93,3 @@ const generateTopChart = ({ chart, title, rawData, column, color, unit }) => {
         }
     });
 }
-
-
-/** 
- * 
- *   type: 'line',
-  data: {
-    labels:['Георгий', 'Нино', 'Сандро'],
-    datasets: [
-      {
-        data: [ 2, 3, 7 ],
-        label: '-- House del Lada --',
-        yAxisID: 'A',
-        backgroundColor: '#f443367d'
-      },
-      {
-        data: [ 10, 25, 3 ],
-        label: '-- House del Shala --',
-        yAxisID: 'B',
-        backgroundColor: '#3f51b57a'
-      }
-    ],
-  },
-  options: {
-    scales: {
-      yAxes: [{
-        id: 'A',
-        type: 'linear',
-        position: 'left',
-        scaleLabel: {
-          display: true,
-          labelString: "Laada"
-        }
-      }, {
-        id: 'B',
-        type: 'linear',
-        position: 'right',
-        scaleLabel: {
-          display: true,
-          labelString: "shala"
-        }
-      }]
-    }
-  }
-});
-*/

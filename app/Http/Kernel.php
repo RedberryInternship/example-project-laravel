@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'business.auth' => \App\Http\Middleware\AuthenticateBusiness::class,
         'check.user.existence' => \App\Http\Middleware\CheckUserExistence::class,
         'e2e' => \App\Http\Middleware\E2E::class,
+        'business.language' => \App\Http\Middleware\BusinessLanguageMiddleware::class,
     ];
 
     /**

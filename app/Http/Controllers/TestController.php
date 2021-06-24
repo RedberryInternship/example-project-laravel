@@ -9,10 +9,10 @@ use App\Facades\Simulator;
 use App\Traits\Message;
 use App\Order;
 
-class TestController extends Controller 
+class TestController extends Controller
 {
   use Message;
-    
+
   public function __invoke()
   {
     dd( "Nothingness" );
@@ -49,7 +49,7 @@ class TestController extends Controller
   }
 
   public function disconnect( Request $request )
-  { 
+  {
     if( request() -> has( 'chargerCode' ) )
     {
       $chargerId    = '0000';

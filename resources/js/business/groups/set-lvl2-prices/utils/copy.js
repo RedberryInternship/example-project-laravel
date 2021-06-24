@@ -1,3 +1,3 @@
 export default {
-  confirmSettingFastPrice: (groupName) => `ნამდვილად გსურთ ჯგუფის("${groupName}") ყველა დამტენზე მითითებული ტარიფის გაწერა?`,
+  confirmSettingFastPrice: (groupName) => `${__('groups.set-batch-price-1')}"${groupName}"${__('groups.set-batch-price-2')}`,
 }

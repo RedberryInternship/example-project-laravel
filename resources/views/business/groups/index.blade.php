@@ -15,7 +15,9 @@
 				<div class="card-content">
 					<div class="row">
 						<div class="col s12">
-	                        <h4 class="card-title bpg-arial">დამტენების ჯგუფები</h4>
+	                        <h4 class="card-title bpg-arial">
+                                @lang('business.groups.charger-groups')
+                            </h4>
 	                    </div>
                     </div>
 
@@ -25,12 +27,12 @@
 
                             <div class="input-field col s8">
                                 <input type="text" for="name" name="name" required>
-                                <label for="name" class="pbg-arial">დამტენების ახალი ჯგუფი</label>
+                                <label for="name" class="pbg-arial">@lang('business.groups.new-group')</label>
                             </div>
 
                             <div class="col offset-s2 s2">
                                 <button class="btn waves-effect waves-light green width-100 bpg-arial">
-                                    დამატება
+                                    @lang('business.groups.add-group')
                                 </button>
                             </div>
                         </form>
@@ -38,7 +40,7 @@
                         @error('name')
                             <div class="card col s3 warning-alert" style="padding: 0 0rem">
                                 <div class="card-content red white-text bpg-arial">
-                                    ამ სახელით უკვე არსებობს ჯგუფი! 
+                                    @lang('business.groups.group-already-exists')
                                     <i class="material-icons right">add_alert</i>
                                 </div>
                             </div>
@@ -52,11 +54,11 @@
                                     <table class="responsive-table bpg-arial">
                                         <thead>
                                             <tr style="color: black">
-                                                <th>ID</th>
-                                                <th>სახელი</th>
-                                                <th class="center">დამტენების რაოდენობა</th>
-                                                <th class="center">რედაქტირება</th>                                                
-                                                <th class="center">წაშლა</th>
+                                                <th>@lang('business.groups.id')</th>
+                                                <th>@lang('business.groups.name')</th>
+                                                <th class="center">@lang('business.groups.count')</th>
+                                                <th class="center">@lang('business.groups.edit')</th>                                                
+                                                <th class="center">@lang('business.groups.delete')</th>
                                             </tr>
                                         </thead>
 

@@ -1,3 +1,3 @@
 export default `
-  <p class="no-phone-numbers bpg-arial">ამ მომენტისთვის ვაითლისთში არცერთი მომხმარებლის ნომერი არ გაქვთ დამატებული...</p>
+  <p class="no-phone-numbers bpg-arial">${__('chargers.whitelist.no-users-added')}</p>
 `;

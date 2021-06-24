@@ -19,7 +19,7 @@
                             <h4 class="card-title bpg-arial">{{ $tabTitle }}</h4>
                             
                             <a href="{{ $contractDownloadPath }}" class="btn waves-effect waves-light green bpg-arial">
-                                რეპორტი
+                                @lang('business.transactions.report')
                             </a>
                         </div>
                     </div>
@@ -35,26 +35,30 @@
                                     <div class="input-field">
                                         <i class="material-icons prefix">search</i>
                                         <input type="text" name="search" id="search" value="{{ request() -> get( 'search' ) }}" />
-                                        <label for="search">Search</label>
+                                        <label for="search">@lang('business.transactions.search')</label>
                                     </div>
                                     <div class="input-field">
                                         <select name="charger_type" id="charger_type">
                                             @php $chargerType = request() -> get('charger_type'); @endphp
     
-                                            <option value="" disabled selected>დამტენის ტიპი</option>
-                                            <option value="FAST" @if($chargerType === 'FAST') selected @endif >სწრაფი</option>
-                                            <option value="LVL2" @if($chargerType === 'LVL2') selected @endif >მე-2 დონის</option>
+                                            <option value="" disabled selected>@lang('business.transactions.charger-type')</option>
+                                            <option value="FAST" @if($chargerType === 'FAST') selected @endif >
+                                                @lang('business.transactions.fast')
+                                            </option>
+                                            <option value="LVL2" @if($chargerType === 'LVL2') selected @endif >
+                                                @lang('business.transactions.lvl2')
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col s6">
                                     <div class="input-field">
                                         <input type="text" name="start_date" value="{{ request() -> get('start_date') }}" class="datepicker" id="start_date">
-                                        <label for="start_date">თარიღი (დან)</label>
+                                        <label for="start_date">@lang('business.transactions.date-from')</label>
                                     </div>
                                     <div class="input-field">
                                         <input type="text" value="{{ request() -> get('end_date') }}" name="end_date" class="datepicker" id="end_date">
-                                        <label for="end_date">თარიღი (მდე)</label>
+                                        <label for="end_date">@lang('business.transactions.date-to')</label>
                                     </div>
                                 </div>
                                 
@@ -62,7 +66,7 @@
                                     <div class="input-field">
                                         <button type="submit" class="btn teal lighten-2 filter-btn bpg-arial">
                                             <i class="material-icons right">filter_list</i>
-                                            გაფილტვრა
+                                            @lang('business.transactions.filter')
                                         </button>
                                     </div>
                                     <div class="input-field left-2-em filter-btn">
@@ -85,11 +89,11 @@
                                 <table class="bpg-arial">
                                     <thead>
                                         <tr style="font-weight:bold; color:black">
-                                            <th>ID</th>
-                                            <th>დამტენის კოდი</th>
-                                            <th>დამტენი</th>
-                                            <th>გადახდები</th>
-                                            <th>დრო</th>
+                                            <th>@lang('business.transactions.id')</th>
+                                            <th>@lang('business.transactions.charger-code')</th>
+                                            <th>@lang('business.transactions.charger')</th>
+                                            <th>@lang('business.transactions.payments')</th>
+                                            <th>@lang('business.transactions.time')</th>
                                             <th class="center"> - </th>
                                         </tr>
                                     </thead>
@@ -117,7 +121,7 @@
                             @else
                                 <div class="mt-4 flex">
                                     <i class="material-icons red color-white round mr-1">priority_high</i>
-                                    <p>დამტენები არ მოიძებნა</p>
+                                    <p>@lang('business.transactions.charger-not-found')</p>
                                 </div>
                             @endif
                         </div>

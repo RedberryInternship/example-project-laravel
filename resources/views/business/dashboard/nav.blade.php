@@ -4,7 +4,7 @@
             <div class="card-content center">
                 <img src="/images/business/transactions.png" alt="images" class="width-40">
                 <h5 class="white-text lighten-4">&nbsp;</h5>
-                <p class="white-text lighten-4">ტრანზაქციები</p>
+                <p class="white-text lighten-4">@lang('business.dashboard.transactions.title')</p>
             </div>
         </div>
     </div>
@@ -14,7 +14,7 @@
             <div class="card-content center">
                 <img src="/app-assets/images/icon/printer.png" alt="images" class="width-40">
                 <h5 class="white-text lighten-4">&nbsp;</h5>
-                <p class="white-text lighten-4">შემოსავალი</p>
+                <p class="white-text lighten-4">@lang('business.dashboard.income.title')</p>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
             <div class="card-content center">
                 <img src="/images/business/active-charger.png" alt="images" class="width-40">
                 <h5 class="white-text lighten-4">&nbsp;</h5>
-                <p class="white-text lighten-4">TOP დამტენები</p>
+                <p class="white-text lighten-4">@lang('business.dashboard.top-chargers.title')</p>
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
             <div class="card-content center">
                 <img src="/images/business/lights.png" alt="images" class="width-40">
                 <h5 class="white-text lighten-4">&nbsp;</h5>
-                <p class="white-text lighten-4">დამტენების სტატუსები</p>
+                <p class="white-text lighten-4">@lang('business.dashboard.charger-statuses.title')</p>
             </div>
         </div>
     </div>

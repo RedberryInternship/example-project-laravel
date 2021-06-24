@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 class ProfileController extends Controller
 {
@@ -56,7 +57,7 @@ class ProfileController extends Controller
 
     /**
      * Download contract file.
-     * 
+     *
      * @return File
      */
     public function downloadContractFile()
@@ -69,5 +70,15 @@ class ProfileController extends Controller
         $ext = end($ext);
 
         return Storage :: disk('public') -> download( $contractFilePath, 'contract.' . $ext );
+    }
+
+    /**
+     * Change application language.
+     */
+    public function changeLanguage()
+    {
+       $lang = request()->get('lang');
+       auth()->user()->setLang($lang);
+       return back();
     }
 }
