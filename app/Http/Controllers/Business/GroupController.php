@@ -28,7 +28,7 @@ class GroupController extends Controller
                       -> get();
 
         return view('business.groups.index') -> with([
-            'tabTitle'       => 'დამტენების ჯგუფები',
+            'tabTitle'       => __('business.sidebar.charger-groups'),
             'activeMenuItem' => 'groups',
             'groups'         => $groups,
             'user'           => $user,

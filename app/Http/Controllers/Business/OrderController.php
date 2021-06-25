@@ -26,7 +26,7 @@ class OrderController extends Controller
         return view('business.orders.index') -> with(
             [
                 'orders'                 => $orders,
-                'tabTitle'               => 'ტრანზაქციები',
+                'tabTitle'               => __('business.sidebar.transactions'),
                 'activeMenuItem'         => 'orders',
                 'user'                   => $user,
                 'contractDownloadPath'   => Helper :: url('/business/order-exports', request() -> input()),

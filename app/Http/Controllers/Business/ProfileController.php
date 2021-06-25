@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
-use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 class ProfileController extends Controller
 {
@@ -27,7 +26,7 @@ class ProfileController extends Controller
                 'user'           => $user,
                 'company'        => $user -> company,
                 'companyName'    => $user -> company -> companyName,
-                'tabTitle'       => 'პროფილი',
+                'tabTitle'       => __('business.sidebar.profile'),
                 'activeMenuItem' => 'profile',
                 'companyName'    => $user -> company -> name,
             ]

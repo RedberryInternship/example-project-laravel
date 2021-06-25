@@ -70,7 +70,7 @@ class FastChargingPricesController extends Controller
 
         return view('business.chargers.connector-types.edit-fast') -> with([
             'fastChargingPrice' => $fastChargingPrice,
-            'tabTitle'          => 'დამტენები',
+            'tabTitle'          => __('business.sidebar.chargers'),
             'activeMenuItem'    => 'chargers',
             'user'              => $user,
             'companyName'       => $user -> company -> name,

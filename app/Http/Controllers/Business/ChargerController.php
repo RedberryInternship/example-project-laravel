@@ -32,7 +32,7 @@ class ChargerController extends Controller
                         -> get();
 
         return view('business.chargers.index') -> with([
-            'tabTitle'       => 'დამტენები',
+            'tabTitle'       => __('business.chargers.chargers'),
             'activeMenuItem' => 'chargers',
             'chargers'       => $chargers,
             'user'           => $user,
@@ -77,7 +77,7 @@ class ChargerController extends Controller
                     'businessServices'        => BusinessService::all(),
                     'chargerConnectorTypes'   => $chargerConnectorTypes,
                     'languages'               => Helper :: allLang(),
-                    'tabTitle'                => 'რედაქტირება',
+                    'tabTitle'                => __('business.sidebar.chargers'),
                     'activeMenuItem'          => 'chargers',
                     'charger'                 => $charger,
                     'user'                    => $user,

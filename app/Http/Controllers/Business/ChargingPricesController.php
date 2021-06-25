@@ -73,7 +73,7 @@ class ChargingPricesController extends Controller
         return view('business.chargers.connector-types.edit-lvl2')->with([
             'chargingPrice'     => $chargingPrice,
             'dayTimesRange'     => Helper :: dayTimesRange(),
-            'tabTitle'          => 'დამტენები',
+            'tabTitle'          => __('business.sidebar.chargers'),
             'activeMenuItem'    => 'chargers',
             'user'              => $user,
             'companyName'       => $user -> company -> name,

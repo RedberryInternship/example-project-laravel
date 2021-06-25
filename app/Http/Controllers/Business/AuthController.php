@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Business;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\Role as RoleEnum;
@@ -20,7 +19,7 @@ class AuthController extends Controller
     public function login()
     {
         return view('business.auth.login') -> with([
-            'tabTitle'            => 'ავტორიზაცია',
+            'tabTitle'            => __('business.login.auth'),
             'activeMenuItem'      => 'login',
             'backgroundClassName' => 'login'
         ]);

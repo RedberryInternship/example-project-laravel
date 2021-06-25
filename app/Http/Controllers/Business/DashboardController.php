@@ -14,7 +14,7 @@ class DashboardController extends Controller
     {
         return view('business.dashboard.index') -> with([
             'user'           => auth() -> user(),
-            'tabTitle'       => 'მთავარი',
+            'tabTitle'       => __('business.sidebar.main'),
             'activeMenuItem' => 'dashboard',
             'firstYear'      => $this -> firstOrderYear(),
             'companyName'    => auth() -> user() -> company -> name,

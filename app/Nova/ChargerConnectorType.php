@@ -9,15 +9,11 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasMany;
 use App\ChargerConnectorType as CCT;
 use Laravel\Nova\Fields\HasOne;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class ChargerConnectorType extends Resource
 {
-    /**
-     * Should appear in navigation.
-     */
-    public static $displayInNavigation = false;
-
     /**
      * The model the resource corresponds to.
      *
@@ -61,6 +57,9 @@ class ChargerConnectorType extends Resource
             Text::make('Connector Type', 'connector_type_id', function( $value ) {
                 return ConnectorType :: where( 'id', $value ) -> first() -> name;
             }) -> readonly(),
+            
+            Number::make('Min Price'),
+            Number::make('Max Price')->step(0.01),
 
             HasOne::make('Charger'),
             
@@ -168,6 +167,6 @@ class ChargerConnectorType extends Resource
      */
     public function authorizedToUpdate(Request $request)
     {
-        return false;
+        return true;
     }
 }
