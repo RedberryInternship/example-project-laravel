@@ -34,8 +34,10 @@
                     </div>
                 </div>
 
-                @if($errors -> any())
-                    <p class="auth-error">@lang('business.login.login-error')</p>
+                @if($errors->any())
+                    @foreach($errors->all() as $error)
+                        <p class="auth-error">{{ $error }}</p>
+                    @endforeach
                 @endif
 
                 <div class="row">

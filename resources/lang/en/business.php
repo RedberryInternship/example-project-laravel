@@ -6,7 +6,6 @@ return [
         'auth' => 'Auth',
         'mail' => 'E-Mail',
         'password' => 'Password',
-        'login-error-bussiness-user' => 'You must be E Space Business user in order to log in to the Admin Panel!',
         'login-error-incorrect-credentials' => 'User credentials seems to be incorrect. please try again...',
     ],
     'sidebar' => [

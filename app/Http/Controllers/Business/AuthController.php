@@ -48,7 +48,7 @@ class AuthController extends Controller
         {
             return back()->withErrors(
                 [
-                    __('business.login.login-error-bussiness-user'),
+                    __('business.login.login-error-incorrect-credentials'),
                 ]
             );
         }

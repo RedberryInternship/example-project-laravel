@@ -116,7 +116,7 @@ class BusinessAuth extends TestCase
           'password' => 'non-existing-password',
         ]
       )
-      -> assertStatus(401);
+      -> assertSessionHasErrors();
   }
 
   /** @test */
@@ -130,7 +130,7 @@ class BusinessAuth extends TestCase
           'password' => $this -> adminUserPassword,
         ]
       )
-      -> assertStatus(401);
+      -> assertSessionHasErrors();
   }
 
   /** @test */
