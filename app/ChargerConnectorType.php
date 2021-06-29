@@ -7,7 +7,6 @@ use App\Enums\ConnectorType as ConnectorTypeEnum;
 use App\Enums\ChargerType as ChargerTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 
-
 class ChargerConnectorType extends Model
 {
     /**
@@ -16,6 +15,14 @@ class ChargerConnectorType extends Model
      * @var array $guarded
      */
     protected $guarded = [];
+
+    /**
+     * Laravel casts attr.
+     */
+    protected $casts = [
+      'min_price' => 'double',
+      'max_price' => 'double',
+    ];
 
     /**
      * BelongsTo relationship with connector_types.

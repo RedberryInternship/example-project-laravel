@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Business\Chargers;
 
+use App\ChargerConnectorType;
+use App\Rules\MaxAndMinPrice;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
@@ -24,13 +26,23 @@ class AddLvl2Price extends FormRequest implements ValidatesWhenResolved
    */
   public function rules()
   {
+    $connectorId = request()->get('charger_connector_type_id');
+    $connector = ChargerConnectorType::findOrFail($connectorId);
+
     return [
-      'charger_connector_type_id' => 'nullable',
+      'charger_connector_type_id' => 'required',
       'start_time'                => 'required',
       'end_time'                  => 'required',
       'min_kwt'                   => 'required',
       'max_kwt'                   => 'required',
-      'price'                     => 'required|numeric',
+      'price'                     => [
+        'required', 
+        'numeric',
+        new MaxAndMinPrice(
+          $connector->min_price, 
+          $connector->max_price,
+        ),
+      ],
     ];
   }
 }

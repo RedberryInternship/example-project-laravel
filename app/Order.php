@@ -628,7 +628,6 @@ class Order extends Model
 
         if(!$this->kilowatt) 
         {
-            
             $this->kilowatt()->create(
                 [
                     'consumed' => $currentKilowattValue,

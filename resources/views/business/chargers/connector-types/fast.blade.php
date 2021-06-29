@@ -108,6 +108,11 @@
                             </tr>
                         </tbody>
                     </table>
+                    @error('price')
+                        <span style="color: red">
+                            {{ $message }}
+                        </span>
+                    @enderror
                 </div>
             </div>
         </div>

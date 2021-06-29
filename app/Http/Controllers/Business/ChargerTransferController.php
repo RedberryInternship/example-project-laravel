@@ -30,6 +30,7 @@ class ChargerTransferController extends Controller
         $group   = Group::with('user')->findOrFail($request -> get('group-id'));
         $charger = Charger::findOrFail($request -> get('charger-id'));
 
+        // dd($group, $charger);
         $this->transferGate($group, $charger);
 
         if ($remove)
@@ -53,9 +54,8 @@ class ChargerTransferController extends Controller
      */
     private function transferGate(Group &$group,Charger &$charger)
     {
-        $invalidGroup = auth()->id() !== $group->user->id;
-        $invalidCharger = auth()->user()->company_id !== $charger->company_id;
-
+        $invalidGroup = (int) auth()->user()->company_id !== (int) $group->user->company_id;
+        $invalidCharger = (int) auth()->user()->company_id !== (int) $charger->company_id;
         abort_if($invalidGroup || $invalidCharger, Response::HTTP_FORBIDDEN);
     }
 }

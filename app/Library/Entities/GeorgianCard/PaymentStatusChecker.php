@@ -21,7 +21,7 @@ class PaymentStatusChecker
    * 
    * @return string
    */
-  public static function getFailureStatus(): string
+  public static function getFailureStatus()
   {
     if( ! self :: succeeded() )
     {

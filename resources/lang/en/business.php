@@ -91,6 +91,7 @@ return [
         'chargers' => 'Chargers',
         'edit' => 'Edit',
         'chargers-not-found' => 'Chargers were not found!',
+        'price-not-in-range' => 'charging price should be between :min_price and :max_price',
     ],
     'logout' => 'Do you really want to log out from Business Admin Panel?',
     'groups' => [

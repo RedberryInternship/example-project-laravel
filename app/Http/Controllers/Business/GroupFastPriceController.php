@@ -7,6 +7,7 @@ use App\FastChargingPrice;
 use App\Library\Entities\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Business\Chargers\AddFastPrice;
+use App\Http\Requests\Business\Chargers\AddGroupFastPrice;
 
 class GroupFastPriceController extends Controller
 {
@@ -39,7 +40,7 @@ class GroupFastPriceController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function update(AddFastPrice $request, $groupID)
+    public function update(AddGroupFastPrice $request, $groupID)
     {
         $user  = auth() -> user();
         $group = Group::with('chargers.charger_connector_types.connector_type') -> find($groupID);

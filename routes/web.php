@@ -9,7 +9,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Library\Entities\Helper;
 
-
 Route::redirect('/', Helper::novaURL());
 
 Route::group(['prefix' => 'business', 'namespace' => 'Business'], function() {

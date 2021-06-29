@@ -7,7 +7,7 @@ use App\Rules\MaxAndMinPrice;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
-class AddFastPrice extends FormRequest implements ValidatesWhenResolved
+class AddGroupFastPrice extends FormRequest implements ValidatesWhenResolved
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -27,19 +27,15 @@ class AddFastPrice extends FormRequest implements ValidatesWhenResolved
   public function rules()
   {
     $connectorId = request()->get('charger_connector_type_id');
-    $conenctor = ChargerConnectorType::findOrFail($connectorId);
+    $connector = ChargerConnectorType::findOrFail($connectorId);
 
     return [
-        'charger_connector_type_id' => 'numeric',
         'start_minutes'             => 'required|numeric',
         'end_minutes'               => 'required|numeric',
         'price'                     => [
           'required',
           'numeric',
-          new MaxAndMinPrice(
-            $conenctor->min_price, 
-            $conenctor->max_price
-          ),
+          new MaxAndMinPrice($connector->min_price, $connector->max_price),
         ],
     ];
   }

@@ -35,5 +35,4 @@ class TransactionController extends Controller
   {
     ChargingFinisher :: finish( $transactionId );
   }
-
 }

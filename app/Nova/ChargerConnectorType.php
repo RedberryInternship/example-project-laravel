@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasMany;
 use App\ChargerConnectorType as CCT;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -38,6 +39,13 @@ class ChargerConnectorType extends Resource
     ];
 
     /**
+     * Eager loading.
+     * 
+     * @var array
+     */
+    public static $with = ['charger'];
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -61,7 +69,9 @@ class ChargerConnectorType extends Resource
             Number::make('Min Price'),
             Number::make('Max Price')->step(0.01),
 
-            HasOne::make('Charger'),
+            BelongsTo::make('Charger')->displayUsing(function ($charger) {
+                return $charger->location;
+            })->searchable(),
             
             HasMany::make('Fast Charging Prices') -> canSee( function() use( $isFast ){
                 

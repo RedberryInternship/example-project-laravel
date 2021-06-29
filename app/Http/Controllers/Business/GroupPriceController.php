@@ -6,6 +6,7 @@ use App\Group;
 use App\ChargingPrice;
 use App\Library\Entities\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Business\Chargers\AddGroupLvl2Price;
 use App\Http\Requests\Business\Chargers\AddLvl2Price;
 
 class GroupPriceController extends Controller
@@ -39,7 +40,7 @@ class GroupPriceController extends Controller
      * @param  int  $groupID
      * @return Response
      */
-    public function update(AddLvl2Price $request, $groupID)
+    public function update(AddGroupLvl2Price $request, $groupID)
     {
         $user  = auth() -> user();
         $group = Group :: with('chargers.charger_connector_types.connector_type') -> find($groupID);
