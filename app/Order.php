@@ -37,6 +37,18 @@ class Order extends Model
     protected $guarded = [];
 
     /**
+     * Active orders statuses.
+     */
+    public $activeOrdersStatuses = [
+        OrderStatusEnum :: INITIATED,
+        OrderStatusEnum :: CHARGING,
+        OrderStatusEnum :: CHARGED,
+        OrderStatusEnum :: USED_UP,
+        OrderStatusEnum :: ON_FINE,
+        OrderStatusEnum :: ON_HOLD,
+    ];
+
+    /**
      * Laravel casts attribute.
      * 
      * @var array $casts
@@ -174,14 +186,7 @@ class Order extends Model
      */
     public function scopeActive( $query )
     {
-        return $query -> whereIn( 'charging_status', [
-            OrderStatusEnum :: INITIATED,
-            OrderStatusEnum :: CHARGING,
-            OrderStatusEnum :: CHARGED,
-            OrderStatusEnum :: USED_UP,
-            OrderStatusEnum :: ON_FINE,
-            OrderStatusEnum :: ON_HOLD,
-        ]);
+        return $query -> whereIn( 'charging_status', $this->activeOrdersStatuses);
     }
     
     /**
@@ -453,6 +458,14 @@ class Order extends Model
         return $this -> charging_status == OrderStatusEnum :: FINISHED;
     }
 
+    /**
+     * Determine if order is active.
+     */
+    public function isActive(): bool
+    {
+        return in_array($this -> charging_status, $this->activeOrdersStatuses);
+    }
+
     /********************************************* 
      * 
      * ===!> Orders model helper methods <!=== 
@@ -476,6 +489,22 @@ class Order extends Model
     public function getCharger(): Charger
     {
         return $this -> charger_connector_type -> charger;
+    }
+
+    /**
+     * Stamp payment failure.
+     */
+    public function stampPaymentFailure(): void
+    {
+        $this->charging_status_change_dates[ OrderStatusEnum :: PAYMENT_FAILED ] = Hook :: now();
+    }
+
+    /**
+     * Close charging records creation.
+     */
+    public function closeChargingRecordsCreation()
+    {
+
     }
 
     /**

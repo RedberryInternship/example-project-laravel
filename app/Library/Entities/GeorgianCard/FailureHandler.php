@@ -2,7 +2,7 @@
 
 namespace App\Library\Entities\GeorgianCard;
 
-use App\Library\Entities\GeorgianCard\PaymentStatusChecker;
+use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Library\Interactors\Firebase;
 use App\Library\Entities\Helper;
 use App\Facades\Simulator;
@@ -18,12 +18,17 @@ class FailureHandler
    */
   public static function handle()
   {
+    /**
+     * @var Order
+     */
     $order = Order :: with( 'charger_connector_type.charger' ) -> find( request() -> get( 'o_id' ) );
 
     if( $order )
     {
-      self :: updateOrder     ( $order );
+      $order->stampPaymentFailure();
+      $order->stampLastChargingPowerRecord();
       self :: stopCharging    ( $order );
+      self :: updateOrder     ( $order );
       self :: sendNotification( $order );
     }
   }
@@ -35,8 +40,9 @@ class FailureHandler
    */
   private static function updateOrder( $order )
   {
-    $status = PaymentStatusChecker :: getFailureStatus();
-    $order -> updateChargingStatus( $status );
+    $order -> charger_connector_type -> isChargerFast()
+      ? $order -> updateChargingStatus( OrderStatusEnum :: FINISHED )
+      : $order -> updateChargingStatus( OrderStatusEnum :: CHARGED  );
   }
 
   /**
@@ -51,7 +57,6 @@ class FailureHandler
 
     Charger :: stop( $chargerId, $transactionId );
     
-    # GLITCH
     if( Helper :: isDev() && $order -> charger_connector_type -> isChargerFast() )
     {
       Simulator :: plugOffCable( $chargerId );

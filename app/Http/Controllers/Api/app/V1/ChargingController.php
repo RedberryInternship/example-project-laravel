@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers\Api\app\V1;
 
-use App\Http\Controllers\Controller;
-
 use App\Traits\Message;
-
-use App\Http\Requests\StartCharging;
 use App\Http\Requests\StopCharging;
-
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StartCharging;
 use App\Library\Interactors\ChargingStarter;
 use App\Library\DataStructures\ChargingStarter as ChargingStarterRequest;
 
