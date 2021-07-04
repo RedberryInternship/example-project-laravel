@@ -78,6 +78,8 @@ class BusinessGroupLVL2Prices extends TestCase
           [
             'charger_id' => $charger->id,
             'connector_type_id' => ConnectorType::whereName(EnumsConnectorType::TYPE_2)->first()->id,
+            'min_price' => null,
+            'max_price' => null,
           ],
         );
       }
@@ -136,7 +138,7 @@ class BusinessGroupLVL2Prices extends TestCase
   }
     
   /** @test */
-  public function create_lvl_2_charging_price_for_group_has_validation_errors(): void
+  public function create_lvl_2_charging_price_for_group_has_validations_errors(): void
   {
     $brandNewGroup = factory(Group::class)->create([ 'user_id' => $this->user->id ]);
     $this->chargers->each(function(Charger $charger) use(&$brandNewGroup){

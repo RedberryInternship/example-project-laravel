@@ -21,8 +21,8 @@ $factory->define(ChargerConnectorType::class, function (Faker $faker) {
       'charger_id'          => 0,
       'connector_type_id'   => $connectorType -> id,
       'm_connector_type_id' => $faker -> numberBetween(1,2),
-      'max_price'           => $faker -> randomNumber(),
-      'min_price'           => $faker -> randomNumber(),
+      'max_price'           => null,
+      'min_price'           => null,
     ];
 });
 

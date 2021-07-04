@@ -27,7 +27,7 @@ class AddLvl2Price extends FormRequest implements ValidatesWhenResolved
   public function rules()
   {
     $connectorId = request()->get('charger_connector_type_id');
-    $connector = ChargerConnectorType::findOrFail($connectorId);
+    $connector = ChargerConnectorType::find($connectorId);
 
     return [
       'charger_connector_type_id' => 'required',
@@ -39,8 +39,8 @@ class AddLvl2Price extends FormRequest implements ValidatesWhenResolved
         'required', 
         'numeric',
         new MaxAndMinPrice(
-          $connector->min_price, 
-          $connector->max_price,
+          $connector ? $connector->min_price : null, 
+          $connector ? $connector->max_price : null,
         ),
       ],
     ];

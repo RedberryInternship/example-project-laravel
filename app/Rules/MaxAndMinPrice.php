@@ -41,12 +41,12 @@ class MaxAndMinPrice implements Rule
     public function passes($attribute, $value)
     {
         if($this->minPrice === null || $this->maxPrice === null)
-          {
-            return true;
-          }
-          $submittedPrice = (double) request()->get('price');
-          
-          return $submittedPrice >= $this->minPrice && $submittedPrice <= $this->maxPrice;
+        {
+          return true;
+        }
+        $submittedPrice = (double) request()->get('price');
+        
+        return $submittedPrice >= $this->minPrice && $submittedPrice <= $this->maxPrice;
     }
 
     /**

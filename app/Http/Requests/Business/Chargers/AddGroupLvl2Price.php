@@ -30,7 +30,6 @@ class AddGroupLvl2Price extends FormRequest implements ValidatesWhenResolved
     $groupId = (int) request()->route('group_price');
     $minPrice = null;
     $maxPrice = null;
-    $connectorId = null;
 
     $group = Group::query()
       -> with('chargers.charger_connector_types')

@@ -22,7 +22,6 @@ class ChargingPricesController extends Controller
     public function store(AddLvl2Price $request)
     {
         $user = auth() -> user();
-
         $chargerConnectorType = ChargerConnectorType :: with('charger') -> findOrFail($request -> get('charger_connector_type_id'));
 
         if ($chargerConnectorType -> charger -> company_id == $user -> company_id)

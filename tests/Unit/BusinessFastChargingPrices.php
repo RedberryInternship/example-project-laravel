@@ -68,6 +68,8 @@ class BusinessFastChargingPrices extends TestCase
       [
         'charger_id' => $this->charger->id,
         'connector_type_id' => ConnectorType::whereName(EnumsConnectorType::COMBO_2)->first()->id,
+        'max_price' => null,
+        'min_price' => null,
       ]
     );
   }
@@ -118,7 +120,7 @@ class BusinessFastChargingPrices extends TestCase
           'price'                     => $price,
         ]
       )
-      ->assertNotFound();
+      -> assertNotFound();
   }
   
   /** @test */

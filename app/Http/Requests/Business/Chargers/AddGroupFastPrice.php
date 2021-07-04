@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Business\Chargers;
 
-use App\ChargerConnectorType;
+use App\Group;
 use App\Rules\MaxAndMinPrice;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
@@ -26,16 +26,50 @@ class AddGroupFastPrice extends FormRequest implements ValidatesWhenResolved
    */
   public function rules()
   {
-    $connectorId = request()->get('charger_connector_type_id');
-    $connector = ChargerConnectorType::findOrFail($connectorId);
+    $groupId = (int) request()->route('group_fast_price');
+    $minPrice = null;
+    $maxPrice = null;
 
+    $group = Group::query()
+      -> with('chargers.charger_connector_types')
+      -> find($groupId);
+    
+    $group
+      ->chargers
+      ->each(function ($charger) use(&$minPrice, &$maxPrice) {
+        $charger
+          ->charger_connector_types
+          ->each(function ($connector) use(&$minPrice, &$maxPrice) {
+            if($connector->min_price !== null && $connector->max_price !== null)
+            {
+              if($minPrice === null) {
+                $minPrice = $connector->min_price;
+              } else if($connector->min_price < $minPrice)
+              {
+                $minPrice = $connector->min_price;
+              }
+
+              if($maxPrice === null)
+              {
+                $maxPrice = $connector->max_price;
+              } else if($connector->max_price > $maxPrice)
+              {
+                $maxPrice = $connector->max_price;
+              }
+            }
+          });
+      });
+  
     return [
         'start_minutes'             => 'required|numeric',
         'end_minutes'               => 'required|numeric',
         'price'                     => [
           'required',
           'numeric',
-          new MaxAndMinPrice($connector->min_price, $connector->max_price),
+          new MaxAndMinPrice(
+            $minPrice,
+            $maxPrice,
+          ),
         ],
     ];
   }

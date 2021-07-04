@@ -171,7 +171,8 @@ class BusinessLVL2ChargingPrices extends TestCase
           // 'max_kwt'    => $maxKWT,
           // 'price'      => $price,
         ]
-      )->assertSessionHasErrors(
+      )
+      ->assertSessionHasErrors(
         [
           'start_time', 
           'end_time', 

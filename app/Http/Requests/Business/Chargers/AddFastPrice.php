@@ -27,7 +27,7 @@ class AddFastPrice extends FormRequest implements ValidatesWhenResolved
   public function rules()
   {
     $connectorId = request()->get('charger_connector_type_id');
-    $conenctor = ChargerConnectorType::findOrFail($connectorId);
+    $conenctor = ChargerConnectorType::find($connectorId);
 
     return [
         'charger_connector_type_id' => 'numeric',
@@ -37,8 +37,8 @@ class AddFastPrice extends FormRequest implements ValidatesWhenResolved
           'required',
           'numeric',
           new MaxAndMinPrice(
-            $conenctor->min_price, 
-            $conenctor->max_price
+            $conenctor ? $conenctor->min_price : null, 
+            $conenctor ? $conenctor->max_price : null,
           ),
         ],
     ];
