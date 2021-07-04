@@ -35,8 +35,9 @@ class CacheOrderDetails
    */
   private function calculate( Order &$order ): void
   { 
-    $timestamp    = Timestamp :: build( $order );
-    $charger      = $order -> getCharger();
+    $timestamp      = Timestamp :: build( $order );
+    $charger        = $order -> getCharger();
+    $chargingPower  = $order -> kilowatt && $order -> kilowatt -> charging_power;
 
     $this -> details = [
       'charger_name'        => $charger       -> name,
@@ -44,7 +45,7 @@ class CacheOrderDetails
       'charge_price'        => $order         -> countConsumedMoney(),
       'penalty_fee'         => $order         -> countPenaltyFee(),
       'duration'            => $timestamp     -> getChargingDuration(),
-      'charge_power'        => $order         -> kilowatt -> charging_power,
+      'charge_power'        => $chargingPower,
       'address'             => $charger       -> location,
       'company_id'          => $charger       -> company_id,
       'consumed_kilowatts'  => @round($order  -> kilowatt -> consumed, 2),
