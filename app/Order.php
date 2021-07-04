@@ -496,7 +496,10 @@ class Order extends Model
      */
     public function stampPaymentFailure(): void
     {
-        $this->charging_status_change_dates[ OrderStatusEnum :: PAYMENT_FAILED ] = Hook :: now();
+        $currentChargingStatusChangeDates = $this->charging_status_change_dates;
+        $currentChargingStatusChangeDates[ OrderStatusEnum :: PAYMENT_FAILED ] = Hook :: now();
+        $this->charging_status_change_dates = $currentChargingStatusChangeDates;
+        $this->save();
     }
 
     /**
