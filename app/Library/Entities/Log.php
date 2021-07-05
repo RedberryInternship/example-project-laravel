@@ -49,12 +49,17 @@ class Log
    */
   public static function kilowattCreated( $transactionId, $value ): void
   {
-    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "transaction id: $transactionId" );
-    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "kilowatt created: $value" );
+
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "KILOWATT CREATED" );
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "Transaction Id: $transactionId" );
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "Kilowatt Created: $value" );
     LaravelLogger :: channel( 'kilowatt-records' ) 
       -> info( "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -" );
   }
 
+  /**
+   * Update kilowatt record.
+   */
   public static function kilowatUpdate(
     $transactionId,
     $watts,
@@ -66,17 +71,17 @@ class Log
     $currentChargingPower
   )
   {
-    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "transaction id: $transactionId" );
-
-    LaravelLogger :: channel( 'kilowatt-records' ) 
-      -> info( "current watts: $watts | previous kilowatt: $previousKilowattValue | kilowatt difference: $kilowattValueDifference" );
-
     $now = now();
-    LaravelLogger :: channel( 'kilowatt-records' ) 
-      -> info( "previously updated: $previousUpdateDatetime | now: $now | diff in secs: $diffInSeconds | diff in hrs: $diffInHours" );
-    
-    LaravelLogger :: channel( 'kilowatt-records' ) 
-      -> info( "current charging power: $currentChargingPower" );
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "KILOWATT UPDATED" );
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "Transaction ID: $transactionId" );
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "Current Watts: $watts" );
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "Previous Kilowatt: $previousKilowattValue" );
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "Kilowatt Difference: $kilowattValueDifference" );
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "Previously Updated: $previousUpdateDatetime" );
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "Now: $now" );
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "Diff in Secs: $diffInSeconds" );
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "Diff in Hrs: $diffInHours" );
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "Current Charging Power: $currentChargingPower" );
     
     LaravelLogger :: channel( 'kilowatt-records' ) 
       -> info( "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -" );
