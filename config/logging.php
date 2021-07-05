@@ -126,6 +126,13 @@ return [
             'permission' => 0666,
         ],
 
+        'kilowatt-records' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/kilowatts/record.log'),
+            'level' => 'debug',
+            'permission' => 0666,
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

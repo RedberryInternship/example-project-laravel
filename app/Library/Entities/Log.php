@@ -42,4 +42,43 @@ class Log
   {
     LaravelLogger :: channel( 'feedback-finish' ) -> info( 'FINISHED - Transaction ID - ' . $transactionId );
   }
+
+
+  /**
+   * Kilowatt record created.
+   */
+  public static function kilowattCreated( $transactionId, $value ): void
+  {
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "transaction id: $transactionId" );
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "kilowatt created: $value" );
+    LaravelLogger :: channel( 'kilowatt-records' ) 
+      -> info( "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -" );
+  }
+
+  public static function kilowatUpdate(
+    $transactionId,
+    $watts,
+    $previousKilowattValue,
+    $kilowattValueDifference,
+    $previousUpdateDatetime,
+    $diffInSeconds,
+    $diffInHours,
+    $currentChargingPower,
+  )
+  {
+    LaravelLogger :: channel( 'kilowatt-records' ) -> info( "transaction id: $transactionId" );
+
+    LaravelLogger :: channel( 'kilowatt-records' ) 
+      -> info( "current watts: $watts | previous kilowatt: $previousKilowattValue | kilowatt difference: $kilowattValueDifference" );
+
+    $now = now();
+    LaravelLogger :: channel( 'kilowatt-records' ) 
+      -> info( "previously updated: $previousUpdateDatetime | now: $now | diff in secs: $diffInSeconds | diff in hrs: $diffInHours" );
+    
+    LaravelLogger :: channel( 'kilowatt-records' ) 
+      -> info( "current charging power: $currentChargingPower" );
+    
+    LaravelLogger :: channel( 'kilowatt-records' ) 
+      -> info( "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -" );
+  }
 }

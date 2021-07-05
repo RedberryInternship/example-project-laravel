@@ -17,6 +17,7 @@ use App\Library\Entities\ChargingProcess\Hook;
 use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Exceptions\NoSuchChargingPriceException;
 use App\Library\Entities\ChargingProcess\Timestamp;
+use App\Library\Entities\Log;
 
 class Order extends Model
 {
@@ -660,6 +661,11 @@ class Order extends Model
 
         if(!$this->kilowatt) 
         {
+            Log::kilowattCreated(
+                $this->charger_transaction_id, 
+                $currentKilowattValue,
+            );
+
             $this->kilowatt()->create(
                 [
                     'consumed' => $currentKilowattValue,
@@ -677,6 +683,17 @@ class Order extends Model
             $diffInHours = $diffInSeconds / 3600;
 
             $currentChargingPower = $kilowattValueDifference / $diffInHours;
+
+            Log::kilowatUpdate(
+                $this->charger_transaction_id,
+                $watts,
+                $previousKilowattValue,
+                $kilowattValueDifference,
+                $previousUpdateDatetime,
+                $diffInSeconds,
+                $diffInHours,
+                $currentChargingPower,
+            );
 
             $this->kilowatt->update(
                 [
