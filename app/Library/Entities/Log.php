@@ -63,7 +63,7 @@ class Log
     $previousUpdateDatetime,
     $diffInSeconds,
     $diffInHours,
-    $currentChargingPower,
+    $currentChargingPower
   )
   {
     LaravelLogger :: channel( 'kilowatt-records' ) -> info( "transaction id: $transactionId" );
