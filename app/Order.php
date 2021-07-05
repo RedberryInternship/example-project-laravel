@@ -655,7 +655,7 @@ class Order extends Model
      */
     public function updateKilowattRecordAndChargingPower($watts): void
     {      
-        $currentKilowattValue = $watts / 1000;
+        $currentKilowattValue = $watts > 0 ? $watts / 1000 : 0;
         $this->load('kilowatt');
 
         if(!$this->kilowatt) 
