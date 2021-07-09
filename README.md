@@ -82,6 +82,7 @@ And now you should provide **.env** file all the necessary environment variables
 
 >DB_PASSWORD=*****
 
+
 #
 **MAILGUN:**
 >MAILGUN_DOMAIN=******
