@@ -239,19 +239,21 @@ class Helper
      */
     public static function removeTmpExcelFiles(): void
     {
-        $files = File::allFiles(base_path('storage'));
-        $filenames = array_map(function($file) { return $file->getFilename(); }, $files);
-        $pattern = "/^laravel-excel-.*\.xlsx$/";
+        try {
+            $files = File::allFiles(base_path('storage'));
+            $filenames = array_map(function($file) { return $file->getFilename(); }, $files);
+            $pattern = "/^laravel-excel-.*\.xlsx$/";
 
-        foreach($filenames as $filename)
-        {
-           $matched = preg_match($pattern, $filename);
-           if($matched)
-           {
-               $file = base_path('storage/'. $filename);
-               unlink($file);
-           }
-        }
+            foreach($filenames as $filename)
+            {
+            $matched = preg_match($pattern, $filename);
+            if($matched)
+            {
+                $file = base_path('storage/'. $filename);
+                unlink($file);
+            }
+            }
+        } catch(\Exception $e) {}
     }
 
     /**

@@ -91,7 +91,6 @@ class RealChargersFeedback extends TestCase
 
     $this 
       -> get($this -> updateURL . '/' . $this -> order -> charger_transaction_id . '/' . 7)
-      -> dump()
       -> assertOk();
   
     
