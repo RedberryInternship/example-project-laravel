@@ -101,6 +101,14 @@ class MishasCharger
   }
 
   /**
+   * Determine if charger is currently charging.
+   */
+  public function isCharging($charger_id)
+  {
+    return true;
+  }
+
+  /**
    * Determine if specific charger is free.
    * 
    * @param   integer $charger_id
