@@ -34,22 +34,20 @@ class Charger extends Base
      */
     public function all()
     {
-        return Cache::remember('chargers', 60, function () {
-            Log :: channel( 'request-charger' ) -> info( 'GET_ALL_CHARGERS' );
-            $service_url = $this -> url . '/es-services/mobile/ws/chargers';
-            $result      = $this -> fetchData( $service_url );
-            
-            switch( $result -> status )
-            {
-                case 0:
-                    return $result -> data -> chargers;
-                default:
-                    throw new FindChargerException( 
-                        'Chargers couldn\'t be retrieved from Misha\'s DB.',
-                         500,
-                         );
-            }
-        });
+        Log :: channel( 'request-charger' ) -> info( 'GET_ALL_CHARGERS' );
+        $service_url = $this -> url . '/es-services/mobile/ws/chargers';
+        $result      = $this -> fetchData( $service_url );
+        
+        switch( $result -> status )
+        {
+            case 0:
+                return $result -> data -> chargers;
+            default:
+                throw new FindChargerException( 
+                    'Chargers couldn\'t be retrieved from Misha\'s DB.',
+                        500,
+                        );
+        }
     }
 
 
@@ -231,29 +229,27 @@ class Charger extends Base
         
         /** Ends here. */
 
-        return Cache::remember("transaction-info.$id", 60, function() use($id) {
-            $text = 'TRANSACTION_INFO | TRANSACITON_ID - ' . $id;
-            Log :: channel( 'request-charger' ) -> info( $text );
+        $text = 'TRANSACTION_INFO | TRANSACITON_ID - ' . $id;
+        Log :: channel( 'request-charger' ) -> info( $text );
 
-            $service_url = $this -> url 
-                            . '/es-services/mobile/ws/transaction/info/'
-                            . $id;
-            
-            $result = $this -> fetchData( $service_url );
-            
-            switch( $result -> status )
-            {
-                case -2:
-                    throw new ChargerTransactionInfoException(
-                        'Charger transaction info not found.',
-                        404,
-                    );
-                case 0:
-                    return $result -> data;
-                default:
-                    throw new ChargerTransactionInfoException();
-            }
-        });
+        $service_url = $this -> url 
+                        . '/es-services/mobile/ws/transaction/info/'
+                        . $id;
+        
+        $result = $this -> fetchData( $service_url );
+        
+        switch( $result -> status )
+        {
+            case -2:
+                throw new ChargerTransactionInfoException(
+                    'Charger transaction info not found.',
+                    404,
+                );
+            case 0:
+                return $result -> data;
+            default:
+                throw new ChargerTransactionInfoException();
+        }
     }
   
     /**
