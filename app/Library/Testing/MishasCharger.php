@@ -106,7 +106,7 @@ class MishasCharger
    * @param   integer $charger_id
    * @return  bool
    */
-  public function isChargerFree($charger_id): bool
+  public function isFree($charger_id): bool
   {
     return true;
     $charger = $this -> find( $charger_id );
