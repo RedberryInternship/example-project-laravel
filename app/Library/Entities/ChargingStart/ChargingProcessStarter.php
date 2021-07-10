@@ -68,7 +68,7 @@ class ChargingProcessStarter
 
     if( $transactionID == -1 || $transactionID == -101 )
     {
-      $isFree = Charger :: isChargerFree( $this -> chargerId );
+      $isFree = Charger :: isFree( $this -> chargerId );
 
       if( $isFree )
       {

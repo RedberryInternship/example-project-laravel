@@ -9,7 +9,6 @@ use App\Exceptions\Charger\StartChargingException;
 use App\Exceptions\Charger\RealChargersBackException;
 use App\Exceptions\Charger\ChargerTransactionInfoException;
 use App\Exceptions\Charger\TransactionAlreadyFinishedException;
-use Illuminate\Support\Facades\Cache;
 
 class Charger extends Base
 {
@@ -101,6 +100,19 @@ class Charger extends Base
                 throw new FindChargerException();
         }
      }
+    
+    /**
+     * Determine if charger is dead.
+     * 
+     * @param int $charger_id
+     * @return object
+     */
+    public function isDead($charger_id)
+    {
+        Log :: channel( 'request-charger' ) -> info( 'IS_DEAD' );
+        $result = $this -> find($charger_id);   
+        return $result -> status == 0;
+     }
 
      /**
       * Find out if this specific charger is free
@@ -108,8 +120,9 @@ class Charger extends Base
       * @param int $charger_id
       * @return bool 
       */
-      public function isChargerFree($charger_id)
+      public function isFree($charger_id)
       {
+        Log :: channel( 'request-charger' ) -> info( 'IS_FREE' );
         $result = $this -> find($charger_id);
         
         return $result -> status == 0;

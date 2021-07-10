@@ -299,13 +299,7 @@ class Charger extends Model
 
     public static function addIsFreeAttributeToCharger(&$charger)
     {
-        /**
-         * set is free attribute for charger from out db.
-         * 
-         * $charger -> is_free = Charger::isChargerFree( $charger -> charger_id );
-         */
-        
-        $charger -> is_free = MishasCharger::isChargerFree( $charger -> charger_id );
+        $charger -> is_free = MishasCharger::isFree( $charger -> charger_id );
     }
 
     /** 

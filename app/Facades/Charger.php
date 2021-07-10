@@ -3,7 +3,7 @@
 namespace App\Facades;
 
 /**
- * @method static bool isChargerFree( $charger_id )
+ * @method static bool isFree( $charger_id )
  *
  * @see App\Library\Charging\Charger
  */

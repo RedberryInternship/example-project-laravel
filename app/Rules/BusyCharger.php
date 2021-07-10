@@ -43,7 +43,7 @@ class BusyCharger implements Rule
             return false;
         }
 
-        return Charger :: isChargerFree( $charger -> charger_id );
+        return Charger :: isFree( $charger -> charger_id );
     }
 
     /**
