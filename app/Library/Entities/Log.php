@@ -86,4 +86,15 @@ class Log
     LaravelLogger :: channel( 'kilowatt-records' ) 
       -> info( "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -" );
   }
+
+  /**
+   * Warrning, charger doesn't have right charging price.
+   */
+  public static function noChargingPrice($chargerCode, $connectorId, $charingPower): void
+  {
+    LaravelLogger :: channel( 'charging-power-explosions' ) 
+      -> warning(
+        "Charger #$chargerCode with connectorID: $connectorId - doesn't have charging price with charging power: $charingPower"
+      );
+  }
 }

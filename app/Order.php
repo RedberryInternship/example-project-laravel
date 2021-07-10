@@ -18,6 +18,7 @@ use App\Enums\ChargingType as ChargingTypeEnum;
 use App\Exceptions\NoSuchChargingPriceException;
 use App\Library\Entities\ChargingProcess\Timestamp;
 use App\Library\Entities\Log;
+use Exception;
 
 class Order extends Model
 {
@@ -633,7 +634,22 @@ class Order extends Model
         }
 
         $currentChargingPower = $this -> getChargingPower();
-        $chargingPrice        = $this -> getChargingPrice( $currentChargingPower );
+        try 
+        {
+            $chargingPrice = $this -> getChargingPrice($currentChargingPower);
+        } 
+        catch(NoSuchChargingPriceException $e) 
+        {
+            $charger = $this->getCharger();
+
+            Log::noChargingPrice(
+                $charger->code, 
+                $this->charger_connector_type->id, 
+                $currentChargingPower,
+            );
+
+            $chargingPrice = $this -> getApproximateChargingPrice($currentChargingPower);
+        }
 
         $this 
             -> charging_powers()
@@ -1091,6 +1107,46 @@ class Order extends Model
         }
 
         return $chargingPriceInfo;
+    }
+
+    /**
+     * Get approximate charging price;
+     * 
+     * @return ChargingPrice
+     */
+    private function getApproximateChargingPrice($chargingPower)
+    {
+        $lvl2ChargingPrices  = $this 
+            -> charger_connector_type 
+            -> charging_prices;
+
+        $approximateChargingPrice = null;
+        $diff = PHP_INT_MAX;
+
+        foreach($lvl2ChargingPrices as $chargingPrice)
+        {
+            $minKwtDiff = abs($chargingPrice->min_kwt - $chargingPower);
+            $maxKwtDiff = abs($chargingPrice->max_kwt - $chargingPower);
+
+            if($minKwtDiff < $diff)
+            {
+                $diff = $minKwtDiff;
+                $approximateChargingPrice = $chargingPrice;
+            }
+            
+            if($maxKwtDiff < $diff)
+            {
+                $diff = $maxKwtDiff;
+                $approximateChargingPrice = $chargingPrice;
+            }
+        }
+
+        if($approximateChargingPrice === null)
+        {
+            throw new NoSuchChargingPriceException("Charger doesn't have charging prices at all");
+        }
+
+        return $approximateChargingPrice;
     }
 
     /**

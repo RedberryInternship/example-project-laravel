@@ -133,6 +133,13 @@ return [
             'permission' => 0666,
         ],
 
+        'charging-power-explosions' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/kilowatts/charging-power-explosions.log'),
+            'level' => 'debug',
+            'permission' => 0666,
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
