@@ -34,7 +34,7 @@ class Charger extends Base
      */
     public function all()
     {
-        Cache::remember('chargers', 60, function () {
+        return Cache::remember('chargers', 60, function () {
             Log :: channel( 'request-charger' ) -> info( 'GET_ALL_CHARGERS' );
             $service_url = $this -> url . '/es-services/mobile/ws/chargers';
             $result      = $this -> fetchData( $service_url );
