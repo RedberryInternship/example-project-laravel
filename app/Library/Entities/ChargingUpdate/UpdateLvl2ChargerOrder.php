@@ -143,6 +143,11 @@ class UpdateLvl2ChargerOrder
   private static function stopChargingWhenCharged( Order &$order ): void
   {
     $charger = $order -> getCharger();
+    
+    if(! RealCharger :: isCharging($charger -> charger_id))
+    {
+      return;
+    }
 
     RealCharger :: stop( 
       $charger -> charger_id, 

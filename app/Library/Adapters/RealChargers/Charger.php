@@ -9,6 +9,7 @@ use App\Exceptions\Charger\StartChargingException;
 use App\Exceptions\Charger\RealChargersBackException;
 use App\Exceptions\Charger\ChargerTransactionInfoException;
 use App\Exceptions\Charger\TransactionAlreadyFinishedException;
+use Exception;
 
 class Charger extends Base
 {
@@ -45,7 +46,7 @@ class Charger extends Base
                 throw new FindChargerException( 
                     'Chargers couldn\'t be retrieved from Misha\'s DB.',
                         500,
-                        );
+                    );
         }
     }
 
@@ -107,11 +108,17 @@ class Charger extends Base
      * @param int $charger_id
      * @return object
      */
-    public function isDead($charger_id)
+    public function isCharging($charger_id)
     {
         Log :: channel( 'request-charger' ) -> info( 'IS_DEAD' );
-        $result = $this -> find($charger_id);   
-        return $result -> status == 0;
+        try {
+            $result = $this -> find($charger_id);   
+            return $result -> status == 1;
+        } catch(Exception $e)
+        {
+            Log::error($e->getMessage());
+            return false;
+        }
      }
 
      /**

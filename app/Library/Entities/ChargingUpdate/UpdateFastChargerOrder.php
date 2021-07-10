@@ -63,9 +63,14 @@ class UpdateFastChargerOrder
   {
     $charger = $order -> getCharger();
 
+    if(! RealCharger :: isCharging($charger -> charger_id))
+    {
+      return;
+    }
+
     RealCharger :: stop( 
-        $charger -> charger_id, 
-        $order -> charger_transaction_id,
+      $charger -> charger_id, 
+      $order -> charger_transaction_id,
     );
 
     $order -> updateChargingStatus( OrderStatusEnum :: USED_UP );
