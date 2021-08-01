@@ -10,6 +10,7 @@ class CarModel extends Model
     {
     	return $this -> belongsTo('App\Mark');
     }
+    
     public function users()
     {
     	return $this -> belongsToMany('App\User', 'user_car_models','model_id','user_id');
