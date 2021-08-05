@@ -26,12 +26,12 @@ class UnhandledChargingPowerChecker
      */
     public static function check(Order $order, $hasFinished = false)
     {
-        $chargingPowers = $order->charging_powers->reverse()->toArray();
+        $chargingPowers = $order->charging_powers->toArray();
 
         if($hasFinished === true)
         {
-            [ 'end_at' => $latestChargingPowerEndTimestamp ] = $chargingPowers[0];
-            [ 'id' => $latestChargingPowerId ] = $chargingPowers[0];
+            [ 'end_at' => $latestChargingPowerEndTimestamp ] = end($chargingPowers);
+            [ 'id' => $latestChargingPowerId ] = end($chargingPowers);
 
             if($latestChargingPowerEndTimestamp === null)
             {
@@ -39,17 +39,17 @@ class UnhandledChargingPowerChecker
             }
         }
 
-        for($i=1; $i < count($chargingPowers); $i++)
+        for($i=0; $i < count($chargingPowers) - 1; $i++)
         {
             ['id' => $id, 'end_at' => $endAt] = $chargingPowers[$i];
             if($endAt === null)
             {
-                ['start_at' => $previousStartedAt] = $chargingPowers[$i - 1];
+                ['start_at' => $previousStartedAt] = $chargingPowers[$i + 1];
 
                 ChargingPower :: query()
                     -> whereId($id)
                     -> update([ 'end_at' => $previousStartedAt]);
             }
-        }
+        } 
     }
 }
