@@ -1,0 +1,9 @@
+version: "3.9"
+services: 
+    back:
+        build: 
+            dockerfile: ./devcontainer/laravel-dockerfile.Dockerfile
+            context: .
+        ports: 
+            - "8000:80"
+        
