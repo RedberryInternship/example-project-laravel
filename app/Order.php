@@ -766,7 +766,7 @@ class Order extends Model
             [
                 OrderStatusEnum :: FINISHED, 
                 OrderStatusEnum :: USED_UP, 
-                OrderStatusEnum :: CHARGED
+                OrderStatusEnum :: CHARGED,
             ],
         );
 

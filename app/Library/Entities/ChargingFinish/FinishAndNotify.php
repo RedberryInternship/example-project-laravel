@@ -2,6 +2,7 @@
 
 namespace App\Library\Entities\ChargingFinish;
 
+use App\Library\Interactors\CronJobs\UnhandledChargingPowerChecker;
 use App\Enums\OrderStatus as OrderStatusEnum;
 use App\Library\Interactors\Firebase;
 use App\Order;
@@ -20,6 +21,7 @@ class FinishAndNotify
     if( $order -> canGoToFinishStatus() )
       {
           $order -> updateChargingStatus( OrderStatusEnum :: FINISHED );
+          UnhandledChargingPowerChecker :: check($order);
           Firebase :: sendFinishNotificationWithData( $order -> charger_transaction_id );
       }
   }

@@ -156,7 +156,7 @@ class UpdateLvl2ChargerOrder
 
     RealCharger :: stop( 
       $charger -> charger_id, 
-      $order   -> charger_transaction_id 
+      $order   -> charger_transaction_id, 
     );
 
     $order -> updateChargingStatus( OrderStatusEnum :: CHARGED );
